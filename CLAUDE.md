@@ -112,6 +112,33 @@ This project uses a disciplined verify-before-claim workflow. Every session:
 5. **Before commit** — all affected regression scenarios must pass (`compare.py` exit 0). If a golden needs updating, regenerate it **deliberately** and commit golden + code in the same commit.
 6. **Session end** — `rm -rf verification/ .playwright-mcp/`.
 
+## Periodic self-review (CLAUDE.md + memory upkeep)
+
+**Rule:** at natural checkpoints Claude must pause, scan the recent conversation in its current context, and proactively suggest additions or corrections to `CLAUDE.md` and the memory files. Never silently auto-apply — always propose the exact diff and wait for Pascal's approval.
+
+**Trigger the review when:**
+- About to commit a non-trivial change.
+- Pascal states a new rule, constraint, invariant, preference, or correction.
+- A new stakeholder requirement comes up.
+- A workflow gotcha, performance footgun, or domain fact is discovered mid-task.
+- Before ending a session or handing off.
+
+**What to look for in the recent conversation:**
+- Phrases like "NEVER", "always", "don't", "never push", "never rename" — hard rules.
+- Phrases like "I prefer", "we should", "make sure you" — soft guidance worth preserving.
+- Domain facts Pascal confirms or corrects (e.g. "actually that value is wrong", "those cells are frozen").
+- New performance pain points or known-slow paths.
+- Tool / infra discoveries (e.g. hook reload semantics, compose gotchas, solver behaviour).
+- Paradigm decisions (e.g. "integrate not migrate", "Heroku is the target").
+
+**How to propose:**
+- Phrase as `"Based on [short context], I'd like to add to [file] — proposed diff: ..."`.
+- One proposal per distinct learning. Don't batch unrelated facts into one edit.
+- If the learning already exists in CLAUDE.md or a memory file, propose an *update*, not a new entry.
+- Never write updates silently — Pascal's approval is required.
+
+**Honest caveat:** Claude cannot read its own transcript outside its current context window. The review is bounded by what's still in context at the checkpoint. If the session has been very long, old-but-relevant facts may already be gone — that's expected, and the solution is to write the important things down *when they come up*, not wait for a periodic sweep to rescue them.
+
 ## Regression harness (`regression/`)
 
 Claude-session-driven golden-file UI + calculation regression. Complements the `simulator.test_*` suites, doesn't replace them.

@@ -1,0 +1,141 @@
+{
+  "_meta": {
+    "scenario_id": "D-full-flow-verbrauch-solar-wind",
+    "captured_on": "2026-04-20",
+    "captured_by": "Claude via Playwright MCP, reproducing Pascal's live flow",
+    "note": "Values assume the baseline_fingerprint in the .yml. Re-capture if seed or formulas change."
+  },
+
+  "baseline_fingerprint": {
+    "seed_row_count": 3995,
+    "baseline_LU_2_1_target_ha": 684640.80,
+    "baseline_LU_6_target_ha": 715288.67,
+    "baseline_verbrauch_1_1_2_user_percent": 95.0,
+    "baseline_verbrauch_2_4_1_user_percent": 80.0,
+    "baseline_verbrauch_7_ziel": 1005742.85,
+    "baseline_verbrauch_8_ziel": 1863864.84,
+    "baseline_annual_electricity_gwh": 1107646.0
+  },
+
+  "invariants": {
+    "speicherdrift_after_balance_gwh_max": 0.1,
+    "annual_electricity_cross_variant_match_gwh": 1108834.53,
+    "annual_electricity_cross_variant_tolerance_gwh": 0.5,
+    "final_verbrauch_7_ziel": "1,006,821.8",
+    "final_verbrauch_8_ziel": "1,858,597.3",
+    "final_lu_2_1_after_solar_variant_ha": 680478.26,
+    "final_lu_6_after_wind_variant_ha": 715288.57
+  },
+
+  "shared_phase_after_verbrauch_edits_and_renewable_recalc": {
+    "inputs_applied": {
+      "/verbrauch/": {
+        "1.1.2": {"from": 95.0, "to": 100.0},
+        "2.4.1": {"from": 80.0, "to": 75.0}
+      }
+    },
+    "verbrauch_page_checkpoints": {
+      "row_7": {
+        "code": "7",
+        "name": "Strom-Endverbrauch insgesamt",
+        "unit": "GWh/a",
+        "status": "461,869.2",
+        "ziel_before": "1,005,742.9",
+        "ziel_after": "1,006,821.8"
+      },
+      "row_8": {
+        "code": "8",
+        "name": "Endenergieverbrauch insgesamt",
+        "unit": "GWh/a",
+        "status": "2,432,616.1",
+        "ziel_before": "1,863,864.8",
+        "ziel_after": "1,858,597.3"
+      }
+    },
+    "backend_jobs": [
+      {"order": 1, "job_type": "verbrauch_recalc", "duration_s_approx": 8.3, "rows_updated": 17, "passes": 6},
+      {"order": 2, "job_type": "verbrauch_recalc", "duration_s_approx": 6.2, "rows_updated": 13, "passes": 7},
+      {"order": 3, "job_type": "renewables_recalc", "duration_s_approx": 8.2, "rows_updated": 30}
+    ]
+  },
+
+  "solar_variant": {
+    "step_ws_balance_solar": {
+      "backend_job": "solar_ws_only",
+      "duration_s_approx": 10,
+      "iterations": 22,
+      "probes": {
+        "LU_2.1_target_ha":      {"before": 684640.80,      "after": 680825.67},
+        "LU_2.1_user_percent":   {"before": 3.8560,         "after": 3.8346},
+        "optimal_solar_9_1_2_gwh": {"before": null,         "after": 1206463.21},
+        "speicherdrift_gwh":     {"after": 0.0174},
+        "annual_electricity_gwh": {"before": 1107646.0,     "after": 1108929.06}
+      }
+    },
+    "step_sector_ws_solar_balance": {
+      "backend_job": "solar_sector_ws",
+      "duration_s_approx": 68,
+      "iterations": 20,
+      "convergence_cycles": 1,
+      "probes": {
+        "LU_2.1_target_ha":      {"before": 680825.67,      "after": 680478.26,    "hard_assert": true},
+        "LU_2.1_user_percent":   {"before": 3.8346,         "after": 3.8326},
+        "optimal_solar_9_1_2_gwh": {"before": 1206463.21,   "after": 1206034.04},
+        "speicherdrift_gwh":     {"after": 0.0497},
+        "annual_electricity_gwh": {"before": 1108929.06,    "after": 1108834.53,   "hard_assert": true}
+      },
+      "sector_gaps_after_solve_gwh": {
+        "prozesswaerme_3_7_minus_10_5": -23.02,
+        "gebaeudewaerme_2_10_minus_10_4": -0.24,
+        "mobile_anwendungen_6_1_minus_10_6_1": 21.91
+      },
+      "sector_knobs_applied": [],
+      "sector_knobs_evaluated_not_applied": [
+        {"code": "3.4", "reason": "within tolerance", "value_unchanged": 26.7},
+        {"code": "8.2", "reason": "target matched", "value_unchanged": 12000.0},
+        {"code": "4.1.2.6", "reason": "mobile gap already within tolerance", "value_unchanged": 66.9},
+        {"code": "4.1.1.6", "reason": "no secondary adjustment needed", "value_unchanged": 69.1}
+      ]
+    }
+  },
+
+  "wind_variant": {
+    "step_ws_balance_wind": {
+      "backend_job": "wind_ws_only",
+      "duration_s_approx": 10,
+      "iterations": 25,
+      "probes": {
+        "LU_6_target_ha":        {"before": 715288.67,      "after": 715288.57},
+        "LU_6_user_percent":     {"before": 2.000274291,    "after": 2.000274028},
+        "optimal_wind_9_1_1_gwh": {"before": null,          "after": 706236.28},
+        "speicherdrift_gwh":     {"after": 0.00088},
+        "annual_electricity_gwh": {"before": 1107646.0,     "after": 1108834.53}
+      }
+    },
+    "step_sector_ws_wind_balance": {
+      "backend_job": "wind_sector_ws",
+      "duration_s_approx": 45,
+      "iterations": 1,
+      "convergence_cycles": 1,
+      "probes": {
+        "LU_6_target_ha":        {"before": 715288.57,      "after": 715288.57,   "hard_assert": true},
+        "LU_6_user_percent":     {"before": 2.000274028,    "after": 2.000274028},
+        "optimal_wind_9_1_1_gwh": {"before": 706236.28,     "after": 706236.28},
+        "speicherdrift_gwh":     {"after": 0.00088},
+        "annual_electricity_gwh": {"before": 1108834.53,    "after": 1108834.53,  "hard_assert": true}
+      },
+      "sector_gaps_after_solve_gwh": {
+        "prozesswaerme_3_7_minus_10_5": 7.46,
+        "gebaeudewaerme_2_10_minus_10_4": 19.16,
+        "mobile_anwendungen_6_1_minus_10_6_1": 21.91
+      }
+    }
+  },
+
+  "cross_variant_checks": {
+    "annual_electricity_converges_to_same_value": 1108834.53,
+    "both_variants_zero_out_storage_drift": true,
+    "solar_moves_lu_2_1_meaningfully": true,
+    "wind_barely_moves_lu_6_on_this_baseline": true
+  }
+}

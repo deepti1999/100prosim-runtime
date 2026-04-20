@@ -26,6 +26,30 @@ def _flatten(obj, prefix=""):
         yield prefix, obj
 
 
+def _check_baseline_fingerprint(golden: dict, current: dict) -> list:
+    """If the golden has a baseline_fingerprint, the current run must match it
+    or the scenario's expected values are invalid. Return list of mismatches."""
+    g_fp = golden.get("baseline_fingerprint")
+    c_fp = current.get("baseline_fingerprint")
+    if not g_fp:
+        return []  # scenarios without fingerprints (legacy) skip this check
+    if not c_fp:
+        return [("baseline_fingerprint", g_fp, "<missing in current run>")]
+    mism = []
+    for key, gv in g_fp.items():
+        if key == "note":
+            continue
+        cv = c_fp.get(key)
+        if cv != gv:
+            try:
+                if gv is not None and cv is not None and abs(float(gv) - float(cv)) < 1e-6:
+                    continue
+            except Exception:
+                pass
+            mism.append((f"baseline_fingerprint.{key}", gv, cv))
+    return mism
+
+
 def diff(scenario_id: str) -> int:
     golden_path = GOLDEN_DIR / f"{scenario_id}.json"
     if not golden_path.exists():
@@ -34,6 +58,16 @@ def diff(scenario_id: str) -> int:
 
     golden = json.loads(golden_path.read_text(encoding="utf-8"))
     current = json.loads(current_path.read_text(encoding="utf-8"))
+
+    fp_mism = _check_baseline_fingerprint(golden, current)
+    if fp_mism:
+        print(f"FINGERPRINT_DRIFT {scenario_id}: baseline has changed — expected values invalid")
+        print(f"  golden:  {golden_path}")
+        print(f"  current: {current_path}")
+        for key, gv, cv in fp_mism:
+            print(f"  {key}\n    golden  = {gv!r}\n    current = {cv!r}")
+        print("  -> re-capture this scenario's golden before comparing values.")
+        return 2  # distinct exit code for baseline drift vs value drift
 
     g = dict(_flatten(golden))
     c = dict(_flatten(current))
