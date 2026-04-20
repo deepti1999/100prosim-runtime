@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""Diff a current-run JSON against its golden. Exit 0 on match, 1 on diff."""
+"""Diff a current-run JSON against its golden.
+
+Exit codes:
+  0 — current matches golden (all probed fields equal)
+  1 — value drift: at least one probed field differs from golden
+  2 — baseline fingerprint drift: the seed or a pinned baseline fact has
+      changed from what this scenario was captured against; re-capture the
+      scenario rather than patching expected values.
+"""
 import json
 import sys
 from pathlib import Path
