@@ -11,6 +11,7 @@ __pycache__/
 venv/
 
 # Django
+db.sqlite3
 db.sqlite3-journal
 *.log
 staticfiles/

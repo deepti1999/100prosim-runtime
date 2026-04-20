@@ -1,0 +1,15 @@
+# Dev-only extras. Install with:
+#   pip install -r requirements-dev.txt
+#   python -m playwright install chromium   # one-time browser download
+#
+# Needed for:
+#   - simulator/test_e2e_ui_*.py        (Playwright-driven live-browser tests)
+#   - simulator/test_e2e_browser_*.py   (Selenium-driven live-browser tests)
+#
+# Both suites are skipped automatically if these packages / browsers are missing,
+# so the core `manage.py test` still works without installing dev extras.
+
+-r requirements.txt
+
+playwright>=1.40
+selenium>=4.20

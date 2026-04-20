@@ -32,14 +32,15 @@ When making changes, treat `calculation_engine/` as a pure library and keep Djan
 
 ## Common commands
 
-Bootstrap (Postgres + migrations + seed + web + worker):
+Bring up the stack (now self-healing):
 
 ```bash
-bash scripts/bootstrap_runtime.sh          # macOS/Linux
-powershell -ExecutionPolicy Bypass -File scripts\bootstrap_runtime.ps1   # Windows
+docker compose up -d
 ```
 
-If port `8001` is busy the script picks the next free port and prints the URL.
+An `init` one-shot service runs migrations and loads the seed fixture (if the DB is empty) before `web` / `worker` start. `bash scripts/bootstrap_runtime.sh` still works but is no longer required for a fresh DB.
+
+Postgres is exposed on `localhost:5432` for host-side tools (Django UI tests in `simulator/test_e2e_ui_*.py` connect this way). Override with `POSTGRES_PORT=5433 docker compose up -d` if the default port is taken.
 
 Run all thesis test suites:
 
@@ -59,8 +60,20 @@ Test module naming encodes scope — keep it consistent when adding tests:
 - `test_bb_*` — black-box (HTTP/contract level)
 - `test_wb_*` — white-box (internal paths)
 - `test_it_*` — integration contracts
-- `test_e2e_*` / `test_bb_e2e*` — end-to-end flows
+- `test_e2e_*` / `test_bb_e2e*` — end-to-end flows (Django test client)
+- `test_e2e_ui_*` — Playwright live-browser UI tests (require Postgres + `requirements-dev.txt` + `playwright install chromium`)
+- `test_e2e_browser_*` — Selenium live-browser tests (Chrome headless by default, auto-falls-back to Firefox/Safari)
 - `test_ws365_formulas.py` — WS365 formula-parity regressions
+
+The `test_e2e_ui_*` and `test_e2e_browser_*` suites skip themselves on SQLite — they need Postgres to avoid transaction/lock issues under concurrent fetches. To run them:
+
+```bash
+pip install -r requirements-dev.txt
+python -m playwright install chromium   # one-time
+LOCAL_POSTGRES_URL="postgresql://postgres:postgres@localhost:5432/finalthesis3" \
+  USE_LOCAL_POSTGRES=true ALLOW_DOCKER_POSTGRES_HOST=true \
+  python manage.py test simulator.test_e2e_ui_baseline simulator.test_e2e_ui_ws_balance simulator.test_e2e_browser_current
+```
 
 Seed / formula import management commands (in `simulator/management/commands/`) — useful when the DB is empty or formulas changed: `import_formulas_to_db`, `import_ws_formulas`, `import_landuse_formulas`, `import_verbrauch_formulas`, `import_ws_constants`, `load_gebaeudewaerme_data`, `load_verbrauch_data`, `load_endenergie_data`, `sync_renewable_formulas`, `validate_formulas`, `check_all_formulas`, `recalc_verbrauch`, `recalc_gebaeudewaerme`, `clear_calculated_values`.
 
@@ -103,7 +116,7 @@ Per-session artifacts go to `verification/<today>/` (gitignored, deleted at turn
 
 ## Hooks
 
-Configured in `.claude/settings.json`; scripts in `.claude/hooks/`.
+Configured in `.claude/settings.json`; scripts in `.claude/hooks/`. Hook config is loaded at session start, so changes here require `/hooks` or a new session to take effect in the current session.
 
 - `SessionStart` → `session_start.py` — injects `docker compose ps` + git branch/dirty state as `additionalContext`. Non-blocking; safe when docker isn't running.
 - `PostToolUse` on `Write|Edit` → `py_syntax.py` — runs `python -m py_compile` on edited `.py` files. Exit 2 with `systemMessage` on syntax error so the model self-corrects. Skips files under `.venv/`, `venv/`, `staticfiles/`.
