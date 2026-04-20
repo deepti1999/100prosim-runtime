@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "scenario_id": "C-ws-balance",
+    "captured_on": "2026-04-20",
+    "note": "Captured post-click state on a balanced seed. Speicherdrift must be 0,0 (hard invariant). Other values are golden-comparison."
+  },
+  "invariants": {
+    "speicherdrift_solar_gwh": "0,0",
+    "speicherdrift_wind_gwh": "0,0"
+  },
+  "balance_job": {
+    "job_type": "solar_ws_only",
+    "status_after_completion": "succeeded"
+  },
+  "ws_page_post_balance": {
+    "balance_by_solar": {
+      "optimales_solar_gwh": "1.211.176",
+      "aenderung": "0 (0,0%)",
+      "speicherdrift_gwh": "0,0",
+      "jahresstrom_gwh": "1.107.646",
+      "iterationen": "1",
+      "benoetigtes_lu_2_1_ha": "684.641",
+      "lu_2_1_aenderung_ha": "0 ha"
+    },
+    "balance_by_wind": {
+      "optimaler_wind_gwh": "706.236",
+      "aenderung": "0 (0,0%)",
+      "speicherdrift_gwh": "0,0",
+      "jahresstrom_gwh": "1.107.646",
+      "iterationen": "1",
+      "benoetigtes_lu_6_ha": "715.289",
+      "lu_6_aenderung_ha": "0 ha"
+    },
+    "summary_cards": {
+      "ueberschuss_summe_gwh": "602.294",
+      "einspeich_summe_gwh": "264.162",
+      "ausspeich_summe_gwh": "264.006",
+      "abregelung_summe_gwh": "195.890"
+    }
+  },
+  "annual_electricity_post_balance": {
+    "svg_flow_values": {
+      "txt-flow":      ["4,525", "1,211,176", "706,236", "19,493", "242,831 GWh", "948,678"],
+      "txt-node-value": ["1,936,905", "1,550,972"],
+      "txt-value-sm":   ["385,933", "406,403", "264,162", "264,006", "154,443"],
+      "txt-flow-sm":    ["250,857", "195,890"],
+      "txt-value":      ["1,107,646"]
+    }
+  }
+}

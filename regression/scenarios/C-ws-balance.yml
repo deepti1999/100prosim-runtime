@@ -1,0 +1,22 @@
+id: C-ws-balance
+summary: Click WS Balance Solar, worker consumes BalanceJob, capture post-balance UI state.
+mutations: queues a solar_ws_only BalanceJob via click on #applyBalanceBtn
+reset: Idempotent on balanced seed (no delta). For perturbed seeds, restore via POST /api/baseline/restore/
+invariants:
+  speicherdrift_gwh_must_equal: "0,0"
+probes:
+  - path: /ws/
+    phase: post_balance
+    capture:
+      - balance_by_solar.jahresstrom_gwh
+      - balance_by_solar.speicherdrift_gwh
+      - balance_by_wind.jahresstrom_gwh
+      - bottom_summary_cards
+async:
+  trigger: click button #applyBalanceBtn (confirm dialog)
+  poll: simulator.models.BalanceJob.objects.order_by('-created_at').first().status == 'succeeded'
+  timeout_seconds: 60
+notes: |
+  Landing page copy mentions "9.3.1 (405047)" and "9.3.4 (189289)" as fixed values.
+  Actual seeded/computed values are 406,403 and 195,890 respectively. Landing copy is
+  approximate / outdated. Use the captured goldens, not the landing text.

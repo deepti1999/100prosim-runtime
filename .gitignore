@@ -1,0 +1,30 @@
+# Claude Code / workflow artifacts
+verification/
+.playwright-mcp/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# Django
+db.sqlite3-journal
+*.log
+staticfiles/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Env
+.env
+.env.local
+
+# Claude local overrides (settings.json is committed, .local.json is personal)
+.claude/settings.local.json
+.claude/test-credentials.json
