@@ -81,6 +81,26 @@ Seed / formula import management commands (in `simulator/management/commands/`) 
 
 Required for any non-local deploy: `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, `DJANGO_ALLOWED_HOSTS`, `DJANGO_CSRF_TRUSTED_ORIGINS`, `DATABASE_URL`. The `web`/`worker` split in `Procfile` must be preserved on managed platforms.
 
+## Stakeholder requirements (hard constraints)
+
+**These are non-negotiable contracts with Pascal's stakeholders. Violating them = breaking the product.**
+
+1. **NEVER rename cells, codes, or labels.** This includes LandUse codes (`LU_0`, `LU_2.1`, `LU_6`, …), Renewable codes (`9.3.1`, `9.3.4`, `10.1`, `10.2`, …), Verbrauch codes, WS365 field names, sector names (`KLIK`, `Gebäudewärme`, `Prozesswärme`, `Mobile Anwendungen`), Bilanz row labels, German UI strings, and `Formula` table names. Cells are a stakeholder contract; external workflows and reports depend on them. **Bug fixes to internal Python / JS / test identifiers are fine — only *domain* names are frozen.** If in doubt, ask.
+2. **German UI throughout** — no language changes without explicit approval.
+3. **Four-sector model** (KLIK, Gebäudewärme, Prozesswärme, Mobile Anwendungen) is load-bearing — do not restructure.
+4. **`Formula` table is authoritative** — don't "clean up" redundant-looking formulas.
+
+## Performance target: Heroku
+
+Production runs on Heroku (see `Procfile`). Heroku is currently slow and that's the performance pain point stakeholders feel. When optimising:
+
+- Bias toward fixes that help **single-dyno, Postgres-over-network, no-parallelism** environments.
+- Local multi-core Docker wins that don't carry over to Heroku are lower value.
+- Suspect hot paths (see `docs/PYPSA_MIGRATION_RESEARCH.md` §23.2 for the full list): 365-day WS loop, goal-seek root-find, 760-formula cascade, N+1 queries on `/renewable/` and `/verbrauch/`, redundant 365-row `WSData` reads on `/annual-electricity/`.
+- Integration with PyPSA for the numerical cores is the planned speedup path (NOT migration — see `docs/PYPSA_MIGRATION_RESEARCH.md` §23.1).
+
+Flag any change that targets Heroku latency explicitly in the commit message (e.g. `perf: cut Heroku recalc cold-start by X%`).
+
 ## Workflow (session loop)
 
 This project uses a disciplined verify-before-claim workflow. Every session:
