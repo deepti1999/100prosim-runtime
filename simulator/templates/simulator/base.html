@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}100ProSim - Erneuerbare Energie Simulation{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-green: #2d5a2d;
+            --light-green: #4a7c4a;
+            --accent-green: #66cc66;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--primary-green) !important;
+        }
+
+        .navbar-brand i {
+            color: var(--accent-green);
+        }
+
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+        }
+
+        .code-column {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .number-column {
+            text-align: right;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'simulator:landing_page' %}">
+                <i class="fas fa-leaf me-2"></i>100ProSim
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'simulator:landuse_list' %}">
+                            <i class="fas fa-map me-1"></i>Flächennutzung
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'simulator:renewable_list' %}">
+                            <i class="fas fa-solar-panel me-1"></i>Erneuerbare Energien
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                    <!-- Baseline Backup Menu -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="baselineDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            <i class="fas fa-database me-1"></i>Baseline
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="#" id="createBaselineBtn" onclick="alert('Clicked!'); createBaseline(); return false;">
+                                    <i class="fas fa-save me-2"></i>Baseline erstellen
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#" id="restoreBaselineBtn" onclick="restoreBaseline(); return false;">
+                                    <i class="fas fa-undo me-2"></i>Auf Baseline zurücksetzen
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <span class="dropdown-item-text text-muted small" id="baselineInfo">
+                                    <i class="fas fa-info-circle me-1"></i>Loading...
+                                </span>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Scenario Snapshot Menu -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="scenarioDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            <i class="fas fa-bookmark me-1"></i>Scenarios
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" style="min-width: 460px;">
+                            <li>
+                                <a class="dropdown-item" href="#" id="createScenarioBtn">
+                                    <i class="fas fa-save me-2"></i>Save Current Scenario
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#" id="refreshScenarioListBtn">
+                                    <i class="fas fa-rotate me-2"></i>Refresh Scenario List
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <div class="dropdown-item-text text-muted small" id="scenarioListInfo">
+                                    <i class="fas fa-info-circle me-1"></i>Loading scenarios...
+                                </div>
+                            </li>
+                            <li>
+                                <div id="scenarioListContainer" style="max-height: 320px; overflow-y: auto;"></div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>{{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'simulator:logout' %}">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'simulator:login' %}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'simulator:register' %}">
+                            <i class="fas fa-user-plus me-1"></i>Register
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center text-muted">
+                    <p>&copy; 2025 Land Use Data Viewer | Built with Django & Bootstrap</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Baseline Backup Functions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var infoEl = document.getElementById('baselineInfo');
+            if (infoEl) {
+                checkBaselineInfo();
+            }
+            loadScenarioList();
+            
+            // Attach event listeners for baseline buttons
+            var createBtn = document.getElementById('createBaselineBtn');
+            if (createBtn) {
+                createBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    createBaseline();
+                });
+            }
+            
+            var restoreBtn = document.getElementById('restoreBaselineBtn');
+            if (restoreBtn) {
+                restoreBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    restoreBaseline();
+                });
+            }
+
+            var createScenarioBtn = document.getElementById('createScenarioBtn');
+            if (createScenarioBtn) {
+                createScenarioBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    createScenario();
+                });
+            }
+
+            var refreshScenarioBtn = document.getElementById('refreshScenarioListBtn');
+            if (refreshScenarioBtn) {
+                refreshScenarioBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    loadScenarioList();
+                });
+            }
+
+            var scenarioContainer = document.getElementById('scenarioListContainer');
+            if (scenarioContainer) {
+                scenarioContainer.addEventListener('click', function (e) {
+                    var btn = e.target.closest('.scenario-action-btn');
+                    if (!btn) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    var action = btn.dataset.action;
+                    var id = btn.dataset.id;
+                    var name = decodeURIComponent(btn.dataset.name || 'Scenario');
+                    if (!id || !action) return;
+
+                    if (action === 'restore') {
+                        restoreScenario(id, name);
+                    } else if (action === 'rename') {
+                        renameScenario(id, name);
+                    } else if (action === 'delete') {
+                        deleteScenario(id, name);
+                    }
+                });
+            }
+        });
+
+        function checkBaselineInfo() {
+            var infoElement = document.getElementById('baselineInfo');
+            if (!infoElement) return;
+
+            fetch('/api/baseline/info/')
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    if (data.exists) {
+                        infoElement.innerHTML = '<i class="fas fa-check-circle me-1 text-success"></i>Created: ' + data.created_at + '<br><small>(' + data.size_mb + ' MB)</small>';
+                    } else {
+                        infoElement.innerHTML = '<i class="fas fa-exclamation-circle me-1 text-warning"></i>No baseline created yet';
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Error checking baseline:', error);
+                });
+        }
+
+        function createBaseline() {
+            console.log('createBaseline called');
+            if (!confirm('Create a baseline snapshot of the current database?\n\nThis will save the current state so you can restore it later.')) {
+                console.log('User cancelled');
+                return;
+            }
+            console.log('User confirmed, creating baseline...');
+
+            var infoElement = document.getElementById('baselineInfo');
+            if (infoElement) {
+                infoElement.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Creating...';
+            }
+
+            fetch('/api/baseline/create/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCsrfToken() }
+            })
+                .then(function (response) { 
+                    console.log('Response received:', response.status);
+                    return response.json(); 
+                })
+                .then(function (data) {
+                    console.log('Data received:', data);
+                    if (data.status === 'ok') {
+                        alert('Baseline snapshot created successfully!\n\nCreated: ' + data.created_at + '\nSize: ' + data.size_mb + ' MB\n\nYou can now experiment freely and restore to this state anytime.');
+                        checkBaselineInfo();
+                    } else {
+                        alert('Error creating baseline: ' + data.error);
+                        checkBaselineInfo();
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Fetch error:', error);
+                    alert('Error: ' + error);
+                    checkBaselineInfo();
+                });
+        }
+
+        function restoreBaseline() {
+            if (!confirm('WARNING: Reset to Baseline?\n\nThis will DELETE all current data and restore the database to the baseline snapshot.\n\nALL CHANGES since the baseline will be LOST!\n\nAre you absolutely sure?')) {
+                return;
+            }
+
+            if (!confirm('FINAL CONFIRMATION\n\nThis action CANNOT be undone.\nClick OK to proceed with restore.')) {
+                return;
+            }
+
+            fetch('/api/baseline/restore/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCsrfToken() }
+            })
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    if (data.status === 'ok') {
+                        alert('Database restored to baseline!\n\nThe page will now reload...');
+                        window.location.reload();
+                    } else {
+                        alert('Error restoring baseline: ' + data.error);
+                    }
+                })
+                .catch(function (error) {
+                    alert('Error: ' + error);
+                });
+        }
+
+        function defaultScenarioName() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = String(now.getMonth() + 1).padStart(2, '0');
+            var day = String(now.getDate()).padStart(2, '0');
+            var hour = String(now.getHours()).padStart(2, '0');
+            var minute = String(now.getMinutes()).padStart(2, '0');
+            return 'Scenario ' + year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function updateScenarioInfo(message, isError) {
+            var info = document.getElementById('scenarioListInfo');
+            if (!info) return;
+            var iconClass = isError ? 'fas fa-exclamation-triangle text-danger' : 'fas fa-info-circle';
+            info.innerHTML = '<i class="' + iconClass + ' me-1"></i>' + message;
+        }
+
+        function createScenario() {
+            var suggested = defaultScenarioName();
+            var name = prompt('Scenario name:', suggested);
+            if (name === null) return;
+            var note = prompt('Optional note (can be left blank):', '');
+            if (note === null) {
+                note = '';
+            }
+
+            fetch('/api/scenario/create/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    note: note
+                })
+            })
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    if (data.status === 'ok') {
+                        alert('Scenario saved: ' + data.name + '\nUpdated: ' + data.created_at);
+                        loadScenarioList();
+                    } else {
+                        alert('Error saving scenario: ' + data.error);
+                    }
+                })
+                .catch(function (error) {
+                    alert('Error saving scenario: ' + error);
+                });
+        }
+
+        function loadScenarioList() {
+            updateScenarioInfo('Loading scenarios...', false);
+            var container = document.getElementById('scenarioListContainer');
+            if (container) {
+                container.innerHTML = '';
+            }
+
+            fetch('/api/scenario/list/')
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    if (data.status !== 'ok') {
+                        updateScenarioInfo('Failed to load scenarios', true);
+                        return;
+                    }
+                    renderScenarioList(data.items || [], data.max_items || 30);
+                })
+                .catch(function (error) {
+                    console.error('Error loading scenarios:', error);
+                    updateScenarioInfo('Failed to load scenarios', true);
+                });
+        }
+
+        function renderScenarioList(items, maxItems) {
+            var container = document.getElementById('scenarioListContainer');
+            if (!container) return;
+
+            if (!items.length) {
+                updateScenarioInfo('No scenarios saved yet.', false);
+                container.innerHTML = '<div class="px-3 py-2 text-muted small">Use "Save Current Scenario" to create your first version.</div>';
+                return;
+            }
+
+            updateScenarioInfo(items.length + ' / ' + maxItems + ' scenarios', false);
+            var html = '';
+            items.forEach(function (item) {
+                var encodedName = encodeURIComponent(item.name || 'Scenario');
+                var safeName = escapeHtml(item.name || 'Scenario');
+                var safeNote = item.note ? ('<div class="small text-muted">' + escapeHtml(item.note) + '</div>') : '';
+                html += ''
+                    + '<div class="px-3 py-2 border-bottom">'
+                    + '  <div class="d-flex justify-content-between align-items-start gap-2">'
+                    + '    <div class="me-2">'
+                    + '      <div class="fw-semibold">' + safeName + '</div>'
+                    + '      <div class="small text-muted">Updated: ' + escapeHtml(item.updated_at || '') + ' • ' + escapeHtml(String(item.size_mb || 0)) + ' MB</div>'
+                    +        safeNote
+                    + '    </div>'
+                    + '    <div class="btn-group btn-group-sm" role="group">'
+                    + '      <button type="button" class="btn btn-outline-primary scenario-action-btn" data-action="restore" data-id="' + item.id + '" data-name="' + encodedName + '">Restore</button>'
+                    + '      <button type="button" class="btn btn-outline-secondary scenario-action-btn" data-action="rename" data-id="' + item.id + '" data-name="' + encodedName + '">Rename</button>'
+                    + '      <button type="button" class="btn btn-outline-danger scenario-action-btn" data-action="delete" data-id="' + item.id + '" data-name="' + encodedName + '">Delete</button>'
+                    + '    </div>'
+                    + '  </div>'
+                    + '</div>';
+            });
+            container.innerHTML = html;
+        }
+
+        function restoreScenario(id, name) {
+            if (!confirm('Restore scenario "' + name + '"?\n\nThis will replace current workspace values.')) {
+                return;
+            }
+            if (!confirm('Final confirmation:\nRestore "' + name + '" now?')) {
+                return;
+            }
+
+            fetch('/api/scenario/' + id + '/restore/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCsrfToken() }
+            })
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    if (data.status === 'ok') {
+                        alert('Scenario restored: ' + name + '\n\nThe page will now reload.');
+                        window.location.reload();
+                    } else {
+                        alert('Error restoring scenario: ' + data.error);
+                    }
+                })
+                .catch(function (error) {
+                    alert('Error restoring scenario: ' + error);
+                });
+        }
+
+        function renameScenario(id, currentName) {
+            var nextName = prompt('New scenario name:', currentName);
+            if (nextName === null) return;
+            if (!nextName.trim()) {
+                alert('Scenario name cannot be empty.');
+                return;
+            }
+
+            fetch('/api/scenario/' + id + '/rename/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: nextName.trim() })
+            })
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    if (data.status === 'ok') {
+                        loadScenarioList();
+                    } else {
+                        alert('Error renaming scenario: ' + data.error);
+                    }
+                })
+                .catch(function (error) {
+                    alert('Error renaming scenario: ' + error);
+                });
+        }
+
+        function deleteScenario(id, name) {
+            if (!confirm('Delete scenario "' + name + '"?\n\nThis cannot be undone.')) {
+                return;
+            }
+
+            fetch('/api/scenario/' + id + '/delete/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCsrfToken() }
+            })
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    if (data.status === 'ok') {
+                        loadScenarioList();
+                    } else {
+                        alert('Error deleting scenario: ' + data.error);
+                    }
+                })
+                .catch(function (error) {
+                    alert('Error deleting scenario: ' + error);
+                });
+        }
+
+        function getCsrfToken() {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                var parts = cookie.split('=');
+                if (parts[0] === 'csrftoken') {
+                    return parts[1];
+                }
+            }
+            return '';
+        }
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

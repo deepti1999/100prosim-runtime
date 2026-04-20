@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: finalthesis3
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d finalthesis3"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8001 --noreload
+    environment:
+      USE_LOCAL_POSTGRES: "true"
+      LOCAL_POSTGRES_URL: "postgresql://postgres:postgres@db:5432/finalthesis3"
+      ALLOW_DOCKER_POSTGRES_HOST: "true"
+      DJANGO_DEBUG: "false"
+      SIMULATOR_VERBOSE_PRINTS: "false"
+      DJANGO_LOG_LEVEL: "WARNING"
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,0.0.0.0"
+    volumes:
+      - .:/app
+    ports:
+      - "${APP_PORT:-8001}:8001"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  worker:
+    build: .
+    command: python manage.py run_balance_worker --sleep 0.2
+    environment:
+      USE_LOCAL_POSTGRES: "true"
+      LOCAL_POSTGRES_URL: "postgresql://postgres:postgres@db:5432/finalthesis3"
+      ALLOW_DOCKER_POSTGRES_HOST: "true"
+      DJANGO_DEBUG: "false"
+      SIMULATOR_VERBOSE_PRINTS: "false"
+      DJANGO_LOG_LEVEL: "WARNING"
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,0.0.0.0"
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  postgres_data:

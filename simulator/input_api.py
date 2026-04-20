@@ -1,0 +1,393 @@
+import json
+import os
+
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+
+from simulator.verbrauch_recalculator import recalc_all_verbrauch
+from .models import LandUse, RenewableData, VerbrauchData
+
+_SIMULATOR_VERBOSE_PRINTS = os.environ.get("SIMULATOR_VERBOSE_PRINTS", "false").lower() == "true"
+if not _SIMULATOR_VERBOSE_PRINTS:
+    def print(*args, **kwargs):  # type: ignore[override]
+        return None
+
+def _run_verbrauch_recalc_passes(*, triggered_by="unknown"):
+    """Run the existing multi-pass Verbrauch recalculation until it stabilizes."""
+    max_passes = 12
+    per_pass_updates = []
+    unique_codes = set()
+
+    for pass_no in range(1, max_passes + 1):
+        updated_codes = recalc_all_verbrauch(
+            trigger_code=f"save_recalc_pass_{pass_no}",
+        )
+        per_pass_updates.append(len(updated_codes))
+        unique_codes.update(updated_codes)
+        if not updated_codes:
+            break
+
+    pass_count = len(per_pass_updates)
+    stabilized = (per_pass_updates[-1] == 0) if per_pass_updates else True
+    message = (
+        f"Recalculated {len(unique_codes)} values in {pass_count} pass(es)"
+        + ("" if stabilized else " (max passes reached)")
+    )
+
+    return {
+        'success': True,
+        'message': message,
+        'updated_count': len(unique_codes),
+        'passes': pass_count,
+        'per_pass_updates': per_pass_updates,
+        'stabilized': stabilized,
+        'triggered_by': triggered_by,
+    }
+
+def _get_landuse_current_percent(landuse):
+    """
+    Current editable percent shown to user.
+    Priority: user_percent -> target share -> 0.
+    """
+    if landuse.user_percent is not None:
+        return float(landuse.user_percent)
+
+    if landuse.parent and landuse.parent.target_ha and landuse.target_ha is not None:
+        parent_target = float(landuse.parent.target_ha or 0)
+        if parent_target > 0:
+            return float(landuse.target_ha) / parent_target * 100.0
+
+    return 0.0
+
+def _get_landuse_baseline_percent(landuse):
+    """
+    Immutable baseline for max-increase validation.
+    If stored baseline exists, use it; otherwise fallback to current percent.
+    """
+    if getattr(landuse, 'increase_limit_baseline_percent', None) is not None:
+        return float(landuse.increase_limit_baseline_percent)
+
+    return _get_landuse_current_percent(landuse)
+
+def _ensure_landuse_baseline_percent(landuse):
+    """
+    Persist baseline once from current percent so repeated +3 edits cannot bypass the cap.
+    """
+    baseline = _get_landuse_baseline_percent(landuse)
+    if getattr(landuse, 'increase_limit_baseline_percent', None) is None:
+        landuse.increase_limit_baseline_percent = baseline
+        # Save only baseline metadata; avoid heavy cascades.
+        landuse.save(update_fields=['increase_limit_baseline_percent'], skip_cascade=True)
+    return float(baseline)
+
+def _check_landuse_increase_limit(landuse, requested_percent):
+    """
+    Enforce absolute increase cap from baseline (not from last edited value).
+    Returns (is_valid, details_dict).
+    """
+    max_increase_points = float(getattr(settings, 'LANDUSE_MAX_INCREASE_PERCENT', 3))
+    baseline_percent = _ensure_landuse_baseline_percent(landuse)
+    current_percent = _get_landuse_current_percent(landuse)
+    max_allowed_value = baseline_percent + max_increase_points
+    increase_from_baseline = requested_percent - baseline_percent
+
+    is_valid = increase_from_baseline <= (max_increase_points + 1e-9)
+    return is_valid, {
+        'max_increase_points': max_increase_points,
+        'baseline_percent': baseline_percent,
+        'current_percent': current_percent,
+        'requested_percent': requested_percent,
+        'increase_from_baseline': increase_from_baseline,
+        'max_allowed_value': max_allowed_value,
+    }
+
+@require_http_methods(["POST"])
+def save_and_recalculate_verbrauch(request):
+    """Queue Verbrauch recalculation on hosted environments; keep inline fallback locally."""
+    try:
+        host = request.get_host() if hasattr(request, "get_host") else ""
+        if settings.DEBUG or host.startswith("testserver"):
+            payload = _run_verbrauch_recalc_passes(
+                triggered_by=getattr(request.user, "username", "debug"),
+            )
+            return JsonResponse(payload)
+
+        from simulator.models import BalanceJob
+        from simulator.ws_queue_api import _queue_or_reuse_balance_job
+
+        job = _queue_or_reuse_balance_job(
+            getattr(request, "user", None),
+            BalanceJob.TYPE_VERBRAUCH_RECALC,
+            {"scope": "verbrauch"},
+        )
+        return JsonResponse({
+            'success': True,
+            'queued': True,
+            'job_id': str(job.id),
+            'status': job.status,
+            'message': 'Verbrauch recalculation queued.',
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=400)
+
+@csrf_exempt
+@login_required
+def update_landuse_percent(request, pk):
+    """
+    Update the user_percent of a LandUse item and recalc target_ha automatically.
+    FIXED: Uses model save() to trigger signals for auto-cascade.
+
+    VALIDATION: Prevents excessive increases to maintain realistic land use changes.
+    """
+    if request.method != "POST":
+        return JsonResponse({"status": "error", "message": "POST method required"}, status=400)
+
+    try:
+        data = json.loads(request.body)
+        new_percent = float(data.get("user_percent"))
+
+        if new_percent < 0 or new_percent > 100:
+            return JsonResponse({
+                "status": "error",
+                "message": "Percentage must be between 0 and 100"
+            }, status=400)
+
+    except (ValueError, TypeError):
+        return JsonResponse({
+            "status": "error",
+            "message": "Invalid percentage value"
+        }, status=400)
+    except Exception:
+        return JsonResponse({
+            "status": "error",
+            "message": "Invalid request data"
+        }, status=400)
+
+    try:
+        landuse = get_object_or_404(LandUse, pk=pk)
+
+        if not landuse.parent:
+            return JsonResponse({
+                "status": "error",
+                "message": "Cannot update root level land use"
+            }, status=400)
+
+        is_valid, details = _check_landuse_increase_limit(landuse, new_percent)
+        if not is_valid:
+            return JsonResponse({
+                "status": "error",
+                "message": f"Cannot increase land use by more than {details['max_increase_points']:.0f} percentage points from baseline.\n\n"
+                          f"Baseline (Status): {details['baseline_percent']:.2f}%\n"
+                          f"Current Input: {details['current_percent']:.2f}%\n"
+                          f"Requested: {details['requested_percent']:.2f}%\n"
+                          f"Increase from baseline: {details['increase_from_baseline']:.2f} percentage points\n"
+                          f"Maximum allowed: {details['max_allowed_value']:.2f}%\n\n"
+                          f"Please stay within the allowed range.",
+                "current_value": float(details['current_percent']),
+                "baseline_value": float(details['baseline_percent']),
+                "max_allowed_value": float(details['max_allowed_value']),
+                "max_increase_percent": float(details['max_increase_points'])
+            }, status=400)
+
+        if landuse.target_locked:
+            landuse.target_locked = False
+
+        old_target_ha = landuse.target_ha
+        old_percent = _get_landuse_current_percent(landuse)
+
+        parent_target = landuse.parent.target_ha or 0
+        new_target_ha = (parent_target * new_percent) / 100.0
+
+        landuse.user_percent = new_percent
+        landuse.target_ha = new_target_ha
+        landuse.save()
+
+        target_percent = (new_target_ha / parent_target * 100) if parent_target else 0
+        change_ha = new_target_ha - (old_target_ha or 0)
+
+        return JsonResponse({
+            "status": "ok",
+            "code": landuse.code,
+            "name": landuse.name,
+            "new_target_ha": float(new_target_ha),
+            "new_target_percent": float(target_percent),
+            "old_target_ha": float(old_target_ha) if old_target_ha else None,
+            "change_ha": float(change_ha),
+            "message": f"Updated {landuse.code} to {new_percent}% - renewables auto-updated",
+            "change": {
+                "code": landuse.code,
+                "name": landuse.name,
+                "old_percent": float(old_percent) if old_percent else None,
+                "new_percent": float(new_percent),
+                "old_ha": float(old_target_ha) if old_target_ha else None,
+                "new_ha": float(new_target_ha),
+                "change_ha": float(change_ha)
+            }
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            "status": "error",
+            "message": f"Failed to update: {str(e)}"
+        }, status=500)
+
+def update_verbrauch_bulk(request):
+    """
+    Update user_percent for multiple VerbrauchData items in bulk.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'error': 'POST required'}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        updates = data.get('updates', [])
+
+        updated_count = 0
+        for update in updates:
+            code = update.get('code')
+            user_percent = update.get('user_percent')
+
+            if code and user_percent is not None:
+                try:
+                    item = VerbrauchData.objects.get(code=code)
+                    item.user_percent = float(user_percent)
+                    item.save()
+                    updated_count += 1
+                except VerbrauchData.DoesNotExist:
+                    pass
+
+        return JsonResponse({
+            'status': 'ok',
+            'updated': updated_count,
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'error': str(e)
+        }, status=500)
+
+@csrf_exempt
+@login_required
+@require_http_methods(["POST"])
+def save_verbrauch_user_input(request):
+    """
+    Save user input for a single Verbrauch item and trigger recalculation.
+    Similar to land use: saves value, applies it, and recalculates everything.
+
+    Returns which percentage siblings were auto-rebalanced for UI highlighting.
+    """
+    try:
+        data = json.loads(request.body)
+        code = data.get('code')
+        user_percent = data.get('user_percent')
+
+        if not code:
+            return JsonResponse({'success': False, 'error': 'Missing code'}, status=400)
+
+        try:
+            item = VerbrauchData.objects.get(code=code)
+        except VerbrauchData.DoesNotExist:
+            return JsonResponse({'success': False, 'error': f'Verbrauch code {code} not found'}, status=404)
+
+        old_value = item.user_percent
+        item.user_percent = float(user_percent) if user_percent is not None else None
+        item.save(skip_cascade=True)
+
+        rebalanced = {}
+        try:
+            from simulator.percentage_rebalancer import get_percentage_group
+            group = get_percentage_group(code)
+            if group and item.unit == '%':
+                for member_code in group['member_codes']:
+                    try:
+                        member = VerbrauchData.objects.get(code=member_code)
+                        rebalanced[member_code] = {
+                            'new': member.ziel,
+                            'user_percent': member.user_percent,
+                            'is_primary': member_code == code
+                        }
+                    except VerbrauchData.DoesNotExist:
+                        pass
+        except Exception as e:
+            print(f"Error getting rebalance info: {e}")
+
+        return JsonResponse({
+            'success': True,
+            'code': code,
+            'old_value': old_value,
+            'new_value': item.user_percent,
+            'message': f'Updated {code} user input to {user_percent}%',
+            'rebalanced': rebalanced
+        })
+
+    except ValueError as e:
+        return JsonResponse({'success': False, 'error': f'Invalid value: {e}'}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@csrf_exempt
+@login_required
+@require_http_methods(["POST"])
+def save_renewable_user_input(request):
+    """
+    Save one renewable user input and mirror it to target value for frontend-editable rows.
+    """
+    try:
+        data = json.loads(request.body)
+        code = data.get('code')
+        user_input = data.get('user_input')
+
+        if not code:
+            return JsonResponse({'success': False, 'error': 'Missing code'}, status=400)
+
+        try:
+            item = RenewableData.objects.get(code=code)
+        except RenewableData.DoesNotExist:
+            return JsonResponse({'success': False, 'error': f'Renewable code {code} not found'}, status=404)
+
+        if not item.is_fixed or not item.user_editable:
+            return JsonResponse(
+                {'success': False, 'error': f'Code {code} is not enabled for user editing'},
+                status=400,
+            )
+
+        if user_input in ('', None):
+            return JsonResponse({'success': False, 'error': 'Missing user input value'}, status=400)
+
+        numeric_value = float(user_input)
+        old_value = item.user_input
+        item.user_input = numeric_value
+        item.save(skip_cascade=True)
+
+        return JsonResponse({
+            'success': True,
+            'code': code,
+            'old_value': old_value,
+            'user_input': item.user_input,
+            'target_value': item.target_value,
+            'message': f'Updated {code} user input to {numeric_value}',
+        })
+    except ValueError as e:
+        return JsonResponse({'success': False, 'error': f'Invalid value: {e}'}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+__all__ = [
+    "_get_landuse_current_percent",
+    "_get_landuse_baseline_percent",
+    "_ensure_landuse_baseline_percent",
+    "_check_landuse_increase_limit",
+    "save_and_recalculate_verbrauch",
+    "update_landuse_percent",
+    "update_verbrauch_bulk",
+    "save_verbrauch_user_input",
+    "save_renewable_user_input",
+]

@@ -1,0 +1,812 @@
+{% extends 'simulator/base.html' %}
+{% load calculation_filters %}
+
+{% block title %}Renewable Energy Data - Solar Overview{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        {% include 'simulator/partials/sidebar_nav.html' with active_section='renewable' %}
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div
+                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Renewable Energy Data Overview</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <button id="run-recalc-btn" type="button" class="btn btn-sm btn-outline-primary"
+                            onclick="runFullRecalcRenewables()">
+                            <i class="fas fa-leaf me-1"></i>Recalculate Renewables
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Hierarchical Solar Energy Data -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                         Renewable Energy Hierarchy
+                        <span class="badge bg-secondary ms-2">{{ total_count }} records</span>
+                    </h5>
+                    <button id="toggleDetailsBtn" class="btn btn-sm btn-outline-primary"
+                        onclick="toggleDetailedSections()">
+                        <i class="fas fa-eye me-1"></i>
+                        <span id="toggleText">Show Full Table (Sections 1-9)</span>
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 hierarchy-table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 80px;">Code</th>
+                                    <th style="width: 250px;">Parameter Hierarchy</th>
+                                    <th class="text-center" style="width: 60px;">Unit</th>
+                                    <th class="text-center" style="width: 100px;">Status Value</th>
+                                    <th class="text-center" style="width: 100px;">Target Value</th>
+                                    <th class="text-center" style="width: 100px;">User Input</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in hierarchical_data %}
+                                <tr
+                                    class="hierarchy-level-{{ item.hierarchy_level }} {% if item.formula %}calculated-row{% endif %} {% if item.code|slice:':2' != '10' %}detailed-section{% endif %}">
+                                    <td>
+                                        <span
+                                            class="badge bg-{% if item.hierarchy_level == 1 %}dark{% elif item.hierarchy_level == 2 %}secondary{% else %}light text-dark{% endif %}">
+                                            {{ item.code }}
+                                        </span>
+                                    </td>
+                                    <td class="hierarchy-cell">
+                                        <div class="hierarchy-indent-{{ item.hierarchy_level }}">
+                                            {% if item.code == '10.1' %}
+                                            <span
+                                                style="color:black;font-weight:500;font-style:normal">{{ item.name }}</span>
+                                            {% elif item.code == '10.3' or item.code == '10.4' or item.code == '10.5' or                                             item.code == '10.6' or item.code == '10.7' %}
+                                            <span
+                                                style="background-color:#d4e6f1;padding:3px 8px;border-radius:3px;color:black;font-weight:600">{{ item.name }}</span>
+                                            {% else %}
+                                            <span style="color:black">{{ item.name }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+
+                                    <td class="text-center">
+                                        {% if item.unit %}
+                                        <code class="unit-badge">{{ item.unit }}</code>
+                                        {% else %}
+                                        <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if item.display_value is not None %}
+                                        <span>{{ item.display_value|floatformat:1 }}</span>
+                                        {% else %}
+                                        <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if item.display_target is not None %}
+                                        <span class="renewable-target-value" data-code="{{ item.code }}">{{ item.display_target|floatformat:1 }}</span>
+                                        {% else %}
+                                        <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {% if item.user_editable %}
+                                        <div contenteditable="true"
+                                            class="editable-renewable-input"
+                                            data-code="{{ item.code }}"
+                                            data-original-value="{% if item.user_input_value is not None %}{{ item.user_input_value|floatformat:1 }}{% endif %}">
+                                            {% if item.user_input_value is not None %}
+                                            {{ item.user_input_value|floatformat:1 }}
+                                            {% else %}
+                                            <span class="placeholder-text">Click to edit...</span>
+                                            {% endif %}
+                                        </div>
+                                        {% else %}
+                                        <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="alert alert-secondary">
+                        <h6 class="alert-heading"> Renewable Energy Information</h6>
+                        <p class="mb-0">
+                            This data shows renewable energy parameters for Germany, focusing on solar energy
+                            installations.
+                            Values include land use for solar panels (Dachflächen/Freiflächen), energy production rates,
+                            and efficiency calculations. Formulas automatically calculate derived values based on your
+                            inputs.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Changes Panel -->
+            <div class="card mt-3" id="renewable-changes-panel">
+                <div class="card-header d-flex justify-content-between align-items-center" style="cursor: pointer;" onclick="toggleRenewableChangesPanel()">
+                    <h6 class="mb-0">
+                        <i class="fas fa-history me-2"></i>Recent Changes
+                        <span id="renewable-changes-count-badge" class="badge bg-primary ms-2" style="display: none;">0</span>
+                        <small class="text-muted ms-2" style="font-weight: normal; font-size: 0.85em;">
+                            <i class="fas fa-info-circle me-1"></i>Changes persist after page refresh
+                        </small>
+                    </h6>
+                    <div>
+                        <button class="btn btn-sm btn-outline-danger me-2" onclick="event.stopPropagation(); clearRenewableChangesHistory();" title="Clear all changes">
+                            <i class="fas fa-trash-alt"></i> Clear
+                        </button>
+                        <i id="renewable-changes-toggle-icon" class="fas fa-chevron-up"></i>
+                    </div>
+                </div>
+                <div class="card-body" id="renewable-changes-panel-body">
+                    <div id="renewable-changes-list" class="list-group">
+                        <div class="text-center text-muted py-3" id="no-renewable-changes-msg">
+                            <i class="fas fa-info-circle me-2"></i>No changes yet. When you modify renewable values, they will appear here.
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+
+<style>
+    .hierarchy-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    /* Hierarchy indentation */
+    .hierarchy-indent-1 {
+        padding-left: 0px;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+    .hierarchy-indent-2 {
+        padding-left: 20px;
+        font-size: 1.05em;
+        font-weight: 600;
+    }
+
+    .hierarchy-indent-3 {
+        padding-left: 40px;
+        font-size: 1em;
+        font-weight: 500;
+    }
+
+    .hierarchy-indent-4 {
+        padding-left: 60px;
+        font-size: 0.95em;
+    }
+
+    .hierarchy-indent-5 {
+        padding-left: 80px;
+        font-size: 0.9em;
+        font-style: italic;
+    }
+
+    /* Row styling based on hierarchy level */
+    .hierarchy-level-1 {
+        background-color: #fff3cd;
+        border-left: 4px solid #ffc107;
+    }
+
+    .hierarchy-level-2 {
+        background-color: #d1ecf1;
+        border-left: 4px solid #17a2b8;
+    }
+
+    .hierarchy-level-3 {
+        background-color: #d4edda;
+        border-left: 4px solid #28a745;
+    }
+
+    .hierarchy-level-4 {
+        background-color: #f8f9fa;
+        border-left: 4px solid #6c757d;
+    }
+
+    .hierarchy-level-5 {
+        background-color: #e2e3e5;
+        border-left: 4px solid #495057;
+    }
+
+    .calculated-row {
+        background-color: #e7f3ff !important;
+        border-left-color: #007bff !important;
+    }
+
+    .calculated-value {
+        background-color: #28a745 !important;
+        animation: pulse-green 2s infinite;
+    }
+
+    @keyframes pulse-green {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.7;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    .formula-display {
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 0.8em;
+        background-color: #f8f9fa;
+        padding: 2px 6px;
+        border-radius: 3px;
+        border: 1px solid #dee2e6;
+    }
+
+    .unit-badge {
+        background-color: #e9ecef;
+        color: #495057;
+        font-size: 0.8em;
+        padding: 2px 6px;
+        border-radius: 3px;
+    }
+
+    .status-value {
+        font-size: 0.85em;
+    }
+
+    .target-value {
+        font-size: 0.85em;
+    }
+
+    .calculation-display {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        min-height: 100px;
+    }
+
+    .editable-renewable-input {
+        min-height: 24px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        border: 1px dashed #17a2b8;
+        background-color: #eef8fb;
+        cursor: text;
+    }
+
+    .editable-renewable-input:focus {
+        outline: none;
+        border-color: #17a2b8;
+        box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.2);
+    }
+
+    .editable-renewable-input.saving {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+    .placeholder-text {
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .hierarchy-cell {
+        min-width: 300px;
+    }
+
+    /* Hover effects */
+    .hierarchy-table tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.1) !important;
+        cursor: pointer;
+    }
+
+    /* Recent Changes Panel Styles */
+    #renewable-changes-panel {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #renewable-changes-panel .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    #renewable-changes-panel .list-group-item {
+        border-left: 3px solid #0d6efd;
+        margin-bottom: 4px;
+        border-radius: 4px;
+    }
+
+    #renewable-changes-panel .list-group-item:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const inputs = document.querySelectorAll('.renewable-input');
+
+        // Store formulas and their dependencies
+        const formulas = {
+            {% for item in hierarchical_data %} {% if item.formula %} '{{ item.code }}': '{{ item.formula }}', {% endif %}{% endfor %}
+        };
+
+    function calculateFormulas() {
+        const values = {};
+
+        // Get all input values
+        inputs.forEach(input => {
+            const code = input.dataset.code;
+            const value = parseFloat(input.value) || 0;
+            values[code] = value;
+        });
+
+        // Add existing status/target values from the template
+        {% for item in hierarchical_data %}
+        {% if item.display_value %}
+        values['{{ item.code }}'] = {{ item.display_value }};
+        {% endif %}
+        {% endfor %}
+
+    // Calculate formula results
+    const results = {};
+    Object.keys(formulas).forEach(code => {
+        try {
+            const formula = formulas[code];
+            // Simple formula evaluation (replace codes with values)
+            let expression = formula;
+            Object.keys(values).forEach(valueCode => {
+                const regex = new RegExp('\\b' + valueCode + '\\b', 'g');
+                expression = expression.replace(regex, values[valueCode] || 0);
+            });
+
+            // Evaluate the expression safely (only basic math)
+            if (/^[0-9+\-*/(). ]+$/.test(expression)) {
+                results[code] = eval(expression);
+            }
+        } catch (e) {
+            console.warn('Formula calculation error for code ' + code + ':', e);
+        }
+    });
+    }
+
+    // Add event listeners
+    inputs.forEach(input => {
+        input.addEventListener('input', calculateFormulas);
+    });
+
+    // Initial calculation
+    calculateFormulas();
+});
+</script>
+
+</main>
+</div>
+</div>
+
+<style>
+    .sidebar {
+        position: fixed;
+        top: 56px;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        padding: 48px 0 0;
+        box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    }
+
+    .sidebar .nav-link {
+        font-weight: 500;
+        color: #333;
+        padding: 0.75rem 1rem;
+        border-radius: 0.375rem;
+        margin: 0.125rem 0.5rem;
+    }
+
+    .sidebar .nav-link:hover {
+        background-color: rgba(0, 0, 0, .075);
+    }
+
+    .sidebar .nav-link.active {
+        color: #0d6efd;
+        background-color: rgba(13, 110, 253, .1);
+    }
+
+    .sidebar .sidebar-heading {
+        font-size: .75rem;
+        text-transform: uppercase;
+    }
+
+    main {
+        margin-left: 0;
+    }
+
+    @media (min-width: 768px) {
+        main {
+            margin-left: 16.66667%;
+        }
+    }
+
+    @media (min-width: 992px) {
+        main {
+            margin-left: 16.66667%;
+        }
+    }
+
+    .detailed-section {
+        display: none;
+    }
+
+    .detailed-section.show {
+        display: table-row;
+    }
+</style>
+
+<script>
+    const CSRF_TOKEN = "{{ csrf_token }}";
+    const RENEWABLE_STORAGE_KEY = 'renewable_changes_history';
+    let renewableChangesHistory = [];
+
+    function loadRenewableChangesHistory() {
+        try {
+            const saved = localStorage.getItem(RENEWABLE_STORAGE_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                renewableChangesHistory = Array.isArray(parsed) ? parsed : [];
+            } else {
+                renewableChangesHistory = [];
+            }
+            renderRenewableChanges();
+        } catch (error) {
+            console.error('Error loading renewable changes:', error);
+            renewableChangesHistory = [];
+            renderRenewableChanges();
+        }
+    }
+
+    function saveRenewableChangesHistory() {
+        try {
+            localStorage.setItem(RENEWABLE_STORAGE_KEY, JSON.stringify(renewableChangesHistory));
+        } catch (error) {
+            console.error('Error saving renewable changes:', error);
+        }
+    }
+
+    function renderRenewableChanges() {
+        const listEl = document.getElementById('renewable-changes-list');
+        const badge = document.getElementById('renewable-changes-count-badge');
+        if (!listEl) return;
+
+        if (!renewableChangesHistory.length) {
+            listEl.innerHTML = `
+                <div class="text-center text-muted py-3" id="no-renewable-changes-msg">
+                    <i class="fas fa-info-circle me-2"></i>No changes yet. When you modify renewable values, they will appear here.
+                </div>
+            `;
+            if (badge) badge.style.display = 'none';
+            return;
+        }
+
+        if (badge) {
+            badge.style.display = 'inline';
+            badge.textContent = renewableChangesHistory.length;
+        }
+
+        let html = '';
+        renewableChangesHistory.forEach(change => {
+            if (!change || typeof change !== 'object') return;
+            const timestamp = new Date(change.timestamp);
+            const timeStr = timestamp.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+            const dateStr = timestamp.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
+            const oldVal = change.old_value !== null && change.old_value !== undefined ? parseFloat(change.old_value).toFixed(1) : '-';
+            const newVal = change.new_value !== null && change.new_value !== undefined ? parseFloat(change.new_value).toFixed(1) : '-';
+
+            html += `
+                <div class="list-group-item list-group-item-action py-2">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="badge bg-secondary me-2">${change.code}</span>
+                            <strong>${change.name || change.code}</strong>
+                        </div>
+                        <small class="text-muted">${dateStr} ${timeStr}</small>
+                    </div>
+                    <div class="mt-1">
+                        <span class="text-danger">${oldVal}</span>
+                        <i class="fas fa-arrow-right mx-2 text-muted"></i>
+                        <span class="text-success fw-bold">${newVal}</span>
+                        <span class="badge bg-info ms-2"> Manual</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        listEl.innerHTML = html;
+    }
+
+    function addRenewableChange(code, name, oldValue, newValue) {
+        const change = {
+            code: code,
+            name: name,
+            old_value: oldValue,
+            new_value: newValue,
+            timestamp: new Date().toISOString(),
+        };
+        renewableChangesHistory.unshift(change);
+        if (renewableChangesHistory.length > 50) {
+            renewableChangesHistory = renewableChangesHistory.slice(0, 50);
+        }
+        saveRenewableChangesHistory();
+        renderRenewableChanges();
+    }
+
+    function clearRenewableChangesHistory() {
+        if (!confirm('Clear all change history?')) return;
+        renewableChangesHistory = [];
+        localStorage.removeItem(RENEWABLE_STORAGE_KEY);
+        renderRenewableChanges();
+    }
+
+    function toggleRenewableChangesPanel() {
+        const body = document.getElementById('renewable-changes-panel-body');
+        const icon = document.getElementById('renewable-changes-toggle-icon');
+        if (!body || !icon) return;
+        if (body.style.display === 'none') {
+            body.style.display = 'block';
+            icon.className = 'fas fa-chevron-up';
+        } else {
+            body.style.display = 'none';
+            icon.className = 'fas fa-chevron-down';
+        }
+    }
+
+    function getCsrfToken() {
+        if (CSRF_TOKEN && CSRF_TOKEN.length > 10) {
+            return CSRF_TOKEN;
+        }
+        const match = document.cookie.match(/csrftoken=([^;]+)/);
+        if (match) return match[1];
+        const inputToken = document.querySelector('input[name=csrfmiddlewaretoken]');
+        return inputToken ? inputToken.value : '';
+    }
+
+    function parseRenewableNumber(rawText) {
+        const clean = String(rawText || '').replace(',', '.').trim();
+        const match = clean.match(/-?\d+(?:\.\d+)?/);
+        if (!match) return NaN;
+        return parseFloat(match[0]);
+    }
+
+    function getRenewableRowName(cell) {
+        const row = cell ? cell.closest('tr') : null;
+        const nameCell = row ? row.querySelector('td:nth-child(2)') : null;
+        if (!nameCell) {
+            return (cell && cell.dataset && cell.dataset.code) ? cell.dataset.code : 'Unknown';
+        }
+        return nameCell.textContent.replace(/\s+/g, ' ').trim();
+    }
+
+    async function saveRenewableUserInput(cell, value) {
+        const code = cell.dataset.code;
+        const previousHtml = cell.innerHTML;
+        const oldValue = parseRenewableNumber(cell.dataset.originalValue || '');
+        const rowName = getRenewableRowName(cell);
+        cell.classList.add('saving');
+        cell.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        try {
+            const response = await fetch("{% url 'simulator:save_renewable_user_input' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    code: code,
+                    user_input: value
+                })
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+                throw new Error(data.error || `HTTP ${response.status}`);
+            }
+
+            const displayValue = Number(data.user_input).toFixed(1);
+            const newValue = Number(data.user_input);
+            if (Number.isNaN(oldValue) || Math.abs(newValue - oldValue) > 1e-9) {
+                addRenewableChange(code, rowName, Number.isNaN(oldValue) ? null : oldValue, newValue);
+            }
+            cell.dataset.originalValue = displayValue;
+            cell.textContent = displayValue;
+
+            const targetCell = document.querySelector(`.renewable-target-value[data-code="${code}"]`);
+            if (targetCell && data.target_value !== null && data.target_value !== undefined) {
+                targetCell.textContent = Number(data.target_value).toFixed(1);
+            }
+        } catch (error) {
+            cell.innerHTML = previousHtml;
+            alert('Error saving renewable input: ' + error.message);
+            throw error;
+        } finally {
+            cell.classList.remove('saving');
+        }
+    }
+
+    function initRenewableEditableInputs() {
+        const editableCells = document.querySelectorAll('.editable-renewable-input');
+        editableCells.forEach(cell => {
+            cell.addEventListener('focus', function () {
+                const text = (this.textContent || '').trim();
+                if (text === 'Click to edit...') {
+                    this.textContent = '';
+                }
+            });
+
+            cell.addEventListener('keydown', async function (e) {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    const original = this.dataset.originalValue || '';
+                    this.innerHTML = original ? original : '<span class="placeholder-text">Click to edit...</span>';
+                    this.blur();
+                    return;
+                }
+
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.dataset.skipBlurSave = '1';
+                    const newValue = parseRenewableNumber(this.textContent);
+                    const originalValue = parseRenewableNumber(this.dataset.originalValue || '');
+                    if (Number.isNaN(newValue)) {
+                        alert('Please enter a valid number.');
+                        this.innerHTML = this.dataset.originalValue || '<span class="placeholder-text">Click to edit...</span>';
+                        this.blur();
+                        return;
+                    }
+                    if (Number.isNaN(originalValue) || Math.abs(newValue - originalValue) > 1e-9) {
+                        try {
+                            await saveRenewableUserInput(this, newValue);
+                        } catch (_) {
+                            // Error already shown.
+                        }
+                    }
+                    this.blur();
+                }
+            });
+
+            cell.addEventListener('blur', async function () {
+                if (this.dataset.skipBlurSave === '1') {
+                    this.dataset.skipBlurSave = '0';
+                    return;
+                }
+
+                const newValue = parseRenewableNumber(this.textContent);
+                const originalValue = parseRenewableNumber(this.dataset.originalValue || '');
+                if (Number.isNaN(newValue)) {
+                    const original = this.dataset.originalValue || '';
+                    this.innerHTML = original ? original : '<span class="placeholder-text">Click to edit...</span>';
+                    return;
+                }
+                if (!Number.isNaN(originalValue) && Math.abs(newValue - originalValue) <= 1e-9) {
+                    this.textContent = Number(originalValue).toFixed(1);
+                    return;
+                }
+                try {
+                    await saveRenewableUserInput(this, newValue);
+                } catch (_) {
+                    // Error already shown.
+                }
+            });
+        });
+    }
+
+    async function runFullRecalcRenewables() {
+        const btn = document.getElementById('run-recalc-btn');
+        if (!btn) return;
+        const original = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Recalculation queued...';
+
+        try {
+            const response = await fetch("{% url 'simulator:recalc_renewables' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCsrfToken(),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error: ${response.status}`);
+            }
+
+            const queued = await response.json();
+            if (queued.success && queued.run_id) {
+                window.location.href = "{% url 'simulator:renewable_list' %}?run_id=" + queued.run_id;
+                return;
+            }
+
+            if (!queued.success || !queued.job_id) {
+                throw new Error(queued.error || 'Could not start recalc job');
+            }
+
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Recalculating...';
+
+            const statusUrlTemplate = "{% url 'simulator:ws_api_balance_job_status' job_id='00000000-0000-0000-0000-000000000000' %}";
+            const statusUrl = statusUrlTemplate.replace('00000000-0000-0000-0000-000000000000', queued.job_id);
+
+            const maxPolls = 600; // ~20 minutes at 2s interval
+            for (let i = 0; i < maxPolls; i++) {
+                const pollResp = await fetch(statusUrl, { method: 'GET' });
+                const pollData = await pollResp.json();
+                if (!pollResp.ok) {
+                    throw new Error(pollData.error || (`HTTP error: ${pollResp.status}`));
+                }
+
+                if (pollData.status === 'succeeded') {
+                    const result = pollData.result || {};
+                    if (result.run_id) {
+                        window.location.href = "{% url 'simulator:renewable_list' %}?run_id=" + result.run_id;
+                        return;
+                    }
+                    window.location.reload();
+                    return;
+                }
+
+                if (pollData.status === 'failed') {
+                    throw new Error(pollData.error || 'Recalculation job failed');
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+            throw new Error('Recalculation timed out while waiting for worker');
+        } catch (err) {
+            console.error('Recalc failed', err);
+            alert('Recalculation failed: ' + err.message + '. Please try again.');
+            btn.disabled = false;
+            btn.innerHTML = original;
+        }
+    }
+
+    function toggleDetailedSections() {
+        const detailedSections = document.querySelectorAll('.detailed-section');
+        const toggleBtn = document.getElementById('toggleDetailsBtn');
+
+        detailedSections.forEach(section => {
+            section.classList.toggle('show');
+        });
+
+        // Update button text and icon
+        if (detailedSections[0].classList.contains('show')) {
+            toggleBtn.innerHTML = '<i class="fas fa-minus-circle"></i> Hide Details';
+        } else {
+            toggleBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Show Details';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        loadRenewableChangesHistory();
+        initRenewableEditableInputs();
+    });
+</script>
+
+{% endblock %}

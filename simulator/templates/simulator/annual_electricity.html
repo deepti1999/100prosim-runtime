@@ -1,0 +1,424 @@
+{% load l10n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annual Electricity Flow Diagram</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+        }
+        .fullpage-container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-content h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 800;
+        }
+        .btn-outline-light {
+            border: 2px solid white;
+            color: white;
+            background: transparent;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        .btn-outline-light:hover { background: white; color: #667eea; }
+
+        .diagram-wrapper {
+            flex: 1;
+            padding: 24px;
+            background: #fff;
+            position: relative;
+        }
+
+        .diagram-scroll {
+            overflow: auto;
+        }
+
+        .ws1-svg {
+            width: 1650px;
+            height: 980px;
+            max-width: none;
+            display: block;
+            margin: 0 auto;
+            background: #fff;
+        }
+
+        .node-yellow { fill: #ffe8b0; stroke: #1f4e79; stroke-width: 2; }
+        .node-blue { fill: #d9ecff; stroke: #1f4e79; stroke-width: 2; }
+        .node-pink { fill: #ffe2e6; stroke: #c97b84; stroke-width: 2; }
+        .flow-line { stroke: #f4b942; stroke-width: 4; marker-end: url(#arrow); }
+        .flow-line-thin { stroke: #f4b942; stroke-width: 3; marker-end: url(#arrow); }
+        .node-circle { fill: #fff; stroke: #f4b942; stroke-width: 4; }
+
+        .txt-title { font-size: 20px; font-weight: 900; fill: #222; }
+        .txt-title-meta { font-size: 13px; font-weight: 700; fill: #5b6472; }
+        .txt-label { font-size: 12px; font-weight: 900; fill: #222; }
+        .txt-label-lg { font-size: 16px; font-weight: 900; fill: #222; }
+        .txt-sub { font-size: 9px; font-weight: 700; fill: #4b5563; font-style: italic; }
+        .txt-value { font-size: 16px; font-weight: 900; fill: #111; }
+        .txt-value-sm { font-size: 15px; font-weight: 900; fill: #111; }
+        .txt-flow { font-size: 15px; font-weight: 900; fill: #111; stroke: #fff; stroke-width: 6; paint-order: stroke fill; }
+        .txt-flow-sm { font-size: 13px; font-weight: 900; fill: #111; stroke: #fff; stroke-width: 5; paint-order: stroke fill; }
+        .txt-node { font-size: 18px; font-weight: 900; fill: #222; }
+        .txt-node-value { font-size: 15px; font-weight: 900; fill: #111; }
+        .txt-metric { font-size: 12px; font-weight: 900; fill: #111; }
+        .txt-metric-label { font-size: 9px; font-weight: 800; fill: #111; }
+        .txt-badge { font-size: 10px; font-weight: 900; fill: #555; }
+
+        .badge-bg { fill: #f3f4f6; stroke: #d1d5db; stroke-width: 1; }
+        .metric-bg { fill: #fff; stroke: #444; stroke-width: 1.2; }
+
+        #ws365Table th {
+            white-space: nowrap;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        #ws365Table thead.ws-main-header tr:first-child th {
+            color: #111111 !important;
+            background-color: #f2f4f7 !important;
+            border-color: #d4d9e0 !important;
+        }
+        #ws365Table td {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="fullpage-container">
+        <div class="header-bar">
+            <div class="header-content">
+                <h1><i class="fas fa-bolt me-2"></i>Annual Electricity Flow Diagram</h1>
+                <a href="{% url 'simulator:main_simulation' %}" class="btn btn-sm btn-outline-light me-2">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <div class="diagram-wrapper">
+            <div class="diagram-scroll">
+            <svg class="ws1-svg" viewBox="0 0 1650 980" xmlns="http://www.w3.org/2000/svg" aria-label="Annual electricity flow">
+                <defs>
+                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                        <polygon points="0 0, 10 3, 0 6" fill="#f4b942"/>
+                    </marker>
+                </defs>
+
+                <text x="40" y="50" class="txt-title">{{ diagram_title|default:"Jahresbilanz Strom" }}</text>
+                <text x="40" y="74" class="txt-title-meta">{{ diagram_scenario_label|default:"Aktuelles Szenario" }} | Stand {{ diagram_generated_on }}</text>
+
+                <!-- Bio -->
+                <rect x="40" y="100" width="200" height="95" rx="6" class="node-yellow"/>
+                <text x="140" y="136" text-anchor="middle" class="txt-label">Bedarfs-Kraftwerke</text>
+                <text x="140" y="168" text-anchor="middle" class="txt-label-lg">Biobrennstoffe</text>
+                <line x1="240" y1="148" x2="1450" y2="148" style="stroke:#f4b942;stroke-width:3"/>
+                <line x1="1450" y1="148" x2="1450" y2="300" class="flow-line-thin"/>
+                <text x="318" y="138" class="txt-flow" id="bio_value">0</text>
+
+                <!-- PV -->
+                <rect x="40" y="220" width="200" height="95" rx="6" class="node-yellow"/>
+                <text x="140" y="274" text-anchor="middle" class="txt-label-lg">PV</text>
+                <text x="285" y="286" class="txt-flow" id="pv_value">0</text>
+
+                <!-- Wind -->
+                <rect x="40" y="340" width="200" height="95" rx="6" class="node-yellow"/>
+                <text x="140" y="394" text-anchor="middle" class="txt-label-lg">Wind</text>
+                <text x="260" y="372" class="txt-flow" id="wind_value">0</text>
+
+                <!-- Hydro -->
+                <rect x="40" y="460" width="200" height="112" rx="6" class="node-yellow"/>
+                <text x="140" y="496" text-anchor="middle" class="txt-label">Laufwasser + Tief.-Geoth.</text>
+                <text x="245" y="556" class="txt-flow" id="hydro_value">0</text>
+
+                <!-- K/J/L -> M arrows -->
+                <line x1="240" y1="266" x2="384" y2="350" class="flow-line"/>
+                <line x1="240" y1="386" x2="384" y2="386" class="flow-line"/>
+                <line x1="240" y1="516" x2="384" y2="422" class="flow-line"/>
+
+                <!-- M -->
+                <circle cx="420" cy="386" r="30" class="node-circle"/>
+                <text x="490" y="356" text-anchor="middle" class="txt-node-value" id="m_value">0</text>
+
+                <!-- M -> N -->
+                <line x1="440" y1="386" x2="675" y2="386" class="flow-line"/>
+
+                <!-- M down to Elektrolyse nach Angebot -->
+                <line x1="420" y1="412" x2="420" y2="496" class="flow-line"/>
+                <text x="420" y="472" text-anchor="middle" class="txt-value-sm" id="ely_branch_value">0</text>
+
+                <!-- Elektrolyse Power to Gas -->
+                <rect x="300" y="500" width="240" height="120" rx="6" class="node-blue"/>
+                <text x="420" y="538" text-anchor="middle" class="txt-label">Elektrolyse</text>
+                <text x="420" y="566" text-anchor="middle" class="txt-label">Power to Gas</text>
+                <text x="420" y="605" text-anchor="middle" class="txt-metric" id="eta_ely_value">65% Eta Ely.</text>
+
+                <!-- Gasspeicher Direktverbr -->
+                <line x1="420" y1="620" x2="420" y2="675" class="flow-line-thin"/>
+                <text x="438" y="658" class="txt-flow-sm" id="gasspeicher_direkt_value">0</text>
+                <rect x="300" y="680" width="240" height="70" rx="6" class="node-blue"/>
+                <text x="420" y="710" text-anchor="middle" class="txt-label">Gasspeicher Direktverbr.</text>
+
+                <!-- Abregelung -->
+                <line x1="705" y1="356" x2="705" y2="208" class="flow-line"/>
+                <text x="705" y="180" text-anchor="middle" class="txt-label-lg">Abregelung</text>
+                <text x="724" y="272" class="txt-flow-sm" id="q_value">0</text>
+
+                <!-- N -->
+                <circle cx="705" cy="386" r="30" class="node-circle"/>
+                <text x="705" y="340" text-anchor="middle" class="txt-node-value" id="n_value_svg">0</text>
+
+                <!-- N down to Elektrolyse Stromspeicher -->
+                <line x1="705" y1="416" x2="705" y2="496" class="flow-line"/>
+                <text x="705" y="472" text-anchor="middle" class="txt-value-sm" id="n_output_branch_value">0</text>
+                <rect x="585" y="500" width="240" height="120" rx="6" class="node-blue"/>
+                <text x="705" y="538" text-anchor="middle" class="txt-label">Elektrolyse Stromspeicher</text>
+                <text x="705" y="566" text-anchor="middle" class="txt-sub">(Überschuss)</text>
+                <text x="705" y="605" text-anchor="middle" class="txt-metric" id="eta_es_value">65% Eta ES</text>
+
+                <!-- Common down path to single Gasspeicher Strom -->
+                <line x1="705" y1="620" x2="705" y2="710" class="flow-line-thin"/>
+                <text x="735" y="670" class="txt-sub">65%</text>
+                <text x="735" y="686" class="txt-value-sm" id="gas_storage_arrow_value">0</text>
+                <rect x="700" y="710" width="400" height="100" rx="6" class="node-blue"/>
+                <text x="900" y="765" text-anchor="middle" class="txt-label-lg">Gasspeicher Strom</text>
+                <rect x="1125" y="730" width="165" height="48" rx="3" class="metric-bg"/>
+                <text x="1208" y="748" text-anchor="middle" class="txt-metric-label">Eta Stromspeicherung</text>
+                <text x="1208" y="767" text-anchor="middle" class="txt-metric" id="eta_storage_value">0.0%</text>
+                <line x1="900" y1="810" x2="900" y2="875" class="flow-line-thin"/>
+                <text x="900" y="905" text-anchor="middle" class="txt-label-lg">Speicherkapazität</text>
+                <text x="900" y="934" text-anchor="middle" class="txt-flow" id="storage_capacity_value">0 GWh</text>
+
+                <!-- Upward extraction from same Gasspeicher Strom (Ausspeich.Summe) -->
+                <line x1="1090" y1="710" x2="1090" y2="640" class="flow-line-thin"/>
+                <text x="1112" y="688" class="txt-value-sm" id="t_value_svg">0</text>
+
+                <!-- Rückverstromung -->
+                <rect x="980" y="535" width="220" height="105" rx="6" class="node-yellow"/>
+                <text x="1090" y="572" text-anchor="middle" class="txt-label">Rückverstromung</text>
+                <text x="1090" y="594" text-anchor="middle" class="txt-sub">(Mangelausgl.)</text>
+                <text x="1090" y="620" text-anchor="middle" class="txt-metric" id="eta_rs_value">59% Eta RS</text>
+
+                <!-- 58.5% path from Rückverstromung to final line -->
+                <line x1="1090" y1="535" x2="1090" y2="470" class="flow-line-thin"/>
+                <text x="1103" y="501" class="txt-sub">58.5%</text>
+                <line x1="1090" y1="470" x2="1320" y2="470" class="flow-line-thin"/>
+                <text x="1205" y="458" text-anchor="middle" class="txt-value-sm" id="reconversion_value">0</text>
+
+                <!-- N -> O -> final -->
+                <line x1="725" y1="386" x2="960" y2="386" class="flow-line"/>
+
+                <rect x="960" y="326" width="250" height="120" rx="6" class="node-blue"/>
+                <text x="1085" y="360" text-anchor="middle" class="txt-label">Strom nach</text>
+                <text x="1085" y="386" text-anchor="middle" class="txt-label">Elektrolyse Stromspeicher</text>
+                <text x="845" y="372" text-anchor="middle" class="txt-flow" id="o_value_svg">0</text>
+
+                <line x1="1210" y1="386" x2="1320" y2="386" class="flow-line"/>
+
+                <rect x="1320" y="300" width="260" height="170" rx="6" class="node-yellow"/>
+                <text x="1450" y="350" text-anchor="middle" class="txt-label-lg">Stromnetz zum</text>
+                <text x="1450" y="385" text-anchor="middle" class="txt-label-lg">Endverbrauch</text>
+                <text x="1450" y="458" text-anchor="middle" class="txt-value" id="final_value">0</text>
+            </svg>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-table me-2"></i>365 Tage Daten
+                    </h5>
+                    <div>
+                        <span class="badge bg-secondary me-2">{{ daily_data|length }} Tage</span>
+                        <button class="btn btn-sm btn-outline-primary" id="exportCsvBtn">
+                            <i class="fas fa-download me-1"></i>CSV Export
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                        <table class="table table-bordered table-hover table-sm mb-0" id="ws365Table">
+                            <thead class="sticky-top ws-main-header">
+                                <tr>
+                                    {% for col in ws_columns %}
+                                    <th class="{{ col.header_class }}" style="min-width: {{ col.min_width }}px;">{{ col.label }}</th>
+                                    {% endfor %}
+                                </tr>
+                                <tr class="table-secondary ws-summary-row">
+                                    {% for cell in ws_min_cells %}
+                                    <td class="{{ cell.classes }}">
+                                        {% if cell.is_label %}
+                                            {{ cell.label }}
+                                        {% else %}
+                                            {{ cell.value|floatformat:1 }}
+                                        {% endif %}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                                <tr class="table-secondary ws-summary-row">
+                                    {% for cell in ws_max_cells %}
+                                    <td class="{{ cell.classes }}">
+                                        {% if cell.is_label %}
+                                            {{ cell.label }}
+                                        {% else %}
+                                            {{ cell.value|floatformat:1 }}
+                                        {% endif %}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody id="ws365TableBody">
+                                {% for row in ws_table_rows %}
+                                <tr>
+                                    {% for cell in row %}
+                                    <td class="{{ cell.classes }}">
+                                        {% if cell.is_day %}
+                                            {{ cell.value|floatformat:0 }}
+                                        {% else %}
+                                            {{ cell.value|floatformat:1 }}
+                                        {% endif %}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const vals = {
+            bio: {{ bio|default:0|unlocalize }},
+            pv: {{ pv|default:0|unlocalize }},
+            wind: {{ wind|default:0|unlocalize }},
+            hydro: {{ hydro|default:0|unlocalize }},
+            m_total: {{ m_total|default:0|unlocalize }},
+            ely_branch_value: {{ ely_branch_value|default:0|unlocalize }},
+            n_value: {{ n_value|default:0|unlocalize }},
+            n_output_branch: {{ n_output_branch|default:0|unlocalize }},
+            q_abregelung: {{ q_abregelung|default:0|unlocalize }},
+            n_to_right: {{ n_to_right|default:0|unlocalize }},
+            gasspeicher_direkt: {{ gasspeicher_direkt|default:0|unlocalize }},
+            ely_offer: {{ ely_offer|default:0|unlocalize }},
+            ely_surplus: {{ ely_surplus|default:0|unlocalize }},
+            h2_offer: {{ h2_offer|default:0|unlocalize }},
+            h2_surplus: {{ h2_surplus|default:0|unlocalize }},
+            gas_storage: {{ gas_storage|default:0|unlocalize }},
+            storage_capacity: {{ storage_capacity|default:0|unlocalize }},
+            eta_ely_pct: {{ eta_ely_pct|default:0|unlocalize }},
+            eta_es_pct: {{ eta_es_pct|default:0|unlocalize }},
+            eta_rs_pct: {{ eta_rs_pct|default:0|unlocalize }},
+            eta_storage_pct: {{ eta_storage_pct|default:0|unlocalize }},
+            t_value: {{ t_value|default:0|unlocalize }},
+            reconversion: {{ reconversion|default:0|unlocalize }},
+            final_stromnetz: {{ final_stromnetz|default:0|unlocalize }}
+        };
+
+        function formatNumber(v) {
+            return Math.round(Number(v || 0)).toLocaleString('en-US');
+        }
+
+        function setText(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = formatNumber(value);
+        }
+
+        function setTextWithSuffix(id, value, suffix) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = `${formatNumber(value)} ${suffix}`;
+        }
+
+        function setPercentText(id, value, label, decimals = 0) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const num = Number(value || 0);
+            const formatted = decimals > 0 ? num.toFixed(decimals) : Math.round(num).toString();
+            el.textContent = label ? `${formatted}% ${label}` : `${formatted}%`;
+        }
+
+        setText('bio_value', vals.bio);
+        setText('pv_value', vals.pv);
+        setText('wind_value', vals.wind);
+        setText('hydro_value', vals.hydro);
+        setText('m_value', vals.m_total);
+        setText('ely_branch_value', vals.ely_branch_value);
+        setText('n_value_svg', vals.n_value);
+        setText('n_output_branch_value', vals.n_output_branch);
+        setText('q_value', vals.q_abregelung);
+        setText('ely_offer_value', vals.ely_offer);
+        setText('h2_offer_value', vals.h2_offer);
+        setText('ely_surplus_value', vals.ely_surplus);
+        setText('h2_surplus_value', vals.h2_surplus);
+        setText('gas_storage_arrow_value', vals.gas_storage);
+        setTextWithSuffix('storage_capacity_value', vals.storage_capacity, 'GWh');
+        setPercentText('eta_ely_value', vals.eta_ely_pct, 'Eta Ely.');
+        setPercentText('eta_es_value', vals.eta_es_pct, 'Eta ES');
+        setPercentText('eta_rs_value', vals.eta_rs_pct, 'Eta RS');
+        setPercentText('eta_storage_value', vals.eta_storage_pct, '', 1);
+        setText('gasspeicher_direkt_value', vals.gasspeicher_direkt);
+        setText('t_value_svg', vals.t_value);
+        setText('reconversion_value', vals.reconversion);
+        setText('o_value_svg', vals.n_to_right);
+        setText('final_value', vals.final_stromnetz);
+
+        const exportCsvBtn = document.getElementById('exportCsvBtn');
+        if (exportCsvBtn) {
+            exportCsvBtn.addEventListener('click', function () {
+                const table = document.getElementById('ws365Table');
+                let csv = [];
+
+                const headers = [];
+                table.querySelectorAll('thead th').forEach(th => {
+                    headers.push('"' + th.textContent.trim() + '"');
+                });
+                csv.push(headers.join(','));
+
+                table.querySelectorAll('tbody tr').forEach(tr => {
+                    const row = [];
+                    tr.querySelectorAll('td').forEach(td => {
+                        row.push('"' + td.textContent.trim() + '"');
+                    });
+                    csv.push(row.join(','));
+                });
+
+                const blob = new Blob([csv.join('\n')], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'jahresstrom_365_tage_' + new Date().toISOString().split('T')[0] + '.csv';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            });
+        }
+    });
+    </script>
+</body>
+</html>
