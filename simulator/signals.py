@@ -8,8 +8,11 @@ from .ws_models import WSData
 
 
 def _invalidate_formula_lookup_caches(*args, **kwargs):
-    """Step 1.6 + 1.7: invalidate formula_service + ws365 compute caches when
-    any tracked row changes. Import lazily to avoid circular import."""
+    """Step 1.6 + 1.7 + recalc_cache: invalidate every process-local cache
+    when any tracked row changes. Import lazily to avoid circular import.
+
+    The recalc_cache MUST be included here or user edits silently no-op
+    when the signature construction has any blind spot."""
     try:
         from simulator.formula_service import invalidate_auto_tokens_cache, invalidate_lookups_cache
         invalidate_auto_tokens_cache()
@@ -19,6 +22,11 @@ def _invalidate_formula_lookup_caches(*args, **kwargs):
     try:
         from simulator.ws365_orchestrator import invalidate_ws365_cache
         invalidate_ws365_cache()
+    except Exception:
+        pass
+    try:
+        from simulator.recalc_cache import invalidate as invalidate_recalc_cache
+        invalidate_recalc_cache()
     except Exception:
         pass
 

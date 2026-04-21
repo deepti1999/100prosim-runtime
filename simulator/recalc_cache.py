@@ -32,17 +32,23 @@ def _hash_tuple_of_rows(qs_values) -> int:
 def renewables_inputs_signature() -> int:
     """Signature for recalc_all_renewables_full inputs.
 
-    Inputs: LandUse, all VerbrauchData, fixed Renewables, renewable Formulas.
+    Inputs: LandUse, all VerbrauchData (ziel+status+user_percent), fixed
+    Renewables, renewable Formulas.
     Excludes: non-fixed Renewables (those are written by the recalc).
+
+    user_percent is included because it's the user-editable input field
+    even on rows where ziel is a calculated output. When the user edits
+    user_percent and the verbrauch recalc runs, renewable outputs must
+    reflect the new ziel values propagated from user_percent.
     """
     from simulator.models import LandUse, VerbrauchData, RenewableData, Formula
     from simulator.models import FormulaVariable
 
     lu = tuple(LandUse.objects.order_by('code').values_list(
-        'code', 'target_ha', 'status_ha'
+        'code', 'target_ha', 'status_ha', 'user_percent'
     ))
     v = tuple(VerbrauchData.objects.order_by('code').values_list(
-        'code', 'ziel', 'status'
+        'code', 'ziel', 'status', 'user_percent'
     ))
     rf = tuple(RenewableData.objects.filter(is_fixed=True).order_by('code').values_list(
         'code', 'target_value', 'status_value'
@@ -61,25 +67,32 @@ def renewables_inputs_signature() -> int:
 def verbrauch_inputs_signature() -> int:
     """Signature for recalc_all_verbrauch inputs.
 
-    Inputs: LandUse, user-input VerbrauchData (is_calculated=False and related
-    flags false), all RenewableData, verbrauch Formulas.
-    Excludes: calculated VerbrauchData (written by the recalc).
+    CRITICAL: user_percent is the user's editable input even on rows where
+    ziel is computed. Previously this signature filtered to rows with
+    is_calculated=False AND ziel_calculated=False — which excluded exactly
+    the rows users edit via the UI. The cache then never invalidated on user
+    edits, making "Save and Continue" a silent no-op.
+
+    Fix: include user_percent of ALL rows (it's never written by the recalc,
+    only by user saves), PLUS ziel/status of non-calculated rows as before.
     """
     from simulator.models import LandUse, VerbrauchData, RenewableData, Formula
     from simulator.models import FormulaVariable
 
     lu = tuple(LandUse.objects.order_by('code').values_list(
-        'code', 'target_ha', 'status_ha'
+        'code', 'target_ha', 'status_ha', 'user_percent'
     ))
-    # Input Verbrauch rows = those NOT written by this recalc.
-    # The recalc writes to rows where is_calculated, status_calculated, or
-    # ziel_calculated is True (see verbrauch_recalculator.py:168-173).
+    # user_percent of all rows — user's knob, never written by the recalc.
+    all_user_percents = tuple(
+        VerbrauchData.objects.order_by('code').values_list('code', 'user_percent')
+    )
+    # Stored ziel/status of input rows (rows the recalc does NOT rewrite).
     v_inputs = tuple(VerbrauchData.objects.filter(
         is_calculated=False,
         status_calculated=False,
         ziel_calculated=False,
     ).order_by('code').values_list(
-        'code', 'ziel', 'status', 'user_percent'
+        'code', 'ziel', 'status'
     ))
     r = tuple(RenewableData.objects.order_by('code').values_list(
         'code', 'target_value', 'status_value'
@@ -92,7 +105,7 @@ def verbrauch_inputs_signature() -> int:
     ).order_by('formula_id', 'variable_name').values_list(
         'formula_id', 'variable_name', 'source_type', 'source_key'
     ))
-    return hash((lu, v_inputs, r, f, fv))
+    return hash((lu, all_user_percents, v_inputs, r, f, fv))
 
 
 def check_and_run(cache_key: str, signature_fn: Callable[[], int], run_fn: Callable[[], Any]) -> Any:
