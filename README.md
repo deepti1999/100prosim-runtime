@@ -62,6 +62,12 @@ The application can also be hosted on other platforms if they provide:
 - `Dockerfile`: image build definition
 - `Procfile`: separate web and worker process model
 
+## Documentation
+
+- [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md) — what changed during the 2026 perf pass, why, measured impact, architecture, math-safety notes. Read this first if you inherit the codebase.
+- [`docs/HEROKU.md`](docs/HEROKU.md) — deployment guide for the live app at `prosim-100`.
+- [`docs/PYPSA_MIGRATION_RESEARCH.md`](docs/PYPSA_MIGRATION_RESEARCH.md) — earlier research on selective PyPSA integration (not adopted; kept as reference).
+
 ## Running the bundled tests
 
 From this folder:
