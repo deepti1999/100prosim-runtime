@@ -8,12 +8,17 @@ from .ws_models import WSData
 
 
 def _invalidate_formula_lookup_caches(*args, **kwargs):
-    """Step 1.6: invalidate the formula_service auto-tokens cache when any
-    tracked row changes. Import lazily to avoid circular import at module load."""
+    """Step 1.6 + 1.7: invalidate formula_service + ws365 compute caches when
+    any tracked row changes. Import lazily to avoid circular import."""
     try:
         from simulator.formula_service import invalidate_auto_tokens_cache, invalidate_lookups_cache
         invalidate_auto_tokens_cache()
         invalidate_lookups_cache()
+    except Exception:
+        pass
+    try:
+        from simulator.ws365_orchestrator import invalidate_ws365_cache
+        invalidate_ws365_cache()
     except Exception:
         pass
 

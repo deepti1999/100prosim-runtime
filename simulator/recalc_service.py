@@ -242,14 +242,18 @@ def _recalc_all_renewables_full_impl(exclude_ws_dependent: bool = False) -> int:
                 ["status_value", "target_value", "updated_at"],
                 batch_size=500,
             )
-            # Step 1.6: bulk_update bypasses signals, so the lookup caches
-            # held by formula_service need explicit invalidation.
+            # Step 1.6 + 1.7: bulk_update bypasses signals; invalidate caches.
             try:
                 from simulator.formula_service import (
                     invalidate_auto_tokens_cache, invalidate_lookups_cache,
                 )
                 invalidate_auto_tokens_cache()
                 invalidate_lookups_cache()
+            except Exception:
+                pass
+            try:
+                from simulator.ws365_orchestrator import invalidate_ws365_cache
+                invalidate_ws365_cache()
             except Exception:
                 pass
             updated_count += changed_in_pass

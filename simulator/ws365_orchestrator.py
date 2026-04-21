@@ -23,19 +23,66 @@ if not _SIMULATOR_VERBOSE_PRINTS:
     def print(*args, **kwargs):  # type: ignore[override]
         return None
 
+# Step 1.7: process-local cache of the pure 365-day compute. Skips the
+# ~48-85ms Python compute on cache hit. The side effect
+# (update_renewable_from_ws365) still runs every call because the writes
+# are value-compare idempotent (see ws365_core.py:436-438).
+#
+# Cache is keyed on (ws_base_data, fixed_values, run_goal_seek) hashed
+# cheaply. Invalidated via signals (WSData/VerbrauchData/RenewableData
+# post_save in signals.py) and via invalidate_ws365_cache() below.
+_WS365_COMPUTE_CACHE = {}  # {(goal_seek,): (sig, response_dict)}
+
+
+def _ws365_inputs_signature(ws_data, fixed_values):
+    """Cheap signature from the already-loaded inputs — avoids hitting the DB
+    again. Tuples of floats hash deterministically."""
+    return (
+        tuple(sorted(fixed_values.items())) if fixed_values else (),
+        # ws_data contains arrays; hash each
+        tuple(
+            (k, hash(tuple(v)) if isinstance(v, list) else v)
+            for k, v in sorted(ws_data.items())
+        ) if ws_data else (),
+    )
+
+
+def invalidate_ws365_cache():
+    """Clear the WS365 compute cache. Called from formula_service after
+    bulk_updates, and via post_save signals in signals.py."""
+    _WS365_COMPUTE_CACHE.clear()
+
+
 def get_ws_365_data(run_goal_seek=False):
     """
     Main function to get all WS 365-day data.
-    
+
     Args:
         run_goal_seek: If True, also run Goal Seek to find optimal solar
-    
+
     Returns:
         Dictionary with all data for frontend display
+
+    Caches the pure compute portion. Side-effect writes to RenewableData
+    9.3.1 / 9.3.4 run on every call (they're idempotent value-compare saves).
     """
     ws_data = get_ws_base_data()
     fixed_values = get_fixed_values()
-    
+    sig = _ws365_inputs_signature(ws_data, fixed_values)
+    cache_key = (bool(run_goal_seek),)
+
+    cached = _WS365_COMPUTE_CACHE.get(cache_key)
+    if cached is not None and cached[0] == sig:
+        response = cached[1]
+        # Side effect still fires — cheap when idempotent, safe when not.
+        current_result = response.get('current') or {}
+        # update_renewable_from_ws365 expects a ws_result dict; current matches shape
+        update_renewable_from_ws365({
+            'einspeich_sum': current_result.get('einspeich_sum', 0),
+            'abregelung_sum': current_result.get('abregelung_sum', 0),
+        })
+        return response
+
     current_result = calculate_365_days(fixed_values['ziel_912'], ws_data, fixed_values)
 
     update_renewable_from_ws365(current_result)
@@ -76,7 +123,8 @@ def get_ws_365_data(run_goal_seek=False):
             'ladezust_day365': goal_seek_result['result']['ladezust_day365'],
         }
         response['optimal_daily_data'] = goal_seek_result['result']['daily_data']
-    
+
+    _WS365_COMPUTE_CACHE[cache_key] = (sig, response)
     return response
 
 def apply_balanced_landuse(

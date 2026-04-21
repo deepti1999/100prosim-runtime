@@ -243,13 +243,18 @@ def _recalc_all_verbrauch_impl(trigger_code: Optional[str] = None, propagate_ren
             for row in changed_items:
                 row.updated_at = now
             VerbrauchData.objects.bulk_update(changed_items, ['status', 'ziel', 'updated_at'])
-            # Step 1.6: bulk_update bypasses signals; keep formula caches coherent.
+            # Step 1.6 + 1.7: bulk_update bypasses signals; keep caches coherent.
             try:
                 from simulator.formula_service import (
                     invalidate_auto_tokens_cache, invalidate_lookups_cache,
                 )
                 invalidate_auto_tokens_cache()
                 invalidate_lookups_cache()
+            except Exception:
+                pass
+            try:
+                from simulator.ws365_orchestrator import invalidate_ws365_cache
+                invalidate_ws365_cache()
             except Exception:
                 pass
 
