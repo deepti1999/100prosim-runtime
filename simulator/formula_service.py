@@ -115,7 +115,7 @@ def evaluate_formula_by_key(formula_key: str, extra_context: Optional[Dict] = No
 def _build_context(formula: Formula, use_target: bool = False, status_lookup: Optional[Dict] = None, target_lookup: Optional[Dict] = None) -> Dict[str, float]:
     """
     Resolve all variables for a formula into a plain dict.
-    
+
     Args:
         formula: The Formula object
         use_target: If True, resolve variables using target/ziel values instead of status
@@ -123,7 +123,7 @@ def _build_context(formula: Formula, use_target: bool = False, status_lookup: Op
     context: Dict[str, float] = {}
     for var in formula.variables.all():
         use_var_target = use_target or ('ziel' in var.source_type.lower() or 'target' in var.source_type.lower())
-        
+
         resolved = _resolve_variable(var, use_target=use_var_target, status_lookup=status_lookup, target_lookup=target_lookup)
         if resolved is None:
             resolved = var.default_value

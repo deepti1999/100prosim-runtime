@@ -10,8 +10,12 @@ No hardcoded values.
 """
 
 from django.apps import apps
+from django.core.cache import cache as django_cache
 from simulator.models import Formula
 from simulator.formula_service import _safe_eval
+
+_BILANZ_CACHE_VERSION = 'v1'
+_BILANZ_CACHE_TTL = 300  # seconds — safety backstop on top of run-id invalidation
 
 def sum_renewable_children(parent_code: str, use_target: bool = True) -> float:
     """
@@ -278,13 +282,37 @@ def get_verbrauch_value(code, use_ziel=True, fail_fast=True):
 def calculate_bilanz_data(fail_fast=False):
     """
     Calculate all bilanz (balance sheet) data dynamically from RenewableData and VerbrauchData.
-    
+
     Args:
         fail_fast: If True, raises on missing formulas. If False (default for backward compat), returns 0.
-    
+
     Returns:
         dict: Complete bilanz data structure with all categories
+
+    Result is cached keyed on the latest CalculationRun.id. A new CalculationRun
+    row is created by every balance-job completion and by recalc_api endpoints,
+    so the cache auto-invalidates on any real recompute. The TTL backstop
+    (_BILANZ_CACHE_TTL) limits staleness from admin-only edits that don't
+    trigger a CalculationRun.
     """
+    if fail_fast:
+        # Bypass cache so errors surface immediately on the fresh path.
+        return _calculate_bilanz_data_impl(fail_fast=True)
+
+    CalculationRun = apps.get_model('simulator', 'CalculationRun')
+    latest = CalculationRun.objects.order_by('-id').values('id').first()
+    latest_id = latest['id'] if latest else 0
+    cache_key = f'bilanz_data_{_BILANZ_CACHE_VERSION}_run{latest_id}'
+    cached = django_cache.get(cache_key)
+    if cached is not None:
+        return cached
+    result = _calculate_bilanz_data_impl(fail_fast=False)
+    django_cache.set(cache_key, result, timeout=_BILANZ_CACHE_TTL)
+    return result
+
+
+def _calculate_bilanz_data_impl(fail_fast=False):
+    """Internal implementation. See calculate_bilanz_data for docs."""
     names = {}
     VerbrauchData = apps.get_model('simulator', 'VerbrauchData')
     RenewableData = apps.get_model('simulator', 'RenewableData')
