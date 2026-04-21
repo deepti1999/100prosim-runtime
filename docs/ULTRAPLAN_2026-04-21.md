@@ -176,19 +176,21 @@ Invalidate by bumping `CalculationRun.id` on every recalc completion (already do
 
 ## Phase 2 — The biggest single speedup (target: 2-3 days)
 
-### Step 2.1 — GW 2.8 direct solve — **DEFERRED**
+### Step 2.1 — GW 2.8 direct solve — **DEFERRED (empirical finding)**
 
-**Status:** deferred after empirical measurement on 2026-04-21.
+**Status:** deferred on 2026-04-21 after two separate empirical investigations.
 
-**Reason:** Phase 1 (specifically Step 1.2) already makes repeat recalcs cost ~7 ms instead of ~2 s. That collapsed the per-iteration cost of the GW secant loop by ~99 %, so the speedup from replacing 6 iterations with 1 is marginal in practice (~35 ms saved on the warm-cache path, ~5 s on cold).
+**First finding — Phase 1 already makes iterations cheap.** Step 1.2 caches repeat recalcs at ~7 ms each. That collapses the per-iteration cost of the GW secant loop by ~99 %. Savings from replacing 6 iterations with 1 drop from seconds to ~35 ms.
 
-**Additional finding:** on the current balanced seed the GW gap is ≈ 15 (well under the tolerance of 100), which means the secant loop at `ws365_sector_balance.py:167` is **skipped entirely**. The 6-iteration case only happens when a user makes a large adjustment that moves the GW gap above tolerance. That's a rare path.
+**Second finding — the secant is dormant in practice.** Shadow harness built with a candidate direct-solve (`simulator/ws365_gw_direct_solve.py`) and synthetic imbalance scenarios. Result: **v_2.8 has no measurable effect on the GW gap on the current seed.** Setting v_2.8 to 60, 70, 79.47, 85, 95 all produce identical GW gap (-14.84 GWh). Dropping r_10.4 by 20 % was instantly overwritten by the recalc because r_10.4 is a calculated (not fixed) row. The GW secant loop at `ws365_sector_balance.py:175` only runs when `abs(gap) > 100`, which on this seed **never happens**.
 
-**Risk side:** the direct solve requires either (a) an analytic derivation of `gap_gw(x_28)` tracing ~20 formulas through the DAG, or (b) a 2-point numerical slope that assumes linearity. Both approaches have a small but nonzero chance of introducing a math regression that's hard to detect without running hundreds of user-adjustment scenarios.
+**Implication:** replacing the secant with any alternative changes behavior only in hypothetical scenarios that don't reproduce on the current seed. We have no way to prove parity for a code path that doesn't execute.
 
-**Decision:** defer until either (1) stakeholders report the balance button is still slow after Phase 1 ships on Heroku, or (2) someone has time to do the formula-DAG trace properly and build a broader shadow-parity test harness.
+**Decision:** do not modify the secant. Keep the existing 6-iteration implementation as-is. The `ws365_gw_direct_solve.py` module is kept in the tree as a reference for a future resumption if stakeholders ever encounter a scenario where the secant actually runs and is measurably slow.
 
-**If resumed later:** implement behind a feature flag, run shadow-parity for N user-adjustment scenarios, compare direct-solve output to secant output within 1 ha, only flip the flag after full agreement.
+**Risk/benefit summary:** risk of silent math regression is nonzero; benefit on realistic seeds is zero. Don't ship.
+
+**If resumed later:** first find or construct a scenario where the secant actually executes (GW gap > 100 GWh). Only then is shadow-parity testing meaningful. Implement behind a feature flag, validate across N real user-adjustment traces, flip only after full agreement.
 
 **Pre-work (do first):** write down the GW gap equation symbolically. Verified in Finding C that every formula in the chain is linear in `v_2.8`. Concretely:
 
