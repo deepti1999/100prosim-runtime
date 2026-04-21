@@ -2,6 +2,23 @@
 
 **Status:** shipped to Heroku 2026-04-21. All changes merged to `main`.
 
+## Post-deploy bug fixes (3 sequential cache bugs caught via Playwright testing)
+
+After the initial deploy, end-to-end Playwright testing uncovered three related bugs in the recalc cache that made Save & Recalculate silently do nothing. All fixed:
+
+**Bug 1 (`274157c`):** `verbrauch_inputs_signature` filtered rows by `is_calculated=False AND ziel_calculated=False AND status_calculated=False` — exactly excluding the calculated rows whose `user_percent` users edit. The cache never saw user changes. Fix: include `user_percent` of ALL rows in signature.
+
+**Bug 2 (`37baec0`):** `check_and_run` returned the previously-cached `updated_codes` list on cache hit. The outer pass-loop in `_run_verbrauch_recalc_passes` checks `if not updated_codes: break` — with a non-empty cached list, it never broke and ran 12 passes returning the same stale list. Fix: return an `empty_result_on_hit` (empty list / 0) so callers correctly see "no change" on cache hit.
+
+**Bug 3 (`691b99f`):** Signature excluded calculated-row ziels as "outputs, not inputs". But `_run_verbrauch_recalc_passes` runs recalc up to 12 times, and each pass's bulk_update updates calculated ziels which ARE inputs for the NEXT pass's downstream formulas. Excluded outputs → pass 2 signature matched pass 1 → cache hit returned empty → DAG convergence stopped after 1 pass → row 7/row 8 aggregates never reflected user's edit. Fix: signature now hashes ALL rows' values (inputs + computed ziels).
+
+**Bug 4 (`a3ed883`):** The signal handler invalidated `recalc_cache` on every `post_save`. The balance optimizer saves knob values 50+ times per run; each save wiped the cache, forcing every settle round to re-do a full cold recalc instead of short-circuiting via the signature match. Fix: removed recalc_cache from signal invalidation — the signature check already correctly detects any real DB change. Kept signal invalidation for caches that don't have their own signature check (formula_service, ws365).
+
+**Net impact:** Save & Recalculate now correctly propagates through the full DAG ("Recalculated 17 values in 6 pass(es)" instead of "10 values in 12 pass(es) (max reached)"). Full sector+WS balance on genuinely unbalanced workspace: 297s → 135s (2.2× faster, now runnable).
+
+---
+
+
 This document covers what changed, why, and the measured impact. For deployment details (Heroku setup, recovery, scaling), see `HEROKU.md`.
 
 ---
