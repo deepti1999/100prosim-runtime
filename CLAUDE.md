@@ -90,16 +90,34 @@ Required for any non-local deploy: `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, `D
 3. **Four-sector model** (KLIK, Gebäudewärme, Prozesswärme, Mobile Anwendungen) is load-bearing — do not restructure.
 4. **`Formula` table is authoritative** — don't "clean up" redundant-looking formulas.
 
-## Performance target: Heroku
+## Two main stakeholder work streams (co-equal, both active)
 
-Production runs on Heroku (see `Procfile`). Heroku is currently slow and that's the performance pain point stakeholders feel. When optimising:
+### 1. Performance — Heroku is slow
+
+Production runs on Heroku (see `Procfile`). Heroku is currently slow; that's the pain point stakeholders feel.
 
 - Bias toward fixes that help **single-dyno, Postgres-over-network, no-parallelism** environments.
-- Local multi-core Docker wins that don't carry over to Heroku are lower value.
-- Suspect hot paths (see `docs/PYPSA_MIGRATION_RESEARCH.md` §23.2 for the full list): 365-day WS loop, goal-seek root-find, 760-formula cascade, N+1 queries on `/renewable/` and `/verbrauch/`, redundant 365-row `WSData` reads on `/annual-electricity/`.
-- Integration with PyPSA for the numerical cores is the planned speedup path (NOT migration — see `docs/PYPSA_MIGRATION_RESEARCH.md` §23.1).
+- Local multi-core Docker wins that don't carry to Heroku are lower value.
+- Suspect hot paths (full list in `docs/PYPSA_MIGRATION_RESEARCH.md` §23.2): 365-day WS loop, goal-seek root-find (the 68-second `solar_sector_ws` step is the worst offender), 760-formula cascade, N+1 queries on `/renewable/` and `/verbrauch/`, redundant 365-row `WSData` reads on `/annual-electricity/`.
+- Planned speedup path: **integrate** PyPSA at the slow numerical cores (not migrate). See `docs/PYPSA_MIGRATION_RESEARCH.md` §23.1.
+- Flag Heroku-targeting changes in commit messages: `perf: cut Heroku recalc cold-start by X%`.
 
-Flag any change that targets Heroku latency explicitly in the commit message (e.g. `perf: cut Heroku recalc cold-start by X%`).
+### 2. Reduce hardcoding — extensibility
+
+Much of the current architecture is hardcoded where it should be data-driven. Adding a new sector requires touching ~15 files; adding a new energy carrier needs code; 2045 / Germany / German-language / power densities are all implicit. Main offenders documented in `docs/PYPSA_MIGRATION_RESEARCH.md` §23.3:
+
+- Four sectors (KLIK / Gebäudewärme / Prozesswärme / Mobile Anwendungen) baked into views, templates, column headings, Bilanz layout.
+- WS365 shape (365-day cycle, single-node Germany) assumed across `ws365_*.py`.
+- Sector-coupling links implicit in formula text (not first-class entities).
+- No `TimeHorizon` concept — "2045 net-zero" lives only in seed numbers.
+- Country = "Germany" implicit throughout (total area 35,759,529 ha).
+- German UI only; no i18n wrapper.
+- Power densities (MW/ha for solar/wind) are magic constants in `ws365_core.py` and land-use forms.
+- Cost data has no first-class concept.
+
+Highest-leverage refactors, in order: first-class `Sector` table → first-class `Carrier` → first-class `Link` / `Conversion` → `TimeHorizon` → power densities + cost params in DB → i18n wrapper → `Region`.
+
+**Perf and extensibility aren't mutually exclusive.** A first-class `Sector` refactor makes a later PyPSA integration (perf work) easier. Prefer extensibility refactors that also reduce perf cost.
 
 ## Workflow (session loop)
 
