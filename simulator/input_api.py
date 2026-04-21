@@ -17,7 +17,18 @@ if not _SIMULATOR_VERBOSE_PRINTS:
         return None
 
 def _run_verbrauch_recalc_passes(*, triggered_by="unknown"):
-    """Run the existing multi-pass Verbrauch recalculation until it stabilizes."""
+    """Run the existing multi-pass Verbrauch recalculation until it stabilizes.
+
+    Invalidates the recalc cache at entry because the worker's process-local
+    cache can contain stale signatures from prior jobs. The outer multi-pass
+    loop below MUST see fresh state each pass; short-circuiting via a cached
+    no-change result causes "Recalculated 0 values in 1 pass" silent-no-op
+    bugs (observed when user reverts a Verbrauch value back to a prior
+    user_percent — the downstream cascade doesn't revert because pass 1
+    returns the cached empty result)."""
+    from simulator.recalc_cache import invalidate as _invalidate_recalc_cache
+    _invalidate_recalc_cache()
+
     max_passes = 12
     per_pass_updates = []
     unique_codes = set()

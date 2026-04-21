@@ -36,6 +36,16 @@ def run_balance_job(job: BalanceJob) -> Dict[str, Any]:
     if user and not user.is_staff:
         ensure_user_workspace_data(user)
 
+    # Invalidate process-local recalc cache at entry. Workers process many
+    # jobs per lifetime; stale cache from a prior job can spuriously match
+    # the current signature (hash collisions, state-cycle coincidences) and
+    # cause silent no-op recalcs. Fresh job = fresh cache.
+    try:
+        from simulator.recalc_cache import invalidate as _invalidate_recalc_cache
+        _invalidate_recalc_cache()
+    except Exception:
+        pass
+
     with owner_scope(user):
         if job.job_type == BalanceJob.TYPE_SOLAR_SECTOR_WS:
             result = apply_balanced_landuse_sector_first()
