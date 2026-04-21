@@ -36,13 +36,27 @@ def run_balance_job(job: BalanceJob) -> Dict[str, Any]:
     if user and not user.is_staff:
         ensure_user_workspace_data(user)
 
-    # Invalidate process-local recalc cache at entry. Workers process many
-    # jobs per lifetime; stale cache from a prior job can spuriously match
-    # the current signature (hash collisions, state-cycle coincidences) and
-    # cause silent no-op recalcs. Fresh job = fresh cache.
+    # Invalidate ALL process-local caches at entry. Workers process many
+    # jobs per lifetime; signals fire in-process only (the web process's
+    # save → worker's cache isn't notified). A fresh job must see fresh DB
+    # state through all caches or downstream formula evaluations read stale
+    # values (observed: user reverts 100→95, worker's auto_tokens_cache
+    # still has 1.1.2=100, so formulas compute with old value and say
+    # "0 values in 1 pass" — silent no-op bug).
     try:
         from simulator.recalc_cache import invalidate as _invalidate_recalc_cache
         _invalidate_recalc_cache()
+    except Exception:
+        pass
+    try:
+        from simulator.formula_service import invalidate_auto_tokens_cache, invalidate_lookups_cache
+        invalidate_auto_tokens_cache()
+        invalidate_lookups_cache()
+    except Exception:
+        pass
+    try:
+        from simulator.ws365_orchestrator import invalidate_ws365_cache
+        invalidate_ws365_cache()
     except Exception:
         pass
 
