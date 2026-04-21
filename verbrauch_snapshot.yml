@@ -1,0 +1,1629 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link " 100ProSim" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: 
+        - text: 100ProSim
+      - button [ref=e6] [cursor=pointer]
+      - text:            
+  - generic [ref=e9]:
+    - heading "Energy Consumption Data (Verbrauch)" [level=3] [ref=e10]
+    - paragraph [ref=e11]: KLIK (Kraft, Licht, Information, Kommunikation, Kälte) + Gebäudewärme
+    - alert [ref=e12]:
+      - strong [ref=e13]: "Hinweis:"
+      - text: Nach jeder Änderung auf dieser Seite bitte zur Seite
+      - strong [ref=e14]: Erneuerbare Energien
+      - text: wechseln und
+      - strong [ref=e15]: Recalculate Renewables
+      - text: ausführen.
+    - alert [ref=e16]:
+      - strong [ref=e17]: "How to edit:"
+      - text: Blue cells are editable - Click to change values Gray cells are read-only (calculated or fixed)
+    - table [ref=e18]:
+      - rowgroup [ref=e19]:
+        - row "Code Category Unit Status Ziel (Target) User % Actions" [ref=e20]:
+          - columnheader "Code" [ref=e21]
+          - columnheader "Category" [ref=e22]
+          - columnheader "Unit" [ref=e23]
+          - columnheader "Status" [ref=e24]
+          - columnheader "Ziel (Target)" [ref=e25]
+          - columnheader "User %" [ref=e26]
+          - columnheader "Actions" [ref=e27]
+      - rowgroup [ref=e28]:
+        - row "1 Kraft, Licht, Information, Kommunikation, Kälte (KLIK) " [ref=e29]:
+          - cell "1" [ref=e30]
+          - cell "Kraft, Licht, Information, Kommunikation, Kälte (KLIK)" [ref=e31]:
+            - strong [ref=e32]: Kraft, Licht, Information, Kommunikation, Kälte (KLIK)
+          - cell "" [ref=e33]:
+            - button "" [disabled]:
+              - generic: 
+        - row "1.0 Bedarfsniveau (statisch), 100% Strom GWh/a 329,214.0 329,214.0 - " [ref=e34]:
+          - cell "1.0" [ref=e35]
+          - cell "Bedarfsniveau (statisch), 100% Strom" [ref=e36]
+          - cell "GWh/a" [ref=e37]
+          - cell "329,214.0" [ref=e38]
+          - cell "329,214.0" [ref=e39]
+          - cell "-" [ref=e40]
+          - cell "" [ref=e41]:
+            - button "" [ref=e42] [cursor=pointer]:
+              - generic [ref=e43]: 
+        - row "1.1 davon Haushalte % 18.6 18.6 18.6 " [ref=e44]:
+          - cell "1.1" [ref=e45]
+          - cell "davon Haushalte" [ref=e46]
+          - cell "%" [ref=e47]
+          - cell "18.6" [ref=e48]
+          - cell "18.6" [ref=e49]
+          - cell "18.6" [ref=e50]: "18.6"
+          - cell "" [ref=e51]:
+            - button "" [ref=e52] [cursor=pointer]:
+              - generic [ref=e53]: 
+        - row "1.1.1 Endenergie Haushalte GWh/a 61,365.5 61,233.8 - " [ref=e54]:
+          - cell "1.1.1" [ref=e55]
+          - cell "Endenergie Haushalte" [ref=e56]
+          - cell "GWh/a" [ref=e57]
+          - cell "61,365.5" [ref=e58]
+          - cell "61,233.8" [ref=e59]
+          - cell "-" [ref=e60]
+          - cell "" [ref=e61]:
+            - button "" [ref=e62] [cursor=pointer]:
+              - generic [ref=e63]: 
+        - row "1.1.2 Zieleinfluss Endanwendungs-Effizienz % 100.0 100.0 100.0 " [ref=e64]:
+          - cell "1.1.2" [ref=e65]
+          - cell "Zieleinfluss Endanwendungs-Effizienz" [ref=e66]
+          - cell "%" [ref=e67]
+          - cell "100.0" [ref=e68]
+          - cell "100.0" [ref=e69]
+          - cell "100.0" [ref=e70]: "100.0"
+          - cell "" [ref=e71]:
+            - button "" [ref=e72] [cursor=pointer]:
+              - generic [ref=e73]: 
+        - row "1.1.3 Endenergie nach Effizienz GWh/a 61,365.5 58,172.1 - " [ref=e74]:
+          - cell "1.1.3" [ref=e75]
+          - cell "Endenergie nach Effizienz" [ref=e76]
+          - cell "GWh/a" [ref=e77]
+          - cell "61,365.5" [ref=e78]
+          - cell "58,172.1" [ref=e79]
+          - cell "-" [ref=e80]
+          - cell "" [ref=e81]:
+            - button "" [ref=e82] [cursor=pointer]:
+              - generic [ref=e83]: 
+        - row "1.2 davon Handel/Dienstleistungen % 34.7 34.7 34.7 " [ref=e84]:
+          - cell "1.2" [ref=e85]
+          - cell "davon Handel/Dienstleistungen" [ref=e86]
+          - cell "%" [ref=e87]
+          - cell "34.7" [ref=e88]
+          - cell "34.7" [ref=e89]
+          - cell "34.7" [ref=e90]: "34.7"
+          - cell "" [ref=e91]:
+            - button "" [ref=e92] [cursor=pointer]:
+              - generic [ref=e93]: 
+        - row "1.2.1 Endenergie Handel/Dienstl. GWh/a 114,237.3 114,237.3 - " [ref=e94]:
+          - cell "1.2.1" [ref=e95]
+          - cell "Endenergie Handel/Dienstl." [ref=e96]
+          - cell "GWh/a" [ref=e97]
+          - cell "114,237.3" [ref=e98]
+          - cell "114,237.3" [ref=e99]
+          - cell "-" [ref=e100]
+          - cell "" [ref=e101]:
+            - button "" [ref=e102] [cursor=pointer]:
+              - generic [ref=e103]: 
+        - row "1.2.2 Zieleinfluss Handels-/Dienstl.-Vol./Pers. % 100.0 100.0 Click to edit... " [ref=e104]:
+          - cell "1.2.2" [ref=e105]
+          - cell "Zieleinfluss Handels-/Dienstl.-Vol./Pers." [ref=e106]
+          - cell "%" [ref=e107]
+          - cell "100.0" [ref=e108]
+          - cell "100.0" [ref=e109]
+          - cell "Click to edit..." [ref=e110]: Click to edit...
+          - cell "" [ref=e111]:
+            - button "" [ref=e112] [cursor=pointer]:
+              - generic [ref=e113]: 
+        - row "1.2.3 Nach Vol./Pers. Anpassung GWh/a 114,237.3 114,237.3 - " [ref=e114]:
+          - cell "1.2.3" [ref=e115]
+          - cell "Nach Vol./Pers. Anpassung" [ref=e116]
+          - cell "GWh/a" [ref=e117]
+          - cell "114,237.3" [ref=e118]
+          - cell "114,237.3" [ref=e119]
+          - cell "-" [ref=e120]
+          - cell "" [ref=e121]:
+            - button "" [ref=e122] [cursor=pointer]:
+              - generic [ref=e123]: 
+        - row "1.2.4 Zieleinfluss Prozess-Effizienz % 100.0 95.0 Click to edit... " [ref=e124]:
+          - cell "1.2.4" [ref=e125]
+          - cell "Zieleinfluss Prozess-Effizienz" [ref=e126]
+          - cell "%" [ref=e127]
+          - cell "100.0" [ref=e128]
+          - cell "95.0" [ref=e129]
+          - cell "Click to edit..." [ref=e130]: Click to edit...
+          - cell "" [ref=e131]:
+            - button "" [ref=e132] [cursor=pointer]:
+              - generic [ref=e133]: 
+        - row "1.2.5 Endenergie nach Prozess-Effizienz GWh/a 114,237.3 108,525.4 - " [ref=e134]:
+          - cell "1.2.5" [ref=e135]
+          - cell "Endenergie nach Prozess-Effizienz" [ref=e136]
+          - cell "GWh/a" [ref=e137]
+          - cell "114,237.3" [ref=e138]
+          - cell "108,525.4" [ref=e139]
+          - cell "-" [ref=e140]
+          - cell "" [ref=e141]:
+            - button "" [ref=e142] [cursor=pointer]:
+              - generic [ref=e143]: 
+        - row "1.3 davon Industrie + Gewerbeanteil GHD % 46.7 46.7 46.7 " [ref=e144]:
+          - cell "1.3" [ref=e145]
+          - cell "davon Industrie + Gewerbeanteil GHD" [ref=e146]
+          - cell "%" [ref=e147]
+          - cell "46.7" [ref=e148]
+          - cell "46.7" [ref=e149]
+          - cell "46.7" [ref=e150]: "46.7"
+          - cell "" [ref=e151]:
+            - button "" [ref=e152] [cursor=pointer]:
+              - generic [ref=e153]: 
+        - row "1.3.1 Endenergie Industrie GWh/a 153,742.9 153,742.9 - " [ref=e154]:
+          - cell "1.3.1" [ref=e155]
+          - cell "Endenergie Industrie" [ref=e156]
+          - cell "GWh/a" [ref=e157]
+          - cell "153,742.9" [ref=e158]
+          - cell "153,742.9" [ref=e159]
+          - cell "-" [ref=e160]
+          - cell "" [ref=e161]:
+            - button "" [ref=e162] [cursor=pointer]:
+              - generic [ref=e163]: 
+        - row "1.3.2 Zieleinfluss Materialdurchsatz/Pers. % 100.0 100.0 Click to edit... " [ref=e164]:
+          - cell "1.3.2" [ref=e165]
+          - cell "Zieleinfluss Materialdurchsatz/Pers." [ref=e166]
+          - cell "%" [ref=e167]
+          - cell "100.0" [ref=e168]
+          - cell "100.0" [ref=e169]
+          - cell "Click to edit..." [ref=e170]: Click to edit...
+          - cell "" [ref=e171]:
+            - button "" [ref=e172] [cursor=pointer]:
+              - generic [ref=e173]: 
+        - row "1.3.3 Nach Materialdurchsatz Anpassung GWh/a 153,742.9 153,742.9 - " [ref=e174]:
+          - cell "1.3.3" [ref=e175]
+          - cell "Nach Materialdurchsatz Anpassung" [ref=e176]
+          - cell "GWh/a" [ref=e177]
+          - cell "153,742.9" [ref=e178]
+          - cell "153,742.9" [ref=e179]
+          - cell "-" [ref=e180]
+          - cell "" [ref=e181]:
+            - button "" [ref=e182] [cursor=pointer]:
+              - generic [ref=e183]: 
+        - row "1.3.4 Zieleinfluss Prozess-Effizienz % 100.0 95.0 Click to edit... " [ref=e184]:
+          - cell "1.3.4" [ref=e185]
+          - cell "Zieleinfluss Prozess-Effizienz" [ref=e186]
+          - cell "%" [ref=e187]
+          - cell "100.0" [ref=e188]
+          - cell "95.0" [ref=e189]
+          - cell "Click to edit..." [ref=e190]: Click to edit...
+          - cell "" [ref=e191]:
+            - button "" [ref=e192] [cursor=pointer]:
+              - generic [ref=e193]: 
+        - row "1.3.5 Endenergie nach Prozess-Effizienz GWh/a 153,742.9 146,055.8 - " [ref=e194]:
+          - cell "1.3.5" [ref=e195]
+          - cell "Endenergie nach Prozess-Effizienz" [ref=e196]
+          - cell "GWh/a" [ref=e197]
+          - cell "153,742.9" [ref=e198]
+          - cell "146,055.8" [ref=e199]
+          - cell "-" [ref=e200]
+          - cell "" [ref=e201]:
+            - button "" [ref=e202] [cursor=pointer]:
+              - generic [ref=e203]: 
+        - row "1.4 Endverbrauch Strom für KLIK gesamt GWh/a 329,345.7 312,753.3 - " [ref=e204]:
+          - cell "1.4" [ref=e205]
+          - cell "Endverbrauch Strom für KLIK gesamt" [ref=e206]
+          - cell "GWh/a" [ref=e207]
+          - cell "329,345.7" [ref=e208]
+          - cell "312,753.3" [ref=e209]
+          - cell "-" [ref=e210]
+          - cell "" [ref=e211]:
+            - button "" [ref=e212] [cursor=pointer]:
+              - generic [ref=e213]: 
+        - row "2 Gebäudewärme (GW) " [ref=e214]:
+          - cell "2" [ref=e215]
+          - cell "Gebäudewärme (GW)" [ref=e216]:
+            - strong [ref=e217]: Gebäudewärme (GW)
+          - cell "" [ref=e218]:
+            - button "" [disabled]:
+              - generic: 
+        - row "2.0 Bedarfsniveau (statisch) GWh/a 798,867.0 798,867.0 - " [ref=e219]:
+          - cell "2.0" [ref=e220]
+          - cell "Bedarfsniveau (statisch)" [ref=e221]
+          - cell "GWh/a" [ref=e222]
+          - cell "798,867.0" [ref=e223]
+          - cell "798,867.0" [ref=e224]
+          - cell "-" [ref=e225]
+          - cell "" [ref=e226]:
+            - button "" [ref=e227] [cursor=pointer]:
+              - generic [ref=e228]: 
+        - row "2.1 davon Haushalte % 71.6 71.6 Click to edit... " [ref=e229]:
+          - cell "2.1" [ref=e230]
+          - cell "davon Haushalte" [ref=e231]
+          - cell "%" [ref=e232]
+          - cell "71.6" [ref=e233]
+          - cell "71.6" [ref=e234]
+          - cell "Click to edit..." [ref=e235]: Click to edit...
+          - cell "" [ref=e236]:
+            - button "" [ref=e237] [cursor=pointer]:
+              - generic [ref=e238]: 
+        - row "2.1.0 = GWh/a 572,308.3 572,308.3 - " [ref=e239]:
+          - cell "2.1.0" [ref=e240]
+          - cell "=" [ref=e241]:
+            - strong [ref=e243]: =
+          - cell "GWh/a" [ref=e244]
+          - cell "572,308.3" [ref=e245]
+          - cell "572,308.3" [ref=e246]
+          - cell "-" [ref=e247]
+          - cell "" [ref=e248]:
+            - button "" [ref=e249] [cursor=pointer]:
+              - generic [ref=e250]: 
+        - row "2.1.1 Wohnfläche pro Person qm/Person 44.7 44.7 44.7 " [ref=e251]:
+          - cell "2.1.1" [ref=e252]
+          - cell "Wohnfläche pro Person" [ref=e253]
+          - cell "qm/Person" [ref=e254]
+          - cell "44.7" [ref=e255]
+          - cell "44.7" [ref=e256]
+          - cell "44.7" [ref=e257]: "44.7"
+          - cell "" [ref=e258]:
+            - button "" [ref=e259] [cursor=pointer]:
+              - generic [ref=e260]: 
+        - row "2.1.2 Zieleinfluss Wohnflächen-Entwicklung % v. Status 100.0 100.0 - " [ref=e261]:
+          - cell "2.1.2" [ref=e262]
+          - cell "Zieleinfluss Wohnflächen-Entwicklung" [ref=e263]
+          - cell "% v. Status" [ref=e264]
+          - cell "100.0" [ref=e265]
+          - cell "100.0" [ref=e266]
+          - cell "-" [ref=e267]
+          - cell "" [ref=e268]:
+            - button "" [ref=e269] [cursor=pointer]:
+              - generic [ref=e270]: 
+        - row "2.1.9 = GWh/a 572,308.3 572,308.3 - " [ref=e271]:
+          - cell "2.1.9" [ref=e272]
+          - cell "=" [ref=e273]:
+            - strong [ref=e275]: =
+          - cell "GWh/a" [ref=e276]
+          - cell "572,308.3" [ref=e277]
+          - cell "572,308.3" [ref=e278]
+          - cell "-" [ref=e279]
+          - cell "" [ref=e280]:
+            - button "" [ref=e281] [cursor=pointer]:
+              - generic [ref=e282]: 
+        - row "2.2 dav.Gewerbe/Handel/Dienstl. + Industr. % 28.4 28.4 28.4 " [ref=e283]:
+          - cell "2.2" [ref=e284]
+          - cell "dav.Gewerbe/Handel/Dienstl. + Industr." [ref=e285]
+          - cell "%" [ref=e286]
+          - cell "28.4" [ref=e287]
+          - cell "28.4" [ref=e288]
+          - cell "28.4" [ref=e289]: "28.4"
+          - cell "" [ref=e290]:
+            - button "" [ref=e291] [cursor=pointer]:
+              - generic [ref=e292]: 
+        - row "2.2.0 = GWh/a 226,878.2 226,878.2 - " [ref=e293]:
+          - cell "2.2.0" [ref=e294]
+          - cell "=" [ref=e295]:
+            - strong [ref=e297]: =
+          - cell "GWh/a" [ref=e298]
+          - cell "226,878.2" [ref=e299]
+          - cell "226,878.2" [ref=e300]
+          - cell "-" [ref=e301]
+          - cell "" [ref=e302]:
+            - button "" [ref=e303] [cursor=pointer]:
+              - generic [ref=e304]: 
+        - row "2.2.1 Zieleinfluss Erwerbstätigkeit % v. Status 100.0 100.0 Click to edit... " [ref=e305]:
+          - cell "2.2.1" [ref=e306]
+          - cell "Zieleinfluss Erwerbstätigkeit" [ref=e307]
+          - cell "% v. Status" [ref=e308]
+          - cell "100.0" [ref=e309]
+          - cell "100.0" [ref=e310]
+          - cell "Click to edit..." [ref=e311]: Click to edit...
+          - cell "" [ref=e312]:
+            - button "" [ref=e313] [cursor=pointer]:
+              - generic [ref=e314]: 
+        - row "2.2.9 = GWh/a 226,878.2 226,878.2 - " [ref=e315]:
+          - cell "2.2.9" [ref=e316]
+          - cell "=" [ref=e317]:
+            - strong [ref=e319]: =
+          - cell "GWh/a" [ref=e320]
+          - cell "226,878.2" [ref=e321]
+          - cell "226,878.2" [ref=e322]
+          - cell "-" [ref=e323]
+          - cell "" [ref=e324]:
+            - button "" [ref=e325] [cursor=pointer]:
+              - generic [ref=e326]: 
+        - row "2.3 Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.) GWh/a 799,186.5 799,186.5 - " [ref=e327]:
+          - cell "2.3" [ref=e328]
+          - cell "Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.)" [ref=e329]
+          - cell "GWh/a" [ref=e330]
+          - cell "799,186.5" [ref=e331]
+          - cell "799,186.5" [ref=e332]
+          - cell "-" [ref=e333]
+          - cell "" [ref=e334]:
+            - button "" [ref=e335] [cursor=pointer]:
+              - generic [ref=e336]: 
+        - row "2.4 davon Raumwärme % 85.9 85.9 85.9 " [ref=e337]:
+          - cell "2.4" [ref=e338]
+          - cell "davon Raumwärme" [ref=e339]
+          - cell "%" [ref=e340]
+          - cell "85.9" [ref=e341]
+          - cell "85.9" [ref=e342]
+          - cell "85.9" [ref=e343]: "85.9"
+          - cell "" [ref=e344]:
+            - button "" [ref=e345] [cursor=pointer]:
+              - generic [ref=e346]: 
+        - row "2.4.0 = GWh/a 686,501.2 686,501.2 - " [ref=e347]:
+          - cell "2.4.0" [ref=e348]
+          - cell "=" [ref=e349]:
+            - strong [ref=e351]: =
+          - cell "GWh/a" [ref=e352]
+          - cell "686,501.2" [ref=e353]
+          - cell "686,501.2" [ref=e354]
+          - cell "-" [ref=e355]
+          - cell "" [ref=e356]:
+            - button "" [ref=e357] [cursor=pointer]:
+              - generic [ref=e358]: 
+        - row "2.4.1 Spez.Raumwärmebed.Status/Saniert kWh/qm/a 136.0 80.0 80.0 " [ref=e359]:
+          - cell "2.4.1" [ref=e360]
+          - cell "Spez.Raumwärmebed.Status/Saniert" [ref=e361]
+          - cell "kWh/qm/a" [ref=e362]
+          - cell "136.0" [ref=e363]
+          - cell "80.0" [ref=e364]
+          - cell "80.0" [ref=e365]: "80.0"
+          - cell "" [ref=e366]:
+            - button "" [ref=e367] [cursor=pointer]:
+              - generic [ref=e368]: 
+        - row "2.4.2 = Veränderung zum Status % v.Status 100.0 -41.2 - " [ref=e369]:
+          - cell "2.4.2" [ref=e370]
+          - cell "= Veränderung zum Status" [ref=e371]:
+            - strong [ref=e373]: = Veränderung zum Status
+          - cell "% v.Status" [ref=e374]
+          - cell "100.0" [ref=e375]
+          - cell "-41.2" [ref=e376]
+          - cell "-" [ref=e377]
+          - cell "" [ref=e378]:
+            - button "" [ref=e379] [cursor=pointer]:
+              - generic [ref=e380]: 
+        - row "2.4.3 Gebäude - Sanierungs-/Ersatzrate %/a 1.5 1.5 - " [ref=e381]:
+          - cell "2.4.3" [ref=e382]
+          - cell "Gebäude - Sanierungs-/Ersatzrate" [ref=e383]
+          - cell "%/a" [ref=e384]
+          - cell "1.5" [ref=e385]
+          - cell "1.5" [ref=e386]
+          - cell "-" [ref=e387]
+          - cell "" [ref=e388]:
+            - button "" [ref=e389] [cursor=pointer]:
+              - generic [ref=e390]: 
+        - 'row "2.4.4 Sanierungszeitraum: 22 Jahre Kalenderjahr 2,023.0 2,045.0 - " [ref=e391]':
+          - cell "2.4.4" [ref=e392]
+          - 'cell "Sanierungszeitraum: 22 Jahre" [ref=e393]'
+          - cell "Kalenderjahr" [ref=e394]
+          - cell "2,023.0" [ref=e395]
+          - cell "2,045.0" [ref=e396]
+          - cell "-" [ref=e397]
+          - cell "" [ref=e398]:
+            - button "" [ref=e399] [cursor=pointer]:
+              - generic [ref=e400]: 
+        - row "2.4.5 = Gebäudeanteil mit Ziel-Wärmeschutz % v.Status 0.0 33.0 - " [ref=e401]:
+          - cell "2.4.5" [ref=e402]
+          - cell "= Gebäudeanteil mit Ziel-Wärmeschutz" [ref=e403]:
+            - strong [ref=e405]: = Gebäudeanteil mit Ziel-Wärmeschutz
+          - cell "% v.Status" [ref=e406]
+          - cell "0.0" [ref=e407]
+          - cell "33.0" [ref=e408]
+          - cell "-" [ref=e409]
+          - cell "" [ref=e410]:
+            - button "" [ref=e411] [cursor=pointer]:
+              - generic [ref=e412]: 
+        - row "2.4.6 = Result.spez.Raumwärmebed. ges. kWh/qm/a 136.0 117.5 - " [ref=e413]:
+          - cell "2.4.6" [ref=e414]
+          - cell "= Result.spez.Raumwärmebed. ges." [ref=e415]:
+            - strong [ref=e417]: = Result.spez.Raumwärmebed. ges.
+          - cell "kWh/qm/a" [ref=e418]
+          - cell "136.0" [ref=e419]
+          - cell "117.5" [ref=e420]
+          - cell "-" [ref=e421]
+          - cell "" [ref=e422]:
+            - button "" [ref=e423] [cursor=pointer]:
+              - generic [ref=e424]: 
+        - row "2.4.7 = Raumwärmebedarf Veränderung % v.Status 0.0 -13.6 - " [ref=e425]:
+          - cell "2.4.7" [ref=e426]
+          - cell "= Raumwärmebedarf Veränderung" [ref=e427]:
+            - strong [ref=e429]: = Raumwärmebedarf Veränderung
+          - cell "% v.Status" [ref=e430]
+          - cell "0.0" [ref=e431]
+          - cell "-13.6" [ref=e432]
+          - cell "-" [ref=e433]
+          - cell "" [ref=e434]:
+            - button "" [ref=e435] [cursor=pointer]:
+              - generic [ref=e436]: 
+        - row "2.4.9 = Bedarfsniveau (Sanierung/Ersatz) GWh/a 686,501.2 593,217.8 - " [ref=e437]:
+          - cell "2.4.9" [ref=e438]
+          - cell "= Bedarfsniveau (Sanierung/Ersatz)" [ref=e439]:
+            - strong [ref=e441]: = Bedarfsniveau (Sanierung/Ersatz)
+          - cell "GWh/a" [ref=e442]
+          - cell "686,501.2" [ref=e443]
+          - cell "593,217.8" [ref=e444]
+          - cell "-" [ref=e445]
+          - cell "" [ref=e446]:
+            - button "" [ref=e447] [cursor=pointer]:
+              - generic [ref=e448]: 
+        - row "2.5 davon Warmwasser % 14.1 14.1 Click to edit... " [ref=e449]:
+          - cell "2.5" [ref=e450]
+          - cell "davon Warmwasser" [ref=e451]
+          - cell "%" [ref=e452]
+          - cell "14.1" [ref=e453]
+          - cell "14.1" [ref=e454]
+          - cell "Click to edit..." [ref=e455]: Click to edit...
+          - cell "" [ref=e456]:
+            - button "" [ref=e457] [cursor=pointer]:
+              - generic [ref=e458]: 
+        - row "2.5.0 = GWh/a 112,685.3 112,685.3 - " [ref=e459]:
+          - cell "2.5.0" [ref=e460]
+          - cell "=" [ref=e461]:
+            - strong [ref=e463]: =
+          - cell "GWh/a" [ref=e464]
+          - cell "112,685.3" [ref=e465]
+          - cell "112,685.3" [ref=e466]
+          - cell "-" [ref=e467]
+          - cell "" [ref=e468]:
+            - button "" [ref=e469] [cursor=pointer]:
+              - generic [ref=e470]: 
+        - row "2.5.1 Zieleinfluss Anwendungs-/Prozess-Effizienz % 100.0 70.0 Click to edit... " [ref=e471]:
+          - cell "2.5.1" [ref=e472]
+          - cell "Zieleinfluss Anwendungs-/Prozess-Effizienz" [ref=e473]
+          - cell "%" [ref=e474]
+          - cell "100.0" [ref=e475]
+          - cell "70.0" [ref=e476]
+          - cell "Click to edit..." [ref=e477]: Click to edit...
+          - cell "" [ref=e478]:
+            - button "" [ref=e479] [cursor=pointer]:
+              - generic [ref=e480]: 
+        - row "2.5.2 = GWh/a 112,685.3 78,879.7 - " [ref=e481]:
+          - cell "2.5.2" [ref=e482]
+          - cell "=" [ref=e483]:
+            - strong [ref=e485]: =
+          - cell "GWh/a" [ref=e486]
+          - cell "112,685.3" [ref=e487]
+          - cell "78,879.7" [ref=e488]
+          - cell "-" [ref=e489]
+          - cell "" [ref=e490]:
+            - button "" [ref=e491] [cursor=pointer]:
+              - generic [ref=e492]: 
+        - row "2.5.3 = Res. Anteil Warmwasser an Gebäudew. % 14.1 11.7 - " [ref=e493]:
+          - cell "2.5.3" [ref=e494]
+          - cell "= Res. Anteil Warmwasser an Gebäudew." [ref=e495]:
+            - strong [ref=e497]: = Res. Anteil Warmwasser an Gebäudew.
+          - cell "%" [ref=e498]
+          - cell "14.1" [ref=e499]
+          - cell "11.7" [ref=e500]
+          - cell "-" [ref=e501]
+          - cell "" [ref=e502]:
+            - button "" [ref=e503] [cursor=pointer]:
+              - generic [ref=e504]: 
+        - row "2.6 Bedarfsniveau (Sanierung/ Anwendungseff.) GWh/a 799,186.5 672,097.6 - " [ref=e505]:
+          - cell "2.6" [ref=e506]
+          - cell "Bedarfsniveau (Sanierung/ Anwendungseff.)" [ref=e507]
+          - cell "GWh/a" [ref=e508]
+          - cell "799,186.5" [ref=e509]
+          - cell "672,097.6" [ref=e510]
+          - cell "-" [ref=e511]
+          - cell "" [ref=e512]:
+            - button "" [ref=e513] [cursor=pointer]:
+              - generic [ref=e514]: 
+        - row "2.7 davon Brennstoffe % v. [75] 79.2 0.0 Click to edit... " [ref=e515]:
+          - cell "2.7" [ref=e516]
+          - cell "davon Brennstoffe" [ref=e517]
+          - cell "% v. [75]" [ref=e518]
+          - cell "79.2" [ref=e519]
+          - cell "0.0" [ref=e520]
+          - cell "Click to edit..." [ref=e521]: Click to edit...
+          - cell "" [ref=e522]:
+            - button "" [ref=e523] [cursor=pointer]:
+              - generic [ref=e524]: 
+        - row "2.7.0 = Endenergieverbrauch GWh/a 632,955.7 0.0 - " [ref=e525]:
+          - cell "2.7.0" [ref=e526]
+          - cell "= Endenergieverbrauch" [ref=e527]:
+            - strong [ref=e529]: = Endenergieverbrauch
+          - cell "GWh/a" [ref=e530]
+          - cell "632,955.7" [ref=e531]
+          - cell "0.0" [ref=e532]
+          - cell "-" [ref=e533]
+          - cell "" [ref=e534]:
+            - button "" [ref=e535] [cursor=pointer]:
+              - generic [ref=e536]: 
+        - row "2.7.1 > Nutzungsgrad Endanwendung % 86.0 88.0 Click to edit... " [ref=e537]:
+          - cell "2.7.1" [ref=e538]
+          - cell "> Nutzungsgrad Endanwendung" [ref=e539]
+          - cell "%" [ref=e540]
+          - cell "86.0" [ref=e541]
+          - cell "88.0" [ref=e542]
+          - cell "Click to edit..." [ref=e543]: Click to edit...
+          - cell "" [ref=e544]:
+            - button "" [ref=e545] [cursor=pointer]:
+              - generic [ref=e546]: 
+        - row "2.7.2 > Wandlungsverluste Endanwendung % v. [75] 11.1 0.0 - " [ref=e547]:
+          - cell "2.7.2" [ref=e548]
+          - cell "> Wandlungsverluste Endanwendung" [ref=e549]
+          - cell "% v. [75]" [ref=e550]
+          - cell "11.1" [ref=e551]
+          - cell "0.0" [ref=e552]
+          - cell "-" [ref=e553]
+          - cell "" [ref=e554]:
+            - button "" [ref=e555] [cursor=pointer]:
+              - generic [ref=e556]: 
+        - row "2.7.3 = Einsparung gegenüber Status (relativ) % v. [75] 0.0 11.1 - " [ref=e557]:
+          - cell "2.7.3" [ref=e558]
+          - cell "= Einsparung gegenüber Status (relativ)" [ref=e559]:
+            - strong [ref=e561]: = Einsparung gegenüber Status (relativ)
+          - cell "% v. [75]" [ref=e562]
+          - cell "0.0" [ref=e563]
+          - cell "11.1" [ref=e564]
+          - cell "-" [ref=e565]
+          - cell "" [ref=e566]:
+            - button "" [ref=e567] [cursor=pointer]:
+              - generic [ref=e568]: 
+        - row "2.7.4 = Einsparung gegenüber Status (absolut) GWh/a 0.0 0.0 - " [ref=e569]:
+          - cell "2.7.4" [ref=e570]
+          - cell "= Einsparung gegenüber Status (absolut)" [ref=e571]:
+            - strong [ref=e573]: = Einsparung gegenüber Status (absolut)
+          - cell "GWh/a" [ref=e574]
+          - cell "0.0" [ref=e575]
+          - cell "0.0" [ref=e576]
+          - cell "-" [ref=e577]
+          - cell "" [ref=e578]:
+            - button "" [ref=e579] [cursor=pointer]:
+              - generic [ref=e580]: 
+        - row "2.8 davon Wärme (30-100°C/verlustarm nutzbar) % v. [75] 16.7 79.5 79.5 " [ref=e581]:
+          - cell "2.8" [ref=e582]
+          - cell "davon Wärme (30-100°C/verlustarm nutzbar)" [ref=e583]
+          - cell "% v. [75]" [ref=e584]
+          - cell "16.7" [ref=e585]
+          - cell "79.5" [ref=e586]
+          - cell "79.5" [ref=e587]: "79.5"
+          - cell "" [ref=e588]:
+            - button "" [ref=e589] [cursor=pointer]:
+              - generic [ref=e590]: 
+        - row "2.8.0 = Endenergieverbrauch GWh/a 133,464.2 534,147.1 - " [ref=e591]:
+          - cell "2.8.0" [ref=e592]
+          - cell "= Endenergieverbrauch" [ref=e593]:
+            - strong [ref=e595]: = Endenergieverbrauch
+          - cell "GWh/a" [ref=e596]
+          - cell "133,464.2" [ref=e597]
+          - cell "534,147.1" [ref=e598]
+          - cell "-" [ref=e599]
+          - cell "" [ref=e600]:
+            - button "" [ref=e601] [cursor=pointer]:
+              - generic [ref=e602]: 
+        - row "2.9 davon Strom (verlustarm nutzb.) % v. [75] 4.1 20.5 - " [ref=e603]:
+          - cell "2.9" [ref=e604]
+          - cell "davon Strom (verlustarm nutzb.)" [ref=e605]
+          - cell "% v. [75]" [ref=e606]
+          - cell "4.1" [ref=e607]
+          - cell "20.5" [ref=e608]
+          - cell "-" [ref=e609]
+          - cell "" [ref=e610]:
+            - button "" [ref=e611] [cursor=pointer]:
+              - generic [ref=e612]: 
+        - row "2.9.0 = Endenergieverbrauch GWh/a 32,766.6 137,950.4 - " [ref=e613]:
+          - cell "2.9.0" [ref=e614]
+          - cell "= Endenergieverbrauch" [ref=e615]:
+            - strong [ref=e617]: = Endenergieverbrauch
+          - cell "GWh/a" [ref=e618]
+          - cell "32,766.6" [ref=e619]
+          - cell "137,950.4" [ref=e620]
+          - cell "-" [ref=e621]
+          - cell "" [ref=e622]:
+            - button "" [ref=e623] [cursor=pointer]:
+              - generic [ref=e624]: 
+        - row "2.9.1 davon für Wärmepumpen % 30.8 100.0 - " [ref=e625]:
+          - cell "2.9.1" [ref=e626]
+          - cell "davon für Wärmepumpen" [ref=e627]
+          - cell "%" [ref=e628]
+          - cell "30.8" [ref=e629]
+          - cell "100.0" [ref=e630]
+          - cell "-" [ref=e631]
+          - cell "" [ref=e632]:
+            - button "" [ref=e633] [cursor=pointer]:
+              - generic [ref=e634]: 
+        - row "2.9.2 = GWh/a 10,108.0 137,950.4 - " [ref=e635]:
+          - cell "2.9.2" [ref=e636]
+          - cell "=" [ref=e637]:
+            - strong [ref=e639]: =
+          - cell "GWh/a" [ref=e640]
+          - cell "10,108.0" [ref=e641]
+          - cell "137,950.4" [ref=e642]
+          - cell "-" [ref=e643]
+          - cell "" [ref=e644]:
+            - button "" [ref=e645] [cursor=pointer]:
+              - generic [ref=e646]: 
+        - row "2.10 Endenergieverbrauch GW gesamt GWh/a 799,186.5 672,097.6 - " [ref=e647]:
+          - cell "2.10" [ref=e648]
+          - cell "Endenergieverbrauch GW gesamt" [ref=e649]
+          - cell "GWh/a" [ref=e650]
+          - cell "799,186.5" [ref=e651]
+          - cell "672,097.6" [ref=e652]
+          - cell "-" [ref=e653]
+          - cell "" [ref=e654]:
+            - button "" [ref=e655] [cursor=pointer]:
+              - generic [ref=e656]: 
+        - row "3 Prozesswärme (PW) " [ref=e657]:
+          - cell "3" [ref=e658]
+          - cell "Prozesswärme (PW)" [ref=e659]:
+            - strong [ref=e660]: Prozesswärme (PW)
+          - cell "" [ref=e661]:
+            - button "" [disabled]:
+              - generic: 
+        - row "3.0 Bedarfsniveau (statisch) GWh/a 555,395.0 555,395.0 - " [ref=e662]:
+          - cell "3.0" [ref=e663]
+          - cell "Bedarfsniveau (statisch)" [ref=e664]
+          - cell "GWh/a" [ref=e665]
+          - cell "555,395.0" [ref=e666]
+          - cell "555,395.0" [ref=e667]
+          - cell "-" [ref=e668]
+          - cell "" [ref=e669]:
+            - button "" [ref=e670] [cursor=pointer]:
+              - generic [ref=e671]: 
+        - row "3.1 davon Haushalte % 8.7 8.7 Click to edit... " [ref=e672]:
+          - cell "3.1" [ref=e673]
+          - cell "davon Haushalte" [ref=e674]
+          - cell "%" [ref=e675]
+          - cell "8.7" [ref=e676]
+          - cell "8.7" [ref=e677]
+          - cell "Click to edit..." [ref=e678]: Click to edit...
+          - cell "" [ref=e679]:
+            - button "" [ref=e680] [cursor=pointer]:
+              - generic [ref=e681]: 
+        - row "3.1.0 = GWh/a 48,410.4 48,410.4 - " [ref=e682]:
+          - cell "3.1.0" [ref=e683]
+          - cell "=" [ref=e684]:
+            - strong [ref=e686]: =
+          - cell "GWh/a" [ref=e687]
+          - cell "48,410.4" [ref=e688]
+          - cell "48,410.4" [ref=e689]
+          - cell "-" [ref=e690]
+          - cell "" [ref=e691]:
+            - button "" [ref=e692] [cursor=pointer]:
+              - generic [ref=e693]: 
+        - row "3.1.1 Zieleinfluss Endanwendungs-Effizienz % 100.0 95.0 95.0 " [ref=e694]:
+          - cell "3.1.1" [ref=e695]
+          - cell "Zieleinfluss Endanwendungs-Effizienz" [ref=e696]
+          - cell "%" [ref=e697]
+          - cell "100.0" [ref=e698]
+          - cell "95.0" [ref=e699]
+          - cell "95.0" [ref=e700]: "95.0"
+          - cell "" [ref=e701]:
+            - button "" [ref=e702] [cursor=pointer]:
+              - generic [ref=e703]: 
+        - row "3.1.2 = GWh/a 48,410.4 45,989.9 - " [ref=e704]:
+          - cell "3.1.2" [ref=e705]
+          - cell "=" [ref=e706]:
+            - strong [ref=e708]: =
+          - cell "GWh/a" [ref=e709]
+          - cell "48,410.4" [ref=e710]
+          - cell "45,989.9" [ref=e711]
+          - cell "-" [ref=e712]
+          - cell "" [ref=e713]:
+            - button "" [ref=e714] [cursor=pointer]:
+              - generic [ref=e715]: 
+        - row "3.2 dav.Industrie + Gewerbeant.GHD % 91.3 91.3 Click to edit... " [ref=e716]:
+          - cell "3.2" [ref=e717]
+          - cell "dav.Industrie + Gewerbeant.GHD" [ref=e718]
+          - cell "%" [ref=e719]
+          - cell "91.3" [ref=e720]
+          - cell "91.3" [ref=e721]
+          - cell "Click to edit..." [ref=e722]: Click to edit...
+          - cell "" [ref=e723]:
+            - button "" [ref=e724] [cursor=pointer]:
+              - generic [ref=e725]: 
+        - row "3.2.0 = GWh/a 506,984.0 506,984.0 - " [ref=e726]:
+          - cell "3.2.0" [ref=e727]
+          - cell "=" [ref=e728]:
+            - strong [ref=e730]: =
+          - cell "GWh/a" [ref=e731]
+          - cell "506,984.0" [ref=e732]
+          - cell "506,984.0" [ref=e733]
+          - cell "-" [ref=e734]
+          - cell "" [ref=e735]:
+            - button "" [ref=e736] [cursor=pointer]:
+              - generic [ref=e737]: 
+        - row "3.2.1 Zieleinfluss Materialdurchsatz/Pers. % 100.0 100.0 Click to edit... " [ref=e738]:
+          - cell "3.2.1" [ref=e739]
+          - cell "Zieleinfluss Materialdurchsatz/Pers." [ref=e740]
+          - cell "%" [ref=e741]
+          - cell "100.0" [ref=e742]
+          - cell "100.0" [ref=e743]
+          - cell "Click to edit..." [ref=e744]: Click to edit...
+          - cell "" [ref=e745]:
+            - button "" [ref=e746] [cursor=pointer]:
+              - generic [ref=e747]: 
+        - row "3.2.1.5 = GWh/a 506,984.0 506,984.0 - " [ref=e748]:
+          - cell "3.2.1.5" [ref=e749]
+          - cell "=" [ref=e750]:
+            - strong [ref=e752]: =
+          - cell "GWh/a" [ref=e753]
+          - cell "506,984.0" [ref=e754]
+          - cell "506,984.0" [ref=e755]
+          - cell "-" [ref=e756]
+          - cell "" [ref=e757]:
+            - button "" [ref=e758] [cursor=pointer]:
+              - generic [ref=e759]: 
+        - row "3.2.2 Zieleinfluss Prozess-Effizienz % 100.0 89.0 Click to edit... " [ref=e760]:
+          - cell "3.2.2" [ref=e761]
+          - cell "Zieleinfluss Prozess-Effizienz" [ref=e762]
+          - cell "%" [ref=e763]
+          - cell "100.0" [ref=e764]
+          - cell "89.0" [ref=e765]
+          - cell "Click to edit..." [ref=e766]: Click to edit...
+          - cell "" [ref=e767]:
+            - button "" [ref=e768] [cursor=pointer]:
+              - generic [ref=e769]: 
+        - row "3.2.3 = GWh/a 506,984.0 451,216.0 - " [ref=e770]:
+          - cell "3.2.3" [ref=e771]
+          - cell "=" [ref=e772]:
+            - strong [ref=e774]: =
+          - cell "GWh/a" [ref=e775]
+          - cell "506,984.0" [ref=e776]
+          - cell "451,216.0" [ref=e777]
+          - cell "-" [ref=e778]
+          - cell "" [ref=e779]:
+            - button "" [ref=e780] [cursor=pointer]:
+              - generic [ref=e781]: 
+        - row "3.3 Bedarfsniveau (Prod.-Vol., Proz.-Effiz.) GWh/a 555,394.4 497,205.9 - " [ref=e782]:
+          - cell "3.3" [ref=e783]
+          - cell "Bedarfsniveau (Prod.-Vol., Proz.-Effiz.)" [ref=e784]
+          - cell "GWh/a" [ref=e785]
+          - cell "555,394.4" [ref=e786]
+          - cell "497,205.9" [ref=e787]
+          - cell "-" [ref=e788]
+          - cell "" [ref=e789]:
+            - button "" [ref=e790] [cursor=pointer]:
+              - generic [ref=e791]: 
+        - row "3.4 davon Brennstoffe % 60.3 26.7 26.7 " [ref=e792]:
+          - cell "3.4" [ref=e793]
+          - cell "davon Brennstoffe" [ref=e794]
+          - cell "%" [ref=e795]
+          - cell "60.3" [ref=e796]
+          - cell "26.7" [ref=e797]
+          - cell "26.7" [ref=e798]: "26.7"
+          - cell "" [ref=e799]:
+            - button "" [ref=e800] [cursor=pointer]:
+              - generic [ref=e801]: 
+        - row "3.4.0 = Endenergieverbrauch GWh/a 334,902.9 132,735.3 - " [ref=e802]:
+          - cell "3.4.0" [ref=e803]
+          - cell "= Endenergieverbrauch" [ref=e804]:
+            - strong [ref=e806]: = Endenergieverbrauch
+          - cell "GWh/a" [ref=e807]
+          - cell "334,902.9" [ref=e808]
+          - cell "132,735.3" [ref=e809]
+          - cell "-" [ref=e810]
+          - cell "" [ref=e811]:
+            - button "" [ref=e812] [cursor=pointer]:
+              - generic [ref=e813]: 
+        - row "3.4.1 > Nutzungsgrad Endanwendung % 86.0 88.0 Click to edit... " [ref=e814]:
+          - cell "3.4.1" [ref=e815]
+          - cell "> Nutzungsgrad Endanwendung" [ref=e816]
+          - cell "%" [ref=e817]
+          - cell "86.0" [ref=e818]
+          - cell "88.0" [ref=e819]
+          - cell "Click to edit..." [ref=e820]: Click to edit...
+          - cell "" [ref=e821]:
+            - button "" [ref=e822] [cursor=pointer]:
+              - generic [ref=e823]: 
+        - row "3.4.2 > Wandlungsverluste Endanwendung % 8.4 3.2 - " [ref=e824]:
+          - cell "3.4.2" [ref=e825]
+          - cell "> Wandlungsverluste Endanwendung" [ref=e826]
+          - cell "%" [ref=e827]
+          - cell "8.4" [ref=e828]
+          - cell "3.2" [ref=e829]
+          - cell "-" [ref=e830]
+          - cell "" [ref=e831]:
+            - button "" [ref=e832] [cursor=pointer]:
+              - generic [ref=e833]: 
+        - row "3.4.3 = Einsparung gegenüber Status (relativ) % 0.0 5.2 - " [ref=e834]:
+          - cell "3.4.3" [ref=e835]
+          - cell "= Einsparung gegenüber Status (relativ)" [ref=e836]:
+            - strong [ref=e838]: = Einsparung gegenüber Status (relativ)
+          - cell "%" [ref=e839]
+          - cell "0.0" [ref=e840]
+          - cell "5.2" [ref=e841]
+          - cell "-" [ref=e842]
+          - cell "" [ref=e843]:
+            - button "" [ref=e844] [cursor=pointer]:
+              - generic [ref=e845]: 
+        - row "3.4.4 = Einsparung gegenüber Status (absolut) GWh/a 0.0 6,953.3 - " [ref=e846]:
+          - cell "3.4.4" [ref=e847]
+          - cell "= Einsparung gegenüber Status (absolut)" [ref=e848]:
+            - strong [ref=e850]: = Einsparung gegenüber Status (absolut)
+          - cell "GWh/a" [ref=e851]
+          - cell "0.0" [ref=e852]
+          - cell "6,953.3" [ref=e853]
+          - cell "-" [ref=e854]
+          - cell "" [ref=e855]:
+            - button "" [ref=e856] [cursor=pointer]:
+              - generic [ref=e857]: 
+        - row "3.5 davon Wärme (>100°C,verlustarm nutzbar) % 25.9 0.0 Click to edit... " [ref=e858]:
+          - cell "3.5" [ref=e859]
+          - cell "davon Wärme (>100°C,verlustarm nutzbar)" [ref=e860]
+          - cell "%" [ref=e861]
+          - cell "25.9" [ref=e862]
+          - cell "0.0" [ref=e863]
+          - cell "Click to edit..." [ref=e864]: Click to edit...
+          - cell "" [ref=e865]:
+            - button "" [ref=e866] [cursor=pointer]:
+              - generic [ref=e867]: 
+        - row "3.5.0 = Endenergieverbrauch GWh/a 143,847.2 0.0 - " [ref=e868]:
+          - cell "3.5.0" [ref=e869]
+          - cell "= Endenergieverbrauch" [ref=e870]:
+            - strong [ref=e872]: = Endenergieverbrauch
+          - cell "GWh/a" [ref=e873]
+          - cell "143,847.2" [ref=e874]
+          - cell "0.0" [ref=e875]
+          - cell "-" [ref=e876]
+          - cell "" [ref=e877]:
+            - button "" [ref=e878] [cursor=pointer]:
+              - generic [ref=e879]: 
+        - row "3.6 davon Strom (verlustarm nutzbar) % 12.9 71.9 - " [ref=e880]:
+          - cell "3.6" [ref=e881]
+          - cell "davon Strom (verlustarm nutzbar)" [ref=e882]
+          - cell "%" [ref=e883]
+          - cell "12.9" [ref=e884]
+          - cell "71.9" [ref=e885]
+          - cell "-" [ref=e886]
+          - cell "" [ref=e887]:
+            - button "" [ref=e888] [cursor=pointer]:
+              - generic [ref=e889]: 
+        - row "3.6.0 = Endenergieverbrauch GWh/a 71,620.9 357,517.4 - " [ref=e890]:
+          - cell "3.6.0" [ref=e891]
+          - cell "= Endenergieverbrauch" [ref=e892]:
+            - strong [ref=e894]: = Endenergieverbrauch
+          - cell "GWh/a" [ref=e895]
+          - cell "71,620.9" [ref=e896]
+          - cell "357,517.4" [ref=e897]
+          - cell "-" [ref=e898]
+          - cell "" [ref=e899]:
+            - button "" [ref=e900] [cursor=pointer]:
+              - generic [ref=e901]: 
+        - row "3.7 Endenergieverbrauch PW gesamt GWh/a 550,370.9 490,252.6 - " [ref=e902]:
+          - cell "3.7" [ref=e903]
+          - cell "Endenergieverbrauch PW gesamt" [ref=e904]
+          - cell "GWh/a" [ref=e905]
+          - cell "550,370.9" [ref=e906]
+          - cell "490,252.6" [ref=e907]
+          - cell "-" [ref=e908]
+          - cell "" [ref=e909]:
+            - button "" [ref=e910] [cursor=pointer]:
+              - generic [ref=e911]: 
+        - row "4 Mobile Anwendungen (MA) " [ref=e912]:
+          - cell "4" [ref=e913]
+          - cell "Mobile Anwendungen (MA)" [ref=e914]:
+            - strong [ref=e915]: Mobile Anwendungen (MA)
+          - cell "" [ref=e916]:
+            - button "" [disabled]:
+              - generic: 
+        - row "4.0 Mobile Anwendungen (MA) GWh/a - - - " [ref=e917]:
+          - cell "4.0" [ref=e918]
+          - cell "Mobile Anwendungen (MA)" [ref=e919]
+          - cell "GWh/a" [ref=e920]
+          - cell "-" [ref=e921]
+          - cell "-" [ref=e922]
+          - cell "-" [ref=e923]
+          - cell "" [ref=e924]:
+            - button "" [ref=e925] [cursor=pointer]:
+              - generic [ref=e926]: 
+        - row "4.1 MA am Boden (Straße, Schiene, Schifffahrt, Maschinen) GWh/a 100.0 100.0 - " [ref=e927]:
+          - cell "4.1" [ref=e928]
+          - cell "MA am Boden (Straße, Schiene, Schifffahrt, Maschinen)" [ref=e929]
+          - cell "GWh/a" [ref=e930]
+          - cell "100.0" [ref=e931]
+          - cell "100.0" [ref=e932]
+          - cell "-" [ref=e933]
+          - cell "" [ref=e934]:
+            - button "" [ref=e935] [cursor=pointer]:
+              - generic [ref=e936]: 
+        - row "4.1.0 Bedarfsniveau (statisch) GWh/a 639,193.0 639,193.0 - " [ref=e937]:
+          - cell "4.1.0" [ref=e938]
+          - cell "Bedarfsniveau (statisch)" [ref=e939]
+          - cell "GWh/a" [ref=e940]
+          - cell "639,193.0" [ref=e941]
+          - cell "639,193.0" [ref=e942]
+          - cell "-" [ref=e943]
+          - cell "" [ref=e944]:
+            - button "" [ref=e945] [cursor=pointer]:
+              - generic [ref=e946]: 
+        - row "4.1.1 davon Personenverkehr (PVk) % 67.4 67.4 Click to edit... " [ref=e947]:
+          - cell "4.1.1" [ref=e948]
+          - cell "davon Personenverkehr (PVk)" [ref=e949]
+          - cell "%" [ref=e950]
+          - cell "67.4" [ref=e951]
+          - cell "67.4" [ref=e952]
+          - cell "Click to edit..." [ref=e953]: Click to edit...
+          - cell "" [ref=e954]:
+            - button "" [ref=e955] [cursor=pointer]:
+              - generic [ref=e956]: 
+        - row "4.1.1.1 Zieleinfluss Pers.-Verkehrsleist./Pers. % 100.0 100.0 Click to edit... " [ref=e957]:
+          - cell "4.1.1.1" [ref=e958]
+          - cell "Zieleinfluss Pers.-Verkehrsleist./Pers." [ref=e959]
+          - cell "%" [ref=e960]
+          - cell "100.0" [ref=e961]
+          - cell "100.0" [ref=e962]
+          - cell "Click to edit..." [ref=e963]: Click to edit...
+          - cell "" [ref=e964]:
+            - button "" [ref=e965] [cursor=pointer]:
+              - generic [ref=e966]: 
+        - row "4.1.1.2 Bedarfsniveau PVk (nach Entwicklung) GWh/a 430,816.1 430,816.1 - " [ref=e967]:
+          - cell "4.1.1.2" [ref=e968]
+          - cell "Bedarfsniveau PVk (nach Entwicklung)" [ref=e969]
+          - cell "GWh/a" [ref=e970]
+          - cell "430,816.1" [ref=e971]
+          - cell "430,816.1" [ref=e972]
+          - cell "-" [ref=e973]
+          - cell "" [ref=e974]:
+            - button "" [ref=e975] [cursor=pointer]:
+              - generic [ref=e976]: 
+        - row "4.1.1.3 Nutzungsgrad Traktionsmix % 27.1 62.7 - " [ref=e977]:
+          - cell "4.1.1.3" [ref=e978]
+          - cell "Nutzungsgrad Traktionsmix" [ref=e979]
+          - cell "%" [ref=e980]
+          - cell "27.1" [ref=e981]
+          - cell "62.7" [ref=e982]
+          - cell "-" [ref=e983]
+          - cell "" [ref=e984]:
+            - button "" [ref=e985] [cursor=pointer]:
+              - generic [ref=e986]: 
+        - row "4.1.1.4.0 Nutzenergie (NE) gesamt PVk GWh/a 116,643.5 0.0 - " [ref=e987]:
+          - cell "4.1.1.4.0" [ref=e988]
+          - cell "Nutzenergie (NE) gesamt PVk" [ref=e989]
+          - cell "GWh/a" [ref=e990]
+          - cell "116,643.5" [ref=e991]
+          - cell "0.0" [ref=e992]
+          - cell "-" [ref=e993]
+          - cell "" [ref=e994]:
+            - button "" [ref=e995] [cursor=pointer]:
+              - generic [ref=e996]: 
+        - row "4.1.1.4.1 Nutzenergie (NE) gesamt PVk GWh/a 0.0 116,643.5 - " [ref=e997]:
+          - cell "4.1.1.4.1" [ref=e998]
+          - cell "Nutzenergie (NE) gesamt PVk" [ref=e999]
+          - cell "GWh/a" [ref=e1000]
+          - cell "0.0" [ref=e1001]
+          - cell "116,643.5" [ref=e1002]
+          - cell "-" [ref=e1003]
+          - cell "" [ref=e1004]:
+            - button "" [ref=e1005] [cursor=pointer]:
+              - generic [ref=e1006]: 
+        - row "4.1.1.5 Anteil Elektrotraktion an PvK-Leistung % 8.6 86.0 86.0 " [ref=e1007]:
+          - cell "4.1.1.5" [ref=e1008]
+          - cell "Anteil Elektrotraktion an PvK-Leistung" [ref=e1009]
+          - cell "%" [ref=e1010]
+          - cell "8.6" [ref=e1011]
+          - cell "86.0" [ref=e1012]
+          - cell "86.0" [ref=e1013]: "86.0"
+          - cell "" [ref=e1014]:
+            - button "" [ref=e1015] [cursor=pointer]:
+              - generic [ref=e1016]: 
+        - row "4.1.1.6 Anteil Elektrotraktion an Endverbr. PVk % 3.0 69.1 69.1 " [ref=e1017]:
+          - cell "4.1.1.6" [ref=e1018]
+          - cell "Anteil Elektrotraktion an Endverbr. PVk" [ref=e1019]
+          - cell "%" [ref=e1020]
+          - cell "3.0" [ref=e1021]
+          - cell "69.1" [ref=e1022]
+          - cell "69.1" [ref=e1023]: "69.1"
+          - cell "" [ref=e1024]:
+            - button "" [ref=e1025] [cursor=pointer]:
+              - generic [ref=e1026]: 
+        - row "4.1.1.7 Nutzungsgrad Elektrotraktion (NG e) % 78.0 78.0 Click to edit... " [ref=e1027]:
+          - cell "4.1.1.7" [ref=e1028]
+          - cell "Nutzungsgrad Elektrotraktion (NG e)" [ref=e1029]
+          - cell "%" [ref=e1030]
+          - cell "78.0" [ref=e1031]
+          - cell "78.0" [ref=e1032]
+          - cell "Click to edit..." [ref=e1033]: Click to edit...
+          - cell "" [ref=e1034]:
+            - button "" [ref=e1035] [cursor=pointer]:
+              - generic [ref=e1036]: 
+        - row "4.1.1.8 Anteil NE Elektrotrakt.an Endverbr. PVk % 2.3 53.9 - " [ref=e1037]:
+          - cell "4.1.1.8" [ref=e1038]
+          - cell "Anteil NE Elektrotrakt.an Endverbr. PVk" [ref=e1039]
+          - cell "%" [ref=e1040]
+          - cell "2.3" [ref=e1041]
+          - cell "53.9" [ref=e1042]
+          - cell "-" [ref=e1043]
+          - cell "" [ref=e1044]:
+            - button "" [ref=e1045] [cursor=pointer]:
+              - generic [ref=e1046]: 
+        - row "4.1.1.9 Anteil NE Elektrotrakt.an NE ges.PVk % 8.6 86.0 - " [ref=e1047]:
+          - cell "4.1.1.9" [ref=e1048]
+          - cell "Anteil NE Elektrotrakt.an NE ges.PVk" [ref=e1049]
+          - cell "%" [ref=e1050]
+          - cell "8.6" [ref=e1051]
+          - cell "86.0" [ref=e1052]
+          - cell "-" [ref=e1053]
+          - cell "" [ref=e1054]:
+            - button "" [ref=e1055] [cursor=pointer]:
+              - generic [ref=e1056]: 
+        - row "4.1.1.10 Stromverbrauch PVk GWh/a 12,924.5 128,603.8 - " [ref=e1057]:
+          - cell "4.1.1.10" [ref=e1058]
+          - cell "Stromverbrauch PVk" [ref=e1059]
+          - cell "GWh/a" [ref=e1060]
+          - cell "12,924.5" [ref=e1061]
+          - cell "128,603.8" [ref=e1062]
+          - cell "-" [ref=e1063]
+          - cell "" [ref=e1064]:
+            - button "" [ref=e1065] [cursor=pointer]:
+              - generic [ref=e1066]: 
+        - row "4.1.1.11 Anteil Verbrenn.Trakt.an Endverbr.PVk % 97.0 30.9 - " [ref=e1067]:
+          - cell "4.1.1.11" [ref=e1068]
+          - cell "Anteil Verbrenn.Trakt.an Endverbr.PVk" [ref=e1069]
+          - cell "%" [ref=e1070]
+          - cell "97.0" [ref=e1071]
+          - cell "30.9" [ref=e1072]
+          - cell "-" [ref=e1073]
+          - cell "" [ref=e1074]:
+            - button "" [ref=e1075] [cursor=pointer]:
+              - generic [ref=e1076]: 
+        - row "4.1.1.12 Nutzungsgrad Verbrenn.Traktion (NG k) % 25.5 28.4 Click to edit... " [ref=e1077]:
+          - cell "4.1.1.12" [ref=e1078]
+          - cell "Nutzungsgrad Verbrenn.Traktion (NG k)" [ref=e1079]
+          - cell "%" [ref=e1080]
+          - cell "25.5" [ref=e1081]
+          - cell "28.4" [ref=e1082]
+          - cell "Click to edit..." [ref=e1083]: Click to edit...
+          - cell "" [ref=e1084]:
+            - button "" [ref=e1085] [cursor=pointer]:
+              - generic [ref=e1086]: 
+        - row "4.1.1.13 Anteil NE Verbrenn.Trakt.an Endverbr.PVk % 24.7 8.8 - " [ref=e1087]:
+          - cell "4.1.1.13" [ref=e1088]
+          - cell "Anteil NE Verbrenn.Trakt.an Endverbr.PVk" [ref=e1089]
+          - cell "%" [ref=e1090]
+          - cell "24.7" [ref=e1091]
+          - cell "8.8" [ref=e1092]
+          - cell "-" [ref=e1093]
+          - cell "" [ref=e1094]:
+            - button "" [ref=e1095] [cursor=pointer]:
+              - generic [ref=e1096]: 
+        - row "4.1.1.14 Anteil NE Verbrenn.Trakt.an NE ges.PVk % 91.4 14.0 - " [ref=e1097]:
+          - cell "4.1.1.14" [ref=e1098]
+          - cell "Anteil NE Verbrenn.Trakt.an NE ges.PVk" [ref=e1099]
+          - cell "%" [ref=e1100]
+          - cell "91.4" [ref=e1101]
+          - cell "14.0" [ref=e1102]
+          - cell "-" [ref=e1103]
+          - cell "" [ref=e1104]:
+            - button "" [ref=e1105] [cursor=pointer]:
+              - generic [ref=e1106]: 
+        - row "4.1.1.15 Kohlenwasserstoff-Verbr.(gasf.) PVk GWh/a 417,891.6 57,508.8 - " [ref=e1107]:
+          - cell "4.1.1.15" [ref=e1108]
+          - cell "Kohlenwasserstoff-Verbr.(gasf.) PVk" [ref=e1109]
+          - cell "GWh/a" [ref=e1110]
+          - cell "417,891.6" [ref=e1111]
+          - cell "57,508.8" [ref=e1112]
+          - cell "-" [ref=e1113]
+          - cell "" [ref=e1114]:
+            - button "" [ref=e1115] [cursor=pointer]:
+              - generic [ref=e1116]: 
+        - 'row "4.1.1.15.1 Alternativ zur Verbrennungsmotoren: Brennstoffzellen (FC) -Traktion: (Passiv) - (Passiv) - " [ref=e1117]':
+          - cell "4.1.1.15.1" [ref=e1118]
+          - 'cell "Alternativ zur Verbrennungsmotoren: Brennstoffzellen (FC) -Traktion: (Passiv)" [ref=e1119]'
+          - cell [ref=e1120]
+          - cell "-" [ref=e1121]
+          - cell "(Passiv)" [ref=e1122]
+          - cell "-" [ref=e1123]
+          - cell "" [ref=e1124]:
+            - button "" [ref=e1125] [cursor=pointer]:
+              - generic [ref=e1126]: 
+        - row "4.1.1.16 Anteil FC-Trakt.an Endverbr.PVk % 0.0 0.0 - " [ref=e1127]:
+          - cell "4.1.1.16" [ref=e1128]
+          - cell "Anteil FC-Trakt.an Endverbr.PVk" [ref=e1129]
+          - cell "%" [ref=e1130]
+          - cell "0.0" [ref=e1131]
+          - cell "0.0" [ref=e1132]
+          - cell "-" [ref=e1133]
+          - cell "" [ref=e1134]:
+            - button "" [ref=e1135] [cursor=pointer]:
+              - generic [ref=e1136]: 
+        - row "4.1.1.17 Nutzungsgrad FC-Traktion (NG FC) % 35.0 35.0 Click to edit... " [ref=e1137]:
+          - cell "4.1.1.17" [ref=e1138]
+          - cell "Nutzungsgrad FC-Traktion (NG FC)" [ref=e1139]
+          - cell "%" [ref=e1140]
+          - cell "35.0" [ref=e1141]
+          - cell "35.0" [ref=e1142]
+          - cell "Click to edit..." [ref=e1143]: Click to edit...
+          - cell "" [ref=e1144]:
+            - button "" [ref=e1145] [cursor=pointer]:
+              - generic [ref=e1146]: 
+        - row "4.1.1.18 Anteil NE FC-Trakt.an Endverbr.PVk % 0.0 0.0 - " [ref=e1147]:
+          - cell "4.1.1.18" [ref=e1148]
+          - cell "Anteil NE FC-Trakt.an Endverbr.PVk" [ref=e1149]
+          - cell "%" [ref=e1150]
+          - cell "0.0" [ref=e1151]
+          - cell "0.0" [ref=e1152]
+          - cell "-" [ref=e1153]
+          - cell "" [ref=e1154]:
+            - button "" [ref=e1155] [cursor=pointer]:
+              - generic [ref=e1156]: 
+        - row "4.1.1.19 Anteil NE FC-Trakt.an NE ges.PVk % 0.0 0.0 - " [ref=e1157]:
+          - cell "4.1.1.19" [ref=e1158]
+          - cell "Anteil NE FC-Trakt.an NE ges.PVk" [ref=e1159]
+          - cell "%" [ref=e1160]
+          - cell "0.0" [ref=e1161]
+          - cell "0.0" [ref=e1162]
+          - cell "-" [ref=e1163]
+          - cell "" [ref=e1164]:
+            - button "" [ref=e1165] [cursor=pointer]:
+              - generic [ref=e1166]: 
+        - row "4.1.1.20 Wasserstoffverbrauch PVk GWh/a 0.0 0.0 - " [ref=e1167]:
+          - cell "4.1.1.20" [ref=e1168]
+          - cell "Wasserstoffverbrauch PVk" [ref=e1169]
+          - cell "GWh/a" [ref=e1170]
+          - cell "0.0" [ref=e1171]
+          - cell "0.0" [ref=e1172]
+          - cell "-" [ref=e1173]
+          - cell "" [ref=e1174]:
+            - button "" [ref=e1175] [cursor=pointer]:
+              - generic [ref=e1176]: 
+        - row "4.1.2 davon Güterverkehr u. a. (GVk) % 32.6 32.6 - " [ref=e1177]:
+          - cell "4.1.2" [ref=e1178]
+          - cell "davon Güterverkehr u. a. (GVk)" [ref=e1179]
+          - cell "%" [ref=e1180]
+          - cell "32.6" [ref=e1181]
+          - cell "32.6" [ref=e1182]
+          - cell "-" [ref=e1183]
+          - cell "" [ref=e1184]:
+            - button "" [ref=e1185] [cursor=pointer]:
+              - generic [ref=e1186]: 
+        - row "4.1.2.1 Zieleinfluss Güterverk.-Leistung/Pers. % 100.0 100.0 Click to edit... " [ref=e1187]:
+          - cell "4.1.2.1" [ref=e1188]
+          - cell "Zieleinfluss Güterverk.-Leistung/Pers." [ref=e1189]
+          - cell "%" [ref=e1190]
+          - cell "100.0" [ref=e1191]
+          - cell "100.0" [ref=e1192]
+          - cell "Click to edit..." [ref=e1193]: Click to edit...
+          - cell "" [ref=e1194]:
+            - button "" [ref=e1195] [cursor=pointer]:
+              - generic [ref=e1196]: 
+        - row "4.1.2.2 Bedarfsniveau GVk (nach Entwicklung) GWh/a 208,376.9 208,376.9 - " [ref=e1197]:
+          - cell "4.1.2.2" [ref=e1198]
+          - cell "Bedarfsniveau GVk (nach Entwicklung)" [ref=e1199]
+          - cell "GWh/a" [ref=e1200]
+          - cell "208,376.9" [ref=e1201]
+          - cell "208,376.9" [ref=e1202]
+          - cell "-" [ref=e1203]
+          - cell "" [ref=e1204]:
+            - button "" [ref=e1205] [cursor=pointer]:
+              - generic [ref=e1206]: 
+        - row "4.1.2.3 Nutzungsgrad Traktionsmix % 30.7 62.1 - " [ref=e1207]:
+          - cell "4.1.2.3" [ref=e1208]
+          - cell "Nutzungsgrad Traktionsmix" [ref=e1209]
+          - cell "%" [ref=e1210]
+          - cell "30.7" [ref=e1211]
+          - cell "62.1" [ref=e1212]
+          - cell "-" [ref=e1213]
+          - cell "" [ref=e1214]:
+            - button "" [ref=e1215] [cursor=pointer]:
+              - generic [ref=e1216]: 
+        - row "4.1.2.4.0 Nutzenergie (NE) gesamt GVk GWh/a 64,019.6 0.0 - " [ref=e1217]:
+          - cell "4.1.2.4.0" [ref=e1218]
+          - cell "Nutzenergie (NE) gesamt GVk" [ref=e1219]
+          - cell "GWh/a" [ref=e1220]
+          - cell "64,019.6" [ref=e1221]
+          - cell "0.0" [ref=e1222]
+          - cell "-" [ref=e1223]
+          - cell "" [ref=e1224]:
+            - button "" [ref=e1225] [cursor=pointer]:
+              - generic [ref=e1226]: 
+        - row "4.1.2.4.1 Nutzenergie (NE) gesamt GVk GWh/a 0.0 64,019.6 - " [ref=e1227]:
+          - cell "4.1.2.4.1" [ref=e1228]
+          - cell "Nutzenergie (NE) gesamt GVk" [ref=e1229]
+          - cell "GWh/a" [ref=e1230]
+          - cell "0.0" [ref=e1231]
+          - cell "64,019.6" [ref=e1232]
+          - cell "-" [ref=e1233]
+          - cell "" [ref=e1234]:
+            - button "" [ref=e1235] [cursor=pointer]:
+              - generic [ref=e1236]: 
+        - row "4.1.2.5 Anteil Elektrotraktion an GVk-Leistung % 18.6 84.0 Click to edit... " [ref=e1237]:
+          - cell "4.1.2.5" [ref=e1238]
+          - cell "Anteil Elektrotraktion an GVk-Leistung" [ref=e1239]
+          - cell "%" [ref=e1240]
+          - cell "18.6" [ref=e1241]
+          - cell "84.0" [ref=e1242]
+          - cell "Click to edit..." [ref=e1243]: Click to edit...
+          - cell "" [ref=e1244]:
+            - button "" [ref=e1245] [cursor=pointer]:
+              - generic [ref=e1246]: 
+        - row "4.1.2.6 Anteil Elektrotraktion an Endverbr. GVk % 7.3 66.9 66.9 " [ref=e1247]:
+          - cell "4.1.2.6" [ref=e1248]
+          - cell "Anteil Elektrotraktion an Endverbr. GVk" [ref=e1249]
+          - cell "%" [ref=e1250]
+          - cell "7.3" [ref=e1251]
+          - cell "66.9" [ref=e1252]
+          - cell "66.9" [ref=e1253]: "66.9"
+          - cell "" [ref=e1254]:
+            - button "" [ref=e1255] [cursor=pointer]:
+              - generic [ref=e1256]: 
+        - row "4.1.2.7 Nutzungsgrad Elektrotraktion (NG e) % 78.0 78.0 78.0 " [ref=e1257]:
+          - cell "4.1.2.7" [ref=e1258]
+          - cell "Nutzungsgrad Elektrotraktion (NG e)" [ref=e1259]
+          - cell "%" [ref=e1260]
+          - cell "78.0" [ref=e1261]
+          - cell "78.0" [ref=e1262]
+          - cell "78.0" [ref=e1263]: "78.0"
+          - cell "" [ref=e1264]:
+            - button "" [ref=e1265] [cursor=pointer]:
+              - generic [ref=e1266]: 
+        - row "4.1.2.8 Anteil NE Elektrotrakt.an Endverbr. GVk % 5.7 52.2 - " [ref=e1267]:
+          - cell "4.1.2.8" [ref=e1268]
+          - cell "Anteil NE Elektrotrakt.an Endverbr. GVk" [ref=e1269]
+          - cell "%" [ref=e1270]
+          - cell "5.7" [ref=e1271]
+          - cell "52.2" [ref=e1272]
+          - cell "-" [ref=e1273]
+          - cell "" [ref=e1274]:
+            - button "" [ref=e1275] [cursor=pointer]:
+              - generic [ref=e1276]: 
+        - row "4.1.2.9 Anteil NE Elektrotrakt.an NE ges.GVk % 18.5 84.0 - " [ref=e1277]:
+          - cell "4.1.2.9" [ref=e1278]
+          - cell "Anteil NE Elektrotrakt.an NE ges.GVk" [ref=e1279]
+          - cell "%" [ref=e1280]
+          - cell "18.5" [ref=e1281]
+          - cell "84.0" [ref=e1282]
+          - cell "-" [ref=e1283]
+          - cell "" [ref=e1284]:
+            - button "" [ref=e1285] [cursor=pointer]:
+              - generic [ref=e1286]: 
+        - row "4.1.2.10 Stromverbrauch GVk GWh/a 15,211.5 68,918.0 - " [ref=e1287]:
+          - cell "4.1.2.10" [ref=e1288]
+          - cell "Stromverbrauch GVk" [ref=e1289]
+          - cell "GWh/a" [ref=e1290]
+          - cell "15,211.5" [ref=e1291]
+          - cell "68,918.0" [ref=e1292]
+          - cell "-" [ref=e1293]
+          - cell "" [ref=e1294]:
+            - button "" [ref=e1295] [cursor=pointer]:
+              - generic [ref=e1296]: 
+        - row "4.1.2.11 Anteil Verbrenn.-Trakt.an Endverbr.GVk % 92.7 33.1 - " [ref=e1297]:
+          - cell "4.1.2.11" [ref=e1298]
+          - cell "Anteil Verbrenn.-Trakt.an Endverbr.GVk" [ref=e1299]
+          - cell "%" [ref=e1300]
+          - cell "92.7" [ref=e1301]
+          - cell "33.1" [ref=e1302]
+          - cell "-" [ref=e1303]
+          - cell "" [ref=e1304]:
+            - button "" [ref=e1305] [cursor=pointer]:
+              - generic [ref=e1306]: 
+        - row "4.1.2.12 Nutzungsgrad Verbrenn.-Traktion (NG k) % 27.0 30.1 Click to edit... " [ref=e1307]:
+          - cell "4.1.2.12" [ref=e1308]
+          - cell "Nutzungsgrad Verbrenn.-Traktion (NG k)" [ref=e1309]
+          - cell "%" [ref=e1310]
+          - cell "27.0" [ref=e1311]
+          - cell "30.1" [ref=e1312]
+          - cell "Click to edit..." [ref=e1313]: Click to edit...
+          - cell "" [ref=e1314]:
+            - button "" [ref=e1315] [cursor=pointer]:
+              - generic [ref=e1316]: 
+        - row "4.1.2.13 Anteil NE Verbrenn-Trakt.an Endverbr.GVk % 25.0 10.0 - " [ref=e1317]:
+          - cell "4.1.2.13" [ref=e1318]
+          - cell "Anteil NE Verbrenn-Trakt.an Endverbr.GVk" [ref=e1319]
+          - cell "%" [ref=e1320]
+          - cell "25.0" [ref=e1321]
+          - cell "10.0" [ref=e1322]
+          - cell "-" [ref=e1323]
+          - cell "" [ref=e1324]:
+            - button "" [ref=e1325] [cursor=pointer]:
+              - generic [ref=e1326]: 
+        - row "4.1.2.14 Anteil NE Verbrenn.Trakt.an NE ges.GVk % 81.5 16.0 - " [ref=e1327]:
+          - cell "4.1.2.14" [ref=e1328]
+          - cell "Anteil NE Verbrenn.Trakt.an NE ges.GVk" [ref=e1329]
+          - cell "%" [ref=e1330]
+          - cell "81.5" [ref=e1331]
+          - cell "16.0" [ref=e1332]
+          - cell "-" [ref=e1333]
+          - cell "" [ref=e1334]:
+            - button "" [ref=e1335] [cursor=pointer]:
+              - generic [ref=e1336]: 
+        - row "4.1.2.15 Kohlenwasserstoff-Verbr.(gasf.) GVk GWh/a 193,165.4 34,098.4 - " [ref=e1337]:
+          - cell "4.1.2.15" [ref=e1338]
+          - cell "Kohlenwasserstoff-Verbr.(gasf.) GVk" [ref=e1339]
+          - cell "GWh/a" [ref=e1340]
+          - cell "193,165.4" [ref=e1341]
+          - cell "34,098.4" [ref=e1342]
+          - cell "-" [ref=e1343]
+          - cell "" [ref=e1344]:
+            - button "" [ref=e1345] [cursor=pointer]:
+              - generic [ref=e1346]: 
+        - 'row "4.1.2.15.1 Alternativ zur Kraftstofftraktion: Brennstoffzellen (FC) -Traktion: (Passiv) - (Passiv) - " [ref=e1347]':
+          - cell "4.1.2.15.1" [ref=e1348]
+          - 'cell "Alternativ zur Kraftstofftraktion: Brennstoffzellen (FC) -Traktion: (Passiv)" [ref=e1349]'
+          - cell [ref=e1350]
+          - cell "-" [ref=e1351]
+          - cell "(Passiv)" [ref=e1352]
+          - cell "-" [ref=e1353]
+          - cell "" [ref=e1354]:
+            - button "" [ref=e1355] [cursor=pointer]:
+              - generic [ref=e1356]: 
+        - row "4.1.2.16 Anteil FC-Trakt.an Endverbr.GVk % 0.0 0.0 - " [ref=e1357]:
+          - cell "4.1.2.16" [ref=e1358]
+          - cell "Anteil FC-Trakt.an Endverbr.GVk" [ref=e1359]
+          - cell "%" [ref=e1360]
+          - cell "0.0" [ref=e1361]
+          - cell "0.0" [ref=e1362]
+          - cell "-" [ref=e1363]
+          - cell "" [ref=e1364]:
+            - button "" [ref=e1365] [cursor=pointer]:
+              - generic [ref=e1366]: 
+        - row "4.1.2.17 Nutzungsgrad FC-Traktion (NG FC) % 35.0 35.0 Click to edit... " [ref=e1367]:
+          - cell "4.1.2.17" [ref=e1368]
+          - cell "Nutzungsgrad FC-Traktion (NG FC)" [ref=e1369]
+          - cell "%" [ref=e1370]
+          - cell "35.0" [ref=e1371]
+          - cell "35.0" [ref=e1372]
+          - cell "Click to edit..." [ref=e1373]: Click to edit...
+          - cell "" [ref=e1374]:
+            - button "" [ref=e1375] [cursor=pointer]:
+              - generic [ref=e1376]: 
+        - row "4.1.2.18 Anteil NE FC-Trakt.an Endverbr.GVk % 0.0 0.0 - " [ref=e1377]:
+          - cell "4.1.2.18" [ref=e1378]
+          - cell "Anteil NE FC-Trakt.an Endverbr.GVk" [ref=e1379]
+          - cell "%" [ref=e1380]
+          - cell "0.0" [ref=e1381]
+          - cell "0.0" [ref=e1382]
+          - cell "-" [ref=e1383]
+          - cell "" [ref=e1384]:
+            - button "" [ref=e1385] [cursor=pointer]:
+              - generic [ref=e1386]: 
+        - row "4.1.2.19 Anteil NE FC-Trakt.an NE ges.GVk % 0.0 0.0 - " [ref=e1387]:
+          - cell "4.1.2.19" [ref=e1388]
+          - cell "Anteil NE FC-Trakt.an NE ges.GVk" [ref=e1389]
+          - cell "%" [ref=e1390]
+          - cell "0.0" [ref=e1391]
+          - cell "0.0" [ref=e1392]
+          - cell "-" [ref=e1393]
+          - cell "" [ref=e1394]:
+            - button "" [ref=e1395] [cursor=pointer]:
+              - generic [ref=e1396]: 
+        - row "4.1.2.20 Wasserstoffverbrauch GVk GWh/a 0.0 0.0 - " [ref=e1397]:
+          - cell "4.1.2.20" [ref=e1398]
+          - cell "Wasserstoffverbrauch GVk" [ref=e1399]
+          - cell "GWh/a" [ref=e1400]
+          - cell "0.0" [ref=e1401]
+          - cell "0.0" [ref=e1402]
+          - cell "-" [ref=e1403]
+          - cell "" [ref=e1404]:
+            - button "" [ref=e1405] [cursor=pointer]:
+              - generic [ref=e1406]: 
+        - row "5 MA Luftverkehr " [ref=e1407]:
+          - cell "5" [ref=e1408]
+          - cell "MA Luftverkehr" [ref=e1409]:
+            - strong [ref=e1410]: MA Luftverkehr
+          - cell "" [ref=e1411]:
+            - button "" [disabled]:
+              - generic: 
+        - row "5.0 Bedarfsniveau (statisch) GWh/a 114,520.0 114,520.0 - " [ref=e1412]:
+          - cell "5.0" [ref=e1413]
+          - cell "Bedarfsniveau (statisch)" [ref=e1414]
+          - cell "GWh/a" [ref=e1415]
+          - cell "114,520.0" [ref=e1416]
+          - cell "114,520.0" [ref=e1417]
+          - cell "-" [ref=e1418]
+          - cell "" [ref=e1419]:
+            - button "" [ref=e1420] [cursor=pointer]:
+              - generic [ref=e1421]: 
+        - row "5.1 Zieleinfluss Luftverk.-Leistung/Person % 100.0 100.0 Click to edit... " [ref=e1422]:
+          - cell "5.1" [ref=e1423]
+          - cell "Zieleinfluss Luftverk.-Leistung/Person" [ref=e1424]
+          - cell "%" [ref=e1425]
+          - cell "100.0" [ref=e1426]
+          - cell "100.0" [ref=e1427]
+          - cell "Click to edit..." [ref=e1428]: Click to edit...
+          - cell "" [ref=e1429]:
+            - button "" [ref=e1430] [cursor=pointer]:
+              - generic [ref=e1431]: 
+        - row "5.2 Bedarfsniv. Luftverk. (nach Entwicklung) GWh/a 114,520.0 114,520.0 - " [ref=e1432]:
+          - cell "5.2" [ref=e1433]
+          - cell "Bedarfsniv. Luftverk. (nach Entwicklung)" [ref=e1434]
+          - cell "GWh/a" [ref=e1435]
+          - cell "114,520.0" [ref=e1436]
+          - cell "114,520.0" [ref=e1437]
+          - cell "-" [ref=e1438]
+          - cell "" [ref=e1439]:
+            - button "" [ref=e1440] [cursor=pointer]:
+              - generic [ref=e1441]: 
+        - row "5.2.1 Zieleinfluss Luftverkehrs-Effizienz % 100.0 87.0 87.0 " [ref=e1442]:
+          - cell "5.2.1" [ref=e1443]
+          - cell "Zieleinfluss Luftverkehrs-Effizienz" [ref=e1444]
+          - cell "%" [ref=e1445]
+          - cell "100.0" [ref=e1446]
+          - cell "87.0" [ref=e1447]
+          - cell "87.0" [ref=e1448]: "87.0"
+          - cell "" [ref=e1449]:
+            - button "" [ref=e1450] [cursor=pointer]:
+              - generic [ref=e1451]: 
+        - row "5.2.2 Kraftstoffverbrauch (flüssig) Luftverkehr GWh/a 114,520.0 99,632.4 - " [ref=e1452]:
+          - cell "5.2.2" [ref=e1453]
+          - cell "Kraftstoffverbrauch (flüssig) Luftverkehr" [ref=e1454]
+          - cell "GWh/a" [ref=e1455]
+          - cell "114,520.0" [ref=e1456]
+          - cell "99,632.4" [ref=e1457]
+          - cell "-" [ref=e1458]
+          - cell "" [ref=e1459]:
+            - button "" [ref=e1460] [cursor=pointer]:
+              - generic [ref=e1461]: 
+        - row "6 Endenergieverbrauch MA gesamt " [ref=e1462]:
+          - cell "6" [ref=e1463]
+          - cell "Endenergieverbrauch MA gesamt" [ref=e1464]:
+            - strong [ref=e1465]: Endenergieverbrauch MA gesamt
+          - cell "" [ref=e1466]:
+            - button "" [disabled]:
+              - generic: 
+        - row "6.0 Endenergieverbrauch MA gesamt GWh/a 753,713.0 388,761.4 - " [ref=e1467]:
+          - cell "6.0" [ref=e1468]
+          - cell "Endenergieverbrauch MA gesamt" [ref=e1469]
+          - cell "GWh/a" [ref=e1470]
+          - cell "753,713.0" [ref=e1471]
+          - cell "388,761.4" [ref=e1472]
+          - cell "-" [ref=e1473]
+          - cell "" [ref=e1474]:
+            - button "" [ref=e1475] [cursor=pointer]:
+              - generic [ref=e1476]: 
+        - row "6.1 davon Kraftstoffe GWh/a 725,577.0 191,239.6 - " [ref=e1477]:
+          - cell "6.1" [ref=e1478]
+          - cell "davon Kraftstoffe" [ref=e1479]
+          - cell "GWh/a" [ref=e1480]
+          - cell "725,577.0" [ref=e1481]
+          - cell "191,239.6" [ref=e1482]
+          - cell "-" [ref=e1483]
+          - cell "" [ref=e1484]:
+            - button "" [ref=e1485] [cursor=pointer]:
+              - generic [ref=e1486]: 
+        - row "6.1.1 davon Wasserstoff (FC-Traktion) GWh/a 0.0 0.0 - " [ref=e1487]:
+          - cell "6.1.1" [ref=e1488]
+          - cell "davon Wasserstoff (FC-Traktion)" [ref=e1489]
+          - cell "GWh/a" [ref=e1490]
+          - cell "0.0" [ref=e1491]
+          - cell "0.0" [ref=e1492]
+          - cell "-" [ref=e1493]
+          - cell "" [ref=e1494]:
+            - button "" [ref=e1495] [cursor=pointer]:
+              - generic [ref=e1496]: 
+        - row "6.1.2 davon Kohlenwassserst.(gasförmig) GWh/a 611,057.0 91,607.2 - " [ref=e1497]:
+          - cell "6.1.2" [ref=e1498]
+          - cell "davon Kohlenwassserst.(gasförmig)" [ref=e1499]
+          - cell "GWh/a" [ref=e1500]
+          - cell "611,057.0" [ref=e1501]
+          - cell "91,607.2" [ref=e1502]
+          - cell "-" [ref=e1503]
+          - cell "" [ref=e1504]:
+            - button "" [ref=e1505] [cursor=pointer]:
+              - generic [ref=e1506]: 
+        - row "6.1.3 dav.Kohlenwasserst. (flüssig, für Luftverk.) GWh/a 114,520.0 99,632.4 - " [ref=e1507]:
+          - cell "6.1.3" [ref=e1508]
+          - cell "dav.Kohlenwasserst. (flüssig, für Luftverk.)" [ref=e1509]
+          - cell "GWh/a" [ref=e1510]
+          - cell "114,520.0" [ref=e1511]
+          - cell "99,632.4" [ref=e1512]
+          - cell "-" [ref=e1513]
+          - cell "" [ref=e1514]:
+            - button "" [ref=e1515] [cursor=pointer]:
+              - generic [ref=e1516]: 
+        - row "6.2 davon Strom GWh/a 28,136.0 197,521.8 - " [ref=e1517]:
+          - cell "6.2" [ref=e1518]
+          - cell "davon Strom" [ref=e1519]
+          - cell "GWh/a" [ref=e1520]
+          - cell "28,136.0" [ref=e1521]
+          - cell "197,521.8" [ref=e1522]
+          - cell "-" [ref=e1523]
+          - cell "" [ref=e1524]:
+            - button "" [ref=e1525] [cursor=pointer]:
+              - generic [ref=e1526]: 
+        - row "7 Strom-Endverbrauch insgesamt GWh/a 461,869.2 1,005,742.9 - " [ref=e1527]:
+          - cell "7" [ref=e1528]
+          - cell "Strom-Endverbrauch insgesamt" [ref=e1529]
+          - cell "GWh/a" [ref=e1530]
+          - cell "461,869.2" [ref=e1531]
+          - cell "1,005,742.9" [ref=e1532]
+          - cell "-" [ref=e1533]
+          - cell "" [ref=e1534]:
+            - button "" [ref=e1535] [cursor=pointer]:
+              - generic [ref=e1536]: 
+        - row "8 Endenergieverbrauch insgesamt GWh/a 2,432,616.1 1,863,864.8 - " [ref=e1537]:
+          - cell "8" [ref=e1538]
+          - cell "Endenergieverbrauch insgesamt" [ref=e1539]
+          - cell "GWh/a" [ref=e1540]
+          - cell "2,432,616.1" [ref=e1541]
+          - cell "1,863,864.8" [ref=e1542]
+          - cell "-" [ref=e1543]
+          - cell "" [ref=e1544]:
+            - button "" [ref=e1545] [cursor=pointer]:
+              - generic [ref=e1546]: 
+        - row "9 Grundstoff-Synthetisierung " [ref=e1547]:
+          - cell "9" [ref=e1548]
+          - cell "Grundstoff-Synthetisierung" [ref=e1549]:
+            - strong [ref=e1550]: Grundstoff-Synthetisierung
+          - cell "" [ref=e1551]:
+            - button "" [disabled]:
+              - generic: 
+        - row "9.1 Bedarfsniveau Grundstoffe (statisch) kWh/a/Pers. 2,337.0 2,337.0 - " [ref=e1552]:
+          - cell "9.1" [ref=e1553]
+          - cell "Bedarfsniveau Grundstoffe (statisch)" [ref=e1554]
+          - cell "kWh/a/Pers." [ref=e1555]
+          - cell "2,337.0" [ref=e1556]
+          - cell "2,337.0" [ref=e1557]
+          - cell "-" [ref=e1558]
+          - cell "" [ref=e1559]:
+            - button "" [ref=e1560] [cursor=pointer]:
+              - generic [ref=e1561]: 
+        - row "9.1.1 * Zieleinfluss Kunststofferzeugung/Pers. % 100.0 53.0 Click to edit... " [ref=e1562]:
+          - cell "9.1.1" [ref=e1563]
+          - cell "* Zieleinfluss Kunststofferzeugung/Pers." [ref=e1564]
+          - cell "%" [ref=e1565]
+          - cell "100.0" [ref=e1566]
+          - cell "53.0" [ref=e1567]
+          - cell "Click to edit..." [ref=e1568]: Click to edit...
+          - cell "" [ref=e1569]:
+            - button "" [ref=e1570] [cursor=pointer]:
+              - generic [ref=e1571]: 
+        - row "9.1.2 = Bedarf an Grundstoffen GWh/a 197,841.0 104,855.0 - " [ref=e1572]:
+          - cell "9.1.2" [ref=e1573]
+          - cell "= Bedarf an Grundstoffen" [ref=e1574]:
+            - strong [ref=e1576]: = Bedarf an Grundstoffen
+          - cell "GWh/a" [ref=e1577]
+          - cell "197,841.0" [ref=e1578]
+          - cell "104,855.0" [ref=e1579]
+          - cell "-" [ref=e1580]
+          - cell "" [ref=e1581]:
+            - button "" [ref=e1582] [cursor=pointer]:
+              - generic [ref=e1583]: 
+        - row "9.1.3 * Anteil aus H2 synthetisierter Grundstoffe % 0.0 73.0 Click to edit... " [ref=e1584]:
+          - cell "9.1.3" [ref=e1585]
+          - cell "* Anteil aus H2 synthetisierter Grundstoffe" [ref=e1586]
+          - cell "%" [ref=e1587]
+          - cell "0.0" [ref=e1588]
+          - cell "73.0" [ref=e1589]
+          - cell "Click to edit..." [ref=e1590]: Click to edit...
+          - cell "" [ref=e1591]:
+            - button "" [ref=e1592] [cursor=pointer]:
+              - generic [ref=e1593]: 
+        - row "9.1.4 = Bedarf an synthetischen Grundstoffen GWh/a 0.0 76,544.2 - " [ref=e1594]:
+          - cell "9.1.4" [ref=e1595]
+          - cell "= Bedarf an synthetischen Grundstoffen" [ref=e1596]:
+            - strong [ref=e1598]: = Bedarf an synthetischen Grundstoffen
+          - cell "GWh/a" [ref=e1599]
+          - cell "0.0" [ref=e1600]
+          - cell "76,544.2" [ref=e1601]
+          - cell "-" [ref=e1602]
+          - cell "" [ref=e1603]:
+            - button "" [ref=e1604] [cursor=pointer]:
+              - generic [ref=e1605]: 
+        - row "10 Fossil " [ref=e1606]:
+          - cell "10" [ref=e1607]
+          - cell "Fossil" [ref=e1608]:
+            - strong [ref=e1609]: Fossil
+          - cell "" [ref=e1610]:
+            - button "" [disabled]:
+              - generic: 
+    - button " Save & Recalculate" [ref=e1612] [cursor=pointer]:
+      - generic [ref=e1613]: 
+      - text: Save & Recalculate
+    - generic [ref=e1614]:
+      - generic [ref=e1615] [cursor=pointer]:
+        - heading " Recent Changes 1  Changes persist after page refresh" [level=6] [ref=e1616]:
+          - generic [ref=e1617]: 
+          - text: Recent Changes 1
+          - generic [ref=e1618]:
+            - generic [ref=e1619]: 
+            - text: Changes persist after page refresh
+        - generic [ref=e1620]:
+          - button " Clear" [ref=e1621]:
+            - generic [ref=e1622]: 
+            - text: Clear
+          - generic [ref=e1623]: 
+      - generic [ref=e1626]:
+        - generic [ref=e1627]:
+          - generic [ref=e1628]:
+            - generic [ref=e1629]: 1.1.2
+            - strong [ref=e1630]: Zieleinfluss Endanwendungs-Effizienz
+          - generic [ref=e1631]: 21.04. 19:58
+        - generic [ref=e1632]:
+          - text: 95.0%
+          - generic [ref=e1633]: 
+          - text: 100.0%
+          - generic [ref=e1634]: Manual
+  - contentinfo [ref=e1635]:
+    - paragraph [ref=e1639]: © 2025 Land Use Data Viewer | Built with Django & Bootstrap

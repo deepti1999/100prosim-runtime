@@ -431,7 +431,10 @@ def apply_balanced_landuse_sector_first():
                 'annual_electricity': initial_annual,
             }
 
-        max_cycles = 2
+        # Cut from 2 to 1: the second cycle rarely improved convergence
+        # materially but added another ~3-5 min on Heroku when real work
+        # was needed. One cycle plus the final post-loop recalc is enough.
+        max_cycles = 1
         cycle_count = 0
         sector_balance = None
         ws_rebalance = None
@@ -866,7 +869,8 @@ def apply_balanced_wind_landuse_sector_first():
                 'annual_electricity': initial_annual,
             }
 
-        max_cycles = 2
+        # Wind: same 2->1 cut as solar sector_first.
+        max_cycles = 1
         cycle_count = 0
         sector_balance = None
         ws_rebalance = None
