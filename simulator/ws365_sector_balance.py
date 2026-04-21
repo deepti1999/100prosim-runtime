@@ -101,14 +101,17 @@ def _balance_heat_sectors_after_ws():
         r82_fixed.save(skip_cascade=True, update_fields=['target_value', 'is_fixed'])
     new_82_target = float(r82_fixed.target_value or 0)
 
-    def settle_totals(trigger_prefix: str, max_rounds: int = 2, tolerance: float = 1.0):
+    def settle_totals(trigger_prefix: str, max_rounds: int = 1, tolerance: float = 1.0):
         """
         Recalculate until heat-sector gaps stabilize.
         This avoids optimizing 2.8 against transient intermediate states.
 
-        Default max_rounds reduced from 3 to 2: measured on Heroku, most
-        recalcs converge in round 1, round 2 is a cheap no-op (Step 1.2
-        short-circuit) when truly stable, and round 3 was rarely decisive.
+        Default cut 2 -> 1 on Heroku: round-1's bulk_update bumps the
+        cache signature, so round 2 sees a cache miss and re-runs the full
+        recalc (~1.5-2s) even when stable. `recalc_all_renewables_full` is
+        already multi-pass (up to 8 internal passes), so one settle_totals
+        round relies on that to converge. If stability verification is
+        needed, callers can pass max_rounds=2 explicitly.
         """
         prev = None
         current = None
