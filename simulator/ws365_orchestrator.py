@@ -170,6 +170,29 @@ def apply_balanced_landuse(
     new_landuse_percent = None
 
     with transaction.atomic():
+        # Early-exit: if WS storage drift is already within tolerance, no
+        # landuse adjustment is needed. Spinning 3 goal_seek cycles on a
+        # balanced state cost ~200s on Heroku.
+        _initial_ws = get_ws_365_data(run_goal_seek=False)
+        _initial_drift = float(_initial_ws.get('current', {}).get('storage_drift') or 0.0)
+        if abs(_initial_drift) <= ws_drift_tolerance:
+            _initial_annual = float(_initial_ws.get('current', {}).get('annual_electricity') or 0.0)
+            _lu21 = LandUse.objects.filter(code='LU_2.1').values_list('target_ha', flat=True).first()
+            return {
+                'success': True,
+                'early_exit': True,
+                'completed_cycles': 0,
+                'storage_drift': _initial_drift,
+                'annual_electricity': _initial_annual,
+                'new_landuse': float(_lu21 or 0),
+                'old_landuse': float(_lu21 or 0),
+                'landuse_code': landuse_code,
+                'landuse_name': landuse_name,
+                'old_landuse_percent': None,
+                'new_landuse_percent': None,
+                'is_balanced': True,
+            }
+
         for cycle_index in range(max_convergence_cycles):
             cycle_no = cycle_index + 1
             completed_cycles = cycle_no
@@ -351,6 +374,21 @@ def apply_balanced_landuse(
         'new_landuse_percent': new_landuse_percent,
     }
 
+def _initial_state_already_balanced(sector_totals: dict, storage_drift: float) -> bool:
+    """Cheap gate: if all sector gaps and WS drift are already within tolerance,
+    the balance machinery will spin ~20-60 recalcs for zero net effect.
+    Skip with a clear success return."""
+    gw_gap = abs(float(sector_totals.get('gebaeudewaerme', {}).get('gap', 0) or 0))
+    pw_gap = abs(float(sector_totals.get('prozesswaerme', {}).get('gap', 0) or 0))
+    mobile_gap = abs(float(sector_totals.get('mobile_anwendungen', {}).get('gap', 0) or 0))
+    return (
+        gw_gap <= 100.0
+        and pw_gap <= PROCESS_GAP_TOLERANCE
+        and mobile_gap <= MOBILE_GAP_TOLERANCE
+        and abs(float(storage_drift or 0)) <= 0.1
+    )
+
+
 def apply_balanced_landuse_sector_first():
     """
     Sector-first balancing flow (Solar mode):
@@ -358,16 +396,46 @@ def apply_balanced_landuse_sector_first():
     2) Re-run WS/electricity balancing (goal-seek + LU_2.1 update)
 
     This keeps the second button aligned with final Renewable page values.
+
+    Performance note: exits immediately if the initial state is already within
+    all tolerances. Without this gate, 2 balance cycles + GW secant + goal_seek
+    still fire ~20-60 recalc rounds even on balanced state.
     """
     from django.db import transaction
     from simulator.recalc_service import recalc_all_renewables_full
 
     with transaction.atomic():
+        # Early-exit gate on already-balanced state.
+        initial_totals = _get_sector_totals()
+        initial_ws = get_ws_365_data(run_goal_seek=False)
+        initial_drift = float(initial_ws.get('current', {}).get('storage_drift') or 0.0)
+        initial_annual = float(initial_ws.get('current', {}).get('annual_electricity') or 0.0)
+        if _initial_state_already_balanced(initial_totals, initial_drift):
+            from simulator.models import LandUse, VerbrauchData, RenewableData
+            lu21 = LandUse.objects.filter(code='LU_2.1').values_list('target_ha', flat=True).first()
+            return {
+                'success': True,
+                'balance_mode': 'sector_then_ws',
+                'convergence_cycles': 0,
+                'early_exit': True,
+                'heat_balance': {'before': initial_totals, 'after': initial_totals},
+                'ws_rebalance': {
+                    'storage_drift': initial_drift,
+                    'annual_electricity': initial_annual,
+                    'new_landuse': float(lu21 or 0),
+                },
+                'sector_balance_ok': True,
+                'drift_ok': True,
+                'overall_balanced': True,
+                'storage_drift': initial_drift,
+                'annual_electricity': initial_annual,
+            }
+
         max_cycles = 2
         cycle_count = 0
         sector_balance = None
         ws_rebalance = None
-        final_sector_totals = _get_sector_totals()
+        final_sector_totals = initial_totals
         final_drift = 0.0
         annual_electricity = 0.0
         sector_balance_ok = False
@@ -510,6 +578,27 @@ def apply_balanced_wind_landuse(
             r912_now.save(skip_cascade=True, update_fields=['target_value'])
 
     with transaction.atomic():
+        # Early-exit: wind mode exits fast when drift already within tolerance.
+        _initial_ws = get_ws_365_data(run_goal_seek=False)
+        _initial_drift = float(_initial_ws.get('current', {}).get('storage_drift') or 0.0)
+        if abs(_initial_drift) <= ws_drift_tolerance:
+            _initial_annual = float(_initial_ws.get('current', {}).get('annual_electricity') or 0.0)
+            _lu6 = LandUse.objects.filter(code='LU_6').values_list('target_ha', flat=True).first()
+            return {
+                'success': True,
+                'early_exit': True,
+                'completed_cycles': 0,
+                'storage_drift': _initial_drift,
+                'annual_electricity': _initial_annual,
+                'new_landuse': float(_lu6 or 0),
+                'old_landuse': float(_lu6 or 0),
+                'landuse_code': landuse_code,
+                'landuse_name': landuse_name,
+                'old_landuse_percent': None,
+                'new_landuse_percent': None,
+                'is_balanced': True,
+            }
+
         for cycle_index in range(max_convergence_cycles):
             cycle_no = cycle_index + 1
             completed_cycles = cycle_no
@@ -751,11 +840,37 @@ def apply_balanced_wind_landuse_sector_first():
     from simulator.recalc_service import recalc_all_renewables_full
 
     with transaction.atomic():
+        # Early-exit: wind sector_first exits fast when already balanced.
+        initial_totals = _get_sector_totals()
+        initial_ws = get_ws_365_data(run_goal_seek=False)
+        initial_drift = float(initial_ws.get('current', {}).get('storage_drift') or 0.0)
+        initial_annual = float(initial_ws.get('current', {}).get('annual_electricity') or 0.0)
+        if _initial_state_already_balanced(initial_totals, initial_drift):
+            from simulator.models import LandUse
+            lu6 = LandUse.objects.filter(code='LU_6').values_list('target_ha', flat=True).first()
+            return {
+                'success': True,
+                'balance_mode': 'wind_sector_then_ws',
+                'convergence_cycles': 0,
+                'early_exit': True,
+                'heat_balance': {'before': initial_totals, 'after': initial_totals},
+                'ws_rebalance': {
+                    'storage_drift': initial_drift,
+                    'annual_electricity': initial_annual,
+                    'new_landuse': float(lu6 or 0),
+                },
+                'sector_balance_ok': True,
+                'drift_ok': True,
+                'overall_balanced': True,
+                'storage_drift': initial_drift,
+                'annual_electricity': initial_annual,
+            }
+
         max_cycles = 2
         cycle_count = 0
         sector_balance = None
         ws_rebalance = None
-        final_sector_totals = _get_sector_totals()
+        final_sector_totals = initial_totals
         final_drift = 0.0
         annual_electricity = 0.0
         sector_balance_ok = False
