@@ -279,8 +279,15 @@ def update_node(node, new_percent, total_area):
 
 @csrf_exempt  
 @require_http_methods(["POST"])
-def update_user_percent(request, code):
-    """API endpoint to update user_percent with proper hierarchical cascading"""
+def update_user_percent_by_code(request, code):
+    """API endpoint to update user_percent with proper hierarchical cascading.
+
+    Renamed from update_user_percent to avoid shadowing the body-based
+    update_user_percent(request) at the top of this file. Python keeps
+    only the last `def` at module scope, so the earlier body-based view
+    was silently replaced and the `/api/update-user-percent/` URL
+    (which has no `code` path param) was 500'ing.
+    """
     try:
         node = get_object_or_404(LandUse, code=code)
         new_percent = float(request.POST.get("user_percent", 0))

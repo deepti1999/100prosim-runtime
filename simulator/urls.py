@@ -48,6 +48,7 @@ from .views_recalc import (
     update_user_percent,
     update_verbrauch_bulk,
 )
+from .views import update_user_percent_by_code
 from .views_ws import (
     ws_api_apply_balance,
     ws_api_apply_balance_wind,
@@ -101,7 +102,7 @@ urlpatterns = [
     
     # API Endpoints
     path('api/update-user-percent/', update_user_percent, name='update_user_percent'),
-    path('api/update/<str:code>/', update_user_percent, name='update_user_percent_code'),
+    path('api/update/<str:code>/', update_user_percent_by_code, name='update_user_percent_code'),
     path('api/save-all-inputs/', save_all_user_inputs, name='save_all_inputs'),
     path('api/run-full-recalc/', run_full_recalc_view, name='run_full_recalc'),
     path('api/recalc-renewables/', run_renewables_recalc_view, name='recalc_renewables'),
