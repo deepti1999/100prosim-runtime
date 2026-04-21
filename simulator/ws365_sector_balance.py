@@ -185,6 +185,7 @@ def _balance_heat_sectors_after_ws():
         # converges, and even on noisy ones 3 is enough in practice.
         # Measured on Heroku: 6 iterations at ~2s each recalc × multiple evals
         # per iter = 36-70 recalc rounds. Cut in half.
+        zero_slope_strikes = 0
         for _ in range(3):
             if abs(g_curr) <= gw_gap_tolerance:
                 break
@@ -194,11 +195,25 @@ def _balance_heat_sectors_after_ws():
             if abs(x_probe - x_curr) < 1e-9:
                 break
 
-            x_probe, g_probe = _evaluate_28_gap(x_probe, settle_rounds=3)
+            x_probe, g_probe = _evaluate_28_gap(x_probe, settle_rounds=2)
 
             slope = None
             if abs(x_probe - x_curr) > 1e-9:
                 slope = (g_probe - g_curr) / (x_probe - x_curr)
+
+            # Early-break: if the knob has near-zero effect on gap for 2
+            # consecutive probes, further iterations are wasted. This
+            # short-circuits the "v_2.8 doesn't actually move GW gap on
+            # some configurations" scenario observed on Heroku.
+            if slope is None or abs(slope) < 1e-6:
+                zero_slope_strikes += 1
+                if zero_slope_strikes >= 2:
+                    break
+                probe_step = max(0.1, probe_step * 0.5)
+                x_curr, g_curr = x_probe, g_probe
+                continue
+            else:
+                zero_slope_strikes = 0
 
             x_next = None
             g_next = None

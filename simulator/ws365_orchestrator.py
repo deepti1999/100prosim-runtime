@@ -151,7 +151,7 @@ def apply_balanced_landuse(
     from .models import LandUse, RenewableData
     from django.db import transaction
     
-    max_convergence_cycles = 3
+    max_convergence_cycles = 2
     ws_drift_tolerance = 0.1
     heat_gap_tolerance = 100.0
     mobile_gap_tolerance = MOBILE_GAP_TOLERANCE
@@ -545,7 +545,7 @@ def apply_balanced_wind_landuse(
     from .models import LandUse, RenewableData
     from django.db import transaction
 
-    max_convergence_cycles = 3
+    max_convergence_cycles = 2
     ws_drift_tolerance = 0.005
     heat_gap_tolerance = 100.0
     mobile_gap_tolerance = MOBILE_GAP_TOLERANCE
