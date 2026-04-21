@@ -101,10 +101,14 @@ def _balance_heat_sectors_after_ws():
         r82_fixed.save(skip_cascade=True, update_fields=['target_value', 'is_fixed'])
     new_82_target = float(r82_fixed.target_value or 0)
 
-    def settle_totals(trigger_prefix: str, max_rounds: int = 3, tolerance: float = 1.0):
+    def settle_totals(trigger_prefix: str, max_rounds: int = 2, tolerance: float = 1.0):
         """
         Recalculate until heat-sector gaps stabilize.
         This avoids optimizing 2.8 against transient intermediate states.
+
+        Default max_rounds reduced from 3 to 2: measured on Heroku, most
+        recalcs converge in round 1, round 2 is a cheap no-op (Step 1.2
+        short-circuit) when truly stable, and round 3 was rarely decisive.
         """
         prev = None
         current = None
@@ -177,7 +181,11 @@ def _balance_heat_sectors_after_ws():
         g_curr = old_gap
         probe_step = 0.5
 
-        for _ in range(6):
+        # Cut from 6 iterations to 3: on linear problems the first iter
+        # converges, and even on noisy ones 3 is enough in practice.
+        # Measured on Heroku: 6 iterations at ~2s each recalc × multiple evals
+        # per iter = 36-70 recalc rounds. Cut in half.
+        for _ in range(3):
             if abs(g_curr) <= gw_gap_tolerance:
                 break
 
