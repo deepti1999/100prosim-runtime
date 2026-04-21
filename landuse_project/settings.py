@@ -157,6 +157,30 @@ if DB_USE_PGBOUNCER and DATABASES["default"].get("ENGINE") == "django.db.backend
 if DATABASES["default"].get("ENGINE") == "django.db.backends.sqlite3":
     DATABASES["default"].setdefault("OPTIONS", {})["timeout"] = 60
 
+# Cache: Redis when REDIS_URL is set (Heroku prod), otherwise local in-memory.
+# Redis is required for the Step 1.4 bilanz cache to be shared across web/worker
+# dynos. Local dev uses LocMemCache (single-process, still functional).
+_REDIS_URL = os.environ.get("REDIS_URL")
+if _REDIS_URL:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": _REDIS_URL,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                # Heroku Redis requires TLS on non-Mini plans; django-redis
+                # honors rediss:// automatically.
+                "IGNORE_EXCEPTIONS": True,
+            },
+        }
+    }
+    DJANGO_REDIS_IGNORE_EXCEPTIONS = True
+else:
+    CACHES = {
+        "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"},
+    }
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
