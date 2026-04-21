@@ -19,18 +19,30 @@ Production database is PostgreSQL (`DATABASE_URL`). `db.sqlite3` exists for loca
 
 ## Live Heroku deployment
 
-The app is deployed at https://prosim-100-adb63f037eb6.herokuapp.com/
+**The app is NOT permanently deployed.** To save money during development Pascal spins it up only when he needs to test cross-process behavior or share the link with the group, then destroys it. Leaving it running costs ~$22/mo; the spin-up / teardown pattern is ~$1/mo for occasional use.
 
-- **App name:** `prosim-100`
+- **App name:** `prosim-100` (recreated each cycle — hostname changes, e.g. `prosim-100-3a84fc3068c0.herokuapp.com`)
 - **Heroku account:** `kkrann1290@gmail.com`
 - **Region:** `eu-west-1`
 - **Stack:** `heroku-24` (Python 3.12 via `.python-version` — Django 4.2 does NOT support 3.14 which is Heroku's default)
 - **Dyno tier:** Basic (1× web + 1× worker, ~$14/mo dynos)
 - **Addons:** `heroku-postgresql:essential-0` ($5/mo), `heroku-redis:mini` ($3/mo)
-- **Total:** ~$22/mo
+- **Total when running:** ~$22/mo, prorated per second
 - **Test user:** `testsim` / `TestSim!2026`
 
-Deploy: `git push heroku main` — release phase runs migrations automatically. Seeding and addon setup are one-time (documented in `docs/HEROKU.md`).
+**Spin up / tear down:**
+```bash
+bash scripts/heroku_up.sh    # ~10 min: create + addons + config + push + seed + testsim
+bash scripts/heroku_down.sh  # ~30 sec: destroy app + addons, stops billing
+```
+
+Both scripts are idempotent. Hostname after each `up` is printed in the final "Done" line.
+
+**Heroku CLI gotchas (baked into the scripts):**
+- `heroku addons:create --wait` on Postgres times out at 5 min even when provisioning is still in progress. Scripts poll `heroku addons` for `created` state instead of using `--wait`.
+- `heroku apps:destroy` on Windows exits non-zero due to a harmless git-remote cleanup error, even though the app IS destroyed. Scripts tolerate the non-zero exit and verify with `heroku apps:info` that the app is actually gone.
+
+Manual deploy (if already provisioned): `git push heroku main` — release phase runs migrations automatically. Full docs in `docs/HEROKU.md`.
 
 **testsim workspace drifts during testing** — reset with:
 ```
