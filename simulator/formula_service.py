@@ -91,6 +91,99 @@ def _extract_auto_tokens(expression: str):
         ws_constant_names,
     )
 
+# Process-local lookup cache. Rebuilt when the input signature changes.
+#
+# Design note: the fast path in _resolve_variable (line ~764) tries several
+# key formats; the slow path does `.objects.get(code=source_key)` with NO
+# prefix stripping or variant matching. To guarantee fast/slow parity we
+# populate ONLY the direct-code keys ('LU_2.1', '2.1', '10.4' — whatever
+# lu.code / v.code / r.code literally is). The fast path's other key variants
+# ('LandUse_2.1', etc.) stay unfound and the lookup correctly falls through
+# to the slow path for any source_key that wouldn't match a direct code.
+_LOOKUPS_CACHE: Optional[tuple] = None  # (signature, status_lookup, target_lookup)
+
+
+def _build_global_lookups_minimal() -> tuple[Dict, Dict]:
+    """Build status/target lookup dicts using ONLY namespace-prefixed keys.
+
+    Design: three models share bare codes (e.g. LandUse LU_2.1's clean form
+    '2.1' collides with VerbrauchData code '2.1'). To avoid cross-table
+    collisions we register ONLY namespace-prefixed keys ('LandUse_LU_2.1',
+    'Verbrauch_2.1', 'Renewable_10.4'). The fast path tries both bare and
+    prefixed variants; bare variants always miss against this cache, prefixed
+    variants hit only for the correct table.
+
+    Slow-path parity: if a variable's source_key does NOT match a row's exact
+    code, both paths return None → default_value. If it matches, both paths
+    return the stored value. The only difference is the slow path fires one
+    SELECT per variable; the fast path hits a dict.
+
+    Known limitation: for `*_code_status` / `*_code_ziel` / `*_code_target`
+    source_types the slow path RECURSIVELY re-evaluates calculated rows.
+    This cache returns the stored value instead. For the current seed those
+    source_types are 0 or 1 occurrences each (negligible). If parity breaks
+    on these we can blacklist them from the fast path instead.
+    """
+    from simulator.models import LandUse, VerbrauchData, RenewableData
+
+    status_lookup: Dict[str, float] = {}
+    target_lookup: Dict[str, float] = {}
+
+    # LandUse — slow path looks up `code` exactly (e.g. 'LU_2.1'). Fast path
+    # probes 'LandUse_{source_key}' which hits when source_key == lu.code.
+    for lu in LandUse.objects.all():
+        status_lookup[f'LandUse_{lu.code}'] = float(lu.status_ha or 0)
+        target_lookup[f'LandUse_{lu.code}'] = float(lu.target_ha or 0)
+
+    # VerbrauchData — fast path probes 'Verbrauch_{source_key}'. source_key
+    # format in FormulaVariable rows matches v.code (e.g. '2.10').
+    for v in VerbrauchData.objects.all():
+        status_lookup[f'Verbrauch_{v.code}'] = float(v.status or 0)
+        target_lookup[f'Verbrauch_{v.code}'] = float(v.ziel or 0)
+
+    # RenewableData — fast path probes 'Renewable_{source_key}' and also
+    # 'RenewableData_{source_key}'. Register both for parity.
+    for r in RenewableData.objects.all():
+        status_lookup[f'Renewable_{r.code}'] = float(r.status_value or 0)
+        target_lookup[f'Renewable_{r.code}'] = float(r.target_value or 0)
+        status_lookup[f'RenewableData_{r.code}'] = float(r.status_value or 0)
+        target_lookup[f'RenewableData_{r.code}'] = float(r.target_value or 0)
+
+    return status_lookup, target_lookup
+
+
+def _lookups_signature() -> tuple:
+    """Cheap signature over the values the global lookups depend on.
+    Total: ~3 aggregate queries + one small scan on LandUse (no updated_at)."""
+    from simulator.models import LandUse, VerbrauchData, RenewableData
+    from django.db.models import Max
+
+    v_sig = VerbrauchData.objects.aggregate(m=Max('updated_at'))['m']
+    r_sig = RenewableData.objects.aggregate(m=Max('updated_at'))['m']
+    lu_sig = hash(tuple(
+        LandUse.objects.order_by('code').values_list('code', 'status_ha', 'target_ha')
+    ))
+    return (v_sig, r_sig, lu_sig)
+
+
+def _get_cached_global_lookups() -> tuple[Dict, Dict]:
+    """Return cached (status_lookup, target_lookup), rebuilding if input state
+    has changed since last call."""
+    global _LOOKUPS_CACHE
+    sig = _lookups_signature()
+    if _LOOKUPS_CACHE is not None and _LOOKUPS_CACHE[0] == sig:
+        return _LOOKUPS_CACHE[1], _LOOKUPS_CACHE[2]
+    status_lookup, target_lookup = _build_global_lookups_minimal()
+    _LOOKUPS_CACHE = (sig, status_lookup, target_lookup)
+    return status_lookup, target_lookup
+
+
+def invalidate_lookups_cache() -> None:
+    """Clear the global lookup cache. Exposed for tests."""
+    global _LOOKUPS_CACHE
+    _LOOKUPS_CACHE = None
+
+
 def evaluate_formula_by_key(formula_key: str, extra_context: Optional[Dict] = None) -> Optional[float]:
     """
     Evaluate a formula by its key using FormulaVariable mappings to resolve inputs.
@@ -119,7 +212,14 @@ def _build_context(formula: Formula, use_target: bool = False, status_lookup: Op
     Args:
         formula: The Formula object
         use_target: If True, resolve variables using target/ziel values instead of status
+        status_lookup / target_lookup: in-memory lookup dicts. If not passed,
+            uses the cached global lookups (minimal-keys variant) which
+            preserves slow-path parity while avoiding per-variable DB fetches
+            for variables whose source_key matches a row's direct code.
     """
+    if status_lookup is None and target_lookup is None:
+        status_lookup, target_lookup = _get_cached_global_lookups()
+
     context: Dict[str, float] = {}
     for var in formula.variables.all():
         use_var_target = use_target or ('ziel' in var.source_type.lower() or 'target' in var.source_type.lower())
@@ -788,9 +888,12 @@ def _resolve_variable(var, use_target: bool = False, status_lookup: Optional[Dic
                     return value
             return None
 
-        # VerbrauchData (direct or code references)
-        if var.source_type in ['verbrauch_status', 'verbrauch_ziel', 'verbrauch_code_status', 'verbrauch_code_ziel']:
-            use_target_lookup = var.source_type in ['verbrauch_ziel', 'verbrauch_code_ziel']
+        # VerbrauchData (direct references only).
+        # verbrauch_code_* is excluded because its slow path RECURSIVELY
+        # recomputes the referenced row's calculated values. A cached scalar
+        # can't replicate that — fall through to the slow path.
+        if var.source_type in ['verbrauch_status', 'verbrauch_ziel']:
+            use_target_lookup = var.source_type == 'verbrauch_ziel'
             lookup = target_lookup if use_target_lookup else status_lookup
             verbrauch_keys = (
                 source_key,
@@ -801,9 +904,9 @@ def _resolve_variable(var, use_target: bool = False, status_lookup: Optional[Dic
             if cached_value is not None:
                 return cached_value
 
-        # RenewableData (direct or code references)
-        if var.source_type in ['renewable_status', 'renewable_target', 'renewable_code_status', 'renewable_code_target']:
-            use_target_lookup = var.source_type in ['renewable_target', 'renewable_code_target']
+        # RenewableData (direct references only — see verbrauch note above).
+        if var.source_type in ['renewable_status', 'renewable_target']:
+            use_target_lookup = var.source_type == 'renewable_target'
             lookup = target_lookup if use_target_lookup else status_lookup
             renewable_keys = (
                 source_key,
