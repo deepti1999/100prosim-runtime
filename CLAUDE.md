@@ -139,6 +139,28 @@ This project uses a disciplined verify-before-claim workflow. Every session:
 
 **Honest caveat:** Claude cannot read its own transcript outside its current context window. The review is bounded by what's still in context at the checkpoint. If the session has been very long, old-but-relevant facts may already be gone — that's expected, and the solution is to write the important things down *when they come up*, not wait for a periodic sweep to rescue them.
 
+## When Claude tests automatically (without being asked)
+
+The user should NOT have to ask me to run tests for routine changes. Scope the test run by the change:
+
+| Change type | Run automatically |
+|---|---|
+| Formula / `Formula` row | `test_ws365_formulas` + scenario C or D |
+| `calculation_engine/*` | `test_bb_calc` + `test_wb_ws365_formula_engine` + scenario C |
+| Page / template / JS | scenario A + Playwright test for that page if one exists |
+| WS balance logic | scenario C + D + `test_bb_bal` + `test_e2e_ui_D_full_flow` |
+| Recalc flow (`recalc_*`, signals, workspace) | `test_bb_e2e` + scenario D |
+| Docker / compose / Dockerfile | restart stack + `curl /readyz` + scenario A smoke |
+| Docs / comments / gitignore / non-code typos | nothing |
+| Uncategorised | pause, ask once, then remember |
+
+Before any non-trivial commit: always run `compare.py A`, `compare.py C`, `compare.py D` plus at least one relevant thesis test module. If the change is genuinely trivial (docs, comments, gitignore), skip.
+
+Tests NEVER auto-update. On failure: investigate first. If the behaviour change is intentional, re-capture the golden deliberately and commit golden + code in the same commit. `compare.py` exit codes:
+- **0** — match
+- **1** — value drift (investigate: regression or intentional?)
+- **2** — baseline fingerprint drift (seed / formula / model changed; re-capture, don't patch)
+
 ## Regression harness (`regression/`)
 
 Claude-session-driven golden-file UI + calculation regression. Complements the `simulator.test_*` suites, doesn't replace them.
