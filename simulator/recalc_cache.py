@@ -30,16 +30,19 @@ def _hash_tuple_of_rows(qs_values) -> int:
 
 
 def renewables_inputs_signature() -> int:
-    """Signature for recalc_all_renewables_full inputs.
+    """Signature over EVERYTHING that could affect renewable recalc output.
 
-    Inputs: LandUse, all VerbrauchData (ziel+status+user_percent), fixed
-    Renewables, renewable Formulas.
-    Excludes: non-fixed Renewables (those are written by the recalc).
+    Includes both inputs (LandUse, all VerbrauchData, fixed Renewables,
+    Formulas) AND computed outputs (non-fixed RenewableData values).
 
-    user_percent is included because it's the user-editable input field
-    even on rows where ziel is a calculated output. When the user edits
-    user_percent and the verbrauch recalc runs, renewable outputs must
-    reflect the new ziel values propagated from user_percent.
+    Including outputs is intentional: outer multi-pass loops (e.g.
+    _run_verbrauch_recalc_passes) rely on fresh recalcs detecting further
+    propagation after each pass's bulk_update. If the signature excluded
+    outputs, pass N+1 would cache-hit on the same input signature and
+    return empty, stopping convergence prematurely.
+
+    True "inputs unchanged" cases (settle loops that don't touch anything)
+    still hit the cache because all row values stay stable.
     """
     from simulator.models import LandUse, VerbrauchData, RenewableData, Formula
     from simulator.models import FormulaVariable
@@ -50,7 +53,8 @@ def renewables_inputs_signature() -> int:
     v = tuple(VerbrauchData.objects.order_by('code').values_list(
         'code', 'ziel', 'status', 'user_percent'
     ))
-    rf = tuple(RenewableData.objects.filter(is_fixed=True).order_by('code').values_list(
+    # All renewables including computed ones — see docstring.
+    r = tuple(RenewableData.objects.order_by('code').values_list(
         'code', 'target_value', 'status_value'
     ))
     f = tuple(Formula.objects.filter(category='renewable', is_active=True).order_by('key').values_list(
@@ -61,20 +65,14 @@ def renewables_inputs_signature() -> int:
     ).order_by('formula_id', 'variable_name').values_list(
         'formula_id', 'variable_name', 'source_type', 'source_key'
     ))
-    return hash((lu, v, rf, f, fv))
+    return hash((lu, v, r, f, fv))
 
 
 def verbrauch_inputs_signature() -> int:
-    """Signature for recalc_all_verbrauch inputs.
+    """Signature over EVERYTHING that could affect verbrauch recalc output.
 
-    CRITICAL: user_percent is the user's editable input even on rows where
-    ziel is computed. Previously this signature filtered to rows with
-    is_calculated=False AND ziel_calculated=False — which excluded exactly
-    the rows users edit via the UI. The cache then never invalidated on user
-    edits, making "Save and Continue" a silent no-op.
-
-    Fix: include user_percent of ALL rows (it's never written by the recalc,
-    only by user saves), PLUS ziel/status of non-calculated rows as before.
+    See the note on renewables_inputs_signature: outputs are included so that
+    multi-pass outer loops get fresh recalcs after each pass's bulk_update.
     """
     from simulator.models import LandUse, VerbrauchData, RenewableData, Formula
     from simulator.models import FormulaVariable
@@ -82,17 +80,9 @@ def verbrauch_inputs_signature() -> int:
     lu = tuple(LandUse.objects.order_by('code').values_list(
         'code', 'target_ha', 'status_ha', 'user_percent'
     ))
-    # user_percent of all rows — user's knob, never written by the recalc.
-    all_user_percents = tuple(
-        VerbrauchData.objects.order_by('code').values_list('code', 'user_percent')
-    )
-    # Stored ziel/status of input rows (rows the recalc does NOT rewrite).
-    v_inputs = tuple(VerbrauchData.objects.filter(
-        is_calculated=False,
-        status_calculated=False,
-        ziel_calculated=False,
-    ).order_by('code').values_list(
-        'code', 'ziel', 'status'
+    # All verbrauch rows including computed ones.
+    v = tuple(VerbrauchData.objects.order_by('code').values_list(
+        'code', 'ziel', 'status', 'user_percent'
     ))
     r = tuple(RenewableData.objects.order_by('code').values_list(
         'code', 'target_value', 'status_value'
@@ -105,7 +95,7 @@ def verbrauch_inputs_signature() -> int:
     ).order_by('formula_id', 'variable_name').values_list(
         'formula_id', 'variable_name', 'source_type', 'source_key'
     ))
-    return hash((lu, all_user_percents, v_inputs, r, f, fv))
+    return hash((lu, v, r, f, fv))
 
 
 def check_and_run(
