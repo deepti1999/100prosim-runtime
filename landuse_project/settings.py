@@ -162,19 +162,27 @@ if DATABASES["default"].get("ENGINE") == "django.db.backends.sqlite3":
 # dynos. Local dev uses LocMemCache (single-process, still functional).
 _REDIS_URL = os.environ.get("REDIS_URL")
 if _REDIS_URL:
+    # Heroku Redis uses self-signed TLS certs on rediss:// — Python's ssl
+    # module rejects them by default. Disable cert verification (safe: the
+    # connection itself is still encrypted; Heroku's internal network is
+    # private). See https://devcenter.heroku.com/articles/connecting-heroku-redis
+    _redis_options: dict = {
+        "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        # Do NOT set IGNORE_EXCEPTIONS=True — it silently swallows errors
+        # and returns None, which breaks the Step 1.4 cache-hit detection.
+    }
+    if _REDIS_URL.startswith("rediss://"):
+        import ssl as _ssl
+        _redis_options["CONNECTION_POOL_KWARGS"] = {
+            "ssl_cert_reqs": _ssl.CERT_NONE,
+        }
     CACHES = {
         "default": {
             "BACKEND": "django_redis.cache.RedisCache",
             "LOCATION": _REDIS_URL,
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                # Heroku Redis requires TLS on non-Mini plans; django-redis
-                # honors rediss:// automatically.
-                "IGNORE_EXCEPTIONS": True,
-            },
+            "OPTIONS": _redis_options,
         }
     }
-    DJANGO_REDIS_IGNORE_EXCEPTIONS = True
 else:
     CACHES = {
         "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"},
