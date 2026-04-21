@@ -16,6 +16,18 @@ After the initial deploy, end-to-end Playwright testing uncovered three related 
 
 **Net impact:** Save & Recalculate now correctly propagates through the full DAG ("Recalculated 17 values in 6 pass(es)" instead of "10 values in 12 pass(es) (max reached)"). Full sector+WS balance on genuinely unbalanced workspace: 297s → 135s (2.2× faster, now runnable).
 
+## Balance time matrix (Heroku, measured end-to-end via Playwright)
+
+After all fixes and the `settle_totals max_rounds 2->1` cut:
+
+| Scenario | Solar WS-only | Solar Sector+WS | Wind WS-only | Wind Sector+WS |
+|---|---:|---:|---:|---:|
+| Already balanced | ~0.5s | ~0.5s | ~0.5s | ~0.5s |
+| After 1-2 Verbrauch edits (realistic user flow) | **~0.5s** | **~0.5s** | ~0.5s | ~0.5s |
+| Extreme imbalance (LU_2.1 halved) | — | ~200s (real convergence) | — | — |
+
+The typical user flow is under 1 second per balance click. The 200s case only occurs when the user makes a very large manual adjustment (e.g., halving a LandUse area); in that case the machinery legitimately needs to work through ~100 recalc rounds to converge.
+
 ---
 
 
