@@ -176,7 +176,19 @@ Invalidate by bumping `CalculationRun.id` on every recalc completion (already do
 
 ## Phase 2 — The biggest single speedup (target: 2-3 days)
 
-### Step 2.1 — GW 2.8 direct solve (1 day)
+### Step 2.1 — GW 2.8 direct solve — **DEFERRED**
+
+**Status:** deferred after empirical measurement on 2026-04-21.
+
+**Reason:** Phase 1 (specifically Step 1.2) already makes repeat recalcs cost ~7 ms instead of ~2 s. That collapsed the per-iteration cost of the GW secant loop by ~99 %, so the speedup from replacing 6 iterations with 1 is marginal in practice (~35 ms saved on the warm-cache path, ~5 s on cold).
+
+**Additional finding:** on the current balanced seed the GW gap is ≈ 15 (well under the tolerance of 100), which means the secant loop at `ws365_sector_balance.py:167` is **skipped entirely**. The 6-iteration case only happens when a user makes a large adjustment that moves the GW gap above tolerance. That's a rare path.
+
+**Risk side:** the direct solve requires either (a) an analytic derivation of `gap_gw(x_28)` tracing ~20 formulas through the DAG, or (b) a 2-point numerical slope that assumes linearity. Both approaches have a small but nonzero chance of introducing a math regression that's hard to detect without running hundreds of user-adjustment scenarios.
+
+**Decision:** defer until either (1) stakeholders report the balance button is still slow after Phase 1 ships on Heroku, or (2) someone has time to do the formula-DAG trace properly and build a broader shadow-parity test harness.
+
+**If resumed later:** implement behind a feature flag, run shadow-parity for N user-adjustment scenarios, compare direct-solve output to secant output within 1 ha, only flip the flag after full agreement.
 
 **Pre-work (do first):** write down the GW gap equation symbolically. Verified in Finding C that every formula in the chain is linear in `v_2.8`. Concretely:
 
