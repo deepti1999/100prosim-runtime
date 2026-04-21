@@ -108,13 +108,27 @@ def verbrauch_inputs_signature() -> int:
     return hash((lu, all_user_percents, v_inputs, r, f, fv))
 
 
-def check_and_run(cache_key: str, signature_fn: Callable[[], int], run_fn: Callable[[], Any]) -> Any:
+def check_and_run(
+    cache_key: str,
+    signature_fn: Callable[[], int],
+    run_fn: Callable[[], Any],
+    empty_result_on_hit: Any = None,
+) -> Any:
     """Short-circuit wrapper. Compute signature; if unchanged since last run,
-    return the cached result. Otherwise run and cache."""
+    return `empty_result_on_hit` (NOT the original cached result).
+
+    Why not the cached result: callers like `_run_verbrauch_recalc_passes`
+    loop while `len(updated_codes) > 0`. If a cache hit returned the prior
+    non-empty list, the outer loop would never break. Returning an empty-
+    shaped value tells callers "nothing to update this time" which is
+    exactly what a cache hit means.
+
+    Callers that want the full result (not just the "did anything change?"
+    signal) should bypass this wrapper."""
     sig = signature_fn()
     cached = _cache.get(cache_key)
     if cached is not None and cached[0] == sig:
-        return cached[1]
+        return empty_result_on_hit
     result = run_fn()
     _cache[cache_key] = (sig, result)
     return result

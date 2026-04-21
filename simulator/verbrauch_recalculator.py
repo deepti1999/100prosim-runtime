@@ -116,10 +116,16 @@ def recalc_all_verbrauch(trigger_code: Optional[str] = None, propagate_renewable
     - Returns list of codes that were updated.
     """
     from simulator.recalc_cache import check_and_run, verbrauch_inputs_signature
+    # recalc_all_verbrauch returns List[str] of updated codes. On cache hit
+    # (inputs unchanged), return an empty list so callers like
+    # _run_verbrauch_recalc_passes that loop on `if not updated_codes: break`
+    # correctly terminate. Returning the prior non-empty list caused an
+    # infinite-pass bug where the outer loop thought work was still being done.
     return check_and_run(
         'recalc_all_verbrauch',
         verbrauch_inputs_signature,
         lambda: _recalc_all_verbrauch_impl(trigger_code, propagate_renewables),
+        empty_result_on_hit=[],
     )
 
 

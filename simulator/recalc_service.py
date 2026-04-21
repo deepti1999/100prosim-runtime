@@ -129,10 +129,14 @@ def recalc_all_renewables_full(exclude_ws_dependent: bool = False) -> int:
     NOTE: 9.3.4 and 9.3.1 are fixed and never set from WS output.
     """
     from simulator.recalc_cache import check_and_run, renewables_inputs_signature
+    # recalc_all_renewables_full returns an int count of updates. On cache
+    # hit (inputs unchanged), return 0 to signal "no work done this call" —
+    # callers that loop on that signal can break correctly.
     return check_and_run(
         'recalc_all_renewables_full',
         renewables_inputs_signature,
         lambda: _recalc_all_renewables_full_impl(exclude_ws_dependent),
+        empty_result_on_hit=0,
     )
 
 
