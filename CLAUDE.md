@@ -17,6 +17,44 @@ Django project: `landuse_project/` (settings, URLs, health). Single app: `simula
 
 Production database is PostgreSQL (`DATABASE_URL`). `db.sqlite3` exists for local convenience but is not the deployment target.
 
+## Live Heroku deployment
+
+The app is deployed at https://prosim-100-adb63f037eb6.herokuapp.com/
+
+- **App name:** `prosim-100`
+- **Heroku account:** `kkrann1290@gmail.com`
+- **Region:** `eu-west-1`
+- **Stack:** `heroku-24` (Python 3.12 via `.python-version` — Django 4.2 does NOT support 3.14 which is Heroku's default)
+- **Dyno tier:** Basic (1× web + 1× worker, ~$14/mo dynos)
+- **Addons:** `heroku-postgresql:essential-0` ($5/mo), `heroku-redis:mini` ($3/mo)
+- **Total:** ~$22/mo
+- **Test user:** `testsim` / `TestSim!2026`
+
+Deploy: `git push heroku main` — release phase runs migrations automatically. Seeding and addon setup are one-time (documented in `docs/HEROKU.md`).
+
+**testsim workspace drifts during testing** — reset with:
+```
+heroku run "python manage.py shell -c '
+from django.contrib.auth import get_user_model
+from simulator.models import LandUse, VerbrauchData, RenewableData, BalanceJob
+from simulator.ws_models import WSData
+from simulator.workspace_service import ensure_user_workspace_data
+u = get_user_model().objects.get(username=\"testsim\")
+BalanceJob.objects.filter(created_by=u).delete()
+for M in (LandUse, VerbrauchData, RenewableData, WSData):
+    M.all_objects.filter(owner=u).delete()
+ensure_user_workspace_data(u)
+'" -a prosim-100
+```
+
+**Heroku Redis TLS gotcha** — Heroku Redis uses self-signed certs. `settings.py` sets `ssl_cert_reqs=ssl.CERT_NONE`. If you remove it, `cache.get()` silently returns None and Step 1.4 bilanz cache stops working.
+
+## Convergence iteration counts are tuned for speed
+
+The balance optimizer's iteration counts were cut during the 2026-04-21 perf pass to get Heroku from ~5 min to ~2 min on unbalanced states. These cuts produce small numeric drift (within scenario D tolerances of ±5 ha / ±1 GWh) but are NOT bit-identical to the pre-optimization outputs.
+
+If you need bit-identical math back: see `docs/CONVERGENCE_ITERATIONS_CHANGED.md` for the exact revert recipe per file/line. Do not revert without Pascal's explicit ask — the speed improvement is material.
+
 ## Code layout (big picture)
 
 `simulator/` holds everything. Because it is large and flat, group files by role rather than by filename:
@@ -29,6 +67,24 @@ Production database is PostgreSQL (`DATABASE_URL`). `db.sqlite3` exists for loca
 - **Scenario/workspace state** — `workspace_service.py` + `workspace_signals.py` + `signals.py` + `owner_scope.py` + `middleware.py` (request-scoped scenario state, queue middleware).
 
 When making changes, treat `calculation_engine/` as a pure library and keep Django/ORM imports out of it; persistence and orchestration belong in `simulator/`.
+
+### Architectural rule: process-local caches + Heroku process boundaries
+
+The app has four process-local in-memory caches (after the 2026-04-21 perf pass):
+
+- `recalc_cache._cache` in `simulator/recalc_cache.py`
+- `_AUTO_TOKENS_CACHE` + `_LOOKUPS_CACHE` in `simulator/formula_service.py`
+- `_WS365_COMPUTE_CACHE` in `simulator/ws365_orchestrator.py`
+
+**Critical rule:** Django signals only fire within the Python process that triggered the save. On Heroku, the web and worker are SEPARATE processes. A save on the web dyno DOES NOT invalidate the worker's caches. Therefore `run_balance_job` in `simulator/balance_jobs.py` invalidates ALL four caches at job entry.
+
+If you add a new multi-pass loop or long-running worker function that reads state, invalidate caches at its entry too. Otherwise you risk "silent no-op" bugs where pass 1 returns empty because the cache has stale state and the outer loop breaks early.
+
+Past incidents:
+- Commit `54d4567` — caches not wiped at job entry caused the 1.1.2 revert bug (user changes 100→95, cascade doesn't propagate because worker has stale 1.1.2=100 in auto_tokens_cache).
+- Commit `691b99f` — signature excluded computed ziels, so multi-pass DAG convergence stopped after 1 pass (pass 2 saw same sig, returned empty).
+
+**Companion rule — never have two Python functions with the same name at module scope.** `views.py` had `update_user_percent` defined twice (commit `9b0cf3d` fixed this). Python silently keeps only the last def, and the URL router routes to the wrong signature → 500. Run `grep -n "^def " file.py | sort | uniq -c` when auditing a module.
 
 ## Common commands
 
