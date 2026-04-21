@@ -113,21 +113,30 @@ def recalc_all_renewables_full(exclude_ws_dependent: bool = False) -> int:
     """
     Recalculate all non-fixed RenewableData items in MULTIPLE PASSES to ensure
     children are calculated before parents (since parents sum their children).
-    
+
     Pass 1: Most specific items (longest codes like 10.3.1.1)
     Pass 2: Mid-level items (like 10.3.1, 10.4.1)
     Pass 3: Parent items (like 10.3, 10.4)
     Pass 4: Top-level (like 10.1, 10.2)
-    
+
     Uses fresh LandUse and Verbrauch lookups. Updates in-memory lookups after
     each calculation so downstream formulas see fresh values.
-    
+
     Args:
         exclude_ws_dependent: Legacy flag (kept for compatibility). 9.3.1/9.3.4 are
         always excluded from calculation and treated as fixed.
-    
+
     NOTE: 9.3.4 and 9.3.1 are fixed and never set from WS output.
     """
+    from simulator.recalc_cache import check_and_run, renewables_inputs_signature
+    return check_and_run(
+        'recalc_all_renewables_full',
+        renewables_inputs_signature,
+        lambda: _recalc_all_renewables_full_impl(exclude_ws_dependent),
+    )
+
+
+def _recalc_all_renewables_full_impl(exclude_ws_dependent: bool = False) -> int:
     from simulator.models import Formula
     from calculation_engine.renewable_engine import RenewableCalculator
 

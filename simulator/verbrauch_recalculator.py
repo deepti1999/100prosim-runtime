@@ -115,6 +115,15 @@ def recalc_all_verbrauch(trigger_code: Optional[str] = None, propagate_renewable
     - Persists changed rows in bulk.
     - Returns list of codes that were updated.
     """
+    from simulator.recalc_cache import check_and_run, verbrauch_inputs_signature
+    return check_and_run(
+        'recalc_all_verbrauch',
+        verbrauch_inputs_signature,
+        lambda: _recalc_all_verbrauch_impl(trigger_code, propagate_renewables),
+    )
+
+
+def _recalc_all_verbrauch_impl(trigger_code: Optional[str] = None, propagate_renewables: bool = True) -> List[str]:
     # Local import to avoid circular dependency
     from calculation_engine.verbrauch_engine import VerbrauchCalculator
     from simulator.models import VerbrauchData, RenewableData, LandUse, Formula
