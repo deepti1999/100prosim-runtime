@@ -6,6 +6,17 @@ from django.dispatch import receiver
 from .models import Formula, FormulaVariable, LandUse, RenewableData, VerbrauchData, WS365Formula
 from .ws_models import WSData
 
+
+def _invalidate_formula_lookup_caches(*args, **kwargs):
+    """Step 1.6: invalidate the formula_service auto-tokens cache when any
+    tracked row changes. Import lazily to avoid circular import at module load."""
+    try:
+        from simulator.formula_service import invalidate_auto_tokens_cache, invalidate_lookups_cache
+        invalidate_auto_tokens_cache()
+        invalidate_lookups_cache()
+    except Exception:
+        pass
+
 _SIMULATOR_VERBOSE_PRINTS = os.environ.get("SIMULATOR_VERBOSE_PRINTS", "false").lower() == "true"
 if not _SIMULATOR_VERBOSE_PRINTS:
     def print(*args, **kwargs):  # type: ignore[override]
@@ -134,6 +145,16 @@ def recalculate_ws_data(stromverbr_override=None, use_diagram_reference=True):
     from .ws_365_service import get_ws_365_data
 
     return get_ws_365_data(run_goal_seek=False)
+
+# Step 1.6: keep the formula lookup caches coherent with DB state.
+# Covers the signal-fired mutation paths; bulk_update sites invalidate
+# explicitly at the call site (see recalc_service.py / verbrauch_recalculator.py).
+post_save.connect(_invalidate_formula_lookup_caches, sender=LandUse)
+post_save.connect(_invalidate_formula_lookup_caches, sender=VerbrauchData)
+post_save.connect(_invalidate_formula_lookup_caches, sender=RenewableData)
+post_save.connect(_invalidate_formula_lookup_caches, sender=Formula)
+post_save.connect(_invalidate_formula_lookup_caches, sender=FormulaVariable)
+
 
 @receiver(post_save, sender=LandUse)
 def update_renewable_calculations(sender, instance, created, **kwargs):

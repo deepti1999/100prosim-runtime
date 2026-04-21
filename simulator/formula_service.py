@@ -391,6 +391,61 @@ def _ws365_sum_from_snapshot(ws_snapshot: Dict, source_key: str) -> float:
         total += float(row.get(mapped_key) or 0)
     return total
 
+# Step 1.6: process-local cache of the 6 per-table bare-code lookups used by
+# _auto_context_from_tokens. Without this the function fires ~740 DB queries
+# per recalc pass. Cache is lazy-built on first call and invalidated via:
+#   1) post_save signals on VerbrauchData / RenewableData / LandUse / Formula
+#      (signals.py wires invalidate_auto_tokens_cache into the cascade)
+#   2) explicit invalidate_auto_tokens_cache() after bulk_update sites in
+#      recalc_service.py and verbrauch_recalculator.py (bulk_update bypasses
+#      signals).
+# We intentionally DO NOT do per-call signature checks — the signature
+# aggregate queries (3 per call) outweighed the savings when measured.
+_AUTO_TOKENS_CACHE: Optional[tuple] = None
+
+
+def _auto_tokens_cached_lookups() -> tuple:
+    """Return (v_s, v_t, r_s, r_t, lu_s, lu_t) lookups, building lazily on
+    first call. Invalidated explicitly via invalidate_auto_tokens_cache()."""
+    global _AUTO_TOKENS_CACHE
+    if _AUTO_TOKENS_CACHE is not None:
+        return _AUTO_TOKENS_CACHE
+
+    from simulator.models import LandUse, VerbrauchData, RenewableData
+
+    verbrauch_status: Dict[str, float] = {}
+    verbrauch_target: Dict[str, float] = {}
+    for v in VerbrauchData.objects.all():
+        verbrauch_status[v.code] = float(v.status or 0)
+        verbrauch_target[v.code] = float(v.ziel or 0)
+
+    renewable_status: Dict[str, float] = {}
+    renewable_target: Dict[str, float] = {}
+    for r in RenewableData.objects.all():
+        renewable_status[r.code] = float(r.status_value or 0)
+        renewable_target[r.code] = float(r.target_value or 0)
+
+    landuse_status: Dict[str, float] = {}
+    landuse_target: Dict[str, float] = {}
+    for lu in LandUse.objects.all():
+        landuse_status[lu.code] = float(lu.status_ha or 0)
+        landuse_target[lu.code] = float(lu.target_ha or 0)
+
+    lookups = (
+        verbrauch_status, verbrauch_target,
+        renewable_status, renewable_target,
+        landuse_status, landuse_target,
+    )
+    _AUTO_TOKENS_CACHE = lookups
+    return lookups
+
+
+def invalidate_auto_tokens_cache() -> None:
+    """Clear the auto-tokens cache. Exposed for tests."""
+    global _AUTO_TOKENS_CACHE
+    _AUTO_TOKENS_CACHE = None
+
+
 def _auto_context_from_tokens(
     expression: str,
     use_target: bool,
@@ -407,6 +462,25 @@ def _auto_context_from_tokens(
     in the expression.
     """
     from simulator.models import LandUse, RenewableData, VerbrauchData
+
+    # Step 1.6: if no lookups passed, use the cached globals. Each miss in the
+    # cached dict still falls through to the DB fallback below, preserving
+    # exact parity with the pre-cache behavior.
+    _all_lookups_none = all(lu is None for lu in (
+        verbrauch_status_lookup, verbrauch_target_lookup,
+        renewable_status_lookup, renewable_target_lookup,
+        landuse_status_lookup, landuse_target_lookup,
+    ))
+    if _all_lookups_none:
+        (
+            verbrauch_status_lookup,
+            verbrauch_target_lookup,
+            renewable_status_lookup,
+            renewable_target_lookup,
+            landuse_status_lookup,
+            landuse_target_lookup,
+        ) = _auto_tokens_cached_lookups()
+
     context: Dict[str, float] = {}
 
     (
