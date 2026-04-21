@@ -159,6 +159,31 @@ Invalidate by bumping `CalculationRun.id` on every recalc completion (already do
 
 **Rollback:** remove the cache wrapper.
 
+### Step 1.6 — Cache lookups in `_auto_context_from_tokens` ✅ SHIPPED `ebabf43`
+
+**Added after Phase 1 initial pass** when deep profile revealed this was the last major query leak.
+
+**Change:** added a process-local cache of 6 per-table bare-code lookups. When `_auto_context_from_tokens` is called with no explicit lookups (the common case via `_safe_eval`), it uses the cached globals instead of firing `.objects.get()` per token.
+
+**Safety gate:** shadow parity test — 758/758 formulas match between cached fast path and DB-fallback slow path.
+
+**Measured (per recalc pass):**
+- `recalc_all_verbrauch`: 795 Q → 429 Q (-46 %)
+- `recalc_all_renewables_full`: 1761 Q → 893 Q (-49 %)
+- Balance cycle cold: 2660 Q → 1423 Q (-46 %)
+
+**Cache invalidation:** post_save signals + explicit calls after bulk_update sites.
+
+**First attempt failed safely:** per-call signature checks (3 Max(updated_at) queries) cost more than they saved. Switched to lazy-build + signal-driven invalidation.
+
+### Step 1.7 — Cache pure compute in `get_ws_365_data` ✅ SHIPPED `9243933`
+
+**Change:** split the 365-day compute from its side effect. Compute is cached by input signature; the write to RenewableData 9.3.1 / 9.3.4 still runs every call (value-compare idempotent).
+
+**Measured:** 48 ms / 12 Q → 10 ms / 11 Q on cache hit.
+
+**Safety gate:** JSON-dump parity of cached vs fresh response. Invariants preserved.
+
 ### Step 1.5 — Fix `_get_sector_totals` (0.5 day)
 
 **Change:** `ws365_sector_balance.py:19-72`: replace the 6-8 individual `.objects.get(code=...)` calls with one bulk fetch using `filter(code__in=[...])` → dict → lookups. Pass the `totals` dict into `settle_totals` so it isn't recomputed per iteration.
