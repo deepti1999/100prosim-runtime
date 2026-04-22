@@ -376,7 +376,13 @@ def save_renewable_user_input(request):
         numeric_value = float(user_input)
         old_value = item.user_input
         item.user_input = numeric_value
-        item.save(skip_cascade=True)
+        # Phase 4-E (T25): fire cascade so dependent cells recompute
+        # automatically — the Excel behaviour stakeholders expect per
+        # PDF §2.4.4. This is cascade propagation, NOT a Balance run.
+        item.save()
+
+        # Re-read after save so target_value reflects any cascade-updated state.
+        item.refresh_from_db()
 
         return JsonResponse({
             'success': True,

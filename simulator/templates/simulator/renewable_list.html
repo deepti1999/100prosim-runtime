@@ -15,14 +15,21 @@
             <div
                 class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Erneuerbare Energien – Übersicht</h1>
+                {# Phase 4-E (T25, T27): "Erneuerbare neu berechnen" button #}
+                {# is now admin-only. Regular users see auto-cascade on every #}
+                {# edit (PDF §2.4.4 Excel behaviour). The manual button stays #}
+                {# for admins as a force-refresh escape hatch. #}
+                {% if user.is_staff %}
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
                         <button id="run-recalc-btn" type="button" class="btn btn-sm btn-outline-primary"
-                            onclick="runFullRecalcRenewables()">
-                            <i class="fas fa-leaf me-1"></i>Erneuerbare neu berechnen
+                            onclick="runFullRecalcRenewables()"
+                            title="Admin-Funktion: komplette Neuberechnung der Erneuerbaren erzwingen">
+                            <i class="fas fa-leaf me-1"></i>Erneuerbare neu berechnen (Admin)
                         </button>
                     </div>
                 </div>
+                {% endif %}
             </div>
 
 

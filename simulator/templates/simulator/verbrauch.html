@@ -11,8 +11,8 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
     <h3>Verbrauch – Datenübersicht</h3>
     <p class="text-muted mb-2">KLIK (Kraft, Licht, Information, Kommunikation, Kälte) + Gebäudewärme</p>
-    <div class="alert alert-warning py-2 mb-3" role="alert">
-        <strong>Hinweis:</strong> Nach jeder Änderung auf dieser Seite bitte zur Seite <strong>Erneuerbare Energien</strong> wechseln und <strong>Erneuerbare neu berechnen</strong> ausführen.
+    <div class="alert alert-success py-2 mb-3" role="alert">
+        <strong>Hinweis:</strong> Änderungen auf dieser Seite werden automatisch gespeichert und an abhängige Berechnungen weitergegeben – ein manuelles Neuberechnen der Erneuerbaren ist nicht mehr nötig.
     </div>
 
     <!-- Legend for editable fields -->
@@ -126,11 +126,18 @@
         </tbody>
     </table>
 
+    {# Phase 4-E (T24, T27): individual cell edits already auto-save + #}
+    {# cascade on Verbrauch (see keydown/blur handlers further down). #}
+    {# The bulk "Speichern & neu berechnen" button stays as an admin #}
+    {# escape hatch to force-refresh the whole page after many edits. #}
+    {% if user.is_staff %}
     <div class="text-end mt-3">
-        <button class="btn btn-warning me-2" id="saveRecalcBtn">
-            <i class="fas fa-sync-alt"></i> Speichern &amp; neu berechnen
+        <button class="btn btn-warning me-2" id="saveRecalcBtn"
+                title="Admin-Funktion: komplette Neuberechnung erzwingen">
+            <i class="fas fa-sync-alt"></i> Alles neu berechnen (Admin)
         </button>
     </div>
+    {% endif %}
 
     <!-- Recent Changes Panel -->
     <div class="card mt-3" id="verbrauch-changes-panel">
@@ -832,7 +839,7 @@
                     saveRecalcInProgress = false;
                     preserveCellValueForSaveRecalc = false;
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-sync-alt"></i> Speichern &amp; neu berechnen';
+                    btn.innerHTML = '<i class="fas fa-sync-alt"></i> Alles neu berechnen (Admin)';
                 }
             });
         }
