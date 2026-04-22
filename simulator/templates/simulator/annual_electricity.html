@@ -218,11 +218,12 @@
 
                 <!-- M-circle (r=16 — consistent with Excel small-circle convention) -->
                 <circle cx="465" cy="375" r="16" class="node-circle"/>
-                <text x="488" y="360" class="txt-key-circle">M</text>
 
-                <!-- m_total (1.927.375) value box, sits above M and its entering arrows -->
-                <rect x="415" y="317" width="100" height="22" class="value-box"/>
-                <text x="465" y="333" text-anchor="middle" class="txt-box-val" id="m_value">0</text>
+                <!-- M stack: letter on TOP, value box BELOW. Sits above the K/J/L source arrows
+                     which converge on M-circle from below the stack. -->
+                <text x="465" y="220" text-anchor="middle" class="txt-key-circle">M</text>
+                <rect x="415" y="230" width="100" height="24" class="value-box"/>
+                <text x="465" y="247" text-anchor="middle" class="txt-box-val" id="m_value">0</text>
 
                 <!-- M → splitter circle (short arrow) -->
                 <line x1="481" y1="375" x2="539" y2="375" class="flow-line"/>
@@ -230,12 +231,11 @@
                 <!-- Splitter circle (Ely-P2G branch point) -->
                 <circle cx="550" cy="375" r="10" class="node-circle"/>
 
-                <!-- Splitter → Q arrow; value box sits ABOVE the arrow line so the arrow flows
-                     through cleanly. Tages below arrow. -->
+                <!-- Splitter → Q arrow; value ≥25px above line, Tages ≥25px below line. -->
                 <line x1="560" y1="375" x2="683" y2="375" class="flow-line"/>
-                <rect x="580" y="346" width="95" height="22" class="value-box"/>
-                <text x="627" y="362" text-anchor="middle" class="txt-box-val" id="o_value_svg">0</text>
-                <text x="627" y="398" text-anchor="middle" class="txt-tages">509</text>
+                <rect x="580" y="322" width="95" height="24" class="value-box"/>
+                <text x="627" y="339" text-anchor="middle" class="txt-box-val" id="o_value_svg">0</text>
+                <text x="627" y="410" text-anchor="middle" class="txt-tages">509</text>
 
                 <!-- Q-circle (r=16) -->
                 <circle cx="700" cy="375" r="16" class="node-circle"/>
@@ -249,23 +249,23 @@
                 <text x="760" y="276" text-anchor="middle" class="txt-tages">62</text>
                 <text x="815" y="256" class="txt-key">Q</text>
 
-                <!-- Q → S direct arrow; value box above the line, Tages below. -->
+                <!-- Q → S direct arrow; value ABOVE, Tages BELOW — generous breathing space. -->
                 <line x1="716" y1="375" x2="1134" y2="375" class="flow-line"/>
-                <rect x="870" y="346" width="95" height="22" class="value-box"/>
-                <text x="917" y="362" text-anchor="middle" class="txt-box-val" id="bio_rejoin_value">0</text>
-                <text x="917" y="398" text-anchor="middle" class="txt-tages">313</text>
-                <text x="975" y="362" class="txt-key">N</text>
+                <rect x="870" y="336" width="95" height="24" class="value-box"/>
+                <text x="917" y="353" text-anchor="middle" class="txt-box-val" id="bio_rejoin_value">0</text>
+                <text x="917" y="402" text-anchor="middle" class="txt-tages">313</text>
+                <text x="975" y="353" class="txt-key">N</text>
 
                 <!-- S-circle (r=16) -->
                 <circle cx="1150" cy="375" r="16" class="node-circle"/>
                 <text x="1173" y="360" class="txt-key-circle">S</text>
 
-                <!-- S → Stromnetz arrow; value above, Tages below. -->
+                <!-- S → Stromnetz arrow; generous gaps. -->
                 <line x1="1166" y1="375" x2="1296" y2="375" class="flow-line"/>
-                <rect x="1195" y="346" width="100" height="22" class="value-box"/>
-                <text x="1245" y="362" text-anchor="middle" class="txt-box-val" id="final_value">0</text>
-                <text x="1245" y="398" text-anchor="middle" class="txt-tages">365</text>
-                <text x="1325" y="325" class="txt-key">I</text>
+                <rect x="1195" y="336" width="100" height="24" class="value-box"/>
+                <text x="1245" y="353" text-anchor="middle" class="txt-box-val" id="final_value">0</text>
+                <text x="1245" y="402" text-anchor="middle" class="txt-tages">365</text>
+                <text x="1325" y="318" class="txt-key">I</text>
 
                 <!-- Stromnetz box -->
                 <rect x="1300" y="335" width="260" height="90" rx="6" class="node-yellow"/>
