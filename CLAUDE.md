@@ -198,6 +198,26 @@ This project uses a disciplined verify-before-claim workflow. Every session:
 5. **Before commit** — all affected regression scenarios must pass (`compare.py` exit 0). If a golden needs updating, regenerate it **deliberately** and commit golden + code in the same commit.
 6. **Session end** — `rm -rf verification/ .playwright-mcp/`.
 
+## Per-item verification — NON-NEGOTIABLE
+
+Every behaviour-changing commit must pass five verifications before being claimed done. This exists because in April 2026 we shipped changes that passed locally but broke on Heroku (cross-process cache bugs — commits `54d4567`, `9b0cf3d`). Local-only verification is insufficient.
+
+| Step | What | Pass criterion |
+|---|---|---|
+| **V2 — Tests (unit/contract)** | Run affected `test_bb_*` / `test_wb_*` / `test_e2e_*` modules. Add new tests for any new code path; weak coverage = add coverage, don't ship. | All tests green locally. |
+| **V3 — API smoke** | curl / pytest against the affected HTTP endpoints. | Expected JSON shape + HTTP 200 + contract preserved. |
+| **V4 — Playwright localhost** | Run the affected regression scenario at `http://localhost:8001`. | Scenario passes; `compare.py <id>` exits 0. |
+| **V5 — Playwright on live Heroku** | Spin up via `bash scripts/heroku_up.sh`, run same Playwright scenario against the deployed URL, tear down via `bash scripts/heroku_down.sh`. | Scenario passes on live URL. This is what catches cross-process cache and Heroku-only bugs. |
+| **V6 — Docs** | If the change introduced any invariant, gotcha, or decision: update `CLAUDE.md`, per-item doc, or memory file in the same commit. | Written down, not just in my head. |
+
+**Rules:**
+- **V5 is mandatory** for anything that touches cache invalidation, signals, balance flow, recalc flow, auto-cascade, worker behaviour, or cross-process state. When in doubt, run it.
+- **V5 can be batched per phase** (not per item) during stakeholder-plan work — spin Heroku up once at phase start, run the whole phase's Playwright suite, tear down. Keeps cost to ~$0.10/phase.
+- **New tests are encouraged.** If a regression is possible and no existing test covers it, write one. Don't skip V2 by pretending no test applies.
+- **If a verification fails, the item is not done.** Fix the root cause; never suppress the failure. Never update goldens to make a failing test pass unless you are deliberately capturing an intentional change + committing golden and code together.
+
+See `docs/stakeholder/IMPLEMENTATION_PLAN.md` §1 for the full ritual with per-item examples.
+
 ## Periodic self-review (CLAUDE.md + memory upkeep)
 
 **Rule:** at natural checkpoints Claude must pause, scan the recent conversation in its current context, and proactively suggest additions or corrections to `CLAUDE.md` and the memory files. Never silently auto-apply — always propose the exact diff and wait for Pascal's approval.
