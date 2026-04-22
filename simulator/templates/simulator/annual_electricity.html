@@ -33,14 +33,14 @@
         .node-circle { fill: #fff; stroke: #f4b942; stroke-width: 4; }
 
         .gas-line { stroke: #2b7bd6; stroke-width: 3; marker-end: url(#arrow-gas); fill: none; }
-        .value-box { fill: #fff; stroke: #222; stroke-width: 1; }
-        .txt-tages { font-size: 12px; font-weight: 700; fill: #1f4e79; font-style: italic; }
-        .txt-pct { font-size: 11px; font-weight: 700; fill: #333; }
-        .txt-red { font-size: 12px; font-weight: 900; fill: #c0392b; }
-        .txt-src-label { font-size: 15px; font-weight: 900; fill: #222; }
-        .txt-src-sub { font-size: 12px; font-weight: 700; fill: #444; font-style: italic; }
-        .txt-box-val { font-size: 14px; font-weight: 900; fill: #111; }
-        .txt-arrow-val { font-size: 14px; font-weight: 900; fill: #111; stroke: #fff; stroke-width: 5; paint-order: stroke fill; }
+        .value-box { fill: #fff; stroke: #222; stroke-width: 1.2; }
+        .txt-tages { font-size: 13px; font-weight: 700; fill: #1f4e79; font-style: italic; }
+        .txt-pct { font-size: 12px; font-weight: 800; fill: #222; }
+        .txt-red { font-size: 13px; font-weight: 900; fill: #c0392b; }
+        .txt-src-label { font-size: 16px; font-weight: 900; fill: #222; }
+        .txt-src-sub { font-size: 13px; font-weight: 700; fill: #444; font-style: italic; }
+        .txt-box-val { font-size: 15px; font-weight: 900; fill: #111; }
+        .txt-arrow-val { font-size: 15px; font-weight: 900; fill: #111; stroke: #fff; stroke-width: 5; paint-order: stroke fill; }
 
         /* Phase 5-C (T55): font sizes bumped per PDF §2.5.6 complaint about
            small, hard-to-read labels. Legend block reads text up to ~25%
@@ -235,9 +235,8 @@
                 <text x="625" y="370" text-anchor="middle" class="txt-box-val" id="o_value_svg">0</text>
                 <text x="625" y="394" text-anchor="middle" class="txt-tages">509</text>
 
-                <!-- Q-circle -->
+                <!-- Q-circle (empty; "Q" letter labels the Abregelung value only) -->
                 <circle cx="700" cy="375" r="22" class="node-circle"/>
-                <text x="733" y="358" class="txt-key-circle">Q</text>
 
                 <!-- Abregelung up-arrow from Q-top -->
                 <line x1="700" y1="353" x2="700" y2="200" class="flow-line"/>
@@ -247,18 +246,12 @@
                 <text x="700" y="272" text-anchor="middle" class="txt-tages">62</text>
                 <text x="760" y="254" class="txt-key">Q</text>
 
-                <!-- Q → N arrow with value+Tages -->
-                <line x1="722" y1="375" x2="838" y2="375" class="flow-line"/>
-                <rect x="740" y="354" width="100" height="22" class="value-box"/>
-                <text x="790" y="370" text-anchor="middle" class="txt-box-val" id="bio_rejoin_value">0</text>
-                <text x="790" y="394" text-anchor="middle" class="txt-tages">313</text>
-
-                <!-- N-circle -->
-                <circle cx="860" cy="375" r="22" class="node-circle"/>
-                <text x="893" y="358" class="txt-key-circle">N</text>
-
-                <!-- N → S arrow (short, no new value) -->
-                <line x1="882" y1="375" x2="1128" y2="375" class="flow-line"/>
+                <!-- Q → S direct arrow (no intermediate N-circle — N letter labels this flow value). -->
+                <line x1="722" y1="375" x2="1128" y2="375" class="flow-line"/>
+                <rect x="870" y="354" width="100" height="22" class="value-box"/>
+                <text x="920" y="370" text-anchor="middle" class="txt-box-val" id="bio_rejoin_value">0</text>
+                <text x="920" y="392" text-anchor="middle" class="txt-tages">313</text>
+                <text x="985" y="370" class="txt-key">N</text>
 
                 <!-- S-circle -->
                 <circle cx="1155" cy="375" r="26" class="node-circle"/>
@@ -269,7 +262,7 @@
                 <rect x="1195" y="354" width="100" height="22" class="value-box"/>
                 <text x="1245" y="370" text-anchor="middle" class="txt-box-val" id="final_value">0</text>
                 <text x="1245" y="394" text-anchor="middle" class="txt-tages">365</text>
-                <text x="1315" y="358" class="txt-key">I</text>
+                <text x="1325" y="325" class="txt-key">I</text>
 
                 <!-- Stromnetz box -->
                 <rect x="1300" y="335" width="260" height="90" rx="6" class="node-yellow"/>
