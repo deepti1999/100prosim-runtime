@@ -79,13 +79,20 @@
                                     </td>
                                     <td class="number-column">
                                         {% if data.landuse.parent %}
+                                        {# T14/T15 (PDF §2.4.1): when user input is empty, the #}
+                                        {# placeholder shows the current base value (status_percent) #}
+                                        {# so clearing the override visually falls back to the base. #}
                                         <input type="number" id="user_percent_{{ data.landuse.id }}" step="0.1" min="0"
                                             max="100" class="form-control form-control-sm user-percent-input"
                                             value="{{ data.landuse.user_percent|default:'' }}"
                                             data-code="{{ data.landuse.code }}"
                                             data-parent="{{ data.landuse.parent.code }}"
                                             data-parent-status="{{ data.landuse.parent.status_ha }}"
-                                            data-pk="{{ data.landuse.id }}" placeholder="% eingeben" style="width: 90px;">
+                                            data-base-value="{{ data.status_percent|default:'' }}"
+                                            data-pk="{{ data.landuse.id }}"
+                                            placeholder="{% if data.status_percent %}{{ data.status_percent }}{% else %}% eingeben{% endif %}"
+                                            title="{% if data.status_percent %}Leer lassen für Basis-Wert {{ data.status_percent }}%{% else %}Prozentwert eingeben{% endif %}"
+                                            style="width: 90px;">
                                         {% else %}
                                         <span class="text-muted">-</span>
                                         {% endif %}

@@ -100,14 +100,18 @@
                                     </td>
                                     <td class="text-center">
                                         {% if item.user_editable %}
+                                        {# T14/T15 (PDF §2.4.1): placeholder shows the base target so #}
+                                        {# clearing the override visually falls back to the base value. #}
                                         <div contenteditable="true"
                                             class="editable-renewable-input"
                                             data-code="{{ item.code }}"
-                                            data-original-value="{% if item.user_input_value is not None %}{{ item.user_input_value|floatformat:1 }}{% endif %}">
+                                            data-original-value="{% if item.user_input_value is not None %}{{ item.user_input_value|floatformat:1 }}{% endif %}"
+                                            data-base-value="{% if item.display_target is not None %}{{ item.display_target|floatformat:1 }}{% endif %}"
+                                            title="{% if item.display_target is not None %}Leer lassen für Basis-Wert {{ item.display_target|floatformat:1 }}{% else %}Zum Bearbeiten klicken{% endif %}">
                                             {% if item.user_input_value is not None %}
                                             {{ item.user_input_value|floatformat:1 }}
                                             {% else %}
-                                            <span class="placeholder-text">Zum Bearbeiten klicken ...</span>
+                                            <span class="placeholder-text">{% if item.display_target is not None %}{{ item.display_target|floatformat:1 }} (Basis){% else %}Zum Bearbeiten klicken ...{% endif %}</span>
                                             {% endif %}
                                         </div>
                                         {% else %}

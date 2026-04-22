@@ -99,13 +99,16 @@
                     {% endif %}
                 </td>
                 {% if row.user_editable %}
+                {# T14/T15 (PDF §2.4.1): when user_percent is empty, placeholder #}
+                {# shows the base Ziel value so clearing reveals the fallback. #}
                 <td contenteditable="true" class="text-center editable-user-input editable-highlight"
                     data-field="user_percent" data-code="{{ row.code }}"
                     data-original-value="{{ row.user_percent|default:'' }}"
-                    title="Zum Bearbeiten klicken – dieses Feld ist vom Benutzer bearbeitbar">
+                    data-base-value="{{ row.ziel|default:'' }}"
+                    title="{% if row.ziel %}Leer lassen für Basis-Wert {{ row.ziel|floatformat:1 }}{% else %}Zum Bearbeiten klicken{% endif %}">
                     <span class="edit-icon"></span>
                     {% if row.user_percent %}{{ row.user_percent|floatformat:1 }}{% else %}<span
-                        class="placeholder-text">Zum Bearbeiten klicken ...</span>{% endif %}
+                        class="placeholder-text">{% if row.ziel %}{{ row.ziel|floatformat:1 }} (Basis){% else %}Zum Bearbeiten klicken ...{% endif %}</span>{% endif %}
                 </td>
                 {% else %}
                 <td class="text-center text-muted non-editable-cell" title="Dieses Feld ist nicht bearbeitbar">
