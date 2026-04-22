@@ -29,3 +29,7 @@ Thumbs.db
 # Claude local overrides (settings.json is committed, .local.json is personal)
 .claude/settings.local.json
 .claude/test-credentials.json
+
+# 100prosim Excel reference bundle (Pascal's local copy for T54 flow-diagram
+# audit; contains his/stakeholders' full working files, not for distribution).
+docs/100prosim_d_*/

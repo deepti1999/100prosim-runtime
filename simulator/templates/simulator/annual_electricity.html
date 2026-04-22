@@ -211,15 +211,12 @@
                 <line x1="1090" y1="470" x2="1320" y2="470" class="flow-line-thin"/>
                 <text x="1205" y="458" text-anchor="middle" class="txt-value-sm" id="reconversion_value">0</text>
 
-                <!-- N -> O -> final -->
-                <line x1="725" y1="386" x2="960" y2="386" class="flow-line"/>
+                <!-- M -> N arrow label (Excel: 1,541,442 flow value on arrow before N) -->
+                <text x="557" y="372" text-anchor="middle" class="txt-flow" id="o_value_svg">0</text>
 
-                <rect x="960" y="326" width="250" height="120" rx="6" class="node-blue"/>
-                <text x="1085" y="360" text-anchor="middle" class="txt-label">Strom nach</text>
-                <text x="1085" y="386" text-anchor="middle" class="txt-label">Elektrolyse Stromspeicher</text>
-                <text x="845" y="372" text-anchor="middle" class="txt-flow" id="o_value_svg">0</text>
-
-                <line x1="1210" y1="386" x2="1320" y2="386" class="flow-line"/>
+                <!-- N -> final (biobrennstoffe S rejoins before Stromnetz; Excel page 10) -->
+                <line x1="735" y1="386" x2="1320" y2="386" class="flow-line"/>
+                <text x="1280" y="372" text-anchor="middle" class="txt-value-sm" id="bio_rejoin_value">0</text>
 
                 <rect x="1320" y="300" width="260" height="170" rx="6" class="node-yellow"/>
                 <text x="1450" y="350" text-anchor="middle" class="txt-label-lg">Stromnetz zum</text>
@@ -355,7 +352,8 @@
         setText('hydro_value', vals.hydro);
         setText('m_value', vals.m_total);
         setText('ely_branch_value', vals.ely_branch_value);
-        setText('n_value_svg', vals.n_value);
+        // T54 fix: N-circle displays n_to_right (Excel N-value = 947,106), not n_value
+        setText('n_value_svg', vals.n_to_right);
         setText('n_output_branch_value', vals.n_output_branch);
         setText('q_value', vals.q_abregelung);
         setText('ely_offer_value', vals.ely_offer);
@@ -371,7 +369,9 @@
         setText('gasspeicher_direkt_value', vals.gasspeicher_direkt);
         setText('t_value_svg', vals.t_value);
         setText('reconversion_value', vals.reconversion);
-        setText('o_value_svg', vals.n_to_right);
+        // T54 fix: M→N arrow label shows n_value (Excel 1,541,442 flow value)
+        setText('o_value_svg', vals.n_value);
+        setText('bio_rejoin_value', vals.bio);
         setText('final_value', vals.final_stromnetz);
 
         const exportCsvBtn = document.getElementById('exportCsvBtn');
