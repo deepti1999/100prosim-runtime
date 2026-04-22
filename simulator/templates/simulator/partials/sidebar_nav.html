@@ -1,6 +1,13 @@
 <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
     <div class="position-sticky pt-3">
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        {# Stakeholder PDF §2.5.3 (T42): "100prosim" brand moved into the #}
+        {# sidebar header in Phase 3-B (removed from the top bar). #}
+        <a class="navbar-brand d-flex align-items-center px-3 pb-3 mb-3 border-bottom text-decoration-none"
+           href="{% url 'simulator:landing_page' %}"
+           style="font-weight: bold; color: var(--primary-green, #2d5a2d);">
+            <i class="fas fa-leaf me-2" style="color: #66cc66;"></i>100ProSim
+        </a>
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted">
             <span>Simulationsmodule</span>
         </h6>
         <ul class="nav flex-column">

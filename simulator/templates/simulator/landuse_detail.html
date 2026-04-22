@@ -3,7 +3,12 @@
 {% block title %}{{ landuse.name }} – Flächennutzung-Details{% endblock %}
 
 {% block content %}
-<div class="row">
+<div class="container-fluid">
+    <div class="row">
+        {# Stakeholder PDF §2.5.3: sidebar on every page. #}
+        {% include 'simulator/partials/sidebar_nav.html' with active_section='landuse' %}
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
     <div class="col-12">
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="mb-4">
@@ -245,6 +250,8 @@
                 </div>
             </div>
         </div>
+    </div>
+        </main>
     </div>
 </div>
 {% endblock %}

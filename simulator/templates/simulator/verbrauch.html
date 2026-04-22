@@ -3,7 +3,12 @@
 {% block title %}Verbrauch{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid">
+    <div class="row">
+        {# Stakeholder PDF §2.5.3 (T37): sidebar added here in Phase 3-A. #}
+        {% include 'simulator/partials/sidebar_nav.html' with active_section='verbrauch' %}
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
     <h3>Verbrauch – Datenübersicht</h3>
     <p class="text-muted mb-2">KLIK (Kraft, Licht, Information, Kommunikation, Kälte) + Gebäudewärme</p>
     <div class="alert alert-warning py-2 mb-3" role="alert">
@@ -148,6 +153,8 @@
                 </div>
             </div>
         </div>
+    </div>
+        </main>
     </div>
 </div>
 

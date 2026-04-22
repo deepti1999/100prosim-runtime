@@ -3,7 +3,12 @@
 {% block title %}Gebäudewärme{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid">
+    <div class="row">
+        {# Stakeholder PDF §2.5.3: sidebar on every page. #}
+        {% include 'simulator/partials/sidebar_nav.html' with active_section='verbrauch' %}
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
     <h3>Gebäudewärme – Datenübersicht</h3>
     <p class="text-muted mb-4">Nachgebildet nach Excel-Tabellenblatt S.5 "Gebäudewärme"</p>
 
@@ -78,6 +83,8 @@
         <button class="btn btn-secondary" id="exportBtn">
             <i class="fas fa-download"></i> CSV exportieren
         </button>
+    </div>
+        </main>
     </div>
 </div>
 
