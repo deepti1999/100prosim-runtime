@@ -158,6 +158,28 @@ Required for any non-local deploy: `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, `D
 3. **Four-sector model** (KLIK, Gebäudewärme, Prozesswärme, Mobile Anwendungen) is load-bearing — do not restructure.
 4. **`Formula` table is authoritative** — don't "clean up" redundant-looking formulas.
 
+## Stakeholder implementation plan (April 2026)
+
+The 12-page stakeholder PDF (`260403_Portierung_Bestandsaufnahme.pdf`, H. Schmidt-Kanefendt 2026-04-03) decomposes into 63 atomic targets (T1–T63). **50/63 are shipped + Heroku-verified** as of 2026-04-22. The plan, progress, and open-items live in `docs/stakeholder/`:
+
+- **`REMAINING.md`** — single source of truth for what's still open (13 targets across 3 buckets: T54 flow-diagram audit, Phase 7 external-gated, §2.3 data model deferred).
+- `IMPLEMENTATION_PLAN.md` — 63-target plan with the 5-way verification ritual.
+- `PROGRESS.md` — live checkbox burndown.
+- `260403_Bestandsaufnahme_DE.md` + `_EN.md` — original + translation.
+- `TRANSLATION_GLOSSARY.md`, `FLOW_DIAGRAM_AUDIT.md`, `REGRESSION_DIFF_REPORT.md`, `VERIFICATION_STATUS.md` — per-item references.
+
+If the user asks "what's next" / "what's left" / anything about stakeholder work: read `REMAINING.md` first.
+
+**Key learnings from the autonomous Phase 3–6 push:**
+
+- **Commit per item with T-ID in subject**: `stakeholder-<phase>-<item>: <summary> (T<n>)`. One phase = one logical push; V5 Heroku verification batched at the phase boundary.
+- **Heroku spin-up/teardown is cheap**: ~$0.06–0.10 per full cycle. Use liberally for V5. `scripts/heroku_up.sh` + `heroku_down.sh` handle the CLI gotchas (5-min `--wait` timeout on Postgres; Windows git-remote non-zero exit on destroy).
+- **Goldens regen needs explicit user sign-off** (plan rule). `regression/compare.py` now filters `_meta.*` from the diff (provenance, not app state). `regression/capture_A.py` + `regression/categorize_A_diff.py` turn a scary 100+-field diff into a 6-category decision — makes sign-off review cheap.
+- **Workspace-scoped data causes per-user value drift** over time. Pin a consistent owner when capturing goldens (testsim works).
+- **Auto-cascade ≠ auto-Balance.** PDF §2.4.4 means "changes in cell A propagate to dependent cells automatically" (Excel-style). Balance (§2.4.3) stays a manual 2-button choice. Don't conflate the two; the codebase now distinguishes them clearly.
+- **`save()` vs `save(skip_cascade=True)`**: Renewable's `save_renewable_user_input` used to skip cascade, which broke the T25 cascade contract. Now uses plain `save()`. LandUse + Verbrauch always did.
+- **Cross-process cache coherency** (fixed earlier in `54d4567`) holds through Phase 3–6. `run_balance_job` still invalidates all 4 caches at entry. Don't remove that.
+
 ## Two main stakeholder work streams (co-equal, both active)
 
 ### 1. Performance — Heroku is slow
