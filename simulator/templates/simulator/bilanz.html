@@ -1,5 +1,6 @@
 {% extends 'simulator/base.html' %}
 {% load bilanz_filters %}
+{% load l10n %}
 
 {% block title %}Bilanz Endenergie{% endblock %}
 
@@ -243,16 +244,31 @@
                             </div>
                         </div>
 
+                        {# Phase 5-B (T57, T60): capacity badge + unit toggle + stacked bars. #}
+                        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                            <div>
+                                <span class="badge bg-secondary me-1">Min: {{ ws_balance_status.min_ladezust|floatformat:1 }} GWh</span>
+                                <span class="badge bg-secondary me-1">Max: {{ ws_balance_status.max_ladezust|floatformat:1 }} GWh</span>
+                                <span class="badge bg-primary">Kapazität (Max − Min): {{ ws_balance_status.storage_capacity_gwh|floatformat:1 }} GWh</span>
+                            </div>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Einheit umschalten">
+                                <button type="button" id="wsUnitGwhBtn" class="btn btn-outline-primary active" data-unit="gwh">GWh</button>
+                                <button type="button" id="wsUnitTlBtn" class="btn btn-outline-primary" data-unit="tl"
+                                        title="Tagesladung = Jahresverbrauch / 365 ({{ ws_balance_status.tagesladung_gwh|floatformat:1 }} GWh)">
+                                    Tagesladung
+                                </button>
+                            </div>
+                        </div>
                         <div class="ws365-chart-wrap">
                             <canvas id="ws365BalanceChart"></canvas>
                         </div>
                         <p class="text-muted small mb-0 mt-2">
                             Toleranz: ±{{ ws_balance_status.tolerance|floatformat:1 }} GWh |
-                            Min: {{ ws_balance_status.min_ladezust|floatformat:1 }} GWh |
-                            Max: {{ ws_balance_status.max_ladezust|floatformat:1 }} GWh
+                            Defizit-Tage: {{ ws_balance_status.deficit_days }} |
+                            Tagesladung: {{ ws_balance_status.tagesladung_gwh|floatformat:1 }} GWh
                         </p>
                         <p class="text-muted small mb-0">
-                            Hinweis: Start- und Endwert werden direkt an der Linie beschriftet (absolute Ladezustand-Brutto-Werte).
+                            Hinweis: Start- und Endwert werden direkt an der Linie beschriftet. Die gestapelten Tages­balken zeigen Einspeicherung (blau) und Ausspeicherung (orange) sowie die Abregelung (grau) pro Tag.
                         </p>
                     {% else %}
                         <div class="alert alert-warning mb-0">
@@ -798,15 +814,54 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    new Chart(ctx, {
-        type: 'line',
-        plugins: [endpointLabelPlugin],
+    // Phase 5-B (T58, T59, T60): daily surplus (einspeich) / deficit (ausspeich)
+    // / Abregelung as stacked bars on a secondary y-axis. Plus unit toggle
+    // GWh ↔ Tagesladung via the buttons in the header.
+    const einspeichSeries  = points.map(p => Number(p.einspeich  || 0));
+    const ausspeichSeries  = points.map(p => Number(p.ausspeich  || 0)).map(v => -v);  // plot discharge as negative
+    const abregelungSeries = points.map(p => Number(p.abregelung || 0));
+    const tagesladungGwh = Number({{ ws_balance_status.tagesladung_gwh|default:1|floatformat:6|unlocalize }}) || 1;
+
+    let unit = 'gwh';
+    const unitFactor = () => unit === 'tl' ? 1 / tagesladungGwh : 1;
+    const unitLabel = () => unit === 'tl' ? 'Tagesladungen' : 'GWh';
+    const scaled = (arr) => arr.map(v => v * unitFactor());
+
+    const chart = new Chart(ctx, {
         data: {
             labels,
             datasets: [
                 {
+                    type: 'bar',
+                    label: 'Einspeicherung (Überschuss)',
+                    data: scaled(einspeichSeries),
+                    backgroundColor: 'rgba(37, 99, 235, 0.55)',
+                    stack: 'daily',
+                    yAxisID: 'yBar',
+                    order: 2,
+                },
+                {
+                    type: 'bar',
+                    label: 'Ausspeicherung (Defizit, negativ dargestellt)',
+                    data: scaled(ausspeichSeries),
+                    backgroundColor: 'rgba(249, 115, 22, 0.55)',
+                    stack: 'daily',
+                    yAxisID: 'yBar',
+                    order: 2,
+                },
+                {
+                    type: 'bar',
+                    label: 'Abregelung',
+                    data: scaled(abregelungSeries),
+                    backgroundColor: 'rgba(107, 114, 128, 0.55)',
+                    stack: 'daily',
+                    yAxisID: 'yBar',
+                    order: 2,
+                },
+                {
+                    type: 'line',
                     label: 'Ladezustand Brutto',
-                    data: values,
+                    data: scaled(values),
                     borderColor: lineColor,
                     backgroundColor: gradient,
                     fill: true,
@@ -815,38 +870,32 @@ document.addEventListener('DOMContentLoaded', function () {
                     pointRadius: pointRadius,
                     pointHoverRadius: 5,
                     pointBackgroundColor: lineColor,
-                    pointBorderWidth: 0
+                    pointBorderWidth: 0,
+                    yAxisID: 'y',
+                    order: 1,
                 }
             ]
         },
+        plugins: [endpointLabelPlugin],
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false
-            },
+            interaction: { mode: 'index', intersect: false },
             plugins: {
-                legend: {
-                    display: true,
-                    labels: {
-                        boxWidth: 14
-                    }
-                },
+                legend: { display: true, labels: { boxWidth: 14 } },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return context.dataset.label + ': ' + Number(context.parsed.y).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' GWh';
+                            const n = Number(context.parsed.y);
+                            return context.dataset.label + ': ' + n.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' ' + unitLabel();
                         }
                     }
                 }
             },
             scales: {
                 x: {
-                    title: {
-                        display: true,
-                        text: 'Tag im Jahr'
-                    },
+                    title: { display: true, text: 'Tag im Jahr' },
+                    stacked: true,
                     ticks: {
                         autoSkip: false,
                         maxRotation: 0,
@@ -859,37 +908,50 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 },
                 y: {
-                    min: yMin,
-                    max: yMax,
-                    title: {
-                        display: true,
-                        text: 'Ladezustand Brutto (GWh)'
-                    },
+                    min: yMin * unitFactor(),
+                    max: yMax * unitFactor(),
+                    position: 'left',
+                    title: { display: true, text: () => 'Ladezustand Brutto (' + unitLabel() + ')' },
                     ticks: {
                         maxTicksLimit: 8,
-                        stepSize: yStep,
                         callback: function(value) {
-                            const num = Number(value);
-                            if (Math.abs(num) < yStep / 2) {
-                                return '';
-                            }
-                            const abs = Math.abs(num);
-                            if (abs < 1000) {
-                                return num.toLocaleString('de-DE', {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                });
-                            }
-                            return num.toLocaleString('de-DE', {
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 0
-                            });
+                            return Number(value).toLocaleString('de-DE', { maximumFractionDigits: 1 });
+                        }
+                    }
+                },
+                yBar: {
+                    position: 'right',
+                    stacked: true,
+                    title: { display: true, text: () => 'Tagesfluss (' + unitLabel() + ')' },
+                    grid: { display: false },
+                    ticks: {
+                        callback: function(value) {
+                            return Number(value).toLocaleString('de-DE', { maximumFractionDigits: 1 });
                         }
                     }
                 }
             }
         }
     });
+
+    // Unit toggle wiring.
+    const btnGwh = document.getElementById('wsUnitGwhBtn');
+    const btnTl = document.getElementById('wsUnitTlBtn');
+    function setUnit(newUnit) {
+        if (unit === newUnit) return;
+        unit = newUnit;
+        btnGwh && btnGwh.classList.toggle('active', newUnit === 'gwh');
+        btnTl && btnTl.classList.toggle('active', newUnit === 'tl');
+        chart.data.datasets[0].data = scaled(einspeichSeries);
+        chart.data.datasets[1].data = scaled(ausspeichSeries);
+        chart.data.datasets[2].data = scaled(abregelungSeries);
+        chart.data.datasets[3].data = scaled(values);
+        chart.options.scales.y.min = yMin * unitFactor();
+        chart.options.scales.y.max = yMax * unitFactor();
+        chart.update();
+    }
+    btnGwh && btnGwh.addEventListener('click', () => setUnit('gwh'));
+    btnTl && btnTl.addEventListener('click', () => setUnit('tl'));
 });
 </script>
 {% endblock %}

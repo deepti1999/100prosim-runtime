@@ -45,13 +45,27 @@ def bilanz_view(request):
     day1 = float(ws_current['ladezust_day1'])
     day365 = float(ws_current['ladezust_day365'])
 
+    # Phase 5-B (T58, T59): include daily surplus/deficit + Mangelausgleich
+    # so the Jahresgang chart can render the stacked bars PDF §2.5.7 asks for.
     ws_chart_points = [
         {
             'day': int(row.get('day') or idx + 1),
             'ladezust_brutto': float(row.get('ladezust_brutto') or 0.0),
+            'ueberschuss_strom': float(row.get('ueberschuss_strom') or 0.0),
+            'einspeich': float(row.get('einspeich') or 0.0),
+            'ausspeich': float(row.get('ausspeich') or 0.0),
+            'abregelung': float(row.get('abregelung') or 0.0),
         }
         for idx, row in enumerate(ws_daily)
     ]
+
+    min_ladezust = min(series) if series else 0.0
+    max_ladezust = max(series) if series else 0.0
+    # Phase 5-B (T60): Tagesladung = annual consumption / 365.
+    # Capacity required = Max - Min of the storage trajectory.
+    annual_consumption = sum(float(row.get('ueberschuss_strom') or 0.0) for row in ws_daily) or 1.0
+    tagesladung_gwh = annual_consumption / 365.0 if annual_consumption else 1.0
+    storage_capacity_gwh = max_ladezust - min_ladezust
 
     ws_balance_status = {
         'available': len(ws_chart_points) > 0,
@@ -59,10 +73,13 @@ def bilanz_view(request):
         'drift': drift,
         'day1': day1,
         'day365': day365,
-        'min_ladezust': min(series) if series else 0.0,
-        'max_ladezust': max(series) if series else 0.0,
+        'min_ladezust': min_ladezust,
+        'max_ladezust': max_ladezust,
         'deficit_days': sum(1 for v in series if v < 0),
         'tolerance': ws_drift_tolerance,
+        # Phase 5-B additions:
+        'storage_capacity_gwh': storage_capacity_gwh,   # Max - Min
+        'tagesladung_gwh': tagesladung_gwh,             # divisor for Tagesladung unit
     }
 
     bilanz_data['ws_balance_status'] = ws_balance_status
