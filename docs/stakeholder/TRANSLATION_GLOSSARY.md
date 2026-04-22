@@ -42,8 +42,8 @@ These are the biggest stakeholder complaint — columns still English on multipl
 | `Code` | `Code` | Universal — stays (alpha-numeric identifier) |
 | `Parameter Hierarchy` | `Parameter-Hierarchie` | /renewable/ |
 | `Unit` | `Einheit` | /renewable/, /verbrauch/, /landuse/ |
-| `Status Value` | `Status-Wert` | /renewable/, /verbrauch/ |
-| `Target Value` | `Ziel-Wert` | /renewable/, /verbrauch/ |
+| `Status Value` | `Status` | /renewable/, /verbrauch/ — match Excel AH.Cockpit1 (PDF §2.5.4) |
+| `Target Value` | `Ziel` | /renewable/, /verbrauch/ — match Excel AH.Cockpit1 (PDF §2.5.4) |
 | `User Input` | `Benutzereingabe` | Everywhere |
 | `Status (ha)` / `Status (%)` | `Status (ha)` / `Status (%)` | Keep — unit in parentheses is universal |
 | `Target (ha)` / `Target (%)` | `Ziel (ha)` / `Ziel (%)` | /landuse/ |
@@ -91,7 +91,7 @@ These use `alert()` / `confirm()` in JS; long sentences. Translations must prese
 
 | English | German |
 |---|---|
-| `WARNING: Reset to Baseline?\nThis will DELETE all current data and restore the database to the baseline snapshot.\nALL CHANGES since the baseline will be LOST!\nAre you absolutely sure?` | `WARNUNG: Auf Baseline zurücksetzen?\nAlle aktuellen Daten werden GELÖSCHT und der Stand wird auf das Baseline-Szenario zurückgesetzt.\nAlle Änderungen seit der Baseline gehen VERLOREN!\nSind Sie absolut sicher?` |
+| `WARNING: Reset to Baseline?\nThis will DELETE all current data and restore the database to the baseline snapshot.\nALL CHANGES since the baseline will be LOST!\nAre you absolutely sure?` | `WARNUNG: Auf Baseline zurücksetzen?\nAlle aktuellen Daten werden GELÖSCHT und der Stand wird auf das Baseline-Szenario zurückgesetzt.\nAlle Änderungen seit der Baseline gehen VERLOREN!\nSind Sie absolut sicher?` | **Locked.** `WARNUNG:` for genuinely destructive data-loss dialogs. |
 | `Baseline snapshot created successfully!` | `Baseline-Snapshot erfolgreich erstellt!` |
 | `Restored to baseline successfully!` | `Erfolgreich auf Baseline zurückgesetzt!` |
 | `No baseline exists yet.` | `Noch keine Baseline vorhanden.` |
@@ -102,14 +102,14 @@ These use `alert()` / `confirm()` in JS; long sentences. Translations must prese
 
 | English | German |
 |---|---|
-| `© 2025 Land Use Data Viewer \| Built with Django & Bootstrap` | `© 2026 100ProSim \| Django & Bootstrap` |
+| `© 2025 Land Use Data Viewer \| Built with Django & Bootstrap` | `© 2026 100ProSim \| Django & Bootstrap` | **Locked.** App is live in 2026; the "Land Use Data Viewer" prototype name is gone. |
 
 ## 8. Loanwords to keep (per usage in 100prosim-Excel or German web convention)
 
 - `Baseline` — PDF uses the loanword directly
 - `Scenario` / `Scenarios` (context-dependent) — but `Szenario`/`Szenarien` is preferred per PDF wording
 - `Cockpit` — PDF §2.5.4 + Excel AH.Cockpit1/2 use this loanword
-- `Dashboard` — **controversial**. Propose `Übersicht` (matches Simulations-Übersicht). Pascal to confirm.
+- `Dashboard` — **decision:** translate to `Übersicht` everywhere, for consistency with `Simulations-Übersicht`.
 - `Goal Seek` — already removed in Phase 1-B
 - `Balance` (noun) / `Balance Solar` / `Balance Wind` — PDF §2.4.3 uses German `WS Balance Solar` mixed form. Keep.
 
@@ -123,16 +123,34 @@ These stay English (code-facing, not user-facing):
 
 ---
 
-## Open questions for Pascal
+## Locked decisions (Pascal 2026-04-22)
 
-1. **"Status" and "Ziel" as column headers.** Excel uses these exact German words (see PDF §2.5.4 screenshot). Confirm we match.
-2. **"Dashboard" → "Übersicht"?** Or keep loanword? PDF §2.5.3 screenshot shows `Simulations-Übersicht` already, so "Übersicht" is the established term.
-3. **Footer year.** Currently `© 2025`. Bump to `© 2026` (app is still live in 2026)?
-4. **Alert dialogs with `WARNING:`.** Proposed `WARNUNG:` — or softer `Achtung:`?
-5. **System-architecture page (`/smard/`)** uses lots of English technical labels ("Chart.js Graphs", "Data Flow Diagram"). Is this page user-facing for stakeholders, or internal? If internal, lower-priority.
+1. **Column headers:** `Status Value` → `Status`, `Target Value` → `Ziel`. Match Excel AH.Cockpit1 verbatim.
+2. **`Dashboard` → `Übersicht`** everywhere, consistent with `Simulations-Übersicht`.
+3. **Footer:** `© 2026 100ProSim | Django & Bootstrap` — drop the prototype name.
+4. **Alert severity:**
+   - `Achtung:` — default for non-destructive warnings.
+   - `WARNUNG:` — reserved for genuinely destructive actions (Reset to Baseline, Delete Scenario).
+5. **`/smard/` system-architecture page IS translated.** The rule is never-skip from the PDF §2.5.1 ("ein erheblicher Teil der Begriffe" — substantial part). Even though /smard/ is not linked from the nav, it's reachable by URL and rendered in the user's browser → user-facing → in scope.
+
+## /smard/ — specific additions
+
+| English | German |
+|---|---|
+| `System Architecture` (h1) | `Systemarchitektur` |
+| `Energy Simulation Platform - Data Flow Diagram` | `Energie-Simulationsplattform – Datenflussdiagramm` |
+| `Technology Stack` | `Technologie-Stack` |
+| `Chart.js Graphs • Dashboard` | `Chart.js-Diagramme • Übersicht` |
+| `User Interface Layer` | `Benutzeroberfläche` |
+| `Application Logic Layer` | `Anwendungslogik` |
+| `Data Layer` | `Datenschicht` |
+| `External Data Sources` | `Externe Datenquellen` |
+| `Interactive Balancing System - Use Case Diagram` (h2) | `Interaktives Balancing-System – Anwendungsfall-Diagramm` |
+
+(Other architecture-box labels translated inline during 2-A edit.)
 
 ## Approval
 
-- [ ] Pascal reviewed the mapping and approved entries in sections 1–7
-- [ ] Open questions answered
-- [ ] Cleared to proceed with Phase 2-A mass-edit
+- [x] Decisions locked (2026-04-22)
+- [x] Open questions answered
+- [x] Cleared to proceed with Phase 2-A mass-edit
