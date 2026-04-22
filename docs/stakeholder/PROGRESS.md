@@ -46,13 +46,14 @@ Mandatory per item (non-negotiable, see IMPLEMENTATION_PLAN.md §1):
 - ✅ Phase 3+4 batched V5 Heroku: LandUse edit triggered save+cascade live (`Saved to database: Updated LU_2.1 to 1.5% - renewables auto-updated`); Balance Solar/Wind buttons only visible, progress banner DOM in place, base-value data-attrs render (19 on landuse, 44 on verbrauch).
 
 ## Phase 5 — Chart rework
-- ☐ 5-A Rich Cockpit results overview — T43, T44, T45, T46, T47
-- ☐ 5-B Improved annual H₂ chart — T57, T58, T59, T60
-- ☐ 5-C Fix electricity/H₂ flow diagram — T53, T54, T55, T56
+- ✅ 5-A Rich Cockpit Status↔Ziel overview — T43, T44, T45, T46, T47 — commit `10a86e6`
+- ✅ 5-B Improved annual H₂ chart (Min/Max/Kapazität, stacked daily bars, Tagesladung toggle) — T57, T58, T59, T60 — commits `f7ce88d`
+- ✅ 5-C Flow diagram: fonts bumped, zoom controls, structure audit doc — T53, T55, T56 — commit `268552c`; T54 value-to-node audit documented as open action in `FLOW_DIAGRAM_AUDIT.md`.
 
 ## Phase 6 — History + details
-- ☐ 6-A Modification history model + UI (inspectable, not undo) — T61, T62, T63
-- ☐ 6-B Modification-detail variant charts (5) — T48, T49, T50, T51, T52
+- ✅ 6-A Modifikations-Historie page + model + migration — T61, T62, T63 — commit `1051de0` (5 contract tests, migration 0050)
+- ✅ 6-B Modifikationsdetails — 5 variant-compare charts — T48, T49, T50, T51, T52 — commit `92ae451` (4 new tests)
+- ✅ Phase 5+6 V5 Heroku: all new pages render on live; Status↔Ziel, capacity badge, Tagesladung toggle, zoom controls, /historie/ inspect-only, /modifikationsdetails/ with 5 canvases + 4-series JSON all confirmed at `prosim-100-750ddc9416fd.herokuapp.com`.
 
 ## Phase 7 — Acid test + handover (external-gated)
 - ⏸ 7-A Hosting handover to ErnES — T1, T2, T3, T4
