@@ -27,9 +27,10 @@ Mandatory per item (non-negotiable, see IMPLEMENTATION_PLAN.md §1):
 - ✅ Phase 1 V5 — Heroku Playwright: both removals verified on live at `prosim-100-2661cfdfdcde.herokuapp.com`. Solar card populated "Optimales Solar: 1.211.176 GWh" automatically on page load without Goal Seek button; Balance buttons enabled correctly.
 
 ## Phase 2 — Localization
-- ☐ 2-A UI labels to German — T29, T30, T31, T33
-- ☐ 2-B User manual to German — T32, T33
-- ☐ 2-C German number format end-to-end — T34, T35, T36
+- ✅ 2-A UI labels to German — T29, T30, T31, T33 — commit `6c82cce` + title/lang fix `10d2c01`
+- ✅ 2-B User manual to German — T32, T33 — commit `b8e4a45` (shared with 2-C)
+- ✅ 2-C German number format end-to-end — T34, T35, T36 — commits `b8e4a45` + bilanz/admin fix `4131cb2`
+- ✅ Phase 2 V5 — Heroku Playwright: all 8 user-reachable pages (login, landuse, renewable, verbrauch, ws, cockpit, bilanz, annual-electricity, user-manual) verified on live at `prosim-100-9fa2a64bdb5f.herokuapp.com`. Titles, headings, columns, buttons, card labels, alert text all German. Numbers in German format everywhere including Bilanz (`329.346` not `329,346`), annual flow diagram (`1.211.176 GWh`), WS summary cards (`Speicherdrift: 0,0 GWh`), LandUse areas (`35.759.529 ha`). 0 English leakage on any page. User manual shows 11 German steps + native German prose.
 
 ## Phase 3 — Menu consistency
 - ☐ 3-A Universal side-menu — T37, T38, T39, T40
