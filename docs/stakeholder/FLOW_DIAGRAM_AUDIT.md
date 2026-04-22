@@ -323,6 +323,79 @@ Abgleichdifferenz, scenario subtitle). Two of these (`261 GW elekt.` and
 pure-template additions — filed as open follow-ups pending
 Schmidt-Kanefendt's priority call.
 
+---
+
+## Visual pass 2 shipped (2026-04-22, commits `0f7316c` + `97c2ddd`)
+
+Pascal reviewed the fix and asked for an exact visual replica of
+PDF page 10. Shipped **all 13 pure-template items** from the gap list
+above + overlap fixes. Two backend-dependent gaps remain (explicitly
+documented).
+
+### Template-only additions (no backend / calculation changes)
+
+| # | Element | Excel ref | Implementation |
+|---|---|---|---|
+| a | `Bruttostromerzeugung:` header (underlined) | top-left | `<text x=450 y=96 class="txt-col-header">` |
+| a' | `Nettostromerzeugung:` header (underlined) | top-right | `<text x=1400 y=96>` |
+| n | Data-source subtitle `Verwendete Zeitreihen: Anlagenpark Deutschland 2023 [SMARD]` | top under scenario | `<text x=40 y=78 class="txt-datasource">` |
+| b | Source letter labels `S/K/J/L` | next to each source value | `.txt-key` class, positioned ABOVE values to avoid overlap |
+| c | Circle letter labels `M/N` | inside flow circles | `.txt-key-circle` inside circles (cx,cy+8) |
+| d | Flow letters `Q/P/P/P/P/T/S/I` | 8 arrow/rejoin positions | `.txt-key` positioned clear of value text |
+| e | `(fluktuierend)` / `(konstant)` subtitles | under PV/Wind/Hydro labels | `<text class="txt-sub">` inside each source box |
+| g | `(nach Angebot)` sublabel | inside Ely P2G box | line between "Power to Gas" and "65% Eta Ely." |
+| h | `Pmin/Pv 100%/65%` sidebar | right of ES box | new `<rect>` + two labels at (835–915, 540–590) |
+| i | `Gas-Verbraucher` label | right of Gasspeicher Direktverbr. | short arrow line + text at (540–600, 715) |
+| j | `S = 4,525` biobrennstoffe rejoin annotation | before Stromnetz | `#bio_rejoin_value` at (1255, 372) |
+| l | `13,9%` reconversion share | near 58,5% path | `#reconversion_share` at (1120, 501), computed as `reconversion / final_stromnetz × 100` |
+| m | `Eta Stromspeicherung (%): 38,0` | top-centre-right (Excel position) | moved from bottom-right to new `<rect>` at (1030, 155, 240, 58) |
+| o | Legend block | bottom-left | new `<rect>` at (40, 820, 320, 130) with 5-row legend matching Excel |
+| — | Footer `100prosim Web · <date>` | right end of bottom | `<text x=1580 y=960 text-anchor=end>` |
+
+### Verification ledger — visual pass 2
+
+| Step | Action | Result |
+|---|---|---|
+| V2 | `test_bb_current_app + test_bb_calc + test_e2e_current_scenario_flow` | 11/11 green |
+| V3 | `regression/compare.py A-baseline-readonly` | 97 fields match |
+| V4 | `browser_navigate http://localhost:8001/annual-electricity/` + crops | `verification/t54/pass2_iter6.png`, `iter6_flow.png`, `iter6_bottom.png`, `iter6_top.png`, `iter6_rv.png` — all clean, no overlap |
+| V4 (overlap iter) | Pascal flagged overlap on iter5; re-cropped zoomed screenshots at `zoom_top.png`, `zoom_flow.png`, `zoom_bottom.png`, `zoom_rv.png` showed 8 letter-labels overlapping their adjacent value text. Repositioned all 8 + `bio_rejoin_value` → iter6 verified clean. | Fixed in commit `97c2ddd` |
+| V5 | `bash scripts/heroku_up.sh` → live visual eyeball → `browser_take_screenshot` → `heroku apps:destroy` | `verification/t54/heroku_pass2.png` — all letter labels clean of value text, diagram mirrors Excel page 10 layout. App destroyed, billing stopped. |
+| V6 | this section + `REMAINING.md` still bumped | ✓ |
+
+### Overlap root cause (lesson captured)
+
+When positioning SVG text labels next to existing value text, I didn't
+account for text width. Examples from iter5:
+- `Q` at x=750 fell inside `189.197` span (x=724–794) → rendered as
+  `189Q197`
+- `P` at x=448 y=472 fell inside `385.933` span (center-anchored at
+  x=420 → 385–455) → rendered as `385.P33`
+- `S` at x=1310 fell inside `4.525` span 1280–1330 → pushed under
+  Stromnetz rect edge
+- `J` at (x=268, y=372) same y as `wind_value` at (x=260, y=372) → same line
+
+**Fix rule:** for labels placed NEXT TO existing text, compute
+`value_text_width ≈ chars × 10 px` for `.txt-flow` (17 px font) and
+leave ≥ 20 px clear space. For labels ABOVE/BELOW text, use Δy ≥ 20 px.
+
+### Still outstanding — backend-dependent (cannot be shipped UI-only)
+
+These four items are what's left to reach pixel-perfect Excel parity.
+Each one needs a new backend metric or a formula we don't yet have.
+
+| # | Element | Excel ref | Why blocked |
+|---|---|---|---|
+| d | Percent-share labels (PV 62.2 %, Wind 29.2 %, Hydro 0.8 %, Bio 0.2 %) under each source | Excel left column | Denominator unclear from Excel. `pv / (pv+wind+hydro+bio)` gives 62.2 % for PV but 36.6 % for Wind (not 29.2 %). Need Schmidt-Kanefendt to share the Excel formula or a working-copy cell reference. |
+| f | Tagesladungen secondary numbers (`397` under `1,201,630` etc.) | Excel: small italic below each GWh/a value | Formula non-obvious: `value / (storage_capacity / 80)` fits PV (1,201,630 / 3,021.6 = 397.7) but not Wind (706,237 / 3,021.6 = 233.7 ≠ 166). Need per-source normalisation we don't have. |
+| k | `261 GW (elekt.)` annotation top-right | Excel above Stromnetz box | Installed-power peak figure. Not computed by backend. Could be a config constant once stakeholder confirms the exact number. |
+| n2 | `Abgleichdifferenz 160` | Excel bottom-centre | Scenario-solver residual diagnostic. Not exposed by WS365 today. Would need a new field on `get_ws_365_data()` output. |
+
+**To unblock:** Pascal or Schmidt-Kanefendt shares either the
+percent-share formula, the Tagesladungen normalisation rule, and
+confirms whether the 261 GW / Abgleichdifferenz values should be
+computed or static. Then 4 more small commits close the gap.
+
 ### T56 — Excel-reference structure
 
 The SVG already follows the PDF page 10 reference layout: sources on
