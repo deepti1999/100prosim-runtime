@@ -218,7 +218,7 @@
                 <line x1="1090" y1="535" x2="1090" y2="420" class="flow-line-thin"/>
                 <text x="1050" y="480" class="txt-sub">58,5%</text>
                 <line x1="1090" y1="420" x2="1155" y2="420" class="flow-line-thin"/>
-                <text x="1110" y="412" class="txt-value-sm" id="reconversion_value">0</text>
+                <text x="1120" y="440" text-anchor="middle" class="txt-value-sm" id="reconversion_value">0</text>
 
                 <!-- M -> N arrow label (Excel: 1,541,442 flow value on arrow before N).
                      Offset right of Abregelung stem (x=557) to avoid overlap. -->
@@ -280,10 +280,11 @@
                 <!-- 13.9% reconversion share near 58.5% vertical path -->
                 <text x="1120" y="501" text-anchor="middle" class="txt-sub" id="reconversion_share">0,0%</text>
 
-                <!-- Eta Stromspeicherung box (Excel: top-right, above main flow) -->
-                <rect x="1030" y="155" width="240" height="58" rx="3" class="metric-bg"/>
-                <text x="1150" y="178" text-anchor="middle" class="txt-sidebar-label">Eta Stromspeicherung (%):</text>
-                <text x="1150" y="200" text-anchor="middle" style="font-size:18px;font-weight:900;fill:#111" id="eta_storage_value">0,0</text>
+                <!-- Eta Stromspeicherung box. Moved left of bio vertical (x=1180)
+                     so the bio line doesn't cut through the box and mimic an arrow. -->
+                <rect x="780" y="82" width="240" height="55" rx="3" class="metric-bg"/>
+                <text x="900" y="104" text-anchor="middle" class="txt-sidebar-label">Eta Stromspeicherung (%):</text>
+                <text x="900" y="126" text-anchor="middle" style="font-size:18px;font-weight:900;fill:#111" id="eta_storage_value">0,0</text>
 
                 <!-- Legend bottom-left (Excel: two-number convention + colour keys) -->
                 <rect x="40" y="820" width="320" height="130" rx="4" class="badge-bg"/>
