@@ -127,10 +127,14 @@ class BlackBoxCurrentAppTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Szenario-Abgleich")
-        self.assertContains(response, "WS Balance Solar")
-        self.assertContains(response, "Sector + WS Solar Balance")
-        self.assertContains(response, "WS Balance Wind")
-        self.assertContains(response, "Sector + WS Wind Balance")
+        # Stakeholder T21/T22 (PDF §2.4.3): 4 balance buttons collapsed
+        # to 2 in Phase 4-C. The visible labels now say "Balance Solar"
+        # and "Balance Wind" only.
+        self.assertContains(response, "Balance Solar")
+        self.assertContains(response, "Balance Wind")
+        self.assertNotContains(response, "WS Balance Solar<")
+        self.assertNotContains(response, "WS Balance Wind<")
+        self.assertNotContains(response, "Sector + WS")
         self.assertContains(response, "Jahresstrom-Hinweis")
         self.assertContains(response, "Zur Seite Jahresstrom")
         # Stakeholder T19/T20 (PDF §2.4.3): "Goal Seek" and "Aktualisieren"

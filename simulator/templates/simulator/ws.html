@@ -22,18 +22,20 @@
                     {# refreshWsSummaryCards() calls /api/ws/summary/ which          #}
                     {# invokes get_ws_365_data(run_goal_seek=True). Aktualisieren    #}
                     {# just re-calls the same endpoint the page already loaded.     #}
-                    <button type="button" class="btn btn-warning me-2" id="applyBalanceBtn" disabled>
-                        <i class="fas fa-balance-scale me-1"></i>WS Balance Solar
-                    </button>
+                    {# Stakeholder PDF §2.4.3 (T21, T22): 4 balance buttons -> 2 in Phase 4-C. #}
+                    {# "Balance Solar" calls apply_full_balance (Sector+WS pipeline). #}
+                    {# "Balance Wind"  calls apply_full_balance_wind (Sector+WS pipeline). #}
+                    {# The underlying simpler endpoints stay for programmatic/test callers. #}
                     <button type="button" class="btn btn-warning me-2" id="applyFullBalanceBtn" disabled>
-                        <i class="fas fa-layer-group me-1"></i>Sector + WS Solar Balance
-                    </button>
-                    <button type="button" class="btn btn-primary me-2" id="applyWindBalanceBtn" disabled>
-                        <i class="fas fa-wind me-1"></i>WS Balance Wind
+                        <i class="fas fa-solar-panel me-1"></i>Balance Solar
                     </button>
                     <button type="button" class="btn btn-primary me-2" id="applyWindFullBalanceBtn" disabled>
-                        <i class="fas fa-layer-group me-1"></i>Sector + WS Wind Balance
+                        <i class="fas fa-wind me-1"></i>Balance Wind
                     </button>
+                    {# Hidden retained IDs so existing JS continues to enable-on-goal-seek. #}
+                    {# The simple-WS buttons are gone from UX but the advanced endpoints are still reachable for automated tests. #}
+                    <button type="button" id="applyBalanceBtn" class="d-none" disabled></button>
+                    <button type="button" id="applyWindBalanceBtn" class="d-none" disabled></button>
                 </div>
             </div>
 
@@ -475,7 +477,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Fehler beim Sector-Balance: ' + error);
         } finally {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-layer-group me-1"></i>Sector + WS Solar Balance';
+            btn.innerHTML = '<i class="fas fa-solar-panel me-1"></i>Balance Solar';
         }
     });
 
@@ -594,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Fehler beim Wind Sector-Balance: ' + error);
         } finally {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-layer-group me-1"></i>Sector + WS Wind Balance';
+            btn.innerHTML = '<i class="fas fa-wind me-1"></i>Balance Wind';
         }
     });
     

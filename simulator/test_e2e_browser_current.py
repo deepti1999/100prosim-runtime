@@ -138,10 +138,9 @@ class BrowserCurrentAppSmokeTests(StaticLiveServerTestCase):
 
         page_text = self.driver.find_element(By.TAG_NAME, "body").text
         for label in (
-            "WS Balance Solar",
-            "Sector + WS Solar Balance",
-            "WS Balance Wind",
-            "Sector + WS Wind Balance",
+            # Phase 4-C (T21/T22): 4 buttons collapsed to 2.
+            "Balance Solar",
+            "Balance Wind",
             "Jahresstrom-Hinweis",
             "Zur Seite Jahresstrom",
         ):
