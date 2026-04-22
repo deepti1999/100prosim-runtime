@@ -338,3 +338,51 @@ A `testsim` account is created in the seeded DB for Playwright-driven tests. Cre
 - **WS balance on balanced seed is a no-op** — the seed is already balanced, so `speicherdrift_gwh` is already `0,0` pre-balance; the solar/wind balance button runs but produces zero delta. Scenario C validates that running the op doesn't move the state.
 - **Procfile `release:` runs migrations** — only on platforms that honor the release phase (Heroku). Raw `docker compose up -d` does NOT; always use `bootstrap_runtime.sh` locally.
 - **Playwright MCP writes `.playwright-mcp/`** — auto-dump of snapshots/console logs to project root on every nav. Gitignored; wipe at end of each turn.
+
+## Working with the Jahresstrom flow diagram (SVG iteration discipline)
+
+The `/annual-electricity/` SVG flow diagram (template
+`simulator/templates/simulator/annual_electricity.html`) was iterated
+22 times before reaching pass 22's stable state. Lessons from that
+push, applicable to any future SVG layout work in this codebase:
+
+- **Excel WS.xlsm is ground truth, and it is parseable.** The file
+  `docs/100prosim_d_*/WS.xlsm` (gitignored) contains every shape's
+  EMU coordinate in `xl/drawings/drawing1.xml`. EMU → px is `/9525`.
+  `scripts/gen_flow_svg.py` is a working extractor — use it to read
+  the canonical positions instead of measuring screenshots.
+- **Excel main flow has 4 circles, not 5.** M-circle, splitter,
+  Q-circle, S-circle. "N" is a letter labelling the 947-value on the
+  Q→S arrow, not a separate circle. (Earlier passes assumed 5.)
+- **Box-on-arrow visually CUTS the arrow** when the box has white
+  fill. Pascal: "don't let the box cut the arrow". Move value boxes
+  OFF the arrow (above for horizontal arrows, right of for vertical
+  arrows). Arrow flows uninterrupted; the value sits beside.
+- **When one circle moves, EVERYTHING tied to it must move.**
+  Cascading shifts when Q changes x: Abregelung arrow + Abregelung
+  value box + Abregelung Q letter; Q→Ely-ES branch arrow + that
+  value box + 134 + 194 GW + P/Eta label; Q→S arrow start;
+  Splitter→Q arrow endpoint; ES gas arrow + value box + P letter;
+  AND middle-row Stromspeicher box + its centred labels. Make a
+  cascade list before each shift or you'll miss an arrow endpoint
+  and ship a visible disconnect (commit `2c303d1` was that bug).
+- **"Stretch the arrow"** in user feedback means: lengthen the
+  horizontal segment between two circles so the value box + label
+  stack fits ABOVE the line with breathing room. Default short
+  arrows force value boxes onto the line.
+- **Eta labels need bordered badges or wider gaps**, not bare text
+  in narrow inter-box space. "Eta Ely." is 50px wide at 13px font;
+  if the gap to the next box is 30px the label overlaps.
+- **Reverting beats fix-forward** for visual regressions. Pass 14
+  was rejected and immediately restored via
+  `git checkout <prev-pass-sha> -- <file>` — clean, no half-broken
+  intermediate commit. Use this whenever a layout change makes
+  things worse: revert, then try a different approach.
+- **Per-pass commit + Heroku at milestones**: every meaningful pass
+  got its own commit so any one could be reverted independently.
+  V5 Heroku verify happened at structural milestones (passes 6, 22)
+  rather than every pass — saves spin-up cost (~$0.10/cycle) without
+  losing live verification at the points where it matters.
+- **Update `docs/stakeholder/FLOW_DIAGRAM_AUDIT.md`** with each
+  visual-pass cluster (pass 2, pass 3, pass 4 sections). Keeps the
+  iteration history searchable.

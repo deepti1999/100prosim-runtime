@@ -448,6 +448,61 @@ by pass 3 and still require Schmidt-Kanefendt input on their
 formulas / source values. See the pass-2 "Still outstanding"
 section above for details.
 
+## Visual pass 4 shipped (2026-04-22→23, commits `797f0d3` → `f4d1a6a`, 14 incremental passes)
+
+After pass 3, Pascal did a much more detailed iteration sweep,
+asking for one specific fix at a time. Each fix produced a new
+commit so we could roll back if a pass made things worse.
+
+### What changed (passes 9–22, all template-only)
+
+| Pass | Commit | Change |
+|---|---|---|
+| 9 | `797f0d3` | First Excel-pixel-parity attempt: bordered source-value boxes, Tagesladungen + percent stacks, gas arrows blue, 194/261 GW red, P/Eta label, U letter, splitter Ely-P2G branch circle, Pmax/Pv→Pmax/Pv. Big jump but layout grew cluttered. |
+| 10 | `a12318e` | Full SVG rewrite from scratch on a planned coordinate grid. Sources at y=120/220/320/420; main flow y=375; middle row y=520; gas row y=740. Five circles (M, splitter, Q, N, S). |
+| 11 | `967a498` | Dropped N-circle (Excel only has 4 circles per drawing1.xml extraction). Kept M letter beside circle, S letter beside S-circle, N letter labels the 947-value on Q→S arrow. |
+| 12 | `ff33e4d` | Replaced Rückv→S double-line with a single polyline (one arrowhead). Speicherkapazität indicator line changed from orange → blue gas-line. Value boxes moved 8px UP off the main flow line so the arrow flows visibly under each box. |
+| 13 | `9e6a19a` | All down-arrow value boxes moved RIGHT of their arrows (10px clear) so the orange / blue lines flow uncut through the diagram. Letters (P, P/Eta, Q, U) shifted right with their value boxes. |
+| 14 | reverted | Tried moving M-stack way above source-arrow trajectories — layout looked detached. Reverted same session. |
+| 15 | `17de741` | Stretched M→splitter arrow (splitter 550→600) so 1.927.234 box + M-letter could sit ABOVE the arrow with breathing room. Q shifted 700→750; S→1180; Stromnetz→1330. Gas-Verbraucher label moved to LEFT of Direktverbr (its previous arrow extension was crossing the ES gas arrow). |
+| 16–17 | `c0217f9` | Middle-row alignment fix: Ely Power to Gas centered on splitter (x=630), Ely Stromspeicher centered on Q (x=830), Rückverstromung centered on S (x=1180). Pmax/Pv between ES and Rückv. T arrow now CLEAN STRAIGHT VERTICAL from Rückv top to S bottom (Rückv re-centered at S-x). Gasspeicher Strom widened. |
+| 18 | (in 17) | Q shifted 780→830 (with all dependents) to add 30px gap between Ely-P2G right edge and Ely-Stromspeicher left edge — were overlapping by 20px. |
+| 19 | `598b5f4` | Gasspeicher Strom shifted right (690→730) so it stops sharing a horizontal slice with Gasspeicher Direktverbr (which ends at x=715). Boxes now have 15px gap. |
+| 20 | `2c303d1` | Splitter→Q arrow endpoint updated 763→814 so the arrow actually reaches Q-circle's left boundary; was 51px short after pass 18. |
+| 21 | `0b2f9dd` | Eta Ely. / Eta ES / Eta RS labels moved OUTSIDE their boxes (Excel convention). Pmax/Pv unframed plain stack. Abgleichdifferenz restructured with 160 above the label. Speicherkapazität label gets its colon back. |
+| 22 | `f4d1a6a` | Eta Ely. and Eta RS now sit in TIGHT bordered metric-bg badges (clear ownership). Pmax/Pv now in a bordered group box. Q-row shifted right 830→870 so the Eta Ely. badge fits between Power to Gas and Stromspeicher with proper spacing (was 30px gap, now 70px). |
+
+### Verification ledger — visual pass 4
+
+| Step | Action | Result |
+|---|---|---|
+| V2 | `test_bb_current_app` | 6/6 green throughout |
+| V3 | Localhost smoke `/annual-electricity/` 200 OK after each restart | ✓ |
+| V4 | Per-pass localhost screenshot via Playwright + visual eyeball | All passes verified, see `verification/t54/pass{12..22}.png` and `localhost_*.png` |
+| V5 | Heroku spin-up via `scripts/heroku_up.sh` at pass 22 (commit `f4d1a6a` live on `prosim-100-b96acef3452c.herokuapp.com`), Playwright navigate + full-page screenshot, then `scripts/heroku_down.sh` + `heroku apps:destroy` to confirm gone | `verification/t54/heroku_pass22.png` — render matches localhost. App destroyed, billing stopped. |
+| V6 | This section + `REMAINING.md` still bumped at 51/63 | ✓ |
+
+### Lessons learned (added to memory)
+
+1. **Excel WS.xlsm shapes are extractable**: `xl/drawings/drawing1.xml` inside the .xlsm zip contains every shape with EMU coordinates (914400 EMU = 1 inch, 9525 EMU = 1px). `scripts/gen_flow_svg.py` automates the extraction. Use this as ground truth — Excel page-10 PDF is rasterized and harder to measure than the raw drawing data.
+2. **Excel has 4 circles, not 5**: sheet `1.Jahresbilanz_Strom` shows M-circle, splitter, Q-circle, S-circle. There is no N-circle — "N" is a letter labelling the 947-value on the Q→S arrow.
+3. **Box-on-arrow visually CUTS the arrow** if the box has white fill. User reads the arrow as terminating at the box. Solution: move the value box OFF the arrow (above for horizontal arrows; right of for vertical arrows). Arrow flows uninterrupted; value sits beside.
+4. **When one circle moves, EVERYTHING tied to it must move**. Cascading shifts: Q-shift means Abregelung arrow + value box + Q letter, Q→Ely-ES branch arrow + value box + tags + 194 GW + P/Eta label, Q→S arrow start, Splitter→Q arrow endpoint, ES gas arrow + value box + P letter, AND middle-row Stromspeicher box + its labels. Make a list before moving.
+5. **Arrow connection bugs are commit-prone**: arrow endpoint hard-coded to x=763 stays at x=763 even when Q-circle moves to x=830 — manifests as a visible 51px gap (pass 20). Always re-check arrow endpoints against circle centers after any cascade.
+6. **Eta labels were too long for the gap**: "Eta Ely." at 13px font is ~50px wide; gap between Power to Gas and Stromspeicher was 30px. Either widen the gap (chosen — pass 22) or use tight bordered badges (also done) to give visual ownership.
+7. **Excel "stretching" interpretation**: "stretch the arrow" really means make the horizontal segment between two circles long enough for the value box + label to fit ABOVE the line with breathing room. Default short arrows force value boxes onto the line.
+8. **Reverting is OK**: pass 14 was rejected by Pascal in the same session, immediate `git checkout 9e6a19a` restored pass 13 cleanly. Don't pile up bad commits trying to "fix forward" — revert and try a different approach.
+
+### Still outstanding — same backend-dependent gaps as pass 2
+
+The 4 backend-blocked items (d, f, k, n2 — percent shares,
+Tagesladungen, 261 GW elekt., Abgleichdifferenz 160) are unchanged
+by passes 9–22; the values 397/186/5/1, 62.2%/29.2%/0.8%/0.2%,
+194 GW, 261 GW, 509/313/365/62/87/51/80/134, and Abgleichdifferenz
+160/80 remain hardcoded Excel reference values pending Schmidt-
+Kanefendt's formulas. See the pass-2 "Still outstanding" section
+for details.
+
 ## Verification done in Phase 5-C
 
 - V2 tests: all black-box tests continue to pass.
