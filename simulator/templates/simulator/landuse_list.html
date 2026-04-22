@@ -22,10 +22,9 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">Land Use Categories</h5>
-                    <button id="save-all-button" class="btn btn-success btn-sm" onclick="saveAllUserInputs()"
-                        title="Save all your percentage inputs to database">
-                        <i class="fas fa-save me-2"></i>Save All Values
-                    </button>
+                    {# "Save All Values" button removed per stakeholder PDF §2.4.5 (T28): edits #}
+                    {# auto-save with 1-second debounce (autoSaveValue, line ~1533). The bulk #}
+                    {# endpoint /api/save-all-inputs/ is retained for programmatic callers. #}
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -184,7 +183,7 @@
             }
         } else {
             console.log('localStorage is EMPTY on page load (no previous changes saved)');
-            console.log('Tip: Make a change and click "Save All Values" to see it persist!');
+            console.log('Tip: Enter a percentage in the "User (%)" column - it auto-saves after ~1s.');
         }
         
         try {
@@ -246,7 +245,7 @@
                     console.log('═══════════════════════════════════════════════════════════');
                     console.log('1. Scroll down to any land use category (e.g., LU_2.1)');
                     console.log('2. Enter a percentage in the "User (%)" column (e.g., 5)');
-                    console.log('3. Click the green "Save All Values" button at the top');
+                    console.log('3. Wait ~1 second — the value auto-saves to the database');
                     console.log('4. Watch the "Recent Changes" panel appear below');
                     console.log('5. Refresh the page (F5) - changes will persist!');
                     console.log('═══════════════════════════════════════════════════════════');
@@ -1542,7 +1541,7 @@
             saveUserPercent(code, percent).catch(error => {
                 console.error(`Auto-save failed for ${code}:`, error);
                 // Show a subtle notification for auto-save failures
-                showSaveMessage(`Auto-save failed for ${code}. Use "Save All" button.`, 'warning');
+                showSaveMessage(`Auto-save failed for ${code}. Try again or reload the page.`, 'warning');
             });
         }, 1000); // Wait 1 second after user stops typing
     }
@@ -1607,99 +1606,11 @@
         throw new Error('Land use recalculation timed out while waiting for worker');
     }
 
-    // Function to save all current user inputs at once
-    async function saveAllUserInputs() {
-        let saveButton = document.getElementById('save-all-button');
-        if (saveButton) {
-            saveButton.disabled = true;
-            saveButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
-        }
-        saveAllInProgress = true;
-        Object.values(pendingRowSaveTimers).forEach(timerId => clearTimeout(timerId));
-        pendingRowSaveTimers = {};
-
-        // Collect all current user inputs
-        let userInputs = {};
-        let hasInputs = false;
-
-        document.querySelectorAll('.user-percent-input').forEach(input => {
-            let code = input.dataset.code;
-            let value = input.value.trim();
-            userInputs[code] = value;
-            if (value !== '') {
-                hasInputs = true;
-            }
-        });
-
-        if (!hasInputs) {
-            showSaveMessage('No values to save', 'warning');
-            saveAllInProgress = false;
-            if (saveButton) {
-                saveButton.disabled = false;
-                saveButton.innerHTML = '<i class="fas fa-save me-2"></i>Save All Values';
-            }
-            return;
-        }
-
-        try {
-            const response = await fetch('/api/save-all-inputs/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCsrfToken()
-                },
-                body: JSON.stringify({
-                    user_inputs: userInputs
-                })
-            });
-            const data = await parseJsonResponseSafe(response);
-
-            if (!data.success) {
-                throw new Error(data.error || 'Failed to save values');
-            }
-
-            // Display changes in the changes panel immediately after save
-            if (data.changes && data.changes.length > 0) {
-                displayChanges(data.changes);
-            }
-
-            // Verify localStorage history still updates.
-            setTimeout(() => {
-                const verification = localStorage.getItem('landuse_changes_history');
-                if (verification) {
-                    const parsed = JSON.parse(verification);
-                    showToast(` ${parsed.length} changes saved to storage - will persist on refresh!`, 'success');
-                } else {
-                    showToast('WARNING: Changes may not persist after refresh! Check console.', 'warning');
-                }
-            }, 300);
-
-            if (data.queued && data.job_id) {
-                if (saveButton) {
-                    saveButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Recalculating...';
-                }
-                showSaveMessage(`Saved ${data.saved_count} values. Recalculation is running...`, 'info');
-                const result = await pollLanduseSaveJob(data.job_id);
-                showSaveMessage(`Saved ${data.saved_count} values and recalculated successfully.`, 'success');
-                console.log('Land use recalculation completed:', result);
-            } else {
-                showSaveMessage(`Successfully saved ${data.saved_count} values!`, 'success');
-            }
-
-            if (data.errors && data.errors.length > 0) {
-                showSaveMessage(`Some errors: ${data.errors.join(', ')}`, 'warning');
-            }
-        } catch (error) {
-            showSaveMessage(`Error saving values: ${error.message}`, 'danger');
-            console.error('Save error:', error);
-        } finally {
-            saveAllInProgress = false;
-            if (saveButton) {
-                saveButton.disabled = false;
-                saveButton.innerHTML = '<i class="fas fa-save me-2"></i>Save All Values';
-            }
-        }
-    }
+    // saveAllUserInputs() removed per stakeholder PDF §2.4.5 (T28).
+    // Edits are already auto-saved individually via autoSaveValue() with a
+    // 1-second debounce, so the bulk "Save All Values" button was redundant.
+    // The /api/save-all-inputs/ endpoint is retained for programmatic callers
+    // and regression tests; this function is the only UI caller and is gone.
 
     // Helper function to get CSRF token
     function getCsrfToken() {
