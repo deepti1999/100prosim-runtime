@@ -39,6 +39,19 @@
                 </div>
             </div>
 
+            {# Phase 4-D (T23): persistent progress banner that shows active #}
+            {# balance-job status. Fixes the PDF complaint that pressing the #}
+            {# button produced "no reconciliation and no busy indicator". #}
+            <div id="balanceProgressBanner" class="alert alert-info d-none" role="status" aria-live="polite">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-spinner fa-spin me-2"></i>
+                    <div>
+                        <strong>Balance läuft …</strong>
+                        <span id="balanceProgressDetail" class="ms-2 text-muted"></span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Summary Cards -->
             <div class="row mb-4">
                 <!-- Solar Result Card -->
@@ -247,10 +260,24 @@ document.addEventListener('DOMContentLoaded', function() {
         return data;
     }
 
+    // Phase 4-D (T23): persistent progress banner hooks.
+    const balanceBanner = document.getElementById('balanceProgressBanner');
+    const balanceDetail = document.getElementById('balanceProgressDetail');
+    function showBalanceProgress(msg) {
+        if (!balanceBanner) return;
+        balanceBanner.classList.remove('d-none');
+        if (balanceDetail) balanceDetail.textContent = msg || '';
+    }
+    function hideBalanceProgress() {
+        if (balanceBanner) balanceBanner.classList.add('d-none');
+        if (balanceDetail) balanceDetail.textContent = '';
+    }
+
     async function waitForBalanceJob(jobId) {
         const statusUrlTemplate = '{% url "simulator:ws_api_balance_job_status" job_id="00000000-0000-0000-0000-000000000000" %}';
         const statusUrl = statusUrlTemplate.replace('00000000-0000-0000-0000-000000000000', jobId);
 
+        const startedAt = Date.now();
         const maxPolls = 600; // ~20 minutes at 2s interval
         for (let i = 0; i < maxPolls; i++) {
             const payload = await fetchJsonSafe(statusUrl, { method: 'GET' });
@@ -260,33 +287,40 @@ document.addEventListener('DOMContentLoaded', function() {
             if (payload.status === 'failed') {
                 throw new Error(payload.error || 'Balance-Job fehlgeschlagen');
             }
+            const elapsedSec = Math.round((Date.now() - startedAt) / 1000);
+            showBalanceProgress(`Status: ${payload.status || 'queued'} · Job ${jobId.slice(0, 8)} · ${elapsedSec}s`);
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
         throw new Error('Balance läuft zu lange (Timeout beim Warten auf Worker)');
     }
 
     async function runBalanceAction(url, startError) {
-        const payload = await fetchJsonSafe(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
+        showBalanceProgress('Job wird gestartet …');
+        try {
+            const payload = await fetchJsonSafe(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            });
+
+            if (!payload.success) {
+                throw new Error(payload.error || startError || 'Job konnte nicht gestartet werden');
             }
-        });
 
-        if (!payload.success) {
-            throw new Error(payload.error || startError || 'Job konnte nicht gestartet werden');
+            if (payload.job_id) {
+                return await waitForBalanceJob(payload.job_id);
+            }
+
+            if (payload.status === 'succeeded' && payload.result) {
+                return payload.result;
+            }
+
+            return payload;
+        } finally {
+            hideBalanceProgress();
         }
-
-        if (payload.job_id) {
-            return await waitForBalanceJob(payload.job_id);
-        }
-
-        if (payload.status === 'succeeded' && payload.result) {
-            return payload.result;
-        }
-
-        return payload;
     }
 
     function fmt0(value) {
