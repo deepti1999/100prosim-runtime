@@ -210,58 +210,60 @@
                      MAIN FLOW (y=375). M-circle, splitter, Q-circle, N, S.
                      ============================================================ -->
 
-                <!-- Source→M arrows (stacks end at x=355 so arrows start at 360). -->
-                <line x1="360" y1="260" x2="436" y2="355" class="flow-line"/>
-                <line x1="360" y1="360" x2="437" y2="375" class="flow-line"/>
-                <line x1="360" y1="460" x2="436" y2="395" class="flow-line"/>
+                <!-- Source→M arrows (stacks end at x=355 so arrows start at 360).
+                     M-circle is r=16 centered (465,375); arrow tips land on boundary. -->
+                <line x1="360" y1="260" x2="450" y2="365" class="flow-line"/>
+                <line x1="360" y1="360" x2="449" y2="375" class="flow-line"/>
+                <line x1="360" y1="460" x2="450" y2="385" class="flow-line"/>
 
-                <!-- M-circle -->
-                <circle cx="465" cy="375" r="28" class="node-circle"/>
-                <text x="502" y="358" class="txt-key-circle">M</text>
+                <!-- M-circle (r=16 — consistent with Excel small-circle convention) -->
+                <circle cx="465" cy="375" r="16" class="node-circle"/>
+                <text x="488" y="360" class="txt-key-circle">M</text>
 
-                <!-- Value on the arrow entering M: m_total (1.927.375) -->
+                <!-- m_total (1.927.375) value box, sits above M and its entering arrows -->
                 <rect x="415" y="317" width="100" height="22" class="value-box"/>
                 <text x="465" y="333" text-anchor="middle" class="txt-box-val" id="m_value">0</text>
 
                 <!-- M → splitter circle (short arrow) -->
-                <line x1="493" y1="375" x2="541" y2="375" class="flow-line"/>
+                <line x1="481" y1="375" x2="539" y2="375" class="flow-line"/>
 
                 <!-- Splitter circle (Ely-P2G branch point) -->
-                <circle cx="550" cy="375" r="9" class="node-circle"/>
+                <circle cx="550" cy="375" r="10" class="node-circle"/>
 
-                <!-- Splitter → Q arrow with value+Tages -->
-                <line x1="559" y1="375" x2="678" y2="375" class="flow-line"/>
-                <rect x="575" y="354" width="100" height="22" class="value-box"/>
-                <text x="625" y="370" text-anchor="middle" class="txt-box-val" id="o_value_svg">0</text>
-                <text x="625" y="394" text-anchor="middle" class="txt-tages">509</text>
+                <!-- Splitter → Q arrow; value box sits ABOVE the arrow line so the arrow flows
+                     through cleanly. Tages below arrow. -->
+                <line x1="560" y1="375" x2="683" y2="375" class="flow-line"/>
+                <rect x="580" y="346" width="95" height="22" class="value-box"/>
+                <text x="627" y="362" text-anchor="middle" class="txt-box-val" id="o_value_svg">0</text>
+                <text x="627" y="398" text-anchor="middle" class="txt-tages">509</text>
 
-                <!-- Q-circle (empty; "Q" letter labels the Abregelung value only) -->
-                <circle cx="700" cy="375" r="22" class="node-circle"/>
+                <!-- Q-circle (r=16) -->
+                <circle cx="700" cy="375" r="16" class="node-circle"/>
 
                 <!-- Abregelung up-arrow from Q-top -->
-                <line x1="700" y1="353" x2="700" y2="200" class="flow-line"/>
-                <text x="700" y="180" text-anchor="middle" class="txt-label-lg">Abregelung</text>
-                <rect x="655" y="238" width="90" height="22" class="value-box"/>
-                <text x="700" y="254" text-anchor="middle" class="txt-box-val" id="q_value">0</text>
-                <text x="700" y="272" text-anchor="middle" class="txt-tages">62</text>
-                <text x="760" y="254" class="txt-key">Q</text>
+                <line x1="700" y1="359" x2="700" y2="205" class="flow-line"/>
+                <text x="700" y="185" text-anchor="middle" class="txt-label-lg">Abregelung</text>
+                <rect x="655" y="240" width="90" height="22" class="value-box"/>
+                <text x="700" y="256" text-anchor="middle" class="txt-box-val" id="q_value">0</text>
+                <text x="700" y="276" text-anchor="middle" class="txt-tages">62</text>
+                <text x="755" y="256" class="txt-key">Q</text>
 
-                <!-- Q → S direct arrow (no intermediate N-circle — N letter labels this flow value). -->
-                <line x1="722" y1="375" x2="1128" y2="375" class="flow-line"/>
-                <rect x="870" y="354" width="100" height="22" class="value-box"/>
-                <text x="920" y="370" text-anchor="middle" class="txt-box-val" id="bio_rejoin_value">0</text>
-                <text x="920" y="392" text-anchor="middle" class="txt-tages">313</text>
-                <text x="985" y="370" class="txt-key">N</text>
+                <!-- Q → S direct arrow; value box above the line, Tages below. -->
+                <line x1="716" y1="375" x2="1134" y2="375" class="flow-line"/>
+                <rect x="870" y="346" width="95" height="22" class="value-box"/>
+                <text x="917" y="362" text-anchor="middle" class="txt-box-val" id="bio_rejoin_value">0</text>
+                <text x="917" y="398" text-anchor="middle" class="txt-tages">313</text>
+                <text x="975" y="362" class="txt-key">N</text>
 
-                <!-- S-circle -->
-                <circle cx="1155" cy="375" r="26" class="node-circle"/>
-                <text x="1192" y="358" class="txt-key-circle">S</text>
+                <!-- S-circle (r=16) -->
+                <circle cx="1150" cy="375" r="16" class="node-circle"/>
+                <text x="1173" y="360" class="txt-key-circle">S</text>
 
-                <!-- S → Stromnetz arrow with value+Tages -->
-                <line x1="1181" y1="375" x2="1296" y2="375" class="flow-line"/>
-                <rect x="1195" y="354" width="100" height="22" class="value-box"/>
-                <text x="1245" y="370" text-anchor="middle" class="txt-box-val" id="final_value">0</text>
-                <text x="1245" y="394" text-anchor="middle" class="txt-tages">365</text>
+                <!-- S → Stromnetz arrow; value above, Tages below. -->
+                <line x1="1166" y1="375" x2="1296" y2="375" class="flow-line"/>
+                <rect x="1195" y="346" width="100" height="22" class="value-box"/>
+                <text x="1245" y="362" text-anchor="middle" class="txt-box-val" id="final_value">0</text>
+                <text x="1245" y="398" text-anchor="middle" class="txt-tages">365</text>
                 <text x="1325" y="325" class="txt-key">I</text>
 
                 <!-- Stromnetz box -->
@@ -329,9 +331,10 @@
 
                 <!-- ============================================================
                      Rückverstromung → S (T arrow, electricity flow, orange)
+                     Single bent line, one arrowhead at the end (not two).
                      ============================================================ -->
-                <line x1="1020" y1="520" x2="1020" y2="401" class="flow-line-thin"/>
-                <line x1="1020" y1="401" x2="1155" y2="401" class="flow-line-thin"/>
+                <polyline points="1020,520 1020,391 1150,391" fill="none"
+                          stroke="#f4b942" stroke-width="3" marker-end="url(#arrow)"/>
                 <rect x="1030" y="440" width="90" height="22" class="value-box"/>
                 <text x="1075" y="456" text-anchor="middle" class="txt-box-val" id="reconversion_value">0</text>
                 <text x="1075" y="474" text-anchor="middle" class="txt-tages">51</text>
@@ -371,8 +374,8 @@
                 <rect x="690" y="740" width="420" height="80" rx="6" class="node-blue"/>
                 <text x="900" y="785" text-anchor="middle" class="txt-label-lg">Gasspeicher Strom</text>
 
-                <!-- Speicherkapazität label below Gasspeicher Strom -->
-                <line x1="900" y1="820" x2="900" y2="870" class="flow-line-thin"/>
+                <!-- Speicherkapazität label below Gasspeicher Strom (gas = blue) -->
+                <line x1="900" y1="820" x2="900" y2="870" class="gas-line"/>
                 <text x="900" y="895" text-anchor="middle" class="txt-label-lg">Speicherkapazität</text>
                 <text x="900" y="918" text-anchor="middle" class="txt-flow" id="storage_capacity_value">0 GWh</text>
                 <text x="900" y="938" text-anchor="middle" class="txt-tages">80</text>
