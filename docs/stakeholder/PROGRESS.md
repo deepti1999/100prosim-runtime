@@ -22,8 +22,9 @@ Mandatory per item (non-negotiable, see IMPLEMENTATION_PLAN.md §1):
 - ✅ 0-C `scripts/bench_acid_test.sh` + rolling `BENCHMARK_LOG.md` — harness stub committed; full flow in Phase 7-B
 
 ## Phase 1 — Surface removals
-- ☐ 1-A Remove "Save All Values" — T28 *(conditional: verify Scenarios→Save covers the intent)*
-- ☐ 1-B Remove "Goal Seek" + "Refresh" — T19, T20 *(conditional: verify they already auto-run)*
+- ✅ 1-A Remove "Save All Values" — T28 — condition verified (autoSaveValue debounce 1s), commit `455fa65`
+- ✅ 1-B Remove "Goal Seek" + "Refresh" — T19, T20 — condition verified (refreshWsSummaryCards auto-fires + summary endpoint runs goal_seek=True), commit `5fd420e`
+- ✅ Phase 1 V5 — Heroku Playwright: both removals verified on live at `prosim-100-2661cfdfdcde.herokuapp.com`. Solar card populated "Optimales Solar: 1.211.176 GWh" automatically on page load without Goal Seek button; Balance buttons enabled correctly.
 
 ## Phase 2 — Localization
 - ☐ 2-A UI labels to German — T29, T30, T31, T33
