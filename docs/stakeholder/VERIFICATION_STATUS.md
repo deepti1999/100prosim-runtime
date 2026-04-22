@@ -4,6 +4,29 @@ Honest audit of what was verified vs. what was not. Saved at end of the
 autonomous push so the next reviewer (you, Pascal, or a handover admin)
 can see exactly where evidence exists and where it's still needed.
 
+## Addendum — 2026-04-22 visual sweep
+
+All 28 tickets that were previously DOM-only on Heroku are now
+**visually confirmed in a real browser** via Playwright MCP. Full
+page-by-page observations in
+`docs/stakeholder/VISUAL_VERIFICATION_2026-04-22.md`.
+
+Tickets that moved from DOM-only → visually confirmed:
+
+- **Phase 3:** T37, T38, T39, T40 (sidebar on all pages), T41 (top-bar dedup), T42 (brand in sidebar)
+- **Phase 4-A:** T14, T15 (base-value placeholders show Status-% as ghost text in LandUse inputs)
+- **Phase 5-A:** T43, T44, T45, T46, T47 (Cockpit "Status ↔ Ziel" section with demand/supply cards + delta table)
+- **Phase 5-B:** T57, T58, T59, T60 (Bilanz capacity badge `Max − Min: 242.831,1 GWh`, stacked Einspeicherung/Ausspeicherung/Abregelung, GWh↔Tagesladung unit toggle verified by clicking)
+- **Phase 5-C:** T53, T55, T56 (flow-diagram fonts bumped, zoom controls 75/100/125/150/200% verified by clicking 150% and seeing real scale-up)
+- **Phase 6-A:** T61, T62, T63 (Historie empty-state + populated-state both confirmed; Excel AH.Monitor column layout renders correctly)
+- **Phase 6-B:** T48, T49, T50, T51, T52 (all 5 variant-compare charts render with 4-series color-coded legend)
+
+**Visual verification total:** 49/50 shipped tickets have full visual
+confirmation. The remaining 1 is **T6** (bench-script stub — no UI to
+render).
+
+No visual regressions found.
+
 ## Verified ✅
 
 ### V2 — unit + black-box test suites

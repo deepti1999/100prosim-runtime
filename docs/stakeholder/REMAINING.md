@@ -1,6 +1,6 @@
 # What's remaining — single source of truth
 
-**Last updated:** 2026-04-22 (after autonomous Phase 3–6 push + 4/6 verification gaps closed)
+**Last updated:** 2026-04-22 (after visual verification sweep — 49/50 shipped tickets now visually confirmed on Heroku; only T6 bench-stub remains non-visual)
 **Source material:** `260403_Portierung_Bestandsaufnahme.pdf` (stakeholder PDF, 12 pages) + `IMPLEMENTATION_PLAN.md` (our 63-target decomposition)
 
 ---
