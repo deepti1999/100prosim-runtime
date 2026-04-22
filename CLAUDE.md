@@ -228,15 +228,23 @@ Every behaviour-changing commit must pass five verifications before being claime
 |---|---|---|
 | **V2 — Tests (unit/contract)** | Run affected `test_bb_*` / `test_wb_*` / `test_e2e_*` modules. Add new tests for any new code path; weak coverage = add coverage, don't ship. | All tests green locally. |
 | **V3 — API smoke** | curl / pytest against the affected HTTP endpoints. | Expected JSON shape + HTTP 200 + contract preserved. |
-| **V4 — Playwright localhost** | Run the affected regression scenario at `http://localhost:8001`. | Scenario passes; `compare.py <id>` exits 0. |
-| **V5 — Playwright on live Heroku** | Spin up via `bash scripts/heroku_up.sh`, run same Playwright scenario against the deployed URL, tear down via `bash scripts/heroku_down.sh`. | Scenario passes on live URL. This is what catches cross-process cache and Heroku-only bugs. |
+| **V4 — Playwright localhost** | Run the affected regression scenario at `http://localhost:8001`. Use `browser_navigate` + `browser_take_screenshot` + eyeball, NOT just `fetch()` inside `browser_evaluate`. | Scenario passes; `compare.py <id>` exits 0; rendered page looks correct. |
+| **V5 — Playwright on live Heroku** | Spin up via `bash scripts/heroku_up.sh`, navigate to each affected page in a real browser tab, take a screenshot, confirm visually. Tear down via `bash scripts/heroku_down.sh`. | Page actually renders as designed on live URL. |
 | **V6 — Docs** | If the change introduced any invariant, gotcha, or decision: update `CLAUDE.md`, per-item doc, or memory file in the same commit. | Written down, not just in my head. |
 
 **Rules:**
 - **V5 is mandatory** for anything that touches cache invalidation, signals, balance flow, recalc flow, auto-cascade, worker behaviour, or cross-process state. When in doubt, run it.
 - **V5 can be batched per phase** (not per item) during stakeholder-plan work — spin Heroku up once at phase start, run the whole phase's Playwright suite, tear down. Keeps cost to ~$0.10/phase.
+- **V4 and V5 require real browser navigation, not just `fetch()` inside `browser_evaluate`.** Running `await fetch('/page/').then(r => r.text()).includes('some-id')` is a DOM-presence check, not visual verification. It will miss:
+  - CSS hiding the element (`d-none`, `display: none`, overflow clipping)
+  - Layout bugs (elements stacking wrong, columns overflowing)
+  - Charts/SVGs failing to render (the DOM is there, the canvas is blank)
+  - Broken images, z-index conflicts, mis-aligned controls
+  - Real interactive behaviour (click → nothing happens, banner doesn't update)
+  If I find myself writing `fetch()` inside `browser_evaluate` to "verify" a UI change, I am skipping V4/V5. Stop and use `browser_navigate` + `browser_take_screenshot` + eyeball instead.
 - **New tests are encouraged.** If a regression is possible and no existing test covers it, write one. Don't skip V2 by pretending no test applies.
 - **If a verification fails, the item is not done.** Fix the root cause; never suppress the failure. Never update goldens to make a failing test pass unless you are deliberately capturing an intentional change + committing golden and code together.
+- **Honest accounting on "verified".** When the user asks "is it verified?", distinguish between (a) DOM-presence check via HTTP/fetch, and (b) real-browser visual confirmation. Don't conflate them. If the user cares enough to ask, they care enough to get the right answer.
 
 See `docs/stakeholder/IMPLEMENTATION_PLAN.md` §1 for the full ritual with per-item examples.
 
