@@ -1,28 +1,28 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Manual - 100ProSim</title>
+    <title>Benutzerhandbuch – 100ProSim</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f8f9fa;
         }
-        
+
         .navbar {
             background: linear-gradient(135deg, #2d5a2d 0%, #66cc66 100%);
             padding: 1rem 0;
         }
-        
+
         .navbar-brand {
             color: white !important;
             font-weight: bold;
             font-size: 1.5rem;
         }
-        
+
         .manual-container {
             background: white;
             border-radius: 15px;
@@ -31,25 +31,25 @@
             max-width: 1400px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
-        
+
         h2 {
             color: #2d5a2d;
             margin-bottom: 30px;
             border-bottom: 3px solid #66cc66;
             padding-bottom: 15px;
         }
-        
+
         h3 {
             color: #4a7c4a;
             margin-top: 30px;
             margin-bottom: 15px;
         }
-        
+
         .screenshot-container {
             margin: 30px 0;
             text-align: center;
         }
-        
+
         .screenshot-container img {
             max-width: 900px;
             width: 100%;
@@ -58,14 +58,14 @@
             border-radius: 10px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
-        
+
         .screenshot-caption {
             margin-top: 15px;
             font-style: italic;
             color: #666;
             font-size: 0.95rem;
         }
-        
+
         .step-item {
             margin-bottom: 20px;
             padding: 15px;
@@ -73,7 +73,7 @@
             border-left: 4px solid #66cc66;
             border-radius: 5px;
         }
-        
+
         .note-box {
             background: #fff3cd;
             border-left: 4px solid #ffc107;
@@ -87,316 +87,316 @@
     <nav class="navbar">
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'simulator:landing_page' %}">
-                 100ProSim - Energy Simulation System
+                 100ProSim – Energie-Simulationssystem
             </a>
         </div>
     </nav>
 
     <div class="container-fluid">
         <div class="manual-container">
-            <h2> User Manual - Land Use Data Management</h2>
+            <h2> Benutzerhandbuch – Flächennutzung und Energie-Simulation</h2>
 
-            <h3>What This Web App Does</h3>
+            <h3>Was diese Webanwendung leistet</h3>
             <div class="step-item">
-                <strong>100ProSim is a simulation tool for planning how to reach 100% renewable energy by 2045.</strong>
+                <strong>100ProSim ist ein Simulationswerkzeug zur Planung, wie 100 % Erneuerbare Energien bis 2045 erreicht werden können.</strong>
             </div>
 
-            <p>This web app helps you test and understand the energy transition scenario in a structured way:</p>
+            <p>Diese Webanwendung hilft Ihnen, das Szenario der Energiewende strukturiert zu untersuchen und zu verstehen:</p>
             <ul>
-                <li><strong>Baseline year (Status):</strong> Represents the 2023 data for renewable production and energy demand</li>
-                <li><strong>Target year (Ziel):</strong> Represents the projected/planned 2045 scenario</li>
-                <li><strong>Main objective:</strong> Check how 2045 demand can be fully covered by renewable energy (100% renewable supply)</li>
-                <li><strong>Four demand sectors:</strong> Demand is managed and evaluated across the main sectors shown in the app</li>
-                <li><strong>User control:</strong> You can edit land use and demand assumptions, run recalculations, apply balancing, and compare results</li>
-                <li><strong>Decision support:</strong> Use Renewable, WS (365 Tage), Bilanz, and Cockpit views to validate whether the system is balanced</li>
+                <li><strong>Status-Jahr:</strong> bildet die Daten des Jahres 2023 zu Erneuerbarer Erzeugung und Energieverbrauch ab.</li>
+                <li><strong>Ziel-Jahr:</strong> bildet das geplante Szenario für 2045 ab.</li>
+                <li><strong>Hauptziel:</strong> prüfen, wie der Verbrauch 2045 vollständig durch Erneuerbare Energien gedeckt werden kann (100 % Erneuerbare Erzeugung).</li>
+                <li><strong>Vier Verbrauchssektoren:</strong> der Verbrauch wird über die in der App dargestellten Hauptsektoren verwaltet und ausgewertet.</li>
+                <li><strong>Benutzersteuerung:</strong> Sie können Flächennutzung und Verbrauchsannahmen bearbeiten, Neuberechnungen ausführen, den Szenario-Abgleich (Balancing) anwenden und Ergebnisse vergleichen.</li>
+                <li><strong>Entscheidungsunterstützung:</strong> Die Seiten Erneuerbare Energien, Szenario-Abgleich (WS 365 Tage), Bilanz und Cockpit zeigen, ob das System balanciert ist.</li>
             </ul>
 
             <div class="note-box">
-                <strong>Background:</strong>
-                This web application is inspired by the Excel-based <strong>100ProSim</strong> workflow and brings the same planning logic into an interactive simulation environment.
+                <strong>Hintergrund:</strong>
+                Diese Webanwendung ist dem Excel-basierten <strong>100ProSim</strong>-Arbeitsablauf nachempfunden und überträgt dieselbe Planungslogik in eine interaktive Simulationsumgebung.
             </div>
-            
-            <h3>Step 1: Accessing Land Use Data</h3>
+
+            <h3>Schritt 1: Zugriff auf die Flächennutzungsdaten</h3>
             <div class="step-item">
-                <strong>Navigate to the Land Use Data page from the sidebar menu</strong>
+                <strong>Öffnen Sie die Seite „Flächennutzung" über das Seitenmenü.</strong>
             </div>
-            
+
             <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/landuse_step1.png' %}" 
-                     alt="Land Use Data Page">
-                <p class="screenshot-caption">Figure 1: Land Use Data page showing all land use records with hectare values</p>
+                <img src="{% static 'simulator/images/manual/landuse_step1.png' %}"
+                     alt="Seite Flächennutzung">
+                <p class="screenshot-caption">Abbildung 1: Die Seite „Flächennutzung" mit allen Einträgen und den zugehörigen Hektar-Werten.</p>
             </div>
-            
-            <h3>Features</h3>
-            <p>On the Land Use page, you can:</p>
+
+            <h3>Funktionen</h3>
+            <p>Auf der Seite „Flächennutzung" können Sie:</p>
             <ul>
-                <li><strong>View all land use entries:</strong> See codes, names, status and target hectares</li>
-                <li><strong>Edit values:</strong> Click on any row to modify hectare values</li>
-                <li><strong>Monitor status:</strong> Check current vs. target values</li>
-                <li><strong>Track recent updates:</strong> At the bottom of the page, the Recent Changes panel shows your latest land use changes</li>
-                <li><strong>Review outcomes:</strong> Check Renewable and Bilanz pages after updates to verify the latest results</li>
+                <li><strong>Alle Einträge ansehen:</strong> Codes, Namen, Status- und Ziel-Hektar-Werte einsehen.</li>
+                <li><strong>Werte bearbeiten:</strong> auf eine Zeile klicken, um Hektar-Werte zu ändern.</li>
+                <li><strong>Status prüfen:</strong> aktuelle gegen Ziel-Werte vergleichen.</li>
+                <li><strong>Letzte Änderungen nachvollziehen:</strong> am Seitenende zeigt das Panel „Letzte Änderungen" Ihre jüngsten Bearbeitungen der Flächennutzung.</li>
+                <li><strong>Ergebnisse verifizieren:</strong> nach Änderungen die Seiten Erneuerbare Energien und Bilanz prüfen, um die aktualisierten Ergebnisse zu kontrollieren.</li>
             </ul>
-            
-            <h3>Step 2: Editing and Saving Land Use Data</h3>
+
+            <h3>Schritt 2: Flächennutzungsdaten bearbeiten und speichern</h3>
             <div class="step-item">
-                <strong>Click on any land use row to edit the target hectare values</strong>
+                <strong>Klicken Sie auf eine beliebige Zeile, um den Ziel-Hektar-Wert zu bearbeiten.</strong>
             </div>
-            
+
             <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/landuse_step2.png' %}?v=3" 
-                     alt="Editing Land Use Data">
-                <p class="screenshot-caption">Figure 2: Editing land use hectare values and saving changes</p>
+                <img src="{% static 'simulator/images/manual/landuse_step2.png' %}?v=3"
+                     alt="Bearbeiten der Flächennutzungsdaten">
+                <p class="screenshot-caption">Abbildung 2: Bearbeiten der Hektar-Werte und Speichern der Änderungen.</p>
             </div>
-            
-            <p>When editing land use data:</p>
+
+            <p>Beim Bearbeiten der Flächennutzung:</p>
             <ul>
-                <li><strong>Click Edit:</strong> Click the edit button on any land use row to modify values</li>
-                <li><strong>Enter New Values:</strong> Input the desired target hectare value</li>
-                <li><strong>Save All Values:</strong> Click <strong>Save All Values</strong> to store all current land-use edits together</li>
-                <li><strong>Automatic recalculation:</strong> After saving, the system recalculates the dependent renewable values and refreshes the 365-day annual electricity outputs in the background</li>
-                <li><strong>Review updated results:</strong> After the save job finishes, check Renewable Energy, Szenario-Abgleich, and Jahresstrom to verify the updated results</li>
-            </ul>
-            
-            <div class="note-box">
-                <strong>Tip:</strong>
-                Land use changes directly affect renewable energy calculations, the WS/365-day values, and the annual electricity overview. After saving, always verify the updated results in Renewable Energy, Szenario-Abgleich, Jahresstrom, and Bilanz.
-            </div>
-            
-            <h3>Step 3: Viewing Renewable Energy Overview</h3>
-            <div class="step-item">
-                <strong>Navigate to the Renewable Energy page to view comprehensive energy data</strong>
-            </div>
-            
-            <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/new_renewable.png' %}?v=1" 
-                     alt="Renewable Energy Overview">
-                <p class="screenshot-caption">Figure 3: Renewable Energy page showing editable values and the Recalculate Renewables button</p>
-            </div>
-            
-            <p>The Renewable Energy page lets you review and update renewable-energy-related values:</p>
-            <ul>
-                <li><strong>Edit values:</strong> Update the user-editable renewable values directly on this page where applicable.</li>
-                <li><strong>Recalculate Renewables:</strong> After editing a value, click <strong>Recalculate Renewables</strong> to rebuild the renewable calculations.</li>
-                <li><strong>Page refresh:</strong> This recalculation updates the Renewable Energy page itself and also refreshes dependent values that rely on renewable outputs.</li>
-                <li><strong>Status and target comparison:</strong> Review the resulting values across the renewable categories after recalculation.</li>
-                <li><strong>Preparation for later steps:</strong> Use the recalculated values before checking Szenario-Abgleich, Jahresstrom, Bilanz, or Cockpit.</li>
-            </ul>
-            
-            <div class="note-box">
-                <strong>Important:</strong>
-                If you edit a renewable input manually, always click <strong>Recalculate Renewables</strong> afterwards so the page and its dependent values are updated consistently.
-            </div>
-            
-            <h3>Step 4: Managing Energy Consumption (Verbrauch)</h3>
-            <div class="step-item">
-                <strong>Navigate to the Verbrauch page to adjust energy consumption percentages</strong>
-            </div>
-            
-            <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/verbrauch_step5.png' %}" 
-                     alt="Verbrauch Energy Consumption">
-                <p class="screenshot-caption">Figure 4: Verbrauch page showing adjustable energy consumption percentages by sector</p>
-            </div>
-            
-            <p>The Verbrauch (Consumption) page allows you to manage energy distribution:</p>
-            <ul>
-                <li><strong>Adjust Percentages:</strong> Click on any sector to modify its energy consumption percentage share</li>
-                <li><strong>Automatic Rebalancing:</strong> When you increase one sector's percentage, other sectors automatically adjust (decrease) to maintain a total of 100%</li>
-                <li><strong>Sector Distribution:</strong> View and modify energy allocation across different consumption sectors (Industry, Transport, Households, etc.)</li>
-                <li><strong>Real-time Updates:</strong> Changes are immediately reflected in the energy balance calculations</li>
-                <li><strong>Interactive Controls:</strong> Use the arrow indicators to easily identify where adjustments can be made</li>
-                <li><strong>Save at the bottom:</strong> After editing values, always use the Save button at the bottom of the page</li>
-            </ul>
-            
-            <div class="note-box">
-                <strong>Important:</strong>
-                The system ensures all sector percentages always sum to 100%. When you change one percentage, the system automatically redistributes the remaining percentage across other sectors proportionally. If the update does not appear immediately after one click, press the Save button once more.
-            </div>
-            
-            <h3>Step 5: Recalculate Renewables After Verbrauch Changes</h3>
-            <div class="step-item">
-                <strong>After changing anything in Verbrauch, go to Erneuerbare Energien and click "Recalculate Renewables"</strong>
-            </div>
-
-            <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/renewable_step5_new.png' %}?v=3" 
-                     alt="Recalculate Renewables Button">
-                <p class="screenshot-caption">Figure 5: Renewable Energy page with the "Recalculate Renewables" button</p>
-            </div>
-
-            <p>This recalculation step is required after Verbrauch updates:</p>
-            <ul>
-                <li><strong>Sync formulas:</strong> Rebuilds renewable status and target values using the latest inputs</li>
-                <li><strong>Keep data current:</strong> Ensures the Renewable page reflects all recent Verbrauch changes</li>
-                <li><strong>Prepare next steps:</strong> Use this before checking Cockpit, WS (365 Tage), or Bilanz results</li>
-            </ul>
-            
-            <h3>Step 6: Check Bilanz Balance Status</h3>
-            <div class="step-item">
-                <strong>Open "Bilanz" and check the WS-365 Balance Status chart</strong>
-            </div>
-            
-            <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/bilanz_step6.png' %}?v=1" 
-                     alt="Bilanz WS-365 Balance Status">
-                <p class="screenshot-caption">Figure 6: Bilanz page showing WS-365 balance status</p>
-            </div>
-
-            <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/bilanz_step6_sectors.png' %}?v=1" 
-                     alt="Bilanz Sector Balance Status">
-                <p class="screenshot-caption">Figure 6b: Bilanz page showing whether each sector is balanced</p>
-            </div>
-            
-            <p>This step gives a quick visual check of WS-365 balancing:</p>
-            <ul>
-                <li><strong>If it looks balanced, it is balanced:</strong> When the status and drift indicators show balanced values, the 365-day cycle is closed.</li>
-                <li><strong>Sector check:</strong> Use the sector-wise Bilanz view to confirm each sector is balanced.</li>
-                <li><strong>Visual confirmation:</strong> Use this chart as the fast final check after balancing.</li>
-            </ul>
-
-            <h3>Step 7: Szenario-Abgleich - Balance and Comparison Page</h3>
-            <div class="step-item">
-                <strong>Use Szenario-Abgleich to review the current storage balance, compare the solar and wind balancing options, and apply the required balance actions.</strong>
-            </div>
-
-            <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/newbalance.png' %}?v=1" 
-                     alt="WS 365 Tage - Balance via Solar">
-                <p class="screenshot-caption">Figure 7a: Szenario-Abgleich page showing the solar balance path</p>
-            </div>
-
-            <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/newbalance2.png' %}?v=1" 
-                     alt="WS 365 Tage - Balance via Wind">
-                <p class="screenshot-caption">Figure 7b: Szenario-Abgleich page showing the wind balance path</p>
-            </div>
-
-            <p><strong>What Szenario-Abgleich does:</strong> This page shows the current comparison of solar and wind balancing options based on the latest model state. To apply a balance safely, always use the two buttons in the correct order.</p>
-            <ul>
-                <li><strong>Solar order:</strong> First click <strong>WS Balance Solar</strong>. Only after that finishes, click <strong>Sector + WS Solar Balance</strong>.</li>
-                <li><strong>Wind order:</strong> First click <strong>WS Balance Wind</strong>. Only after that finishes, click <strong>Sector + WS Wind Balance</strong>.</li>
-                <li><strong>Why this order matters:</strong> The first WS button performs the WS balancing step. The second button then applies the combined sector plus WS balance on top of that updated state.</li>
-                <li><strong>Comparison values:</strong> The solar and wind balance preview cards populate automatically when the page loads — no separate Goal Seek or Refresh button is needed.</li>
-                <li><strong>Final check:</strong> After the correct two-button sequence, confirm the final state in Bilanz and Jahresstrom.</li>
-            </ul>
-
-            <h3>Step 8: Jahresstrom / Annual Electricity</h3>
-            <div class="step-item">
-                <strong>After balancing, use Jahresstrom to review both the annual electricity flow diagram and the detailed 365-day table in one page.</strong>
-            </div>
-
-            <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/new_annual_electrcity.png' %}?v=1" 
-                     alt="Annual Electricity Diagram">
-                <p class="screenshot-caption">Figure 8a: Annual electricity flow diagram showing yearly electricity generation, storage, reconversion, curtailment, and end-use flow</p>
-            </div>
-
-            <p>The first part of Jahresstrom presents the annual electricity flow diagram and helps you validate the system-level yearly picture:</p>
-            <ul>
-                <li><strong>Annual generation picture:</strong> Shows the yearly electricity contributions from bio, PV, wind, and hydro/geothermal.</li>
-                <li><strong>Curtailment and storage path:</strong> Shows how surplus electricity is curtailed, routed into electrolysis, stored, and later reconverted.</li>
-                <li><strong>Storage indicators:</strong> Displays storage capacity, conversion efficiencies, and storage efficiency values derived from the current 365-day result.</li>
-                <li><strong>Final electricity delivery:</strong> The final grid block shows the annual electricity delivered to end consumption after storage and reconversion are considered.</li>
-                <li><strong>Scenario title:</strong> The page header reflects the currently active scenario/version and its date when a saved scenario has been restored.</li>
-            </ul>
-
-            <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/new_annual_electrcity_2.png' %}?v=1" 
-                     alt="Annual Electricity 365-day Table">
-                <p class="screenshot-caption">Figure 8b: Jahresstrom page showing the detailed 365-day table that was moved from Szenario-Abgleich</p>
-            </div>
-
-            <p>The second part of Jahresstrom contains the detailed 365-day dataset:</p>
-            <ul>
-                <li><strong>365-day analysis:</strong> Displays the day-by-day values used for the yearly electricity simulation.</li>
-                <li><strong>Detailed verification:</strong> Lets you inspect the columns for surplus, storage, curtailment, reconversion, and charge-level behavior across the whole year.</li>
-                <li><strong>Traceability:</strong> Helps confirm how the yearly diagram values are built from the underlying 365-day calculation results.</li>
-                <li><strong>Reporting support:</strong> Use this part of the page when you need a detailed check of the annual system behavior after balancing.</li>
-            </ul>
-            
-            <h3>Step 9: Understanding Visual Representations</h3>
-            <div class="step-item">
-                <strong>Interpret the Cockpit sector chart to verify whether renewable production is aligned with demand</strong>
-            </div>
-            
-            <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/cockpit_step8_deficit.png' %}?v=1" 
-                     alt="Cockpit Sector Chart - Deficit Cases">
-                <p class="screenshot-caption">Figure 9a: Cockpit sector view showing sector deficits with red delta markers</p>
-            </div>
-            
-            <p>Figure 9a represents the imbalance case and highlights required action:</p>
-            <ul>
-                <li><strong>Paired sector bars:</strong> Blue shows sector demand (Verbrauch), green shows renewable supply (Erneuerbare) for the same sector.</li>
-                <li><strong>Red delta badges (e.g., Δ -404):</strong> Demand is higher than renewable production in that sector.</li>
-                <li><strong>Sector-level gap detection:</strong> Each red marker quantifies the deficit directly in MWh/a, enabling targeted correction.</li>
-                <li><strong>Follow-up action:</strong> Use WS/Bilanz balancing functions to close these sector gaps, then re-check the cockpit for updated markers.</li>
-                <li><strong>Validation loop:</strong> The chart serves as a visual control step after each recalculation and balancing cycle.</li>
-            </ul>
-
-            <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/cockpit_step8_balanced.png' %}?v=1" 
-                     alt="Cockpit Sector Chart - Balanced">
-                <p class="screenshot-caption">Figure 9b: Cockpit sector view with balanced demand and renewable production</p>
-            </div>
-
-            <p>Figure 9b represents the balanced case and should be read as follows:</p>
-            <ul>
-                <li><strong>Balanced indicator:</strong> The light-blue <strong>Perfekt</strong> badge means the sector difference is within the accepted tolerance and considered balanced.</li>
-                <li><strong>Operational meaning:</strong> In this view, balancing actions have aligned renewable output with sector demand at cockpit level.</li>
-                <li><strong>Quick decision support:</strong> You can immediately confirm that no sector requires corrective balancing.</li>
-                <li><strong>Stable visual state:</strong> Similar bar heights with <strong>Perfekt</strong> markers indicate a robust and consistent system state.</li>
-            </ul>
-            
-            <div class="note-box">
-                <strong>Tip:</strong>
-                Use Step 9 as a fast visual quality check: <strong>Perfekt</strong> badges indicate balanced sectors, while red delta badges indicate where additional balancing is still required.
-            </div>
-
-            <h3>Step 10: Save Scenario Snapshots and Continue Later</h3>
-            <div class="step-item">
-                <strong>At any point, you can save the current situation as a scenario snapshot and return to it anytime.</strong>
-            </div>
-
-            <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/scenario.png' %}?v=1" 
-                     alt="Scenario Snapshot View">
-                <p class="screenshot-caption">Figure 10: Scenario snapshot view for saving and reopening simulation states</p>
-            </div>
-
-            <p>Use scenario snapshots to keep your work organized and easy to revisit:</p>
-            <ul>
-                <li><strong>Save current state:</strong> Capture the current values and balance state whenever you reach an important point.</li>
-                <li><strong>Return anytime:</strong> Open the saved scenario later and continue from the same situation without starting over.</li>
-                <li><strong>Compare alternatives:</strong> Store different planning variants (for example, different demand or land-use choices) and compare outcomes.</li>
-                <li><strong>Work safely:</strong> Snapshotting before major changes gives you a clean fallback point.</li>
-            </ul>
-
-            <h3>Step 11: Create, Save, Restore, Rename, and Delete Scenarios</h3>
-            <div class="step-item">
-                <strong>Use the Scenarios menu in the top navigation to save named scenario versions and restore them later.</strong>
-            </div>
-
-            <div class="screenshot-container">
-                <img src="{% static 'simulator/images/manual/new_version_scenario.png' %}?v=1" 
-                     alt="Scenario Version Management">
-                <p class="screenshot-caption">Figure 11: Scenario menu showing create, restore, rename, and delete actions for saved versions</p>
-            </div>
-
-            <p>The current web application supports structured scenario version management:</p>
-            <ul>
-                <li><strong>Save Current Scenario:</strong> Stores the complete current model state under a user-defined scenario name.</li>
-                <li><strong>Restore:</strong> Loads a previously saved scenario version back into the current session.</li>
-                <li><strong>Rename:</strong> Lets you update the scenario name if the version should be described more clearly.</li>
-                <li><strong>Delete:</strong> Removes outdated or no-longer-needed scenario versions.</li>
-                <li><strong>Practical use:</strong> Save a scenario before major changes, test another variant, and restore the earlier version if needed.</li>
-                <li><strong>Link to Jahresstrom:</strong> When a scenario is restored, the annual electricity page header reflects the active scenario name and timestamp.</li>
+                <li><strong>Bearbeiten starten:</strong> Klicken Sie die Bearbeiten-Schaltfläche in der gewünschten Zeile an.</li>
+                <li><strong>Neue Werte eingeben:</strong> den gewünschten Ziel-Hektar-Wert erfassen.</li>
+                <li><strong>Automatisches Speichern:</strong> jede Eingabe wird nach kurzer Pause automatisch gespeichert (etwa 1 Sekunde nach der letzten Tastatureingabe).</li>
+                <li><strong>Automatische Neuberechnung:</strong> nach dem Speichern berechnet das System die abhängigen Werte der Erneuerbaren neu und aktualisiert die 365-Tage-Ergebnisse des Jahresstroms im Hintergrund.</li>
+                <li><strong>Aktualisierte Ergebnisse prüfen:</strong> nach Abschluss der Neuberechnung die Seiten Erneuerbare Energien, Szenario-Abgleich und Jahresstrom öffnen, um die Auswirkungen zu kontrollieren.</li>
             </ul>
 
             <div class="note-box">
-                <strong>Note:</strong>
-                All values shown in this web app are calculated from the current model logic, formulas, and reference data. Full formula and reference documentation will be released soon.
+                <strong>Tipp:</strong>
+                Änderungen der Flächennutzung wirken sich direkt auf die Erneuerbaren-Berechnungen, die WS/365-Tage-Werte und den Jahresstrom aus. Prüfen Sie nach dem Speichern stets die aktualisierten Ergebnisse in Erneuerbare Energien, Szenario-Abgleich, Jahresstrom und Bilanz.
+            </div>
+
+            <h3>Schritt 3: Übersicht der Erneuerbaren Energien</h3>
+            <div class="step-item">
+                <strong>Öffnen Sie die Seite „Erneuerbare Energien", um die zugehörigen Daten einzusehen.</strong>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="{% static 'simulator/images/manual/new_renewable.png' %}?v=1"
+                     alt="Übersicht der Erneuerbaren Energien">
+                <p class="screenshot-caption">Abbildung 3: Die Seite „Erneuerbare Energien" mit bearbeitbaren Werten und der Schaltfläche „Erneuerbare neu berechnen".</p>
+            </div>
+
+            <p>Auf der Seite „Erneuerbare Energien" können Sie Werte prüfen und aktualisieren:</p>
+            <ul>
+                <li><strong>Werte bearbeiten:</strong> Die vom Benutzer editierbaren Werte können direkt auf dieser Seite aktualisiert werden.</li>
+                <li><strong>Erneuerbare neu berechnen:</strong> Nach einer Änderung die Schaltfläche „Erneuerbare neu berechnen" verwenden, um die Erneuerbaren-Berechnungen neu aufzubauen.</li>
+                <li><strong>Seiten-Aktualisierung:</strong> Die Neuberechnung aktualisiert die Seite selbst sowie abhängige Werte, die auf Erneuerbaren-Ergebnissen beruhen.</li>
+                <li><strong>Vergleich Status vs. Ziel:</strong> Nach der Neuberechnung die resultierenden Werte in den Kategorien der Erneuerbaren prüfen.</li>
+                <li><strong>Vorbereitung weiterer Schritte:</strong> Vor dem Prüfen von Szenario-Abgleich, Jahresstrom, Bilanz oder Cockpit die neu berechneten Werte verwenden.</li>
+            </ul>
+
+            <div class="note-box">
+                <strong>Wichtig:</strong>
+                Wenn Sie einen Erneuerbaren-Wert manuell bearbeiten, immer anschließend <strong>Erneuerbare neu berechnen</strong> klicken, damit die Seite und ihre abhängigen Werte konsistent aktualisiert werden.
+            </div>
+
+            <h3>Schritt 4: Verbrauch bearbeiten</h3>
+            <div class="step-item">
+                <strong>Öffnen Sie die Seite „Verbrauch", um die Verbrauchsanteile anzupassen.</strong>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="{% static 'simulator/images/manual/verbrauch_step5.png' %}"
+                     alt="Verbrauchsseite">
+                <p class="screenshot-caption">Abbildung 4: Die Seite „Verbrauch" mit den einstellbaren Verbrauchsanteilen je Sektor.</p>
+            </div>
+
+            <p>Auf der Seite „Verbrauch" wird die Energieverteilung gesteuert:</p>
+            <ul>
+                <li><strong>Anteile anpassen:</strong> Auf einen Sektor klicken, um dessen prozentualen Anteil am Verbrauch zu ändern.</li>
+                <li><strong>Automatische Umverteilung:</strong> Wenn Sie den Anteil eines Sektors erhöhen, werden andere Sektoren automatisch angepasst (verringert), damit die Summe 100 % ergibt.</li>
+                <li><strong>Sektor-Verteilung:</strong> Energieverteilung über verschiedene Verbrauchssektoren ansehen und ändern (z. B. Industrie, Verkehr, Haushalte).</li>
+                <li><strong>Aktualisierung in Echtzeit:</strong> Änderungen wirken sich unmittelbar auf die Energiebilanz-Berechnungen aus.</li>
+                <li><strong>Interaktive Hilfsmarkierungen:</strong> Die Pfeilsymbole kennzeichnen, wo Anpassungen möglich sind.</li>
+                <li><strong>Am Seitenende speichern:</strong> Nach dem Bearbeiten die Speichern-Schaltfläche am Seitenende verwenden.</li>
+            </ul>
+
+            <div class="note-box">
+                <strong>Wichtig:</strong>
+                Die Summe aller Sektor-Anteile beträgt stets 100 %. Wenn Sie einen Anteil ändern, verteilt das System den verbleibenden Anteil automatisch und proportional auf die übrigen Sektoren. Falls die Aktualisierung nach einem Klick nicht sofort sichtbar wird, die Speichern-Schaltfläche erneut drücken.
+            </div>
+
+            <h3>Schritt 5: Erneuerbare nach Verbrauchs-Änderungen neu berechnen</h3>
+            <div class="step-item">
+                <strong>Nach Änderungen im Verbrauch zur Seite „Erneuerbare Energien" wechseln und „Erneuerbare neu berechnen" klicken.</strong>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="{% static 'simulator/images/manual/renewable_step5_new.png' %}?v=3"
+                     alt="Schaltfläche „Erneuerbare neu berechnen"">
+                <p class="screenshot-caption">Abbildung 5: Die Seite „Erneuerbare Energien" mit der Schaltfläche „Erneuerbare neu berechnen".</p>
+            </div>
+
+            <p>Dieser Neuberechnungs-Schritt ist nach Änderungen im Verbrauch erforderlich:</p>
+            <ul>
+                <li><strong>Formeln synchronisieren:</strong> Status- und Ziel-Werte der Erneuerbaren werden mit den aktuellen Eingaben neu aufgebaut.</li>
+                <li><strong>Daten aktuell halten:</strong> Die Seite „Erneuerbare Energien" spiegelt alle jüngsten Verbrauchs-Änderungen wider.</li>
+                <li><strong>Nächste Schritte vorbereiten:</strong> Vor dem Prüfen von Cockpit, WS (365 Tage) oder Bilanz diesen Schritt ausführen.</li>
+            </ul>
+
+            <h3>Schritt 6: Bilanz-Status prüfen</h3>
+            <div class="step-item">
+                <strong>Öffnen Sie „Bilanz" und prüfen Sie das WS-365-Balance-Status-Diagramm.</strong>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="{% static 'simulator/images/manual/bilanz_step6.png' %}?v=1"
+                     alt="WS-365 Balance-Status in der Bilanz">
+                <p class="screenshot-caption">Abbildung 6: Bilanz-Seite mit dem WS-365-Balance-Status.</p>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="{% static 'simulator/images/manual/bilanz_step6_sectors.png' %}?v=1"
+                     alt="Bilanz – Sektor-Status">
+                <p class="screenshot-caption">Abbildung 6b: Bilanz-Seite mit der Anzeige, ob die einzelnen Sektoren balanciert sind.</p>
+            </div>
+
+            <p>Dieser Schritt bietet eine schnelle visuelle Kontrolle des WS-365-Abgleichs:</p>
+            <ul>
+                <li><strong>Wenn es balanciert aussieht, ist es balanciert:</strong> Wenn Status und Drift-Anzeigen balancierte Werte zeigen, ist der 365-Tage-Zyklus geschlossen.</li>
+                <li><strong>Sektor-Prüfung:</strong> Die sektorweise Bilanz-Ansicht verwenden, um zu bestätigen, dass jeder Sektor balanciert ist.</li>
+                <li><strong>Visuelle Bestätigung:</strong> Dieses Diagramm als finale Schnellkontrolle nach dem Balancieren nutzen.</li>
+            </ul>
+
+            <h3>Schritt 7: Szenario-Abgleich – Balance und Vergleich</h3>
+            <div class="step-item">
+                <strong>Verwenden Sie den Szenario-Abgleich, um den aktuellen Speicher-Status zu prüfen, die Solar- und Wind-Balance-Optionen zu vergleichen und die erforderlichen Balance-Aktionen anzuwenden.</strong>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="{% static 'simulator/images/manual/newbalance.png' %}?v=1"
+                     alt="WS 365 Tage – Balance über Solar">
+                <p class="screenshot-caption">Abbildung 7a: Der Szenario-Abgleich zeigt den Solar-Balance-Pfad.</p>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="{% static 'simulator/images/manual/newbalance2.png' %}?v=1"
+                     alt="WS 365 Tage – Balance über Wind">
+                <p class="screenshot-caption">Abbildung 7b: Der Szenario-Abgleich zeigt den Wind-Balance-Pfad.</p>
+            </div>
+
+            <p><strong>Was der Szenario-Abgleich leistet:</strong> Diese Seite zeigt den aktuellen Vergleich der Solar- und Wind-Balance-Optionen auf Basis des letzten Modellzustands. Um eine Balance sicher anzuwenden, die beiden Schaltflächen stets in der korrekten Reihenfolge verwenden.</p>
+            <ul>
+                <li><strong>Solar-Reihenfolge:</strong> Zuerst <strong>WS Balance Solar</strong> klicken. Erst nach Abschluss dieses Schritts <strong>Sector + WS Solar Balance</strong> klicken.</li>
+                <li><strong>Wind-Reihenfolge:</strong> Zuerst <strong>WS Balance Wind</strong> klicken. Erst nach Abschluss dieses Schritts <strong>Sector + WS Wind Balance</strong> klicken.</li>
+                <li><strong>Warum diese Reihenfolge wichtig ist:</strong> Die erste WS-Schaltfläche führt den WS-Balance-Schritt aus. Die zweite Schaltfläche wendet die kombinierte Sektor- und WS-Balance auf den aktualisierten Stand an.</li>
+                <li><strong>Vergleichswerte:</strong> Die Solar- und Wind-Balance-Vorschau-Karten werden beim Laden der Seite automatisch befüllt – eine separate „Goal Seek"- oder „Aktualisieren"-Schaltfläche ist nicht erforderlich.</li>
+                <li><strong>Abschlussprüfung:</strong> Nach der korrekten Zwei-Schaltflächen-Reihenfolge den finalen Zustand in Bilanz und Jahresstrom bestätigen.</li>
+            </ul>
+
+            <h3>Schritt 8: Jahresstrom</h3>
+            <div class="step-item">
+                <strong>Nach dem Balancieren den Jahresstrom verwenden, um das Jahres-Flussdiagramm und die detaillierte 365-Tage-Tabelle auf einer Seite zu prüfen.</strong>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="{% static 'simulator/images/manual/new_annual_electrcity.png' %}?v=1"
+                     alt="Jahresstrom-Flussdiagramm">
+                <p class="screenshot-caption">Abbildung 8a: Das Jahres-Flussdiagramm zeigt jährliche Stromerzeugung, Speicherung, Rückverstromung, Abregelung und den End-Verbrauch.</p>
+            </div>
+
+            <p>Der erste Teil des Jahresstroms zeigt das Jahres-Flussdiagramm und hilft bei der Gesamt-Jahres-Validierung:</p>
+            <ul>
+                <li><strong>Jahres-Erzeugung im Überblick:</strong> zeigt die jährlichen Strombeiträge aus Biomasse, PV, Wind und Laufwasser/Geothermie.</li>
+                <li><strong>Abregelungs- und Speicher-Pfad:</strong> zeigt, wie Überschuss-Strom abgeregelt, in die Elektrolyse geleitet, gespeichert und später rückverstromt wird.</li>
+                <li><strong>Speicher-Kennzahlen:</strong> Speicherkapazität, Wirkungsgrade und Speichereffizienz aus dem aktuellen 365-Tage-Ergebnis.</li>
+                <li><strong>Finale Stromlieferung:</strong> Der finale Netzknoten zeigt den jährlichen Strom, der nach Speicherung und Rückverstromung in den Endverbrauch fließt.</li>
+                <li><strong>Szenario-Titel:</strong> Der Seitenkopf zeigt das aktuell aktive Szenario / die Version sowie das Datum an, wenn ein gespeichertes Szenario wiederhergestellt wurde.</li>
+            </ul>
+
+            <div class="screenshot-container">
+                <img src="{% static 'simulator/images/manual/new_annual_electrcity_2.png' %}?v=1"
+                     alt="Jahresstrom – 365-Tage-Tabelle">
+                <p class="screenshot-caption">Abbildung 8b: Die Jahresstrom-Seite zeigt die detaillierte 365-Tage-Tabelle, die aus dem Szenario-Abgleich hierher übernommen wurde.</p>
+            </div>
+
+            <p>Der zweite Teil des Jahresstroms enthält den detaillierten 365-Tage-Datensatz:</p>
+            <ul>
+                <li><strong>365-Tage-Analyse:</strong> zeigt die Tageswerte, auf denen die Jahres-Stromsimulation basiert.</li>
+                <li><strong>Detaillierte Verifikation:</strong> erlaubt die Prüfung der Spalten für Überschuss, Speicher, Abregelung, Rückverstromung und Ladezustand über das gesamte Jahr.</li>
+                <li><strong>Nachvollziehbarkeit:</strong> hilft zu bestätigen, wie die Werte des Jahresdiagramms aus den 365-Tage-Berechnungen aufgebaut werden.</li>
+                <li><strong>Berichterstattung:</strong> Nutzen Sie diesen Seitenbereich, wenn Sie eine ausführliche Prüfung des Systemverhaltens nach dem Balancieren benötigen.</li>
+            </ul>
+
+            <h3>Schritt 9: Visualisierungen interpretieren</h3>
+            <div class="step-item">
+                <strong>Interpretieren Sie das Cockpit-Sektor-Diagramm, um zu prüfen, ob die Erneuerbare Erzeugung mit dem Verbrauch übereinstimmt.</strong>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="{% static 'simulator/images/manual/cockpit_step8_deficit.png' %}?v=1"
+                     alt="Cockpit-Sektor-Diagramm – Defizit-Fälle">
+                <p class="screenshot-caption">Abbildung 9a: Die Cockpit-Sektor-Ansicht zeigt Sektor-Defizite mit roten Delta-Markierungen.</p>
+            </div>
+
+            <p>Abbildung 9a stellt den Ungleichgewichts-Fall dar und zeigt Handlungsbedarf:</p>
+            <ul>
+                <li><strong>Sektor-Balken-Paare:</strong> Blau zeigt den Sektor-Verbrauch, Grün die Erneuerbare Erzeugung für denselben Sektor.</li>
+                <li><strong>Rote Delta-Markierungen (z. B. Δ -404):</strong> Der Verbrauch ist höher als die Erneuerbare Erzeugung im jeweiligen Sektor.</li>
+                <li><strong>Sektorweise Lücken-Erkennung:</strong> Jede rote Markierung quantifiziert das Defizit direkt in MWh/a und ermöglicht eine gezielte Korrektur.</li>
+                <li><strong>Folgeaktion:</strong> Nutzen Sie die WS-/Bilanz-Balance-Funktionen, um die Sektor-Lücken zu schließen, und prüfen Sie danach erneut das Cockpit.</li>
+                <li><strong>Validierungsschleife:</strong> Das Diagramm dient als visuelle Kontrolle nach jeder Neuberechnung und jedem Balance-Zyklus.</li>
+            </ul>
+
+            <div class="screenshot-container">
+                <img src="{% static 'simulator/images/manual/cockpit_step8_balanced.png' %}?v=1"
+                     alt="Cockpit-Sektor-Diagramm – Balanciert">
+                <p class="screenshot-caption">Abbildung 9b: Die Cockpit-Sektor-Ansicht mit balanciertem Verbrauch und balancierter Erneuerbarer Erzeugung.</p>
+            </div>
+
+            <p>Abbildung 9b stellt den balancierten Fall dar und ist wie folgt zu lesen:</p>
+            <ul>
+                <li><strong>Balance-Indikator:</strong> Der hellblaue <strong>Perfekt</strong>-Marker bedeutet, dass die Sektor-Differenz innerhalb der akzeptierten Toleranz liegt und als balanciert gilt.</li>
+                <li><strong>Betriebliche Bedeutung:</strong> In dieser Ansicht haben die Balance-Aktionen die Erneuerbare Erzeugung mit dem Sektor-Verbrauch auf Cockpit-Ebene in Einklang gebracht.</li>
+                <li><strong>Schnelle Entscheidungsunterstützung:</strong> Sie können sofort bestätigen, dass kein Sektor eine korrigierende Balance benötigt.</li>
+                <li><strong>Stabiler Zustand:</strong> Ähnliche Balkenhöhen mit <strong>Perfekt</strong>-Markern zeigen einen robusten und konsistenten Systemzustand.</li>
+            </ul>
+
+            <div class="note-box">
+                <strong>Tipp:</strong>
+                Nutzen Sie Schritt 9 als schnelle visuelle Qualitätskontrolle: <strong>Perfekt</strong>-Marker zeigen balancierte Sektoren an; rote Delta-Marker zeigen, wo weitere Balance-Schritte erforderlich sind.
+            </div>
+
+            <h3>Schritt 10: Szenario-Snapshots speichern und später fortsetzen</h3>
+            <div class="step-item">
+                <strong>Sie können den aktuellen Zustand jederzeit als Szenario-Snapshot speichern und später dorthin zurückkehren.</strong>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="{% static 'simulator/images/manual/scenario.png' %}?v=1"
+                     alt="Szenario-Snapshot-Ansicht">
+                <p class="screenshot-caption">Abbildung 10: Szenario-Snapshot-Ansicht zum Speichern und erneuten Öffnen von Simulationszuständen.</p>
+            </div>
+
+            <p>Nutzen Sie Szenario-Snapshots, um Ihre Arbeit strukturiert zu halten und leicht wieder aufzugreifen:</p>
+            <ul>
+                <li><strong>Aktuellen Zustand speichern:</strong> Aktuelle Werte und Balance-Zustand erfassen, sobald Sie einen wichtigen Punkt erreicht haben.</li>
+                <li><strong>Jederzeit zurückkehren:</strong> Das gespeicherte Szenario später öffnen und vom selben Stand aus fortfahren, ohne neu beginnen zu müssen.</li>
+                <li><strong>Alternativen vergleichen:</strong> Unterschiedliche Planungsvarianten speichern (z. B. verschiedene Verbrauchs- oder Flächennutzungs-Entscheidungen) und Ergebnisse vergleichen.</li>
+                <li><strong>Sicher arbeiten:</strong> Vor größeren Änderungen einen Snapshot zu setzen liefert einen verlässlichen Rückfallpunkt.</li>
+            </ul>
+
+            <h3>Schritt 11: Szenarien erstellen, speichern, wiederherstellen, umbenennen und löschen</h3>
+            <div class="step-item">
+                <strong>Verwenden Sie das Szenarien-Menü in der oberen Navigation, um benannte Szenario-Versionen zu speichern und später wiederherzustellen.</strong>
+            </div>
+
+            <div class="screenshot-container">
+                <img src="{% static 'simulator/images/manual/new_version_scenario.png' %}?v=1"
+                     alt="Szenario-Versionsverwaltung">
+                <p class="screenshot-caption">Abbildung 11: Das Szenarien-Menü mit den Aktionen Erstellen, Wiederherstellen, Umbenennen und Löschen für gespeicherte Versionen.</p>
+            </div>
+
+            <p>Die aktuelle Webanwendung unterstützt eine strukturierte Szenario-Versionsverwaltung:</p>
+            <ul>
+                <li><strong>Aktuelles Szenario speichern:</strong> Speichert den vollständigen aktuellen Modellzustand unter einem vom Benutzer gewählten Szenario-Namen.</li>
+                <li><strong>Wiederherstellen:</strong> Lädt eine zuvor gespeicherte Szenario-Version in die aktuelle Sitzung zurück.</li>
+                <li><strong>Umbenennen:</strong> Erlaubt es, den Szenario-Namen zu aktualisieren, wenn die Version klarer benannt werden soll.</li>
+                <li><strong>Löschen:</strong> Entfernt veraltete oder nicht mehr benötigte Szenario-Versionen.</li>
+                <li><strong>Praktischer Einsatz:</strong> Vor größeren Änderungen ein Szenario speichern, eine andere Variante testen und die frühere Version bei Bedarf wiederherstellen.</li>
+                <li><strong>Verknüpfung mit dem Jahresstrom:</strong> Wird ein Szenario wiederhergestellt, zeigt der Seitenkopf der Jahresstrom-Seite den aktiven Szenario-Namen samt Zeitstempel.</li>
+            </ul>
+
+            <div class="note-box">
+                <strong>Hinweis:</strong>
+                Alle in dieser Webanwendung gezeigten Werte werden aus der aktuellen Modell-Logik, den Formeln und den Referenzdaten berechnet. Die vollständige Formel- und Referenzdokumentation wird in Kürze veröffentlicht.
             </div>
         </div>
     </div>

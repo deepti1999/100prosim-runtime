@@ -402,8 +402,9 @@
             const timeStr = timestamp.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
             const dateStr = timestamp.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
             
-            const oldVal = change.old_value !== null && change.old_value !== undefined ? parseFloat(change.old_value).toFixed(1) : '-';
-            const newVal = change.new_value !== null && change.new_value !== undefined ? parseFloat(change.new_value).toFixed(1) : '-';
+            const fmt1 = (n) => parseFloat(n).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            const oldVal = change.old_value !== null && change.old_value !== undefined ? fmt1(change.old_value) : '-';
+            const newVal = change.new_value !== null && change.new_value !== undefined ? fmt1(change.new_value) : '-';
             
             const sourceIcon = change.source === 'user' ? '' : '';
             const sourceLabel = change.source === 'user' ? 'Manuell' : 'Auto';
@@ -613,7 +614,7 @@
                     if (Number.isNaN(originalNumeric) || Math.abs(numValue - originalNumeric) > 1e-9) {
                         saveUserInput(this.dataset.code, numValue, this, { suppressAlert: true }).catch(() => {});
                     } else if (originalValue) {
-                        this.textContent = parseFloat(originalNumeric).toFixed(1);
+                        this.textContent = parseFloat(originalNumeric).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
                     }
                 }
             });
@@ -649,7 +650,7 @@
                         
                         // Update the cell with new value
                         cell.dataset.originalValue = value;
-                        cell.textContent = value.toFixed(1);
+                        cell.textContent = value.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
                         // Highlight rebalanced rows (if any)
                         if (data.rebalanced && Object.keys(data.rebalanced).length > 0) {
@@ -706,7 +707,7 @@
                     // Update the User % cell
                     const userPercentCell = row.querySelector('.editable-user-input');
                     if (userPercentCell && info.new !== null) {
-                        const newVal = parseFloat(info.new).toFixed(1);
+                        const newVal = parseFloat(info.new).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
                         userPercentCell.textContent = newVal;
                         userPercentCell.dataset.originalValue = newVal;
                     }
@@ -716,7 +717,7 @@
                     if (cells.length >= 5) {
                         const zielCell = cells[4]; // 5th column is Ziel
                         if (info.new !== null) {
-                            zielCell.textContent = parseFloat(info.new).toFixed(1);
+                            zielCell.textContent = parseFloat(info.new).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
                         }
                     }
 

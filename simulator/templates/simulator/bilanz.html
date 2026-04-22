@@ -778,8 +778,9 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.lineWidth = 3;
             ctx.textBaseline = 'middle';
 
-            const firstLabel = Number(values[0] || 0).toFixed(1) + ' GWh';
-            const lastLabel = Number(values[lastIndex] || 0).toFixed(1) + ' GWh';
+            const deFmt1 = (n) => Number(n).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            const firstLabel = deFmt1(values[0] || 0) + ' GWh';
+            const lastLabel = deFmt1(values[lastIndex] || 0) + ' GWh';
 
             const firstX = firstPoint.x + 8;
             const firstY = firstPoint.y - 10;
@@ -835,7 +836,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return context.dataset.label + ': ' + Number(context.parsed.y).toFixed(1) + ' GWh';
+                            return context.dataset.label + ': ' + Number(context.parsed.y).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' GWh';
                         }
                     }
                 }
@@ -874,12 +875,12 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                             const abs = Math.abs(num);
                             if (abs < 1000) {
-                                return num.toLocaleString(undefined, {
+                                return num.toLocaleString('de-DE', {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 });
                             }
-                            return num.toLocaleString(undefined, {
+                            return num.toLocaleString('de-DE', {
                                 minimumFractionDigits: 0,
                                 maximumFractionDigits: 0
                             });

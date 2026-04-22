@@ -397,9 +397,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 alert('WS-Balance (Solar) angewendet!\n\n' +
-                      'LU_2.1 aktualisiert: ' + Math.round(data.new_landuse).toLocaleString() + ' ha\n' +
-                      '(vorher: ' + Math.round(data.old_landuse).toLocaleString() + ' ha)\n\n' +
-                      'Solar (9.1.2): ' + Math.round(data.new_solar).toLocaleString() + ' GWh\n' +
+                      'LU_2.1 aktualisiert: ' + Math.round(data.new_landuse).toLocaleString('de-DE') + ' ha\n' +
+                      '(vorher: ' + Math.round(data.old_landuse).toLocaleString('de-DE') + ' ha)\n\n' +
+                      'Solar (9.1.2): ' + Math.round(data.new_solar).toLocaleString('de-DE') + ' GWh\n' +
                       'Speicherdrift: ' + data.storage_drift.toFixed(1) + ' GWh\n\n' +
                       'Seite wird aktualisiert...');
                 window.location.reload();
@@ -449,8 +449,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     const wsInfo = data.ws_rebalance || {};
                     const luInfo = (
                         wsInfo.new_landuse != null && wsInfo.old_landuse != null
-                            ? ('\nLU_2.1: ' + Math.round(wsInfo.old_landuse).toLocaleString() + ' -> ' +
-                               Math.round(wsInfo.new_landuse).toLocaleString() + ' ha')
+                            ? ('\nLU_2.1: ' + Math.round(wsInfo.old_landuse).toLocaleString('de-DE') + ' -> ' +
+                               Math.round(wsInfo.new_landuse).toLocaleString('de-DE') + ' ha')
                             : ''
                     );
                     let sectorInfo = '\nGebäudewärme Gap (2.10-10.4): ' + gw.gap.toFixed(1) + ' GWh' +
@@ -515,9 +515,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 alert('WS-Balance (Wind) angewendet!\n\n' +
-                      'LU_6 aktualisiert: ' + Math.round(data.new_landuse).toLocaleString() + ' ha\n' +
-                      '(vorher: ' + Math.round(data.old_landuse).toLocaleString() + ' ha)\n\n' +
-                      'Wind (9.1.1): ' + Math.round(data.new_wind).toLocaleString() + ' GWh\n' +
+                      'LU_6 aktualisiert: ' + Math.round(data.new_landuse).toLocaleString('de-DE') + ' ha\n' +
+                      '(vorher: ' + Math.round(data.old_landuse).toLocaleString('de-DE') + ' ha)\n\n' +
+                      'Wind (9.1.1): ' + Math.round(data.new_wind).toLocaleString('de-DE') + ' GWh\n' +
                       'Speicherdrift: ' + data.storage_drift.toFixed(1) + ' GWh' +
                       sectorInfo + '\n\n' +
                       'Seite wird aktualisiert...');
@@ -568,8 +568,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     const wsInfo = data.ws_rebalance || {};
                     const luInfo = (
                         wsInfo.new_landuse != null && wsInfo.old_landuse != null
-                            ? ('\nLU_6: ' + Math.round(wsInfo.old_landuse).toLocaleString() + ' -> ' +
-                               Math.round(wsInfo.new_landuse).toLocaleString() + ' ha')
+                            ? ('\nLU_6: ' + Math.round(wsInfo.old_landuse).toLocaleString('de-DE') + ' -> ' +
+                               Math.round(wsInfo.new_landuse).toLocaleString('de-DE') + ' ha')
                             : ''
                     );
                     let sectorInfo = '\nGebäudewärme Gap (2.10-10.4): ' + gw.gap.toFixed(1) + ' GWh' +

@@ -517,8 +517,9 @@
             const timestamp = new Date(change.timestamp);
             const timeStr = timestamp.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
             const dateStr = timestamp.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
-            const oldVal = change.old_value !== null && change.old_value !== undefined ? parseFloat(change.old_value).toFixed(1) : '-';
-            const newVal = change.new_value !== null && change.new_value !== undefined ? parseFloat(change.new_value).toFixed(1) : '-';
+            const fmt1 = (n) => parseFloat(n).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            const oldVal = change.old_value !== null && change.old_value !== undefined ? fmt1(change.old_value) : '-';
+            const newVal = change.new_value !== null && change.new_value !== undefined ? fmt1(change.new_value) : '-';
 
             html += `
                 <div class="list-group-item list-group-item-action py-2">
@@ -629,7 +630,8 @@
                 throw new Error(data.error || `HTTP ${response.status}`);
             }
 
-            const displayValue = Number(data.user_input).toFixed(1);
+            const fmt1 = (n) => Number(n).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            const displayValue = fmt1(data.user_input);
             const newValue = Number(data.user_input);
             if (Number.isNaN(oldValue) || Math.abs(newValue - oldValue) > 1e-9) {
                 addRenewableChange(code, rowName, Number.isNaN(oldValue) ? null : oldValue, newValue);
@@ -639,11 +641,11 @@
 
             const targetCell = document.querySelector(`.renewable-target-value[data-code="${code}"]`);
             if (targetCell && data.target_value !== null && data.target_value !== undefined) {
-                targetCell.textContent = Number(data.target_value).toFixed(1);
+                targetCell.textContent = fmt1(data.target_value);
             }
         } catch (error) {
             cell.innerHTML = previousHtml;
-            alert('Error saving renewable input: ' + error.message);
+            alert('Fehler beim Speichern der Erneuerbaren-Eingabe: ' + error.message);
             throw error;
         } finally {
             cell.classList.remove('saving');
@@ -655,7 +657,7 @@
         editableCells.forEach(cell => {
             cell.addEventListener('focus', function () {
                 const text = (this.textContent || '').trim();
-                if (text === 'Click to edit...') {
+                if (text === 'Zum Bearbeiten klicken ...') {
                     this.textContent = '';
                 }
             });
@@ -664,7 +666,7 @@
                 if (e.key === 'Escape') {
                     e.preventDefault();
                     const original = this.dataset.originalValue || '';
-                    this.innerHTML = original ? original : '<span class="placeholder-text">Click to edit...</span>';
+                    this.innerHTML = original ? original : '<span class="placeholder-text">Zum Bearbeiten klicken ...</span>';
                     this.blur();
                     return;
                 }
@@ -675,8 +677,8 @@
                     const newValue = parseRenewableNumber(this.textContent);
                     const originalValue = parseRenewableNumber(this.dataset.originalValue || '');
                     if (Number.isNaN(newValue)) {
-                        alert('Please enter a valid number.');
-                        this.innerHTML = this.dataset.originalValue || '<span class="placeholder-text">Click to edit...</span>';
+                        alert('Bitte eine gültige Zahl eingeben.');
+                        this.innerHTML = this.dataset.originalValue || '<span class="placeholder-text">Zum Bearbeiten klicken ...</span>';
                         this.blur();
                         return;
                     }
@@ -701,11 +703,11 @@
                 const originalValue = parseRenewableNumber(this.dataset.originalValue || '');
                 if (Number.isNaN(newValue)) {
                     const original = this.dataset.originalValue || '';
-                    this.innerHTML = original ? original : '<span class="placeholder-text">Click to edit...</span>';
+                    this.innerHTML = original ? original : '<span class="placeholder-text">Zum Bearbeiten klicken ...</span>';
                     return;
                 }
                 if (!Number.isNaN(originalValue) && Math.abs(newValue - originalValue) <= 1e-9) {
-                    this.textContent = Number(originalValue).toFixed(1);
+                    this.textContent = Number(originalValue).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
                     return;
                 }
                 try {

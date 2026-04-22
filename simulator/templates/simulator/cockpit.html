@@ -494,7 +494,7 @@
         const d = bilanzData[currentView];
         document.getElementById('totalEnergy').textContent = d.gesamt_total.toLocaleString('de-DE');
         const ren = d.strom_renewable + d.brennstoffe_renewable + d.waerme_renewable;
-        document.getElementById('renewablePercent').textContent = d.gesamt_total > 0 ? ((ren / d.gesamt_total) * 100).toFixed(1) + '%' : '0%';
+        document.getElementById('renewablePercent').textContent = d.gesamt_total > 0 ? ((ren / d.gesamt_total) * 100).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%' : '0%';
         document.getElementById('renewableAmount').textContent = ren.toLocaleString('de-DE') + ' MWh/a erneuerbar';
         updateSectorChart(d);
     }

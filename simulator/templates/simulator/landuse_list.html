@@ -1254,7 +1254,7 @@
         // Simple English format - no commas for decimals
         if (value >= 1000) {
             // For large numbers, show as integer with English comma separators
-            return Math.round(value).toLocaleString('en-US');
+            return Math.round(value).toLocaleString('de-DE');
         } else {
             // For small numbers, show 1 decimal place with dot
             return value.toFixed(1);
@@ -2038,12 +2038,12 @@
                     <strong class="text-primary">${change.new_percent !== null && change.new_percent !== undefined ? change.new_percent + '%' : '-'}</strong>
                 </p>
                 <p class="mb-0">
-                    <span class="text-muted">Hectares:</span> 
-                    <strong>${change.old_ha !== null && change.old_ha !== undefined ? Number(change.old_ha).toLocaleString() : '-'}</strong> 
-                    → 
-                    <strong class="text-primary">${change.new_ha !== null && change.new_ha !== undefined ? Number(change.new_ha).toLocaleString() : '-'}</strong>
+                    <span class="text-muted">Hektar:</span>
+                    <strong>${change.old_ha !== null && change.old_ha !== undefined ? Number(change.old_ha).toLocaleString('de-DE') : '-'}</strong>
+                    →
+                    <strong class="text-primary">${change.new_ha !== null && change.new_ha !== undefined ? Number(change.new_ha).toLocaleString('de-DE') : '-'}</strong>
                     <span class="${changeColor} ms-2">
-                        (${changeSign}${change.change_ha !== null && change.change_ha !== undefined ? Number(change.change_ha).toLocaleString() : '0'} ha)
+                        (${changeSign}${change.change_ha !== null && change.change_ha !== undefined ? Number(change.change_ha).toLocaleString('de-DE') : '0'} ha)
                     </span>
                 </p>
             `;
@@ -2170,7 +2170,7 @@
                             cell.classList.add('cell-changed');
                             
                             // Add tooltip with old → new info
-                            const tooltipText = `Was: ${change.old_ha ? change.old_ha.toLocaleString() : '-'} ha → Now: ${change.new_ha.toLocaleString()} ha`;
+                            const tooltipText = `Vorher: ${change.old_ha ? change.old_ha.toLocaleString('de-DE') : '-'} ha → Jetzt: ${change.new_ha.toLocaleString('de-DE')} ha`;
                             cell.classList.add('change-tooltip');
                             cell.setAttribute('data-change-info', tooltipText);
                             

@@ -187,4 +187,7 @@ class BlackBoxCurrentAppTests(TestCase):
     def test_user_manual_page_loads(self):
         response = self.client.get(reverse("simulator:user_manual"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "User Manual")
+        # Post Phase 2-B: user manual is now in German (PDF §2.5.1 + §T32).
+        self.assertContains(response, "Benutzerhandbuch")
+        self.assertContains(response, "Schritt 1")
+        self.assertContains(response, "Flächennutzung")

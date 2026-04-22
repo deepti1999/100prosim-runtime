@@ -204,19 +204,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'de'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Berlin'
 
 USE_I18N = True
 
 USE_TZ = True
 
-USE_L10N = False  # Disable Django's automatic localization for numbers
+# Per stakeholder PDF §2.5.2: German number format everywhere
+# (dot for thousands grouping, comma as decimal separator).
+# USE_L10N=True lets Django honour DECIMAL_SEPARATOR / THOUSAND_SEPARATOR
+# in {% floatformat %} and related template filters using our custom
+# formats (simulator/formats/de/formats.py overrides Django's default "de" locale).
+USE_L10N = True
 USE_THOUSAND_SEPARATOR = True
-THOUSAND_SEPARATOR = ','
-DECIMAL_SEPARATOR = '.'
-NUMBER_GROUPING = 3
+FORMAT_MODULE_PATH = ['simulator.formats']
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
