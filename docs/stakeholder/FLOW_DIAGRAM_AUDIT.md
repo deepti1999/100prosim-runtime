@@ -404,6 +404,50 @@ the left, M-circle as the conversion/curtailment hub, H₂ electrolysis
 as the final sink. No structural rework needed pending the T54 value
 audit.
 
+## Visual pass 3 shipped (2026-04-22, commits `3345111` → `dbf8cb4` → `e55114e` → `c36b88a` → `dabf12c`)
+
+Pascal re-reviewed visual pass 2 and called out **three structural
+mis-alignments with Excel page 10 that the first pass didn't touch**:
+
+1. The web diagram had only **two summing circles** (M, N) before
+   Stromnetz. Excel page 10 has **three** (M, N, S) with bio, main
+   flow, and Rückverstromung all joining at S BEFORE entering the
+   Stromnetz box. Our version routed the three inflows directly into
+   the Stromnetz box — structurally wrong.
+2. The Abregelung up-arrow stemmed from the N-circle. Excel shows
+   it stemming from the **M→N mid-segment** (the Q position).
+3. Source arrows (K, J, L → M) overshot the M-circle; letter labels
+   (M, N, S) were drawn inside circles; P / Q flow-letter labels
+   overlapped or sat on the wrong side of their value text.
+
+### Fixes shipped (template-only, zero calc/backend impact)
+
+| Commit | What |
+|---|---|
+| `3345111` | Added S-circle at (1180, 386). Bio top now ends at x=1180 and descends into S. N→S arrow (735→1150) labelled `n_to_right` (947,106). S→Stromnetz arrow (1210→1320) labelled `final_stromnetz` (1,105,556). Rückv up-arrow rerouted into S. Abregelung stem moved from x=705 to x=557. Removed redundant N-circle value label and big final_value inside Stromnetz box. |
+| `dbf8cb4` | Eta Stromspeicherung box moved from (1030, 155) to (780, 82) so the bio vertical no longer cuts through it (fake-arrow appearance). `reconversion_value` re-anchored middle at (1120, 440). |
+| `e55114e` | Replaced Rückv→S L-shape with a clean straight vertical (1180, 535)→(1180, 416). Dropped the decorative `58,5%` tag (not in Excel). `reconversion_value` at (1210, 480); `reconversion_share` at (1210, 510). |
+| `c36b88a` | K/J/L→M arrow tips recomputed per direction to land exactly on the M-circle boundary (no tail overshoot). M→N line start moved from x=440 (inside M) to x=450 (M right edge). Down-arrows extended to box top (Ely / N-Ely-ES / Gasspeicher-direkt). Abregelung stem start moved from y=378 (8px gap above main flow) to y=386. On-arrow branch-values moved to the side (not overlapping the arrow line). |
+| `dabf12c` | Per Excel convention, **circles drawn empty** and M / N / S letters placed NEXT TO them (italic blue) instead of inside. Q letter moved from left of Abregelung stem to right of value ("189.197 Q" together). P letters moved from overlapping the value text to after it ("385.933 P", "405.027 P"). |
+
+### Verification ledger — visual pass 3
+
+| Step | Action | Result |
+|---|---|---|
+| V2 | `test_bb_current_app` | 6/6 green |
+| V3 | Smoke visit `/annual-electricity/` → 200 OK | ✓ |
+| V4 | `browser_navigate http://localhost:8001/annual-electricity/` + scroll + screenshot | `verification/t54/localhost_letters_fix.png`, `localhost_letters_down.png`, `localhost_s_clean*.png` — clean. |
+| V5 | Heroku spin-up via `scripts/heroku_up.sh`, live browser screenshots at structural milestone (pass 6 = c36b88a live on Heroku), teardown via `scripts/heroku_down.sh`. Label-only pass 7 (dabf12c) not re-deployed — zero structural or backend risk, localhost renders identically to Heroku. | `verification/t54/heroku_pass3_*.png`, `heroku_pass6_left.png`. App destroyed, billing stopped. |
+| V6 | This section added | ✓ |
+
+### Still outstanding — same backend-dependent gaps as pass 2
+
+The 4 backend-blocked items (d, f, k, n2 — percent shares,
+Tagesladungen, 261 GW elekt., Abgleichdifferenz 160) are unchanged
+by pass 3 and still require Schmidt-Kanefendt input on their
+formulas / source values. See the pass-2 "Still outstanding"
+section above for details.
+
 ## Verification done in Phase 5-C
 
 - V2 tests: all black-box tests continue to pass.
