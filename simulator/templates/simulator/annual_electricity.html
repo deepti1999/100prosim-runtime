@@ -32,20 +32,24 @@
         .flow-line-thin { stroke: #f4b942; stroke-width: 3; marker-end: url(#arrow); }
         .node-circle { fill: #fff; stroke: #f4b942; stroke-width: 4; }
 
-        .txt-title { font-size: 20px; font-weight: 900; fill: #222; }
-        .txt-title-meta { font-size: 13px; font-weight: 700; fill: #5b6472; }
-        .txt-label { font-size: 12px; font-weight: 900; fill: #222; }
-        .txt-label-lg { font-size: 16px; font-weight: 900; fill: #222; }
-        .txt-sub { font-size: 9px; font-weight: 700; fill: #4b5563; font-style: italic; }
-        .txt-value { font-size: 16px; font-weight: 900; fill: #111; }
-        .txt-value-sm { font-size: 15px; font-weight: 900; fill: #111; }
-        .txt-flow { font-size: 15px; font-weight: 900; fill: #111; stroke: #fff; stroke-width: 6; paint-order: stroke fill; }
-        .txt-flow-sm { font-size: 13px; font-weight: 900; fill: #111; stroke: #fff; stroke-width: 5; paint-order: stroke fill; }
-        .txt-node { font-size: 18px; font-weight: 900; fill: #222; }
-        .txt-node-value { font-size: 15px; font-weight: 900; fill: #111; }
-        .txt-metric { font-size: 12px; font-weight: 900; fill: #111; }
-        .txt-metric-label { font-size: 9px; font-weight: 800; fill: #111; }
-        .txt-badge { font-size: 10px; font-weight: 900; fill: #555; }
+        /* Phase 5-C (T55): font sizes bumped per PDF §2.5.6 complaint about
+           small, hard-to-read labels. Legend block reads text up to ~25%
+           larger than before while the viewBox stays at 1650×980 so the
+           page-level zoom behaviour is unchanged. */
+        .txt-title { font-size: 24px; font-weight: 900; fill: #222; }
+        .txt-title-meta { font-size: 15px; font-weight: 700; fill: #5b6472; }
+        .txt-label { font-size: 14px; font-weight: 900; fill: #222; }
+        .txt-label-lg { font-size: 19px; font-weight: 900; fill: #222; }
+        .txt-sub { font-size: 11px; font-weight: 700; fill: #4b5563; font-style: italic; }
+        .txt-value { font-size: 18px; font-weight: 900; fill: #111; }
+        .txt-value-sm { font-size: 17px; font-weight: 900; fill: #111; }
+        .txt-flow { font-size: 17px; font-weight: 900; fill: #111; stroke: #fff; stroke-width: 6; paint-order: stroke fill; }
+        .txt-flow-sm { font-size: 15px; font-weight: 900; fill: #111; stroke: #fff; stroke-width: 5; paint-order: stroke fill; }
+        .txt-node { font-size: 20px; font-weight: 900; fill: #222; }
+        .txt-node-value { font-size: 17px; font-weight: 900; fill: #111; }
+        .txt-metric { font-size: 14px; font-weight: 900; fill: #111; }
+        .txt-metric-label { font-size: 11px; font-weight: 800; fill: #111; }
+        .txt-badge { font-size: 12px; font-weight: 900; fill: #555; }
 
         .badge-bg { fill: #f3f4f6; stroke: #d1d5db; stroke-width: 1; }
         .metric-bg { fill: #fff; stroke: #444; stroke-width: 1.2; }
@@ -64,6 +68,15 @@
             font-size: 0.8rem;
             padding: 0.25rem 0.5rem;
         }
+
+        /* Phase 5-C (T55): zoom controls + responsive scaling. */
+        .ws1-svg-zoom-wrap { position: relative; }
+        .ws1-svg-zoom-controls {
+            position: sticky; top: 0; z-index: 5; background: #fff; padding: 6px 0;
+            display: flex; gap: 8px; align-items: center;
+        }
+        .ws1-svg-zoom-controls .zoom-label { font-size: 13px; color: #555; }
+        .ws1-svg { transform-origin: 0 0; transition: transform 0.15s ease; }
 </style>
 {% endblock %}
 
@@ -79,7 +92,18 @@
             </div>
 
         <div class="diagram-wrapper">
-            <div class="diagram-scroll">
+            {# Phase 5-C (T55): zoom controls for the flow diagram. #}
+            <div class="ws1-svg-zoom-controls">
+                <span class="zoom-label"><i class="fas fa-search-plus me-1"></i>Zoom:</span>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Zoom-Stufe">
+                    <button type="button" class="btn btn-outline-primary" data-zoom="0.75">75 %</button>
+                    <button type="button" class="btn btn-outline-primary active" data-zoom="1.0">100 %</button>
+                    <button type="button" class="btn btn-outline-primary" data-zoom="1.25">125 %</button>
+                    <button type="button" class="btn btn-outline-primary" data-zoom="1.5">150 %</button>
+                    <button type="button" class="btn btn-outline-primary" data-zoom="2.0">200 %</button>
+                </div>
+            </div>
+            <div class="diagram-scroll ws1-svg-zoom-wrap">
             <svg class="ws1-svg" viewBox="0 0 1650 980" xmlns="http://www.w3.org/2000/svg" aria-label="Annual electricity flow">
                 <defs>
                     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
@@ -379,6 +403,24 @@
                 window.URL.revokeObjectURL(url);
             });
         }
+
+        // Phase 5-C (T55): zoom controls for the SVG flow diagram.
+        const svg = document.querySelector('.ws1-svg');
+        const zoomButtons = document.querySelectorAll('.ws1-svg-zoom-controls button[data-zoom]');
+        zoomButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const z = parseFloat(btn.dataset.zoom) || 1;
+                if (svg) {
+                    svg.style.transform = `scale(${z})`;
+                    // Reserve layout space proportional to scale so scrollbars work.
+                    const baseWidth = svg.getAttribute('viewBox').split(' ')[2] || 1650;
+                    const baseHeight = svg.getAttribute('viewBox').split(' ')[3] || 980;
+                    svg.style.width = (baseWidth * z) + 'px';
+                    svg.style.height = (baseHeight * z) + 'px';
+                }
+                zoomButtons.forEach(b => b.classList.toggle('active', b === btn));
+            });
+        });
     });
     </script>
 {% endblock %}
