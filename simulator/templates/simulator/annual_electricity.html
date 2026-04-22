@@ -216,85 +216,81 @@
                 <line x1="360" y1="360" x2="449" y2="375" class="flow-line"/>
                 <line x1="360" y1="460" x2="450" y2="385" class="flow-line"/>
 
-                <!-- M-circle (r=16 — consistent with Excel small-circle convention) -->
+                <!-- M-circle (r=16) -->
                 <circle cx="465" cy="375" r="16" class="node-circle"/>
 
-                <!-- M stack: letter on TOP, value box BELOW. Sits above the K/J/L source arrows
-                     which converge on M-circle from below the stack. -->
-                <text x="465" y="220" text-anchor="middle" class="txt-key-circle">M</text>
-                <rect x="415" y="230" width="100" height="24" class="value-box"/>
-                <text x="465" y="247" text-anchor="middle" class="txt-box-val" id="m_value">0</text>
+                <!-- M → splitter arrow FURTHER stretched. -->
+                <line x1="481" y1="375" x2="620" y2="375" class="flow-line"/>
 
-                <!-- M → splitter circle (short arrow) -->
-                <line x1="481" y1="375" x2="539" y2="375" class="flow-line"/>
+                <!-- M stack: letter TOP, value box, arrow below. -->
+                <text x="560" y="320" text-anchor="middle" class="txt-key-circle">M</text>
+                <rect x="510" y="330" width="100" height="24" class="value-box"/>
+                <text x="560" y="347" text-anchor="middle" class="txt-box-val" id="m_value">0</text>
 
-                <!-- Splitter circle (Ely-P2G branch point) -->
-                <circle cx="550" cy="375" r="10" class="node-circle"/>
+                <!-- Splitter circle — shifted +80 from original (now x=630) -->
+                <circle cx="630" cy="375" r="10" class="node-circle"/>
 
-                <!-- Splitter → Q arrow; value ≥25px above line, Tages ≥25px below line. -->
-                <line x1="560" y1="375" x2="683" y2="375" class="flow-line"/>
-                <rect x="580" y="322" width="95" height="24" class="value-box"/>
-                <text x="627" y="339" text-anchor="middle" class="txt-box-val" id="o_value_svg">0</text>
-                <text x="627" y="410" text-anchor="middle" class="txt-tages">509</text>
+                <!-- Splitter → Q arrow stretched further. -->
+                <line x1="640" y1="375" x2="763" y2="375" class="flow-line"/>
+                <rect x="660" y="335" width="100" height="24" class="value-box"/>
+                <text x="710" y="352" text-anchor="middle" class="txt-box-val" id="o_value_svg">0</text>
+                <text x="710" y="406" text-anchor="middle" class="txt-tages">509</text>
 
-                <!-- Q-circle (r=16) -->
-                <circle cx="700" cy="375" r="16" class="node-circle"/>
+                <!-- Q-circle shifted +80 from original (now x=780) -->
+                <circle cx="780" cy="375" r="16" class="node-circle"/>
 
-                <!-- Abregelung up-arrow from Q-top; value box sits TO THE RIGHT of arrow so
-                     the orange line flows through cleanly. -->
-                <line x1="700" y1="359" x2="700" y2="205" class="flow-line"/>
-                <text x="700" y="185" text-anchor="middle" class="txt-label-lg">Abregelung</text>
-                <rect x="715" y="240" width="90" height="22" class="value-box"/>
-                <text x="760" y="256" text-anchor="middle" class="txt-box-val" id="q_value">0</text>
-                <text x="760" y="276" text-anchor="middle" class="txt-tages">62</text>
-                <text x="815" y="256" class="txt-key">Q</text>
+                <!-- Abregelung up-arrow from Q-top; value box TO THE RIGHT of arrow. -->
+                <line x1="780" y1="359" x2="780" y2="205" class="flow-line"/>
+                <text x="780" y="185" text-anchor="middle" class="txt-label-lg">Abregelung</text>
+                <rect x="795" y="240" width="90" height="22" class="value-box"/>
+                <text x="840" y="256" text-anchor="middle" class="txt-box-val" id="q_value">0</text>
+                <text x="840" y="276" text-anchor="middle" class="txt-tages">62</text>
+                <text x="895" y="256" class="txt-key">Q</text>
 
-                <!-- Q → S direct arrow; value ABOVE, Tages BELOW — generous breathing space. -->
-                <line x1="716" y1="375" x2="1134" y2="375" class="flow-line"/>
-                <rect x="870" y="336" width="95" height="24" class="value-box"/>
-                <text x="917" y="353" text-anchor="middle" class="txt-box-val" id="bio_rejoin_value">0</text>
-                <text x="917" y="402" text-anchor="middle" class="txt-tages">313</text>
-                <text x="975" y="353" class="txt-key">N</text>
+                <!-- Q → S arrow. -->
+                <line x1="796" y1="375" x2="1164" y2="375" class="flow-line"/>
+                <rect x="920" y="335" width="100" height="24" class="value-box"/>
+                <text x="970" y="352" text-anchor="middle" class="txt-box-val" id="bio_rejoin_value">0</text>
+                <text x="970" y="406" text-anchor="middle" class="txt-tages">313</text>
+                <text x="1030" y="352" class="txt-key">N</text>
 
-                <!-- S-circle (r=16) -->
-                <circle cx="1150" cy="375" r="16" class="node-circle"/>
-                <text x="1173" y="360" class="txt-key-circle">S</text>
+                <!-- S-circle (r=16) shifted +30 from last stretch (now x=1180) -->
+                <circle cx="1180" cy="375" r="16" class="node-circle"/>
+                <text x="1203" y="360" class="txt-key-circle">S</text>
 
-                <!-- S → Stromnetz arrow; generous gaps. -->
-                <line x1="1166" y1="375" x2="1296" y2="375" class="flow-line"/>
-                <rect x="1195" y="336" width="100" height="24" class="value-box"/>
-                <text x="1245" y="353" text-anchor="middle" class="txt-box-val" id="final_value">0</text>
-                <text x="1245" y="402" text-anchor="middle" class="txt-tages">365</text>
-                <text x="1325" y="318" class="txt-key">I</text>
+                <!-- S → Stromnetz arrow. -->
+                <line x1="1196" y1="375" x2="1326" y2="375" class="flow-line"/>
+                <rect x="1225" y="335" width="100" height="24" class="value-box"/>
+                <text x="1275" y="352" text-anchor="middle" class="txt-box-val" id="final_value">0</text>
+                <text x="1275" y="406" text-anchor="middle" class="txt-tages">365</text>
+                <text x="1355" y="320" class="txt-key">I</text>
 
-                <!-- Stromnetz box -->
-                <rect x="1300" y="335" width="260" height="90" rx="6" class="node-yellow"/>
-                <text x="1430" y="368" text-anchor="middle" class="txt-label-lg">Stromnetz zum</text>
-                <text x="1430" y="393" text-anchor="middle" class="txt-label-lg">Endverbrauch</text>
+                <!-- Stromnetz box shifted +30 -->
+                <rect x="1330" y="335" width="260" height="90" rx="6" class="node-yellow"/>
+                <text x="1460" y="368" text-anchor="middle" class="txt-label-lg">Stromnetz zum</text>
+                <text x="1460" y="393" text-anchor="middle" class="txt-label-lg">Endverbrauch</text>
 
-                <!-- ============================================================
-                     BIO top path (horizontal then down into S from above)
-                     ============================================================ -->
-                <line x1="355" y1="158" x2="1155" y2="158" style="stroke:#f4b942;stroke-width:3"/>
-                <line x1="1155" y1="158" x2="1155" y2="349" class="flow-line-thin"/>
+                <!-- BIO top path — ends at new S x=1180 -->
+                <line x1="355" y1="158" x2="1180" y2="158" style="stroke:#f4b942;stroke-width:3"/>
+                <line x1="1180" y1="158" x2="1180" y2="349" class="flow-line-thin"/>
 
                 <!-- ============================================================
                      DOWN BRANCHES to the middle row (Elektrolyse P2G, Ely ES)
                      ============================================================ -->
 
-                <!-- Splitter → Elektrolyse P2G; value box sits RIGHT of arrow. -->
-                <line x1="550" y1="385" x2="550" y2="520" class="flow-line"/>
-                <rect x="560" y="440" width="90" height="22" class="value-box"/>
-                <text x="605" y="456" text-anchor="middle" class="txt-box-val" id="ely_branch_value">0</text>
-                <text x="660" y="456" class="txt-key">P</text>
+                <!-- Splitter → Elektrolyse P2G; shifted to match new splitter x=630. -->
+                <line x1="630" y1="385" x2="630" y2="520" class="flow-line"/>
+                <rect x="640" y="440" width="90" height="22" class="value-box"/>
+                <text x="685" y="456" text-anchor="middle" class="txt-box-val" id="ely_branch_value">0</text>
+                <text x="740" y="456" class="txt-key">P</text>
 
-                <!-- Q → Elektrolyse Stromspeicher; value box RIGHT of arrow. -->
-                <line x1="700" y1="391" x2="700" y2="520" class="flow-line"/>
-                <rect x="710" y="440" width="90" height="22" class="value-box"/>
-                <text x="755" y="456" text-anchor="middle" class="txt-box-val" id="n_output_branch_value">0</text>
-                <text x="755" y="478" text-anchor="middle" class="txt-tages">134</text>
-                <text x="755" y="494" text-anchor="middle" class="txt-red">194 GW</text>
-                <text x="810" y="456" class="txt-key">P/Eta</text>
+                <!-- Q → Elektrolyse Stromspeicher; shifted to match new Q x=780. -->
+                <line x1="780" y1="391" x2="780" y2="520" class="flow-line"/>
+                <rect x="790" y="440" width="90" height="22" class="value-box"/>
+                <text x="835" y="456" text-anchor="middle" class="txt-box-val" id="n_output_branch_value">0</text>
+                <text x="835" y="478" text-anchor="middle" class="txt-tages">134</text>
+                <text x="835" y="494" text-anchor="middle" class="txt-red">194 GW</text>
+                <text x="890" y="456" class="txt-key">P/Eta</text>
 
                 <!-- ============================================================
                      MIDDLE ROW — Elektrolyse P2G, Elektrolyse ES, Rückverstromung
@@ -360,9 +356,10 @@
                 <text x="555" y="706" text-anchor="middle" class="txt-src-label">Gasspeicher</text>
                 <text x="555" y="724" text-anchor="middle" class="txt-src-label">Direktverbr.</text>
 
-                <!-- Gas-Verbraucher label arrow right of Direktverbr -->
-                <line x1="640" y1="710" x2="690" y2="710" class="gas-line"/>
-                <text x="697" y="714" class="txt-src-sub">Gas-Verbraucher</text>
+                <!-- Gas-Verbraucher label moved to the LEFT of Direktverbr so its arrow
+                     doesn't cross the ES→Gasspeicher Strom vertical at x≈780. -->
+                <line x1="470" y1="710" x2="410" y2="710" class="gas-line"/>
+                <text x="405" y="714" text-anchor="end" class="txt-src-sub">Gas-Verbraucher</text>
 
                 <!-- Ely-ES → Gasspeicher Strom; value box RIGHT of arrow. -->
                 <line x1="745" y1="615" x2="745" y2="740" class="gas-line"/>
