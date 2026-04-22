@@ -144,4 +144,21 @@ Observed (scrolled through 5 chart cards):
 
 **Heroku cost of this sweep:** ~$0.08 (one cycle, destroyed after).
 
-**Screenshots:** captured during the session and live-viewable in the conversation. Not persisted to the repo; the MCP cache is session-scoped and was purged at session end.
+## Screenshots
+
+All 12 screenshots committed alongside this doc in `docs/stakeholder/visual_verification_2026-04-22/`:
+
+| File | Shows |
+|---|---|
+| `simulation-dashboard.png` | /simulation/ — top-bar dedup, brand in sidebar, 10-item sidebar, German footer |
+| `landuse-base-value.png` | /landuse/ — Status-% ghost-text placeholders in user inputs |
+| `verbrauch-sidebar.png` | /verbrauch/ — green auto-cascade banner, sidebar present |
+| `cockpit-status-ziel.png` | /cockpit/ — grey "Wieviel werden wir noch brauchen?" + green "Wo soll es herkommen?" cards + delta table |
+| `bilanz-jahresgang.png` | /bilanz/ — capacity badge + 4-series chart + GWh active |
+| `bilanz-tagesladung.png` | /bilanz/ — same after clicking Tagesladung toggle (y-axis rescaled to Tagesladungen) |
+| `jahresstrom-100pct.png` | /annual-electricity/ — zoom controls + flow diagram at 100% |
+| `jahresstrom-150pct.png` | /annual-electricity/ — after clicking 150% (SVG cleanly scaled up) |
+| `historie-empty.png` | /historie/ — empty-state with inspect-only notice |
+| `historie-populated.png` | /historie/ — after an edit; Einträge table + Spalten-Ansicht |
+| `modifikationsdetails-top.png` | /modifikationsdetails/ — 4-series legend + first Nachfrage-Einflüsse chart |
+| `modifikationsdetails-charts-345.png` | /modifikationsdetails/ — Primärenergie-Beiträge + Ausbau der Erneuerbaren Energiequellen |
