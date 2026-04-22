@@ -1,6 +1,6 @@
 # What's remaining — single source of truth
 
-**Last updated:** 2026-04-22 evening (after T54 flow-diagram fix, commit `d0eea4d`, V5-verified on Heroku)
+**Last updated:** 2026-04-23 (after T54 visual pass 4 = 14 incremental commits `797f0d3`→`f4d1a6a`, V5-verified at pass 22 on Heroku)
 **Source material:** `260403_Portierung_Bestandsaufnahme.pdf` (stakeholder PDF, 12 pages) + `IMPLEMENTATION_PLAN.md` (our 63-target decomposition)
 
 ---
