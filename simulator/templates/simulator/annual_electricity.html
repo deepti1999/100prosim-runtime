@@ -214,11 +214,11 @@
                 <text x="1090" y="594" text-anchor="middle" class="txt-sub">(Mangelausgl.)</text>
                 <text x="1090" y="620" text-anchor="middle" class="txt-metric" id="eta_rs_value">59% Eta RS</text>
 
-                <!-- Rückverstromung path to S-circle (Excel: T-arrow joins main flow at S, not Stromnetz) -->
-                <line x1="1090" y1="535" x2="1090" y2="420" class="flow-line-thin"/>
-                <text x="1050" y="480" class="txt-sub">58,5%</text>
-                <line x1="1090" y1="420" x2="1155" y2="420" class="flow-line-thin"/>
-                <text x="1120" y="440" text-anchor="middle" class="txt-value-sm" id="reconversion_value">0</text>
+                <!-- Rückverstromung path to S-circle: clean straight vertical from
+                     the right side of Rückv box (x=1180, inside box 980-1200) up to
+                     S-circle bottom (y=416). Matches Excel page 10 routing. -->
+                <line x1="1180" y1="535" x2="1180" y2="416" class="flow-line-thin"/>
+                <text x="1210" y="480" class="txt-value-sm" id="reconversion_value">0</text>
 
                 <!-- M -> N arrow label (Excel: 1,541,442 flow value on arrow before N).
                      Offset right of Abregelung stem (x=557) to avoid overlap. -->
@@ -277,8 +277,8 @@
                 <line x1="540" y1="715" x2="600" y2="715" class="flow-line-thin"/>
                 <text x="615" y="718" class="txt-sub">Gas-Verbraucher</text>
 
-                <!-- 13.9% reconversion share near 58.5% vertical path -->
-                <text x="1120" y="501" text-anchor="middle" class="txt-sub" id="reconversion_share">0,0%</text>
+                <!-- 13.9% reconversion share, right of the Rückv→S vertical -->
+                <text x="1210" y="510" class="txt-sub" id="reconversion_share">0,0%</text>
 
                 <!-- Eta Stromspeicherung box. Moved left of bio vertical (x=1180)
                      so the bio line doesn't cut through the box and mimic an arrow. -->
