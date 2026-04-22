@@ -54,6 +54,14 @@
         .badge-bg { fill: #f3f4f6; stroke: #d1d5db; stroke-width: 1; }
         .metric-bg { fill: #fff; stroke: #444; stroke-width: 1.2; }
 
+        /* Excel page 10 parity (T54 visual pass 2) */
+        .txt-col-header { font-size: 16px; font-weight: 900; fill: #222; text-decoration: underline; }
+        .txt-datasource { font-size: 12px; font-weight: 700; fill: #5b6472; font-style: italic; }
+        .txt-key { font-size: 15px; font-weight: 900; fill: #1f4e79; font-style: italic; }
+        .txt-key-circle { font-size: 18px; font-weight: 900; fill: #1f4e79; font-style: italic; }
+        .txt-sidebar-label { font-size: 11px; font-weight: 700; fill: #111; }
+        .txt-sidebar-val { font-size: 12px; font-weight: 900; fill: #111; }
+
         #ws365Table th {
             white-space: nowrap;
             font-size: 0.85rem;
@@ -111,8 +119,9 @@
                     </marker>
                 </defs>
 
-                <text x="40" y="50" class="txt-title">{{ diagram_title|default:"Jahresbilanz Strom" }}</text>
-                <text x="40" y="74" class="txt-title-meta">{{ diagram_scenario_label|default:"Aktuelles Szenario" }} | Stand {{ diagram_generated_on }}</text>
+                <text x="40" y="42" class="txt-title">{{ diagram_title|default:"Jahresbilanz Strom" }}</text>
+                <text x="40" y="62" class="txt-title-meta">{{ diagram_scenario_label|default:"Aktuelles Szenario" }} | Stand {{ diagram_generated_on }}</text>
+                <text x="40" y="78" class="txt-datasource">Verwendete Zeitreihen: Anlagenpark Deutschland 2023 [SMARD]</text>
 
                 <!-- Bio -->
                 <rect x="40" y="100" width="200" height="95" rx="6" class="node-yellow"/>
@@ -124,17 +133,20 @@
 
                 <!-- PV -->
                 <rect x="40" y="220" width="200" height="95" rx="6" class="node-yellow"/>
-                <text x="140" y="274" text-anchor="middle" class="txt-label-lg">PV</text>
+                <text x="140" y="262" text-anchor="middle" class="txt-label-lg">PV</text>
+                <text x="140" y="286" text-anchor="middle" class="txt-sub">(fluktuierend)</text>
                 <text x="285" y="286" class="txt-flow" id="pv_value">0</text>
 
                 <!-- Wind -->
                 <rect x="40" y="340" width="200" height="95" rx="6" class="node-yellow"/>
-                <text x="140" y="394" text-anchor="middle" class="txt-label-lg">Wind</text>
+                <text x="140" y="382" text-anchor="middle" class="txt-label-lg">Wind</text>
+                <text x="140" y="406" text-anchor="middle" class="txt-sub">(fluktuierend)</text>
                 <text x="260" y="372" class="txt-flow" id="wind_value">0</text>
 
                 <!-- Hydro -->
                 <rect x="40" y="460" width="200" height="112" rx="6" class="node-yellow"/>
                 <text x="140" y="496" text-anchor="middle" class="txt-label">Laufwasser + Tief.-Geoth.</text>
+                <text x="140" y="518" text-anchor="middle" class="txt-sub">(konstant)</text>
                 <text x="245" y="556" class="txt-flow" id="hydro_value">0</text>
 
                 <!-- K/J/L -> M arrows -->
@@ -156,7 +168,8 @@
                 <!-- Elektrolyse Power to Gas -->
                 <rect x="300" y="500" width="240" height="120" rx="6" class="node-blue"/>
                 <text x="420" y="538" text-anchor="middle" class="txt-label">Elektrolyse</text>
-                <text x="420" y="566" text-anchor="middle" class="txt-label">Power to Gas</text>
+                <text x="420" y="560" text-anchor="middle" class="txt-label">Power to Gas</text>
+                <text x="420" y="580" text-anchor="middle" class="txt-sub">(nach Angebot)</text>
                 <text x="420" y="605" text-anchor="middle" class="txt-metric" id="eta_ely_value">65% Eta Ely.</text>
 
                 <!-- Gasspeicher Direktverbr -->
@@ -188,9 +201,6 @@
                 <text x="735" y="686" class="txt-value-sm" id="gas_storage_arrow_value">0</text>
                 <rect x="700" y="710" width="400" height="100" rx="6" class="node-blue"/>
                 <text x="900" y="765" text-anchor="middle" class="txt-label-lg">Gasspeicher Strom</text>
-                <rect x="1125" y="730" width="165" height="48" rx="3" class="metric-bg"/>
-                <text x="1208" y="748" text-anchor="middle" class="txt-metric-label">Eta Stromspeicherung</text>
-                <text x="1208" y="767" text-anchor="middle" class="txt-metric" id="eta_storage_value">0.0%</text>
                 <line x1="900" y1="810" x2="900" y2="875" class="flow-line-thin"/>
                 <text x="900" y="905" text-anchor="middle" class="txt-label-lg">Speicherkapazität</text>
                 <text x="900" y="934" text-anchor="middle" class="txt-flow" id="storage_capacity_value">0 GWh</text>
@@ -222,6 +232,70 @@
                 <text x="1450" y="350" text-anchor="middle" class="txt-label-lg">Stromnetz zum</text>
                 <text x="1450" y="385" text-anchor="middle" class="txt-label-lg">Endverbrauch</text>
                 <text x="1450" y="458" text-anchor="middle" class="txt-value" id="final_value">0</text>
+
+                <!-- ====================================================== -->
+                <!-- Excel page 10 parity (T54 visual pass 2, 2026-04-22) -->
+                <!-- ====================================================== -->
+
+                <!-- Top column headers — sit between title-area (0..78) and first source box (y=100) -->
+                <text x="450" y="96" text-anchor="middle" class="txt-col-header">Bruttostromerzeugung:</text>
+                <text x="1400" y="96" text-anchor="middle" class="txt-col-header">Nettostromerzeugung:</text>
+
+                <!-- Source letter labels (Zeitreihenkennung): S, K, J, L -->
+                <text x="268" y="132" class="txt-key">S</text>
+                <text x="268" y="252" class="txt-key">K</text>
+                <text x="268" y="372" class="txt-key">J</text>
+                <text x="228" y="534" class="txt-key">L</text>
+
+                <!-- Circle letter labels inside M and N -->
+                <text x="420" y="392" text-anchor="middle" class="txt-key-circle">M</text>
+                <text x="705" y="392" text-anchor="middle" class="txt-key-circle">N</text>
+
+                <!-- Flow letter labels: Q (Abregelung), P (Ely input), P (ES input),
+                     P (Gasspeicher Direkt), P (Gas Storage arrow), T (Rückverstr.),
+                     I (Stromnetz), S (bio rejoin) -->
+                <text x="750" y="272" class="txt-key">Q</text>
+                <text x="448" y="472" class="txt-key">P</text>
+                <text x="735" y="472" class="txt-key">P</text>
+                <text x="470" y="658" class="txt-key">P</text>
+                <text x="765" y="686" class="txt-key">P</text>
+                <text x="1140" y="688" class="txt-key">T</text>
+                <text x="1310" y="372" class="txt-key">S</text>
+                <text x="1410" y="458" class="txt-key">I</text>
+
+                <!-- Pmin/Pv sidebar on Elektrolyse Stromspeicher (Excel shows 100%/65%) -->
+                <rect x="835" y="540" width="80" height="50" rx="3" class="metric-bg"/>
+                <text x="875" y="558" text-anchor="middle" class="txt-sidebar-label">Pmin/Pv</text>
+                <text x="875" y="578" text-anchor="middle" class="txt-sidebar-val">100%/65%</text>
+
+                <!-- Gas-Verbraucher label to the right of Gasspeicher Direktverbr. -->
+                <line x1="540" y1="715" x2="600" y2="715" class="flow-line-thin"/>
+                <text x="615" y="718" class="txt-sub">Gas-Verbraucher</text>
+
+                <!-- 13.9% reconversion share near 58.5% vertical path -->
+                <text x="1120" y="501" text-anchor="middle" class="txt-sub" id="reconversion_share">0,0%</text>
+
+                <!-- Eta Stromspeicherung box (Excel: top-right, above main flow) -->
+                <rect x="1030" y="155" width="240" height="58" rx="3" class="metric-bg"/>
+                <text x="1150" y="178" text-anchor="middle" class="txt-sidebar-label">Eta Stromspeicherung (%):</text>
+                <text x="1150" y="200" text-anchor="middle" style="font-size:18px;font-weight:900;fill:#111" id="eta_storage_value">0,0</text>
+
+                <!-- Legend bottom-left (Excel: two-number convention + colour keys) -->
+                <rect x="40" y="820" width="320" height="130" rx="4" class="badge-bg"/>
+                <text x="52" y="842" class="txt-label">Legende</text>
+                <text x="60" y="865" class="txt-flow-sm">31.799</text>
+                <text x="130" y="865" class="txt-sub">Wert in GWh/a</text>
+                <text x="60" y="885" class="txt-sub-italic" style="font-size:13px;font-weight:800;fill:#1f4e79;font-style:italic">146</text>
+                <text x="130" y="885" class="txt-sub">Wert in ⌀ Tagesladungen</text>
+                <text x="60" y="905" class="txt-key">K</text>
+                <text x="130" y="905" class="txt-sub">Zeitreihenkennung</text>
+                <line x1="60" y1="918" x2="115" y2="918" style="stroke:#f4b942;stroke-width:3" marker-end="url(#arrow)"/>
+                <text x="130" y="922" class="txt-sub">Strom</text>
+                <line x1="60" y1="938" x2="115" y2="938" style="stroke:#1f4e79;stroke-width:3" marker-end="url(#arrow)"/>
+                <text x="130" y="942" class="txt-sub">Gas</text>
+
+                <!-- Footer right: scenario + version identifier (Excel: "100prosim WS 250517.1209") -->
+                <text x="1580" y="960" text-anchor="end" class="txt-sub">100prosim Web · {{ diagram_generated_on }}</text>
             </svg>
             </div>
 
@@ -365,7 +439,19 @@
         setPercentText('eta_ely_value', vals.eta_ely_pct, 'Eta Ely.');
         setPercentText('eta_es_value', vals.eta_es_pct, 'Eta ES');
         setPercentText('eta_rs_value', vals.eta_rs_pct, 'Eta RS');
-        setPercentText('eta_storage_value', vals.eta_storage_pct, '', 1);
+        // Excel page 10 parity: eta_storage displayed as "XX,Y" (no trailing %)
+        {
+          const el = document.getElementById('eta_storage_value');
+          if (el) el.textContent = Number(vals.eta_storage_pct || 0).toFixed(1).replace('.', ',');
+        }
+        // 13.9% reconversion share = t_output / final_stromnetz * 100 (Excel page 10)
+        {
+          const el = document.getElementById('reconversion_share');
+          if (el) {
+            const share = vals.final_stromnetz > 0 ? (vals.reconversion / vals.final_stromnetz * 100) : 0;
+            el.textContent = share.toFixed(1).replace('.', ',') + '%';
+          }
+        }
         setText('gasspeicher_direkt_value', vals.gasspeicher_direkt);
         setText('t_value_svg', vals.t_value);
         setText('reconversion_value', vals.reconversion);
