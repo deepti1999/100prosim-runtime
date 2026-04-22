@@ -209,7 +209,7 @@
                 </div>
             </div>
 
-            <!-- Sector Comparison -->
+            <!-- Sector Comparison (single-view: Status OR Ziel, toggled above) -->
             <div class="section-header">
                 <h3><i class="fas fa-industry me-2"></i>Sektoren: Verbrauch vs. Erneuerbare</h3>
             </div>
@@ -217,6 +217,64 @@
                 <div class="card-body">
                     <div class="chart-container main-sector-chart" style="height: 84vh; min-height: 780px;">
                         <canvas id="sectorComparisonChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            {# Phase 5-A (T43-T47): richer Status+Ziel gegenüberstellung after #}
+            {# PDF §2.5.4 + Excel AH.Cockpit1. Shows both views simultaneously #}
+            {# with per-sector delta annotations — no toggle required. #}
+            <div class="section-header">
+                <h3><i class="fas fa-balance-scale me-2"></i>Status ↔ Ziel — Gegenüberstellung</h3>
+            </div>
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-secondary text-white">
+                            <strong>Wieviel werden wir noch brauchen?</strong>
+                            <span class="ms-2 text-light" style="font-size:0.9em;">(Endenergie-Verbrauch je Sektor)</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" style="height: 420px;">
+                                <canvas id="demandStatusZielChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-success text-white">
+                            <strong>Wo soll es herkommen?</strong>
+                            <span class="ms-2 text-light" style="font-size:0.9em;">(Erneuerbare Erzeugung je Sektor)</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" style="height: 420px;">
+                                <canvas id="supplyStatusZielChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <strong>Prozentuale Veränderung Ziel ggü. Status je Sektor</strong>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0" id="sectorDeltaTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Sektor</th>
+                                    <th class="text-end">Verbrauch Status</th>
+                                    <th class="text-end">Verbrauch Ziel</th>
+                                    <th class="text-end">Δ Verbrauch</th>
+                                    <th class="text-end">Erneuerbare Status</th>
+                                    <th class="text-end">Erneuerbare Ziel</th>
+                                    <th class="text-end">Δ Erneuerbare</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sectorDeltaBody"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -499,6 +557,91 @@
         updateSectorChart(d);
     }
 
+    // Phase 5-A (T43–T47): Status↔Ziel Gegenüberstellung charts and delta table.
+    function initStatusZielCharts() {
+        const statusSeries = getSectorSeries(bilanzData.status);
+        const zielSeries = getSectorSeries(bilanzData.ziel);
+
+        const demandCtx = document.getElementById('demandStatusZielChart');
+        if (demandCtx) {
+            charts.demandStatusZiel = new Chart(demandCtx, {
+                type: 'bar',
+                data: {
+                    labels: sectorLabels,
+                    datasets: [
+                        { label: 'Status (Verbrauch)', data: statusSeries.demand, backgroundColor: '#94a3b8', borderRadius: 6 },
+                        { label: 'Ziel (Verbrauch)',   data: zielSeries.demand,   backgroundColor: colors.demand,   borderRadius: 6 },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: { callbacks: { label: c => c.dataset.label + ': ' + formatMwh(c.parsed.y) + ' MWh/a' } },
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { callback: v => v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v }, title: { display: true, text: 'MWh/a' } },
+                    },
+                },
+            });
+        }
+
+        const supplyCtx = document.getElementById('supplyStatusZielChart');
+        if (supplyCtx) {
+            charts.supplyStatusZiel = new Chart(supplyCtx, {
+                type: 'bar',
+                data: {
+                    labels: sectorLabels,
+                    datasets: [
+                        { label: 'Status (Erneuerbare)', data: statusSeries.renewable, backgroundColor: '#86efac', borderRadius: 6 },
+                        { label: 'Ziel (Erneuerbare)',   data: zielSeries.renewable,   backgroundColor: colors.renewable, borderRadius: 6 },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: { callbacks: { label: c => c.dataset.label + ': ' + formatMwh(c.parsed.y) + ' MWh/a' } },
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { callback: v => v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v }, title: { display: true, text: 'MWh/a' } },
+                    },
+                },
+            });
+        }
+
+        // Delta table
+        const tbody = document.getElementById('sectorDeltaBody');
+        if (tbody) {
+            const fmt = (n) => Number(n || 0).toLocaleString('de-DE', { maximumFractionDigits: 0 });
+            const pct = (from, to) => {
+                if (from === 0) return to === 0 ? '0,0 %' : '—';
+                return ((to - from) / Math.abs(from) * 100).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' %';
+            };
+            const colorFor = (from, to) => {
+                if (from === 0 || to === from) return '';
+                return to > from ? 'text-success' : 'text-danger';
+            };
+            tbody.innerHTML = sectorLabels.map((label, i) => {
+                const dStat = statusSeries.demand[i];
+                const dZiel = zielSeries.demand[i];
+                const rStat = statusSeries.renewable[i];
+                const rZiel = zielSeries.renewable[i];
+                return `<tr>
+                    <td><strong>${label}</strong></td>
+                    <td class="text-end">${fmt(dStat)}</td>
+                    <td class="text-end">${fmt(dZiel)}</td>
+                    <td class="text-end ${colorFor(dStat, dZiel)}">${pct(dStat, dZiel)}</td>
+                    <td class="text-end">${fmt(rStat)}</td>
+                    <td class="text-end">${fmt(rZiel)}</td>
+                    <td class="text-end ${colorFor(rStat, rZiel)}">${pct(rStat, rZiel)}</td>
+                </tr>`;
+            }).join('');
+        }
+    }
+
     function switchView(v) {
         currentView = v;
         document.getElementById('statusToggle').classList.toggle('active', v === 'status');
@@ -506,6 +649,9 @@
         updateCharts();
     }
 
-    document.addEventListener('DOMContentLoaded', initCharts);
+    document.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        initStatusZielCharts();
+    });
 </script>
 {% endblock %}
