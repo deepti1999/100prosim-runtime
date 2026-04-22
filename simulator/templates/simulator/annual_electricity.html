@@ -178,8 +178,12 @@
                 <rect x="300" y="680" width="240" height="70" rx="6" class="node-blue"/>
                 <text x="420" y="710" text-anchor="middle" class="txt-label">Gasspeicher Direktverbr.</text>
 
-                <!-- Abregelung (Excel page 10: stems from M→N mid-segment, not N-circle) -->
-                <line x1="557" y1="386" x2="557" y2="208" class="flow-line"/>
+                <!-- Q-circle — Excel page 10: Abregelung branches UP from its own
+                     summing node between M and N. Sits on the main flow at y=386. -->
+                <circle cx="557" cy="386" r="22" class="node-circle"/>
+
+                <!-- Abregelung arrow stems from Q-circle top (y=364). -->
+                <line x1="557" y1="364" x2="557" y2="208" class="flow-line"/>
                 <text x="557" y="180" text-anchor="middle" class="txt-label-lg">Abregelung</text>
                 <text x="580" y="272" class="txt-flow-sm" id="q_value">0</text>
 
