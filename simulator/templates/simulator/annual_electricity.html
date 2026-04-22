@@ -230,25 +230,25 @@
                 <!-- Splitter circle — shifted +80 from original (now x=630) -->
                 <circle cx="630" cy="375" r="10" class="node-circle"/>
 
-                <!-- Splitter → Q arrow (endpoint updated to reach Q-left boundary at x=814). -->
-                <line x1="640" y1="375" x2="814" y2="375" class="flow-line"/>
-                <rect x="685" y="335" width="100" height="24" class="value-box"/>
-                <text x="735" y="352" text-anchor="middle" class="txt-box-val" id="o_value_svg">0</text>
-                <text x="735" y="406" text-anchor="middle" class="txt-tages">509</text>
+                <!-- Splitter → Q arrow (endpoint updated to reach Q-left boundary at x=854). -->
+                <line x1="640" y1="375" x2="854" y2="375" class="flow-line"/>
+                <rect x="697" y="335" width="100" height="24" class="value-box"/>
+                <text x="747" y="352" text-anchor="middle" class="txt-box-val" id="o_value_svg">0</text>
+                <text x="747" y="406" text-anchor="middle" class="txt-tages">509</text>
 
-                <!-- Q-circle shifted further right to give room between Ely P2G and Ely ES. -->
-                <circle cx="830" cy="375" r="16" class="node-circle"/>
+                <!-- Q-circle shifted to x=870 (aligned with new Stromspeicher center). -->
+                <circle cx="870" cy="375" r="16" class="node-circle"/>
 
                 <!-- Abregelung up-arrow from Q-top; value box TO THE RIGHT of arrow. -->
-                <line x1="830" y1="359" x2="830" y2="205" class="flow-line"/>
-                <text x="830" y="185" text-anchor="middle" class="txt-label-lg">Abregelung</text>
-                <rect x="845" y="240" width="90" height="22" class="value-box"/>
-                <text x="890" y="256" text-anchor="middle" class="txt-box-val" id="q_value">0</text>
-                <text x="890" y="276" text-anchor="middle" class="txt-tages">62</text>
-                <text x="945" y="256" class="txt-key">Q</text>
+                <line x1="870" y1="359" x2="870" y2="205" class="flow-line"/>
+                <text x="870" y="185" text-anchor="middle" class="txt-label-lg">Abregelung</text>
+                <rect x="885" y="240" width="90" height="22" class="value-box"/>
+                <text x="930" y="256" text-anchor="middle" class="txt-box-val" id="q_value">0</text>
+                <text x="930" y="276" text-anchor="middle" class="txt-tages">62</text>
+                <text x="985" y="256" class="txt-key">Q</text>
 
                 <!-- Q → S arrow. -->
-                <line x1="846" y1="375" x2="1164" y2="375" class="flow-line"/>
+                <line x1="886" y1="375" x2="1164" y2="375" class="flow-line"/>
                 <rect x="920" y="335" width="100" height="24" class="value-box"/>
                 <text x="970" y="352" text-anchor="middle" class="txt-box-val" id="bio_rejoin_value">0</text>
                 <text x="970" y="406" text-anchor="middle" class="txt-tages">313</text>
@@ -284,48 +284,51 @@
                 <text x="685" y="456" text-anchor="middle" class="txt-box-val" id="ely_branch_value">0</text>
                 <text x="740" y="456" class="txt-key">P</text>
 
-                <!-- Q → Elektrolyse Stromspeicher; shifted to match new Q x=830. -->
-                <line x1="830" y1="391" x2="830" y2="520" class="flow-line"/>
-                <rect x="840" y="440" width="90" height="22" class="value-box"/>
-                <text x="885" y="456" text-anchor="middle" class="txt-box-val" id="n_output_branch_value">0</text>
-                <text x="885" y="478" text-anchor="middle" class="txt-tages">134</text>
-                <text x="885" y="494" text-anchor="middle" class="txt-red">194 GW</text>
-                <text x="940" y="456" class="txt-key">P/Eta</text>
+                <!-- Q → Elektrolyse Stromspeicher; shifted to new Q x=870. -->
+                <line x1="870" y1="391" x2="870" y2="520" class="flow-line"/>
+                <rect x="880" y="440" width="90" height="22" class="value-box"/>
+                <text x="925" y="456" text-anchor="middle" class="txt-box-val" id="n_output_branch_value">0</text>
+                <text x="925" y="478" text-anchor="middle" class="txt-tages">134</text>
+                <text x="925" y="494" text-anchor="middle" class="txt-red">194 GW</text>
+                <text x="980" y="456" class="txt-key">P/Eta</text>
 
                 <!-- ============================================================
                      MIDDLE ROW — Elektrolyse P2G, Elektrolyse ES, Rückverstromung
                      ============================================================ -->
 
-                <!-- Elektrolyse Power to Gas — Eta labels OUTSIDE right of box (Excel style). -->
+                <!-- Elektrolyse Power to Gas — Eta Ely badge outside, with clear bordered box. -->
                 <rect x="545" y="520" width="170" height="95" rx="6" class="node-blue"/>
                 <text x="630" y="555" text-anchor="middle" class="txt-src-label">Elektrolyse</text>
                 <text x="630" y="575" text-anchor="middle" class="txt-src-label">Power to Gas</text>
                 <text x="630" y="595" text-anchor="middle" class="txt-src-sub">(nach Angebot)</text>
-                <text x="725" y="582" class="txt-red" id="eta_ely_value">65%</text>
-                <text x="725" y="602" class="txt-src-label" style="font-size:13px">Eta Ely.</text>
+                <rect x="720" y="565" width="60" height="46" rx="3" class="metric-bg"/>
+                <text x="750" y="582" text-anchor="middle" class="txt-red" id="eta_ely_value">65%</text>
+                <text x="750" y="600" text-anchor="middle" class="txt-src-label" style="font-size:11px">Eta Ely.</text>
 
-                <!-- Elektrolyse Stromspeicher — Eta labels outside right. -->
-                <rect x="745" y="520" width="170" height="95" rx="6" class="node-blue"/>
-                <text x="830" y="555" text-anchor="middle" class="txt-src-label">Elektrolyse</text>
-                <text x="830" y="575" text-anchor="middle" class="txt-src-label">Stromspeicher</text>
-                <text x="830" y="595" text-anchor="middle" class="txt-src-sub">(Überschuss)</text>
+                <!-- Elektrolyse Stromspeicher — shifted right to make room for Eta Ely badge. -->
+                <rect x="785" y="520" width="170" height="95" rx="6" class="node-blue"/>
+                <text x="870" y="555" text-anchor="middle" class="txt-src-label">Elektrolyse</text>
+                <text x="870" y="575" text-anchor="middle" class="txt-src-label">Stromspeicher</text>
+                <text x="870" y="595" text-anchor="middle" class="txt-src-sub">(Überschuss)</text>
 
-                <!-- Pmax/Pv — plain label stack (no frame), between ES and Rückv. Includes Eta ES. -->
-                <text x="980" y="548" text-anchor="middle" class="txt-sidebar-label">P_max/P_v</text>
-                <text x="980" y="568" text-anchor="middle" class="txt-red">100%</text>
-                <text x="980" y="586" text-anchor="middle" class="txt-sidebar-val" id="eta_es_value">65%</text>
-                <text x="980" y="606" text-anchor="middle" class="txt-src-label" style="font-size:13px">Eta ES</text>
+                <!-- Pmax/Pv — bordered group box; sits in gap between Stromspeicher and Rückv. -->
+                <rect x="990" y="528" width="80" height="92" rx="3" class="metric-bg"/>
+                <text x="1030" y="546" text-anchor="middle" class="txt-sidebar-label">P_max/P_v</text>
+                <text x="1030" y="566" text-anchor="middle" class="txt-red">100%</text>
+                <text x="1030" y="584" text-anchor="middle" class="txt-sidebar-val" id="eta_es_value">65%</text>
+                <text x="1030" y="606" text-anchor="middle" class="txt-src-label" style="font-size:11px">Eta ES</text>
 
-                <!-- Rückverstromung — Eta labels outside right. -->
+                <!-- Rückverstromung — Eta labels in a tight bordered badge to the right. -->
                 <rect x="1095" y="520" width="170" height="95" rx="6" class="node-yellow"/>
                 <text x="1180" y="555" text-anchor="middle" class="txt-src-label">Rückver-</text>
                 <text x="1180" y="575" text-anchor="middle" class="txt-src-label">stromung</text>
                 <text x="1180" y="595" text-anchor="middle" class="txt-src-sub">(Mangelausgl.)</text>
 
-                <!-- 261 GW red + Eta RS stacked outside right of Rückv. -->
-                <text x="1275" y="555" class="txt-red">261 GW (elekt.)</text>
-                <text x="1275" y="582" class="txt-red" id="eta_rs_value">59%</text>
-                <text x="1275" y="602" class="txt-src-label" style="font-size:13px">Eta RS</text>
+                <!-- 261 GW red above Rückv badge, badge holds Eta RS stack. -->
+                <text x="1275" y="540" class="txt-red">261 GW (elekt.)</text>
+                <rect x="1268" y="565" width="60" height="46" rx="3" class="metric-bg"/>
+                <text x="1298" y="582" text-anchor="middle" class="txt-red" id="eta_rs_value">59%</text>
+                <text x="1298" y="600" text-anchor="middle" class="txt-src-label" style="font-size:11px">Eta RS</text>
 
                 <!-- Rückverstromung → S (T arrow): now a clean straight vertical from
                      Rückv top-center (1180, 520) directly to S bottom (1180, 391). -->
@@ -356,12 +359,12 @@
                 <line x1="545" y1="710" x2="485" y2="710" class="gas-line"/>
                 <text x="480" y="714" text-anchor="end" class="txt-src-sub">Gas-Verbraucher</text>
 
-                <!-- Ely-ES → Gasspeicher Strom (both centered on Q x=830). -->
-                <line x1="830" y1="615" x2="830" y2="740" class="gas-line"/>
-                <rect x="840" y="668" width="90" height="22" class="value-box"/>
-                <text x="885" y="684" text-anchor="middle" class="txt-box-val" id="gas_storage_arrow_value">0</text>
-                <text x="885" y="704" text-anchor="middle" class="txt-tages">87</text>
-                <text x="940" y="684" class="txt-key">P</text>
+                <!-- Ely-ES → Gasspeicher Strom (both centered on Q x=870). -->
+                <line x1="870" y1="615" x2="870" y2="740" class="gas-line"/>
+                <rect x="880" y="668" width="90" height="22" class="value-box"/>
+                <text x="925" y="684" text-anchor="middle" class="txt-box-val" id="gas_storage_arrow_value">0</text>
+                <text x="925" y="704" text-anchor="middle" class="txt-tages">87</text>
+                <text x="980" y="684" class="txt-key">P</text>
 
                 <!-- Gasspeicher Strom — shifted right so it doesn't share a horizontal edge with
                      Gasspeicher Direktverbr (which ends at x=715). Starts at x=730. -->
