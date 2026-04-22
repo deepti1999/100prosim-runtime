@@ -7,20 +7,19 @@
 
 ## Headline
 
-**51/63 atomic targets shipped and Heroku-verified.** 12 targets outstanding:
+**51/63 atomic targets shipped and Heroku-verified.** 12 targets outstanding from the original plan, plus 4 backend-data items surfaced during T54 visual passes:
 
 | Bucket | Count | Blocked on |
 |---|---:|---|
 | **External-gated** | 6 | ErnES picks a compute platform |
 | **Deferred by decision** | 6 | Separate scoping session (Pascal's call) |
+| **T54 backend-data** | 4 | Schmidt-Kanefendt formulas / fields (see §3 below) |
 
-T54 (flow-diagram value→position mis-wiring) is now closed — see
-`FLOW_DIAGRAM_AUDIT.md` "Fix shipped (2026-04-22)". The 15 missing
-annotations identified during the deep audit (a–o) are *not* T54 targets,
-they're cosmetic extensions; captured at the bottom of the audit doc for
-Schmidt-Kanefendt's prioritisation.
-
-Every deliverable from the PDF that can be shipped right now **is shipped**. What's left falls into three clear categories below.
+T54 (flow-diagram value→position mis-wiring) is structurally closed
+through visual pass 22 — see `FLOW_DIAGRAM_AUDIT.md` "Visual pass 4
+shipped". The diagram now matches Excel page 10 in layout, circles,
+boxes, gas-vs-Strom colours, and label positions. What is **not** yet
+matching Excel is the 4 backend-data items below.
 
 ---
 
@@ -107,6 +106,45 @@ Excel 100prosim ships variants: Germany (`D.xlsx`), plus per-Bundesland sheets o
 
 ---
 
+## 3. T54 backend-data items (4) — Jahresstrom flow diagram
+
+These four labels currently render in the SVG with **hardcoded
+Excel-reference values**. They cannot be made dynamic from existing
+backend output; each needs either a formula confirmation from
+Schmidt-Kanefendt or a new field added to the WS365 service.
+
+| # | Label in diagram | Current hardcoded value | What's blocking dynamic binding |
+|---|---|---|---|
+| **D1** | Tagesladungen italic blue numbers under each source value | `397` (PV), `186` (Wind), `5` (Hydro), `1` (Bio) | Per-source normalisation formula unknown. Tried `value / (storage_capacity / 80)` — fits PV (1,201,630 / 3,021.6 ≈ 397.7) but not Wind (706,237 / 3,021.6 ≈ 233.7 ≠ 186). Need Schmidt-Kanefendt's formula. |
+| **D2** | Tagesladungen italic blue numbers on every flow segment | `509` on M→Q, `313` on Q→S, `365` on S→Stromnetz, `62` on Abregelung, `134` on Q→Ely-ES, `87` on each gas branch (×3), `51` on Rückv→S, `80` on Speicherkapazität | Same formula gap as D1; values vary per scenario but no obvious denominator from current outputs. |
+| **D3** | Percent shares under each source value | `62,2%` (PV), `29,2%` (Wind), `0,8%` (Hydro), `0,2%` (Bio) | Denominator unclear. `pv / (pv + wind + hydro + bio)` gives PV = 62.2% ✓ but Wind = 36.6% ✗ (not 29.2%). Need the exact Excel formula or working-copy cell reference. |
+| **D4a** | `194 GW` red annotation under 405.027 box (Pmax of Elektrolyse Stromspeicher) | Static text | Installed-power peak figure. Not computed by backend. Likely a config constant once stakeholder confirms the exact number; currently 194 in Excel, may differ for other regions. |
+| **D4b** | `261 GW (elekt.)` red annotation beside Rückverstromung | Static text | Same as D4a — installed-power peak, not in backend. |
+| **D4c** | `Abgleichdifferenz 160` (with small `0` to right and `80` Tages below) at bottom-right | Static text | Scenario-solver residual diagnostic. Not exposed by `get_ws_365_data()` today. Would need a new field on the WS365 service output. |
+
+**Where these currently live in the template:** in
+`simulator/templates/simulator/annual_electricity.html`, search for
+the literal strings `"397"`, `"509"`, `"62,2%"`, `"194 GW"`, `"261 GW"`,
+`"160"` to find the hardcoded `<text>` elements. Each is right next to
+its dynamic counterpart for easy swap-out once the formula is known.
+
+**Effort once unblocked:**
+- D1 + D2: ~30 min if it's one formula. Add `tages_*` keys to the
+  context vars in `simulator/page_renewable.py::annual_electricity_view`,
+  bind them in the template's JS init block.
+- D3: ~30 min, similar pattern.
+- D4a + D4b: ~15 min — add two config constants (or one constant per
+  Region once `Region` becomes first-class), expose in context.
+- D4c: ~1–2 hours — new field on `get_ws_365_data()` output, requires
+  a small audit of the WS365 solver to surface the residual.
+
+**To unblock:** Schmidt-Kanefendt confirms the Tagesladungen
+normalisation rule, the percent-share denominator, the
+installed-power values for Germany 2023, and whether
+`Abgleichdifferenz` should be computed (and from what).
+
+---
+
 ## What's NOT remaining — shipped 2026-04-22
 
 For reference, everything below is done + V5-verified on live Heroku (cost ~$0.35 across 5 cycles, all destroyed):
@@ -134,6 +172,7 @@ For reference, everything below is done + V5-verified on live Heroku (cost ~$0.3
 |---|---|---|
 | Phase 7 platform | ErnES | Weeks to months |
 | Deferred §2.3 scoping | Pascal | One meeting |
+| T54 backend-data formulas (D1–D4c) | Schmidt-Kanefendt | One email reply with the 3 formulas + 2 GW values |
 
 ---
 
