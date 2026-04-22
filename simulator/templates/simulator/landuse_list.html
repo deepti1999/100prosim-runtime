@@ -1,6 +1,6 @@
 {% extends 'simulator/base.html' %}
 
-{% block title %}Land Use Data - All Records{% endblock %}
+{% block title %}Flächennutzung – Datenübersicht{% endblock %}
 
 {% block content %}
 {% csrf_token %}
@@ -13,7 +13,7 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div
                 class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Land Use Data Overview</h1>
+                <h1 class="h2">Flächennutzung – Übersicht</h1>
             </div>
 
 
@@ -21,7 +21,7 @@
             <!-- Data Table -->
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">Land Use Categories</h5>
+                    <h5 class="card-title mb-0">Flächennutzungs-Kategorien</h5>
                     {# "Save All Values" button removed per stakeholder PDF §2.4.5 (T28): edits #}
                     {# auto-save with 1-second debounce (autoSaveValue, line ~1533). The bulk #}
                     {# endpoint /api/save-all-inputs/ is retained for programmatic callers. #}
@@ -32,12 +32,12 @@
                             <thead>
                                 <tr>
                                     <th class="code-column">Code</th>
-                                    <th>Land Use Type / Energy Use</th>
+                                    <th>Flächennutzung / Energieverwendung</th>
                                     <th class="number-column">Status (ha)</th>
                                     <th class="number-column">Status (%)</th>
-                                    <th class="number-column">Target (ha)</th>
-                                    <th class="number-column">Target (%)</th>
-                                    <th class="number-column">User (%)</th>
+                                    <th class="number-column">Ziel (ha)</th>
+                                    <th class="number-column">Ziel (%)</th>
+                                    <th class="number-column">Benutzer (%)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,7 +85,7 @@
                                             data-code="{{ data.landuse.code }}"
                                             data-parent="{{ data.landuse.parent.code }}"
                                             data-parent-status="{{ data.landuse.parent.status_ha }}"
-                                            data-pk="{{ data.landuse.id }}" placeholder="Enter %" style="width: 90px;">
+                                            data-pk="{{ data.landuse.id }}" placeholder="% eingeben" style="width: 90px;">
                                         {% else %}
                                         <span class="text-muted">-</span>
                                         {% endif %}
@@ -94,8 +94,8 @@
                                 {% empty %}
                                 <tr>
                                     <td colspan="7" class="text-center text-muted py-5">
-                                        <h5>No data available</h5>
-                                        <p>Import some CSV data to get started.</p>
+                                        <h5>Keine Daten verfügbar</h5>
+                                        <p>Importieren Sie CSV-Daten, um zu beginnen.</p>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -109,11 +109,11 @@
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="alert alert-info">
-                        <h6 class="alert-heading">Data Information</h6>
+                        <h6 class="alert-heading">Hinweise zu den Daten</h6>
                         <p class="mb-0">
-                            This data shows land use categories and energy utilization in Germany, including current
-                            status and future targets.
-                            The change ratio indicates the relationship between targets and current status.
+                            Diese Seite zeigt Flächennutzungs-Kategorien und Energieverwendung für Deutschland,
+                            einschließlich des aktuellen Status und der Ziel-Werte für das Szenario.
+                            Das Veränderungsverhältnis beschreibt das Verhältnis zwischen Ziel und Status.
                         </p>
                     </div>
                 </div>
@@ -123,17 +123,17 @@
             <div class="card mt-3" id="changes-panel" style="display: block;">
                 <div class="card-header d-flex justify-content-between align-items-center" style="cursor: pointer;" onclick="toggleChangesPanel()">
                     <h6 class="mb-0">
-                        <i class="fas fa-history me-2"></i>Recent Changes
+                        <i class="fas fa-history me-2"></i>Letzte Änderungen
                         <span id="changes-count-badge" class="badge bg-primary ms-2" style="display: none;">0</span>
                         <small class="text-muted ms-2" style="font-weight: normal; font-size: 0.85em;">
-                            <i class="fas fa-info-circle me-1"></i>Changes persist after page refresh
+                            <i class="fas fa-info-circle me-1"></i>Änderungen bleiben nach dem Neuladen der Seite erhalten
                         </small>
                     </h6>
                     <div>
-                        <button class="btn btn-sm btn-outline-danger me-2" onclick="event.stopPropagation(); localStorage.clear(); location.reload();" title="Clear all localStorage">
-                            <i class="fas fa-trash-alt"></i> Clear Storage
+                        <button class="btn btn-sm btn-outline-danger me-2" onclick="event.stopPropagation(); localStorage.clear(); location.reload();" title="Lokalen Speicher löschen">
+                            <i class="fas fa-trash-alt"></i> Speicher löschen
                         </button>
-                        <button class="btn btn-sm btn-outline-info me-2" onclick="event.stopPropagation(); testLocalStorage();" title="Test localStorage">
+                        <button class="btn btn-sm btn-outline-info me-2" onclick="event.stopPropagation(); testLocalStorage();" title="Lokalen Speicher testen">
                             <i class="fas fa-vial"></i>
                         </button>
                         <i id="changes-toggle-icon" class="fas fa-chevron-up"></i>
@@ -142,11 +142,11 @@
                 <div class="card-body" id="changes-panel-body" style="display: block;">
                     <div id="changes-list" class="list-group">
                         <div class="text-center text-muted py-3" id="no-changes-msg">
-                            <i class="fas fa-info-circle me-2"></i>No changes yet. When you modify land use values, they will appear here and persist across page refreshes.
+                            <i class="fas fa-info-circle me-2"></i>Noch keine Änderungen. Sobald Sie Werte bearbeiten, erscheinen sie hier und bleiben nach dem Neuladen der Seite erhalten.
                         </div>
                     </div>
                     <button class="btn btn-sm btn-outline-secondary mt-2" onclick="clearChangesHistory()" id="clear-changes-btn" style="display: none;">
-                        <i class="fas fa-trash me-1"></i>Clear History
+                        <i class="fas fa-trash me-1"></i>Verlauf löschen
                     </button>
                 </div>
             </div>
@@ -324,7 +324,7 @@
                     pendingRowSaveTimers[pk] = setTimeout(() => {
                         delete pendingRowSaveTimers[pk];
                         if (saveAllInProgress) {
-                            console.log(` Skipping row save for ${e.target.dataset.code} while Save All is running`);
+                            console.log(` Zeile ${e.target.dataset.code} übersprungen (Sammelspeicherung läuft)`);
                             return;
                         }
                         console.log(`Saving to backend: ${e.target.dataset.code} = ${userPercent}%`);

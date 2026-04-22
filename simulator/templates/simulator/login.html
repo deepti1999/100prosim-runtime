@@ -159,7 +159,7 @@
 </head>
 <body>
     <a href="{% url 'simulator:landing_page' %}" class="back-link">
-        <i class="fas fa-arrow-left me-2"></i>Back to Home
+        <i class="fas fa-arrow-left me-2"></i>Zurück zur Startseite
     </a>
 
     <div class="login-container">
@@ -167,7 +167,7 @@
             <h1 class="login-title">
                 <i class="fas fa-leaf me-2"></i>100ProSim
             </h1>
-            <p class="login-subtitle">Sign in to save your simulations</p>
+            <p class="login-subtitle">Anmelden, um Ihre Simulationen zu speichern</p>
         </div>
 
         <!-- Display Messages -->
@@ -188,28 +188,28 @@
                 <input type="text" 
                        name="username" 
                        class="form-control with-icon" 
-                       placeholder="Username"
+                       placeholder="Benutzername"
                        value="{{ form.username.value|default:'' }}"
                        required>
             </div>
 
             <div class="input-group">
                 <i class="fas fa-lock input-icon"></i>
-                <input type="password" 
-                       name="password" 
-                       class="form-control with-icon" 
-                       placeholder="Password"
+                <input type="password"
+                       name="password"
+                       class="form-control with-icon"
+                       placeholder="Passwort"
                        required>
             </div>
 
             <button type="submit" class="btn btn-login">
-                <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                <i class="fas fa-sign-in-alt me-2"></i>Anmelden
             </button>
         </form>
 
         <div class="auth-links">
-            <p class="mb-0">Don't have an account? 
-                <a href="{% url 'simulator:register' %}" class="auth-link">Create one here</a>
+            <p class="mb-0">Noch kein Konto?
+                <a href="{% url 'simulator:register' %}" class="auth-link">Hier registrieren</a>
             </p>
         </div>
     </div>

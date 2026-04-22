@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
     <meta charset="UTF-8">
@@ -101,7 +101,7 @@
                             </li>
                             <li>
                                 <span class="dropdown-item-text text-muted small" id="baselineInfo">
-                                    <i class="fas fa-info-circle me-1"></i>Loading...
+                                    <i class="fas fa-info-circle me-1"></i>Wird geladen ...
                                 </span>
                             </li>
                         </ul>
@@ -110,17 +110,17 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="scenarioDropdown" role="button"
                             data-bs-toggle="dropdown">
-                            <i class="fas fa-bookmark me-1"></i>Scenarios
+                            <i class="fas fa-bookmark me-1"></i>Szenarien
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" style="min-width: 460px;">
                             <li>
                                 <a class="dropdown-item" href="#" id="createScenarioBtn">
-                                    <i class="fas fa-save me-2"></i>Save Current Scenario
+                                    <i class="fas fa-save me-2"></i>Aktuelles Szenario speichern
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="#" id="refreshScenarioListBtn">
-                                    <i class="fas fa-rotate me-2"></i>Refresh Scenario List
+                                    <i class="fas fa-rotate me-2"></i>Szenario-Liste aktualisieren
                                 </a>
                             </li>
                             <li>
@@ -128,7 +128,7 @@
                             </li>
                             <li>
                                 <div class="dropdown-item-text text-muted small" id="scenarioListInfo">
-                                    <i class="fas fa-info-circle me-1"></i>Loading scenarios...
+                                    <i class="fas fa-info-circle me-1"></i>Szenarien werden geladen ...
                                 </div>
                             </li>
                             <li>
@@ -143,19 +143,19 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'simulator:logout' %}">
-                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    <i class="fas fa-sign-out-alt me-2"></i>Abmelden
                                 </a></li>
                         </ul>
                     </li>
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'simulator:login' %}">
-                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                            <i class="fas fa-sign-in-alt me-1"></i>Anmelden
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'simulator:register' %}">
-                            <i class="fas fa-user-plus me-1"></i>Register
+                            <i class="fas fa-user-plus me-1"></i>Registrieren
                         </a>
                     </li>
                     {% endif %}
@@ -175,7 +175,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12 text-center text-muted">
-                    <p>&copy; 2025 Land Use Data Viewer | Built with Django & Bootstrap</p>
+                    <p>&copy; 2026 100ProSim | Django &amp; Bootstrap</p>
                 </div>
             </div>
         </div>
@@ -262,9 +262,9 @@
                 .then(function (response) { return response.json(); })
                 .then(function (data) {
                     if (data.exists) {
-                        infoElement.innerHTML = '<i class="fas fa-check-circle me-1 text-success"></i>Created: ' + data.created_at + '<br><small>(' + data.size_mb + ' MB)</small>';
+                        infoElement.innerHTML = '<i class="fas fa-check-circle me-1 text-success"></i>Erstellt: ' + data.created_at + '<br><small>(' + data.size_mb + ' MB)</small>';
                     } else {
-                        infoElement.innerHTML = '<i class="fas fa-exclamation-circle me-1 text-warning"></i>No baseline created yet';
+                        infoElement.innerHTML = '<i class="fas fa-exclamation-circle me-1 text-warning"></i>Noch keine Baseline erstellt';
                     }
                 })
                 .catch(function (error) {
@@ -274,7 +274,7 @@
 
         function createBaseline() {
             console.log('createBaseline called');
-            if (!confirm('Create a baseline snapshot of the current database?\n\nThis will save the current state so you can restore it later.')) {
+            if (!confirm('Baseline-Snapshot des aktuellen Stands erstellen?\n\nDer aktuelle Zustand wird gespeichert, sodass Sie ihn später wiederherstellen können.')) {
                 console.log('User cancelled');
                 return;
             }
@@ -282,7 +282,7 @@
 
             var infoElement = document.getElementById('baselineInfo');
             if (infoElement) {
-                infoElement.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Creating...';
+                infoElement.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Wird erstellt ...';
             }
 
             fetch('/api/baseline/create/', {
@@ -296,26 +296,26 @@
                 .then(function (data) {
                     console.log('Data received:', data);
                     if (data.status === 'ok') {
-                        alert('Baseline snapshot created successfully!\n\nCreated: ' + data.created_at + '\nSize: ' + data.size_mb + ' MB\n\nYou can now experiment freely and restore to this state anytime.');
+                        alert('Baseline-Snapshot erfolgreich erstellt!\n\nErstellt: ' + data.created_at + '\nGröße: ' + data.size_mb + ' MB\n\nSie können jetzt frei experimentieren und jederzeit auf diesen Stand zurücksetzen.');
                         checkBaselineInfo();
                     } else {
-                        alert('Error creating baseline: ' + data.error);
+                        alert('Fehler beim Erstellen der Baseline: ' + data.error);
                         checkBaselineInfo();
                     }
                 })
                 .catch(function (error) {
                     console.error('Fetch error:', error);
-                    alert('Error: ' + error);
+                    alert('Fehler: ' + error);
                     checkBaselineInfo();
                 });
         }
 
         function restoreBaseline() {
-            if (!confirm('WARNING: Reset to Baseline?\n\nThis will DELETE all current data and restore the database to the baseline snapshot.\n\nALL CHANGES since the baseline will be LOST!\n\nAre you absolutely sure?')) {
+            if (!confirm('WARNUNG: Auf Baseline zurücksetzen?\n\nAlle aktuellen Daten werden GELÖSCHT und der Stand wird auf den Baseline-Snapshot zurückgesetzt.\n\nAlle Änderungen seit der Baseline gehen VERLOREN!\n\nSind Sie absolut sicher?')) {
                 return;
             }
 
-            if (!confirm('FINAL CONFIRMATION\n\nThis action CANNOT be undone.\nClick OK to proceed with restore.')) {
+            if (!confirm('ENDGÜLTIGE BESTÄTIGUNG\n\nDiese Aktion kann NICHT rückgängig gemacht werden.\nKlicken Sie OK, um mit dem Zurücksetzen fortzufahren.')) {
                 return;
             }
 
@@ -326,14 +326,14 @@
                 .then(function (response) { return response.json(); })
                 .then(function (data) {
                     if (data.status === 'ok') {
-                        alert('Database restored to baseline!\n\nThe page will now reload...');
+                        alert('Stand erfolgreich auf Baseline zurückgesetzt!\n\nDie Seite wird jetzt neu geladen ...');
                         window.location.reload();
                     } else {
-                        alert('Error restoring baseline: ' + data.error);
+                        alert('Fehler beim Zurücksetzen: ' + data.error);
                     }
                 })
                 .catch(function (error) {
-                    alert('Error: ' + error);
+                    alert('Fehler: ' + error);
                 });
         }
 
@@ -344,7 +344,7 @@
             var day = String(now.getDate()).padStart(2, '0');
             var hour = String(now.getHours()).padStart(2, '0');
             var minute = String(now.getMinutes()).padStart(2, '0');
-            return 'Scenario ' + year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
+            return 'Szenario ' + year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
         }
 
         function escapeHtml(value) {
@@ -365,9 +365,9 @@
 
         function createScenario() {
             var suggested = defaultScenarioName();
-            var name = prompt('Scenario name:', suggested);
+            var name = prompt('Szenario-Name:', suggested);
             if (name === null) return;
-            var note = prompt('Optional note (can be left blank):', '');
+            var note = prompt('Optionale Notiz (kann leer bleiben):', '');
             if (note === null) {
                 note = '';
             }
@@ -386,19 +386,19 @@
                 .then(function (response) { return response.json(); })
                 .then(function (data) {
                     if (data.status === 'ok') {
-                        alert('Scenario saved: ' + data.name + '\nUpdated: ' + data.created_at);
+                        alert('Szenario gespeichert: ' + data.name + '\nAktualisiert: ' + data.created_at);
                         loadScenarioList();
                     } else {
-                        alert('Error saving scenario: ' + data.error);
+                        alert('Fehler beim Speichern des Szenarios: ' + data.error);
                     }
                 })
                 .catch(function (error) {
-                    alert('Error saving scenario: ' + error);
+                    alert('Fehler beim Speichern des Szenarios: ' + error);
                 });
         }
 
         function loadScenarioList() {
-            updateScenarioInfo('Loading scenarios...', false);
+            updateScenarioInfo('Szenarien werden geladen ...', false);
             var container = document.getElementById('scenarioListContainer');
             if (container) {
                 container.innerHTML = '';
@@ -408,14 +408,14 @@
                 .then(function (response) { return response.json(); })
                 .then(function (data) {
                     if (data.status !== 'ok') {
-                        updateScenarioInfo('Failed to load scenarios', true);
+                        updateScenarioInfo('Szenarien konnten nicht geladen werden', true);
                         return;
                     }
                     renderScenarioList(data.items || [], data.max_items || 30);
                 })
                 .catch(function (error) {
                     console.error('Error loading scenarios:', error);
-                    updateScenarioInfo('Failed to load scenarios', true);
+                    updateScenarioInfo('Szenarien konnten nicht geladen werden', true);
                 });
         }
 
@@ -424,29 +424,29 @@
             if (!container) return;
 
             if (!items.length) {
-                updateScenarioInfo('No scenarios saved yet.', false);
-                container.innerHTML = '<div class="px-3 py-2 text-muted small">Use "Save Current Scenario" to create your first version.</div>';
+                updateScenarioInfo('Noch keine Szenarien gespeichert.', false);
+                container.innerHTML = '<div class="px-3 py-2 text-muted small">Verwenden Sie "Aktuelles Szenario speichern", um Ihre erste Version anzulegen.</div>';
                 return;
             }
 
-            updateScenarioInfo(items.length + ' / ' + maxItems + ' scenarios', false);
+            updateScenarioInfo(items.length + ' / ' + maxItems + ' Szenarien', false);
             var html = '';
             items.forEach(function (item) {
-                var encodedName = encodeURIComponent(item.name || 'Scenario');
-                var safeName = escapeHtml(item.name || 'Scenario');
+                var encodedName = encodeURIComponent(item.name || 'Szenario');
+                var safeName = escapeHtml(item.name || 'Szenario');
                 var safeNote = item.note ? ('<div class="small text-muted">' + escapeHtml(item.note) + '</div>') : '';
                 html += ''
                     + '<div class="px-3 py-2 border-bottom">'
                     + '  <div class="d-flex justify-content-between align-items-start gap-2">'
                     + '    <div class="me-2">'
                     + '      <div class="fw-semibold">' + safeName + '</div>'
-                    + '      <div class="small text-muted">Updated: ' + escapeHtml(item.updated_at || '') + ' • ' + escapeHtml(String(item.size_mb || 0)) + ' MB</div>'
+                    + '      <div class="small text-muted">Aktualisiert: ' + escapeHtml(item.updated_at || '') + ' • ' + escapeHtml(String(item.size_mb || 0)) + ' MB</div>'
                     +        safeNote
                     + '    </div>'
                     + '    <div class="btn-group btn-group-sm" role="group">'
-                    + '      <button type="button" class="btn btn-outline-primary scenario-action-btn" data-action="restore" data-id="' + item.id + '" data-name="' + encodedName + '">Restore</button>'
-                    + '      <button type="button" class="btn btn-outline-secondary scenario-action-btn" data-action="rename" data-id="' + item.id + '" data-name="' + encodedName + '">Rename</button>'
-                    + '      <button type="button" class="btn btn-outline-danger scenario-action-btn" data-action="delete" data-id="' + item.id + '" data-name="' + encodedName + '">Delete</button>'
+                    + '      <button type="button" class="btn btn-outline-primary scenario-action-btn" data-action="restore" data-id="' + item.id + '" data-name="' + encodedName + '">Wiederherstellen</button>'
+                    + '      <button type="button" class="btn btn-outline-secondary scenario-action-btn" data-action="rename" data-id="' + item.id + '" data-name="' + encodedName + '">Umbenennen</button>'
+                    + '      <button type="button" class="btn btn-outline-danger scenario-action-btn" data-action="delete" data-id="' + item.id + '" data-name="' + encodedName + '">Löschen</button>'
                     + '    </div>'
                     + '  </div>'
                     + '</div>';
@@ -455,10 +455,10 @@
         }
 
         function restoreScenario(id, name) {
-            if (!confirm('Restore scenario "' + name + '"?\n\nThis will replace current workspace values.')) {
+            if (!confirm('Szenario "' + name + '" wiederherstellen?\n\nDie aktuellen Werte des Arbeits-Szenarios werden ersetzt.')) {
                 return;
             }
-            if (!confirm('Final confirmation:\nRestore "' + name + '" now?')) {
+            if (!confirm('Endgültige Bestätigung:\n"' + name + '" jetzt wiederherstellen?')) {
                 return;
             }
 
@@ -469,22 +469,22 @@
                 .then(function (response) { return response.json(); })
                 .then(function (data) {
                     if (data.status === 'ok') {
-                        alert('Scenario restored: ' + name + '\n\nThe page will now reload.');
+                        alert('Szenario wiederhergestellt: ' + name + '\n\nDie Seite wird jetzt neu geladen.');
                         window.location.reload();
                     } else {
-                        alert('Error restoring scenario: ' + data.error);
+                        alert('Fehler beim Wiederherstellen des Szenarios: ' + data.error);
                     }
                 })
                 .catch(function (error) {
-                    alert('Error restoring scenario: ' + error);
+                    alert('Fehler beim Wiederherstellen des Szenarios: ' + error);
                 });
         }
 
         function renameScenario(id, currentName) {
-            var nextName = prompt('New scenario name:', currentName);
+            var nextName = prompt('Neuer Szenario-Name:', currentName);
             if (nextName === null) return;
             if (!nextName.trim()) {
-                alert('Scenario name cannot be empty.');
+                alert('Der Szenario-Name darf nicht leer sein.');
                 return;
             }
 
@@ -501,16 +501,16 @@
                     if (data.status === 'ok') {
                         loadScenarioList();
                     } else {
-                        alert('Error renaming scenario: ' + data.error);
+                        alert('Fehler beim Umbenennen des Szenarios: ' + data.error);
                     }
                 })
                 .catch(function (error) {
-                    alert('Error renaming scenario: ' + error);
+                    alert('Fehler beim Umbenennen des Szenarios: ' + error);
                 });
         }
 
         function deleteScenario(id, name) {
-            if (!confirm('Delete scenario "' + name + '"?\n\nThis cannot be undone.')) {
+            if (!confirm('Szenario "' + name + '" löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden.')) {
                 return;
             }
 
@@ -523,11 +523,11 @@
                     if (data.status === 'ok') {
                         loadScenarioList();
                     } else {
-                        alert('Error deleting scenario: ' + data.error);
+                        alert('Fehler beim Löschen des Szenarios: ' + data.error);
                     }
                 })
                 .catch(function (error) {
-                    alert('Error deleting scenario: ' + error);
+                    alert('Fehler beim Löschen des Szenarios: ' + error);
                 });
         }
 

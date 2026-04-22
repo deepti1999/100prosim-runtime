@@ -1,39 +1,39 @@
 {% extends 'simulator/base.html' %}
 
-{% block title %}Verbrauch – Energy Consumption{% endblock %}
+{% block title %}Verbrauch{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h3>Energy Consumption Data (Verbrauch)</h3>
+    <h3>Verbrauch – Datenübersicht</h3>
     <p class="text-muted mb-2">KLIK (Kraft, Licht, Information, Kommunikation, Kälte) + Gebäudewärme</p>
     <div class="alert alert-warning py-2 mb-3" role="alert">
-        <strong>Hinweis:</strong> Nach jeder Änderung auf dieser Seite bitte zur Seite <strong>Erneuerbare Energien</strong> wechseln und <strong>Recalculate Renewables</strong> ausführen.
+        <strong>Hinweis:</strong> Nach jeder Änderung auf dieser Seite bitte zur Seite <strong>Erneuerbare Energien</strong> wechseln und <strong>Erneuerbare neu berechnen</strong> ausführen.
     </div>
 
     <!-- Legend for editable fields -->
     <div class="alert alert-info mb-3" role="alert">
-        <strong> How to edit:</strong>
+        <strong>So bearbeiten Sie Werte:</strong>
         <span class="ms-2"
             style="background-color: #cfe2ff; padding: 3px 8px; border-radius: 4px; border: 1px solid #9ec5fe;">
-             Blue cells
+             Blaue Zellen
         </span>
-        <span class="ms-1">are editable - Click to change values</span>
+        <span class="ms-1">sind bearbeitbar – zum Ändern klicken</span>
         <span class="ms-3" style="background-color: #f8f9fa; padding: 3px 8px; border-radius: 4px; opacity: 0.7;">
-            Gray cells
+            Graue Zellen
         </span>
-        <span class="ms-1">are read-only (calculated or fixed)</span>
+        <span class="ms-1">sind schreibgeschützt (berechnet oder fest)</span>
     </div>
 
     <table class="table table-bordered table-hover align-middle">
         <thead class="table-light">
             <tr>
                 <th style="width: 8%;">Code</th>
-                <th style="width: 35%;">Category</th>
-                <th style="width: 8%;">Unit</th>
+                <th style="width: 35%;">Kategorie</th>
+                <th style="width: 8%;">Einheit</th>
                 <th style="width: 12%;">Status</th>
-                <th style="width: 12%;">Ziel (Target)</th>
-                <th style="width: 12%;">User %</th>
-                <th style="width: 8%;">Actions</th>
+                <th style="width: 12%;">Ziel</th>
+                <th style="width: 12%;">Benutzer %</th>
+                <th style="width: 8%;">Aktionen</th>
             </tr>
         </thead>
         <tbody>
@@ -97,13 +97,13 @@
                 <td contenteditable="true" class="text-center editable-user-input editable-highlight"
                     data-field="user_percent" data-code="{{ row.code }}"
                     data-original-value="{{ row.user_percent|default:'' }}"
-                    title=" Click to edit - This field is user-editable">
+                    title="Zum Bearbeiten klicken – dieses Feld ist vom Benutzer bearbeitbar">
                     <span class="edit-icon"></span>
                     {% if row.user_percent %}{{ row.user_percent|floatformat:1 }}{% else %}<span
-                        class="placeholder-text">Click to edit...</span>{% endif %}
+                        class="placeholder-text">Zum Bearbeiten klicken ...</span>{% endif %}
                 </td>
                 {% else %}
-                <td class="text-center text-muted non-editable-cell" title=" This field is not editable">
+                <td class="text-center text-muted non-editable-cell" title="Dieses Feld ist nicht bearbeitbar">
                     {% if row.user_percent %}{{ row.user_percent|floatformat:1 }}{% else %}-{% endif %}
                 </td>
                 {% endif %}
@@ -120,7 +120,7 @@
 
     <div class="text-end mt-3">
         <button class="btn btn-warning me-2" id="saveRecalcBtn">
-            <i class="fas fa-sync-alt"></i> Save & Recalculate
+            <i class="fas fa-sync-alt"></i> Speichern &amp; neu berechnen
         </button>
     </div>
 
@@ -128,15 +128,15 @@
     <div class="card mt-3" id="verbrauch-changes-panel">
         <div class="card-header d-flex justify-content-between align-items-center" style="cursor: pointer;" onclick="toggleVerbrauchChangesPanel()">
             <h6 class="mb-0">
-                <i class="fas fa-history me-2"></i>Recent Changes
+                <i class="fas fa-history me-2"></i>Letzte Änderungen
                 <span id="verbrauch-changes-count-badge" class="badge bg-primary ms-2" style="display: none;">0</span>
                 <small class="text-muted ms-2" style="font-weight: normal; font-size: 0.85em;">
-                    <i class="fas fa-info-circle me-1"></i>Changes persist after page refresh
+                    <i class="fas fa-info-circle me-1"></i>Änderungen bleiben nach dem Neuladen der Seite erhalten
                 </small>
             </h6>
             <div>
-                <button class="btn btn-sm btn-outline-danger me-2" onclick="event.stopPropagation(); clearVerbrauchChangesHistory();" title="Clear all changes">
-                    <i class="fas fa-trash-alt"></i> Clear
+                <button class="btn btn-sm btn-outline-danger me-2" onclick="event.stopPropagation(); clearVerbrauchChangesHistory();" title="Alle Änderungen löschen">
+                    <i class="fas fa-trash-alt"></i> Löschen
                 </button>
                 <i id="verbrauch-changes-toggle-icon" class="fas fa-chevron-up"></i>
             </div>
@@ -144,7 +144,7 @@
         <div class="card-body" id="verbrauch-changes-panel-body">
             <div id="verbrauch-changes-list" class="list-group">
                 <div class="text-center text-muted py-3" id="no-verbrauch-changes-msg">
-                    <i class="fas fa-info-circle me-2"></i>No changes yet. When you modify Verbrauch values, they will appear here.
+                    <i class="fas fa-info-circle me-2"></i>Noch keine Änderungen. Sobald Sie Verbrauchs-Werte bearbeiten, erscheinen sie hier.
                 </div>
             </div>
         </div>
@@ -406,7 +406,7 @@
             const newVal = change.new_value !== null && change.new_value !== undefined ? parseFloat(change.new_value).toFixed(1) : '-';
             
             const sourceIcon = change.source === 'user' ? '' : '';
-            const sourceLabel = change.source === 'user' ? 'Manual' : 'Auto';
+            const sourceLabel = change.source === 'user' ? 'Manuell' : 'Auto';
             
             html += `
                 <div class="list-group-item list-group-item-action py-2">
@@ -452,7 +452,7 @@
     }
 
     function editRow(code) {
-        alert(`Edit functionality for ${code} will be implemented later!`);
+        alert(`Bearbeiten-Funktion für ${code} wird später implementiert.`);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -520,7 +520,7 @@
 
             // Clear placeholder on focus
             cell.addEventListener('focus', function () {
-                if (this.textContent.includes('Click to edit') || this.textContent.includes('Enter')) {
+                if (this.textContent.includes('Zum Bearbeiten klicken') || this.textContent.includes('Enter')) {
                     this.textContent = '';
                 }
                 // Store original value for potential cancel
@@ -538,17 +538,17 @@
                     const code = this.dataset.code;
 
                     if (newValue === '') {
-                        this.innerHTML = '<span class="placeholder-text">Click to edit...</span>';
+                        this.innerHTML = '<span class="placeholder-text">Zum Bearbeiten klicken ...</span>';
                         return;
                     }
 
                     // Check if value changed
                     const numValue = extractCellNumericValue(this);
                     if (isNaN(numValue)) {
-                        alert('Please enter a valid number');
+                        alert('Bitte eine gültige Zahl eingeben');
                         this.textContent = originalValue || '';
                         if (!originalValue) {
-                            this.innerHTML = '<span class="placeholder-text">Click to edit...</span>';
+                            this.innerHTML = '<span class="placeholder-text">Zum Bearbeiten klicken ...</span>';
                         }
                         return;
                     }
@@ -572,7 +572,7 @@
                     if (originalValue) {
                         this.textContent = originalValue;
                     } else {
-                        this.innerHTML = '<span class="placeholder-text">Click to edit...</span>';
+                        this.innerHTML = '<span class="placeholder-text">Zum Bearbeiten klicken ...</span>';
                     }
                     this.blur();
                 }
@@ -591,11 +591,11 @@
                 const originalValue = this.dataset.originalValue;
 
                 // If user left field without pressing Enter, restore original
-                if (currentValue === '' || currentValue.includes('Click to edit')) {
+                if (currentValue === '' || currentValue.includes('Zum Bearbeiten klicken')) {
                     if (originalValue) {
                         this.textContent = originalValue;
                     } else {
-                        this.innerHTML = '<span class="placeholder-text">Click to edit...</span>';
+                        this.innerHTML = '<span class="placeholder-text">Zum Bearbeiten klicken ...</span>';
                     }
                 } else if (currentValue !== originalValue) {
                     // If user changed value and left the field, save automatically.
@@ -604,7 +604,7 @@
                         if (originalValue) {
                             this.textContent = originalValue;
                         } else {
-                            this.innerHTML = '<span class="placeholder-text">Click to edit...</span>';
+                            this.innerHTML = '<span class="placeholder-text">Zum Bearbeiten klicken ...</span>';
                         }
                         return;
                     }
@@ -669,7 +669,7 @@
                         }
                     } else {
                         if (!suppressAlert) {
-                            alert('Error: ' + (data.error || 'Unknown error'));
+                            alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
                         }
                         cell.innerHTML = originalHtml;
                         throw new Error(data.error || 'Unknown error');
@@ -677,7 +677,7 @@
                 })
                 .catch(error => {
                     if (!suppressAlert) {
-                        alert('Error saving: ' + error);
+                        alert('Fehler beim Speichern: ' + error);
                     }
                     cell.innerHTML = originalHtml;
                     throw error;
@@ -789,7 +789,7 @@
             saveRecalcButton.addEventListener('click', async function () {
                 const btn = this;
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Wird verarbeitet ...';
                 saveRecalcInProgress = true;
                 preserveCellValueForSaveRecalc = false;
 
@@ -807,21 +807,21 @@
                     const data = await parseJsonResponseSafe(response);
                     if (data.success && data.queued && data.job_id) {
                         const result = await pollVerbrauchRecalcJob(data.job_id);
-                        alert(`Success!\n${result.message || 'Recalculation completed.'}`);
+                        alert(`Erfolg!\n${result.message || 'Neuberechnung abgeschlossen.'}`);
                         location.reload();
                     } else if (data.success) {
-                        alert(`Success!\n${data.message}`);
+                        alert(`Erfolg!\n${data.message}`);
                         location.reload();
                     } else {
-                        alert('Error: ' + (data.error || 'Unknown error'));
+                        alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
                     }
                 } catch (error) {
-                    alert('Error: ' + error);
+                    alert('Fehler: ' + error);
                 } finally {
                     saveRecalcInProgress = false;
                     preserveCellValueForSaveRecalc = false;
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-sync-alt"></i> Save & Recalculate';
+                    btn.innerHTML = '<i class="fas fa-sync-alt"></i> Speichern &amp; neu berechnen';
                 }
             });
         }
@@ -830,7 +830,7 @@
         const exportBtn = document.getElementById('exportBtn');
         if (exportBtn) {
             exportBtn.addEventListener('click', function () {
-                alert('Export functionality coming soon!');
+                alert('Export-Funktion folgt in Kürze.');
             });
         }
     });

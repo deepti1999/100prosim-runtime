@@ -1,7 +1,7 @@
 {% extends 'simulator/base.html' %}
 {% load static %}
 
-{% block title %}Cockpit - Visual Energy Dashboard{% endblock %}
+{% block title %}Cockpit – Energie-Übersicht{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -422,8 +422,8 @@
             data: {
                 labels: sectorLabels,
                 datasets: [
-                    { label: 'Verbrauch (Demand)', data: [], backgroundColor: colors.demand, borderRadius: 8, barPercentage: 0.92, categoryPercentage: 0.74, maxBarThickness: 86 },
-                    { label: 'Erneuerbare (Renewable)', data: [], backgroundColor: colors.renewable, borderRadius: 8, barPercentage: 0.92, categoryPercentage: 0.74, maxBarThickness: 86 }
+                    { label: 'Verbrauch', data: [], backgroundColor: colors.demand, borderRadius: 8, barPercentage: 0.92, categoryPercentage: 0.74, maxBarThickness: 86 },
+                    { label: 'Erneuerbare', data: [], backgroundColor: colors.renewable, borderRadius: 8, barPercentage: 0.92, categoryPercentage: 0.74, maxBarThickness: 86 }
                 ]
             },
             plugins: [deltaBadgePlugin],
