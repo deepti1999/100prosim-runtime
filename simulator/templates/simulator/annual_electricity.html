@@ -240,13 +240,14 @@
                 <!-- Q-circle (r=16) -->
                 <circle cx="700" cy="375" r="16" class="node-circle"/>
 
-                <!-- Abregelung up-arrow from Q-top -->
+                <!-- Abregelung up-arrow from Q-top; value box sits TO THE RIGHT of arrow so
+                     the orange line flows through cleanly. -->
                 <line x1="700" y1="359" x2="700" y2="205" class="flow-line"/>
                 <text x="700" y="185" text-anchor="middle" class="txt-label-lg">Abregelung</text>
-                <rect x="655" y="240" width="90" height="22" class="value-box"/>
-                <text x="700" y="256" text-anchor="middle" class="txt-box-val" id="q_value">0</text>
-                <text x="700" y="276" text-anchor="middle" class="txt-tages">62</text>
-                <text x="755" y="256" class="txt-key">Q</text>
+                <rect x="715" y="240" width="90" height="22" class="value-box"/>
+                <text x="760" y="256" text-anchor="middle" class="txt-box-val" id="q_value">0</text>
+                <text x="760" y="276" text-anchor="middle" class="txt-tages">62</text>
+                <text x="815" y="256" class="txt-key">Q</text>
 
                 <!-- Q → S direct arrow; value box above the line, Tages below. -->
                 <line x1="716" y1="375" x2="1134" y2="375" class="flow-line"/>
@@ -281,19 +282,19 @@
                      DOWN BRANCHES to the middle row (Elektrolyse P2G, Ely ES)
                      ============================================================ -->
 
-                <!-- Splitter → Elektrolyse P2G -->
-                <line x1="550" y1="384" x2="550" y2="520" class="flow-line"/>
-                <rect x="505" y="440" width="90" height="22" class="value-box"/>
-                <text x="550" y="456" text-anchor="middle" class="txt-box-val" id="ely_branch_value">0</text>
-                <text x="605" y="456" class="txt-key">P</text>
+                <!-- Splitter → Elektrolyse P2G; value box sits RIGHT of arrow. -->
+                <line x1="550" y1="385" x2="550" y2="520" class="flow-line"/>
+                <rect x="560" y="440" width="90" height="22" class="value-box"/>
+                <text x="605" y="456" text-anchor="middle" class="txt-box-val" id="ely_branch_value">0</text>
+                <text x="660" y="456" class="txt-key">P</text>
 
-                <!-- Q → Elektrolyse Stromspeicher (from Q-bottom) -->
-                <line x1="700" y1="397" x2="700" y2="520" class="flow-line"/>
-                <rect x="655" y="440" width="90" height="22" class="value-box"/>
-                <text x="700" y="456" text-anchor="middle" class="txt-box-val" id="n_output_branch_value">0</text>
-                <text x="700" y="474" text-anchor="middle" class="txt-tages">134</text>
-                <text x="700" y="490" text-anchor="middle" class="txt-red">194 GW</text>
-                <text x="755" y="456" class="txt-key">P/Eta</text>
+                <!-- Q → Elektrolyse Stromspeicher; value box RIGHT of arrow. -->
+                <line x1="700" y1="391" x2="700" y2="520" class="flow-line"/>
+                <rect x="710" y="440" width="90" height="22" class="value-box"/>
+                <text x="755" y="456" text-anchor="middle" class="txt-box-val" id="n_output_branch_value">0</text>
+                <text x="755" y="478" text-anchor="middle" class="txt-tages">134</text>
+                <text x="755" y="494" text-anchor="middle" class="txt-red">194 GW</text>
+                <text x="810" y="456" class="txt-key">P/Eta</text>
 
                 <!-- ============================================================
                      MIDDLE ROW — Elektrolyse P2G, Elektrolyse ES, Rückverstromung
@@ -347,12 +348,12 @@
                      Ely-ES → Gasspeicher Strom (y=740, shared with Rückv return)
                      ============================================================ -->
 
-                <!-- P2G → Direktverbr -->
+                <!-- P2G → Direktverbr; value box RIGHT of arrow. -->
                 <line x1="555" y1="615" x2="555" y2="680" class="gas-line"/>
-                <rect x="510" y="632" width="90" height="22" class="value-box"/>
-                <text x="555" y="648" text-anchor="middle" class="txt-box-val" id="gasspeicher_direkt_value">0</text>
-                <text x="555" y="666" text-anchor="middle" class="txt-tages">87</text>
-                <text x="610" y="648" class="txt-key">P</text>
+                <rect x="565" y="632" width="90" height="22" class="value-box"/>
+                <text x="610" y="648" text-anchor="middle" class="txt-box-val" id="gasspeicher_direkt_value">0</text>
+                <text x="610" y="668" text-anchor="middle" class="txt-tages">87</text>
+                <text x="665" y="648" class="txt-key">P</text>
 
                 <!-- Gasspeicher Direktverbr box -->
                 <rect x="470" y="680" width="170" height="60" rx="6" class="node-blue"/>
@@ -363,12 +364,12 @@
                 <line x1="640" y1="710" x2="690" y2="710" class="gas-line"/>
                 <text x="697" y="714" class="txt-src-sub">Gas-Verbraucher</text>
 
-                <!-- Ely-ES → Gasspeicher Strom -->
+                <!-- Ely-ES → Gasspeicher Strom; value box RIGHT of arrow. -->
                 <line x1="745" y1="615" x2="745" y2="740" class="gas-line"/>
-                <rect x="700" y="668" width="90" height="22" class="value-box"/>
-                <text x="745" y="684" text-anchor="middle" class="txt-box-val" id="gas_storage_arrow_value">0</text>
-                <text x="745" y="702" text-anchor="middle" class="txt-tages">87</text>
-                <text x="800" y="684" class="txt-key">P</text>
+                <rect x="755" y="668" width="90" height="22" class="value-box"/>
+                <text x="800" y="684" text-anchor="middle" class="txt-box-val" id="gas_storage_arrow_value">0</text>
+                <text x="800" y="704" text-anchor="middle" class="txt-tages">87</text>
+                <text x="855" y="684" class="txt-key">P</text>
 
                 <!-- Gasspeicher Strom (big box) -->
                 <rect x="690" y="740" width="420" height="80" rx="6" class="node-blue"/>
@@ -380,12 +381,12 @@
                 <text x="900" y="918" text-anchor="middle" class="txt-flow" id="storage_capacity_value">0 GWh</text>
                 <text x="900" y="938" text-anchor="middle" class="txt-tages">80</text>
 
-                <!-- Rückverstromung ← Gasspeicher (gas input, U arrow, UP) -->
+                <!-- Rückverstromung ← Gasspeicher (gas input, U arrow, UP); box RIGHT of arrow. -->
                 <line x1="1060" y1="740" x2="1060" y2="615" class="gas-line"/>
-                <rect x="1015" y="668" width="90" height="22" class="value-box"/>
-                <text x="1060" y="684" text-anchor="middle" class="txt-box-val" id="t_value_svg">0</text>
-                <text x="1060" y="702" text-anchor="middle" class="txt-tages">87</text>
-                <text x="1115" y="684" class="txt-key">U</text>
+                <rect x="1070" y="668" width="90" height="22" class="value-box"/>
+                <text x="1115" y="684" text-anchor="middle" class="txt-box-val" id="t_value_svg">0</text>
+                <text x="1115" y="704" text-anchor="middle" class="txt-tages">87</text>
+                <text x="1170" y="684" class="txt-key">U</text>
 
                 <!-- Abgleichdifferenz bottom -->
                 <text x="1180" y="895" text-anchor="middle" class="txt-src-sub">Abgleichdifferenz</text>
