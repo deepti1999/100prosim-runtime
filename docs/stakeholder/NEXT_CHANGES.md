@@ -188,17 +188,23 @@ These are larger design/build items — each is a real feature, not a tweak. Sco
 
 ## Suggested sequencing
 
+> Final sequencing lives in `IMPLEMENTATION_PLAN.md`. Summary below.
+
 | Phase | Items | Why grouped |
 |---|---|---|
-| **Now (blockers)** | P0-1, P0-2 | Stakeholder says these are go/no-go. Can run in parallel with small P1 wins. |
-| **Sprint 1 — UX cleanup** | P1-5, P1-3, P2-3 | All frontend-only, low risk, big visible improvement. Ship together. |
-| **Sprint 2 — UX behaviour** | P1-1, P1-2, P1-4 | Touches recalc + balance backend. Needs regression suite (scenarios A/C/D) rerun. |
-| **Sprint 3 — Localization** | P2-1, P2-2 | Mostly mechanical; can run in parallel with Sprint 2. |
-| **Sprint 4 — Visualizations** | P3-1, P3-3, P3-4 | Redesign cockpit + fix flow diagram + fix annual chart. Use a single shared chart helper. |
-| **Sprint 5 — History + details** | P3-5, P3-2 | Needs snapshot infrastructure — do P3-5 first because it sets up the snapshot model P3-2 reuses. |
-| **Sprint 6 — Data model rework** | P4-1 | Largest. Plan separately with a dedicated spec before touching code. |
+| **0 — Scaffolding** | progress tracker, Playwright scenarios, bench script | Pre-work so every later phase has tooling. |
+| **1 — Surface removals** | P1-5, P1-2 (button removals) | Frontend-only, 30-min fixes, immediate visible win. |
+| **2 — Localization** | P2-1, P2-2 | Mechanical string work; can parallel Phase 3. |
+| **3 — Menu consistency** | P2-3 | Template partial extraction. |
+| **4 — Behaviour fixes** | P1-1, P1-2, P1-3, P1-4 | Cascade propagation (not Balance), base-value restore, admin baseline, balance consolidation + busy-indicator fix. |
+| **5 — Chart rework** | P3-1, P3-3, P3-4 | Redesign cockpit + fix flow diagram + fix annual chart. |
+| **6 — History + details** | P3-5, P3-2 | P3-5's snapshot infra unlocks P3-2's variant-compare charts. |
+| **7 — Acid test + handover** | P0-1, P0-2 | External-gated on ErnES platform choice. |
+| **Deferred** | P4-1 | Data-model rework — needs its own spec and scoping session with Pascal. Tracked in PROGRESS.md with ⏸ status, not dropped. |
 
-Before committing to this order, we should run it past Pascal and Schmidt-Kanefendt. In particular P4-1 interacts with the hardcoding-reduction work already called out in `docs/PYPSA_MIGRATION_RESEARCH.md` — the Sector / Carrier / Region first-class refactors there are prerequisites, not separate work.
+**On the cascade/Balance distinction** — §2.4.4 is about **auto-cascade** (Verbrauch → Erneuerbare recompute without a manual button), not auto-Balance. Balance stays manual (two buttons: Solar + Wind). Earlier draft conflated the two; corrected in `IMPLEMENTATION_PLAN.md` §4-E.
+
+**On P4-1 deferral** — we have the Excel files but need a dedicated scoping session before pulling it in. It's the largest architectural change on the list and interacts with the hardcoding-reduction work in `docs/PYPSA_MIGRATION_RESEARCH.md` (Sector / Carrier / Region first-class refactors are prerequisites, not separate work).
 
 ---
 

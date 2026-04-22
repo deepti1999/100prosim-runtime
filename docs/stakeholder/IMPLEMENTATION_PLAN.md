@@ -10,12 +10,13 @@ This plan operationalises the stakeholder document. Every atomic ask in the PDF 
 ## 0. Principles (non-negotiable)
 
 1. **Nothing in the PDF gets skipped.** Every atomic target T1–T63 has a verification checkbox. A phase is only "done" when all its targets pass verification.
-2. **No calculation logic changes.** UI, UX, layout, translations, menus, buttons — all fair game. Math inside `calculation_engine/` and the `Formula` table is frozen. Exceptions are explicit and require Pascal's sign-off (currently: P0-2 performance work, P4 data-model rework).
+2. **No calculation logic changes.** UI, UX, layout, translations, menus, buttons — all fair game. Math inside `calculation_engine/` and the `Formula` table is frozen. Exceptions are explicit and require Pascal's sign-off (currently: Phase 7 performance work only).
 3. **No renaming domain cells.** LU_*, 9.3.1/9.3.4/10.x, sector names, Verbrauch codes, WS365 field names stay as-is. Translations are UI labels on top of the codes, not replacements for them.
-4. **Commit per item, not per phase.** Small reversible commits. Never stack two behaviour changes in one commit.
-5. **Verify four ways per item.** Unit/contract tests → Playwright against localhost → Playwright against live Heroku → doc update. No "done" without all four.
-6. **Easiest first.** We front-load small, reversible, visible wins. Big structural work (data model, acid test) lives in later phases so the early sprints demonstrate progress and de-risk the tooling.
-7. **Stakeholder-review gates between phases.** We stop after each phase, show Pascal + Schmidt-Kanefendt the result, and collect feedback before starting the next.
+4. **"Recalculate" means cascade propagation, not auto-Balance.** §2.4.4 of the PDF asks that user edits auto-propagate through interconnected cells (Verbrauch change → linked Erneuerbare cells refresh) — the existing `save_and_recalculate_*` path. Balance (§2.4.3) remains a manual button (two of them: Solar + Wind). Do not confuse the two.
+5. **Commit per item, not per phase.** Small reversible commits. Never stack two behaviour changes in one commit.
+6. **Verification is non-negotiable.** Every item must pass V2 (unit/contract tests), V3 (API smoke), V4 (Playwright against localhost), V5 (Playwright against live Heroku), V6 (docs). If any of the four fails, the item is not done. New tests may be added whenever coverage is weak. See §1 for the full ritual.
+7. **Easiest first.** We front-load small, reversible, visible wins. Big structural work (acid test, handover) lives in later phases so the early sprints demonstrate progress and de-risk the tooling.
+8. **Stakeholder-review gates between phases.** We stop after each phase, show Pascal + Schmidt-Kanefendt the result, and collect feedback before starting the next.
 
 ---
 
@@ -57,71 +58,79 @@ Any item that requires touching the above is escalated to Pascal before starting
 
 > This is the completeness ledger. Every PDF section is decomposed into atomic targets. Every target maps to exactly one item. The plan is done when every ✅ is checked.
 
-| ID | PDF § | Target | Item |
-|---|---|---|---|
-| **T1** | §2.1 | ErnES compute platform provisioned (external gate) | 8-A |
-| **T2** | §2.1 | Runnable installation on ErnES platform | 8-A |
-| **T3** | §2.1 | ≥2 ErnES admins trained on hosting runbook | 8-A |
-| **T4** | §2.1 | Login-credential loss recovery procedure documented | 8-A |
-| **T5** | §2.2 | Run acid test: onshore 2.0→2.3 %, offshore 70→60 GW, measure reconciliation time | 8-B |
-| **T6** | §2.2 | Acid-test benchmark script (reproducible, tracked cycle-over-cycle) | 0-C |
-| **T7** | §2.2 | If acid test fails on ErnES platform: trigger architecture review | 8-B |
-| **T8** | §2.3.1 | Parameter source (Quellbezug) surfaced in UI | 7-A |
-| **T9** | §2.3.1 | Parameter assumption (Annahme) surfaced in UI | 7-A |
-| **T10** | §2.3.1 | Admin can update parameters without code changes | 7-A |
-| **T11** | §2.3.2 | Scenario switcher between regions (DE + Bundesländer) | 7-B |
-| **T12** | §2.3.2 | Data model loaded from external file (Excel interface) | 7-B |
-| **T13** | §2.3.2 | Region-specific data models editable by non-developer admins | 7-B |
-| **T14** | §2.4.1 | Clearing user-input modification → original base value reappears | 4-A |
-| **T15** | §2.4.1 | T14 applies to Verbrauch targets, Renewable user inputs, LandUse user percents | 4-A |
-| **T16** | §2.4.2 | Remove "Create baseline" button | 4-B |
-| **T17** | §2.4.2 | "Reset to baseline" loads admin-configured base | 4-B |
-| **T18** | §2.4.2 | Shared baseline across users (not per-user) | 4-B |
-| **T19** | §2.4.3 | Remove "Goal Seek" button | 1-B |
-| **T20** | §2.4.3 | Remove "Refresh / Aktualisieren" button | 1-B |
-| **T21** | §2.4.3 | Merge WS Balance Solar + Sector+WS Solar → single "Balance Solar" | 4-C |
-| **T22** | §2.4.3 | Merge WS Balance Wind + Sector+WS Wind → single "Balance Wind" | 4-C |
-| **T23** | §2.4.3 | Fix: buttons non-functional after scenario changes, no busy indicator | 4-D |
-| **T24** | §2.4.4 | Auto-recalc on any Verbrauch user change | 4-E |
-| **T25** | §2.4.4 | Auto-recalc on any Erneuerbare user change | 4-E |
-| **T26** | §2.4.4 | Auto-recalc on any Flächen user change | 4-E |
-| **T27** | §2.4.4 | Never leave the user in an undefined-state window (clear visual feedback) | 4-E |
-| **T28** | §2.4.5 | Remove "Save All Values" button from Flächen page | 1-A |
-| **T29** | §2.5.1 | Translate all page headings to German | 2-A |
-| **T30** | §2.5.1 | Translate all column labels to German | 2-A |
-| **T31** | §2.5.1 | Translate all button labels to German | 2-A |
-| **T32** | §2.5.1 | Translate user manual to German | 2-B |
-| **T33** | §2.5.1 | Native-German text (not Google-translate artifacts) | 2-A, 2-B |
-| **T34** | §2.5.2 | German number format (dot thousands, comma decimal) on all pages | 2-C |
-| **T35** | §2.5.2 | German input parsing: `1.234,5` accepted | 2-C |
-| **T36** | §2.5.2 | JS-rendered numbers use `toLocaleString('de-DE')` | 2-C |
-| **T37** | §2.5.3 | Side-menu present on Verbrauch | 3-A |
-| **T38** | §2.5.3 | Side-menu present on Jahresstrom | 3-A |
-| **T39** | §2.5.3 | Side-menu present on Benutzerhandbuch | 3-A |
-| **T40** | §2.5.3 | Side-menu uniformly formatted on Cockpit | 3-A |
-| **T41** | §2.5.3 | Remove duplicate entries from top bar | 3-B |
-| **T42** | §2.5.3 | Move "100prosim" branding into side-menu header | 3-B |
-| **T43** | §2.5.4 | Status + Target side-by-side view | 5-A |
-| **T44** | §2.5.4 | Per-sector contribution breakdown | 5-A |
-| **T45** | §2.5.4 | Left column "Wieviel werden wir noch brauchen?" (demand by sector) | 5-A |
-| **T46** | §2.5.4 | Right column "Wo soll es herkommen?" (supply by source) | 5-A |
-| **T47** | §2.5.4 | Percentage-delta annotations (e.g. -27 %, ×5.2) | 5-A |
-| **T48** | §2.5.5 | Chart: Nachfrage-Einflüsse auf Endenergieverbrauch (Variantenvergleich) | 6-B |
-| **T49** | §2.5.5 | Chart: Effizienz-Einflüsse auf Endenergieverbrauch (Variantenvergleich) | 6-B |
-| **T50** | §2.5.5 | Chart: Endenergie-Verbrauch nach Anwendungsbereichen inkl. Grundstoffe | 6-B |
-| **T51** | §2.5.5 | Chart: Primärenergie-Beiträge nach Quellen | 6-B |
-| **T52** | §2.5.5 | Chart: Ausbau der Erneuerbaren Energiequellen | 6-B |
-| **T53** | §2.5.6 | Audit current Flussdiagramm vs. Excel reference node-by-node | 5-C |
-| **T54** | §2.5.6 | Correct value→node assignments | 5-C |
-| **T55** | §2.5.6 | Increase font size / allow zoom | 5-C |
-| **T56** | §2.5.6 | Match Excel structure (Bedarfs-KW, PV, Wind, Laufwasser+Geoth → Elektrolyse → Stromspeicher → Rückverstromung; branches: Abregelung, Gasspeicher Direktverbr, Gasspeicher Strom) | 5-C |
-| **T57** | §2.5.7 | Rescale y-axis: either Min=0 or annotate Min/Max/Capacity directly | 5-B |
-| **T58** | §2.5.7 | Daily surplus / deficit stacked bars (solar + wind, separately) | 5-B |
-| **T59** | §2.5.7 | Mangelausgleich overlay bar | 5-B |
-| **T60** | §2.5.7 | Unit switch GWh → Tagesladung | 5-B |
-| **T61** | §2.5.8 | Persist each modification step (before/after, who, what, when) | 6-A |
-| **T62** | §2.5.8 | UI showing snapshots as columns (per Excel layout) | 6-A |
-| **T63** | §2.5.8 | Reversible / inspectable history | 6-A |
+**Fidelity notes:**
+- **"explicit"** = PDF states it directly in words.
+- **"implied"** = follows necessarily from PDF context (e.g. PDF mentions the login-loss incident in §2.1 → recovery procedure is implied as a handover deliverable).
+- **"conditional"** = PDF phrases the ask as "if X, then do Y" — we must verify X first.
+- **"extrapolated"** = reasonable extension of explicit asks to related UI surfaces PDF didn't individually enumerate.
+
+| ID | PDF § | Target | Fidelity | Item |
+|---|---|---|---|---|
+| **T1** | §2.1 | ErnES compute platform provisioned (external gate) | explicit | 7-A |
+| **T2** | §2.1 | Runnable installation on ErnES platform | explicit | 7-A |
+| **T3** | §2.1 | ≥2 ErnES admins trained on hosting runbook | explicit | 7-A |
+| **T4** | §2.1 | Login-credential loss recovery procedure documented | implied (PDF reports the incident) | 7-A |
+| **T5** | §2.2 | Run acid test: onshore 2.0→2.3 %, offshore 70→60 GW, measure reconciliation time | explicit | 7-B |
+| **T6** | §2.2 | Acid-test benchmark script (reproducible, tracked cycle-over-cycle) | implied | 0-C |
+| **T7** | §2.2 | If acid test fails on ErnES platform: trigger architecture review | explicit | 7-B |
+| **T8** | §2.3.1 | Parameter source (Quellbezug) surfaced in UI | explicit (proposal) | **DEFERRED** |
+| **T9** | §2.3.1 | Parameter assumption (Annahme) surfaced in UI | explicit (proposal) | **DEFERRED** |
+| **T10** | §2.3.1 | Admin can update parameters without code changes | explicit (proposal) | **DEFERRED** |
+| **T11** | §2.3.2 | Scenario switcher between regions (DE + Bundesländer) | explicit (proposal) | **DEFERRED** |
+| **T12** | §2.3.2 | Data model loaded from external file (Excel interface) | explicit (proposal) | **DEFERRED** |
+| **T13** | §2.3.2 | Region-specific data models editable by non-developer admins | explicit (proposal) | **DEFERRED** |
+| **T14** | §2.4.1 | Clearing user-input modification → original base value reappears | explicit (Verbrauch target) | 4-A |
+| **T15** | §2.4.1 | T14 applies to Verbrauch targets, Renewable user inputs, LandUse user percents | extrapolated to all 3 mod surfaces | 4-A |
+| **T16** | §2.4.2 | Remove "Create baseline" button | explicit | 4-B |
+| **T17** | §2.4.2 | "Reset to baseline" loads admin-configured base | explicit | 4-B |
+| **T18** | §2.4.2 | Shared baseline across users (not per-user) | explicit | 4-B |
+| **T19** | §2.4.3 | Remove "Goal Seek" button | conditional (if already auto-runs, else add auto-run first) | 1-B |
+| **T20** | §2.4.3 | Remove "Refresh / Aktualisieren" button | conditional (same) | 1-B |
+| **T21** | §2.4.3 | Merge WS Balance Solar + Sector+WS Solar → single "Balance Solar" | explicit | 4-C |
+| **T22** | §2.4.3 | Merge WS Balance Wind + Sector+WS Wind → single "Balance Wind" | explicit | 4-C |
+| **T23** | §2.4.3 | Fix: buttons non-functional after scenario changes, no busy indicator | explicit (bug report) | 4-D |
+| **T24** | §2.4.4 | Auto-**cascade** on any Verbrauch user change (change → linked Erneuerbare cells refresh; not auto-Balance) | explicit | 4-E |
+| **T25** | §2.4.4 | Auto-cascade on any Erneuerbare user change | explicit | 4-E |
+| **T26** | §2.4.4 | Auto-cascade on any Flächen user change | explicit | 4-E |
+| **T27** | §2.4.4 | Never leave the user in an undefined-state window (clear visual feedback) | implied | 4-E |
+| **T28** | §2.4.5 | Remove "Save All Values" button from Flächen page | conditional (if Scenarios→Save covers the intent) | 1-A |
+| **T29** | §2.5.1 | Translate all page headings to German | explicit | 2-A |
+| **T30** | §2.5.1 | Translate all column labels to German | explicit | 2-A |
+| **T31** | §2.5.1 | Translate all button labels to German | explicit | 2-A |
+| **T32** | §2.5.1 | Translate user manual to German | explicit | 2-B |
+| **T33** | §2.5.1 | Native-German text (not Google-translate artifacts) | explicit | 2-A, 2-B |
+| **T34** | §2.5.2 | German number format (dot thousands, comma decimal) on all pages | explicit (display) | 2-C |
+| **T35** | §2.5.2 | German input parsing: `1.234,5` accepted | implied (parsing must match the format) | 2-C |
+| **T36** | §2.5.2 | JS-rendered numbers use `toLocaleString('de-DE')` | implied (how T34 is achieved for JS) | 2-C |
+| **T37** | §2.5.3 | Side-menu present on Verbrauch | explicit | 3-A |
+| **T38** | §2.5.3 | Side-menu present on Jahresstrom | explicit | 3-A |
+| **T39** | §2.5.3 | Side-menu present on Benutzerhandbuch | explicit | 3-A |
+| **T40** | §2.5.3 | Side-menu uniformly formatted on Cockpit | explicit | 3-A |
+| **T41** | §2.5.3 | Remove duplicate entries from top bar | conditional (only after T37–T40 make side-menu universal) | 3-B |
+| **T42** | §2.5.3 | Move "100prosim" branding into side-menu header | explicit | 3-B |
+| **T43** | §2.5.4 | Status + Target side-by-side view | explicit (Excel-pattern proposal) | 5-A |
+| **T44** | §2.5.4 | Per-sector contribution breakdown | explicit | 5-A |
+| **T45** | §2.5.4 | Left column "Wieviel werden wir noch brauchen?" (demand by sector) | extrapolated from Excel AH.Cockpit1 screenshot | 5-A |
+| **T46** | §2.5.4 | Right column "Wo soll es herkommen?" (supply by source) | extrapolated from same screenshot | 5-A |
+| **T47** | §2.5.4 | Percentage-delta annotations (e.g. -27 %, ×5.2) | extrapolated from same screenshot | 5-A |
+| **T48** | §2.5.5 | Chart: Nachfrage-Einflüsse auf Endenergieverbrauch (Variantenvergleich) | explicit (Excel AH.Cockpit2) | 6-B |
+| **T49** | §2.5.5 | Chart: Effizienz-Einflüsse auf Endenergieverbrauch (Variantenvergleich) | explicit | 6-B |
+| **T50** | §2.5.5 | Chart: Endenergie-Verbrauch nach Anwendungsbereichen inkl. Grundstoffe | explicit | 6-B |
+| **T51** | §2.5.5 | Chart: Primärenergie-Beiträge nach Quellen | explicit | 6-B |
+| **T52** | §2.5.5 | Chart: Ausbau der Erneuerbaren Energiequellen | explicit | 6-B |
+| **T53** | §2.5.6 | Audit current Flussdiagramm vs. Excel reference node-by-node | implied (precondition to fix) | 5-C |
+| **T54** | §2.5.6 | Correct value→node assignments | explicit ("Werte falsch zugeordnet") | 5-C |
+| **T55** | §2.5.6 | Increase font size / allow zoom | explicit ("kleine Schriftart") | 5-C |
+| **T56** | §2.5.6 | Match Excel structure (Bedarfs-KW, PV, Wind, Laufwasser+Geoth → Elektrolyse → Stromspeicher → Rückverstromung; branches: Abregelung, Gasspeicher Direktverbr, Gasspeicher Strom) | explicit (Excel template shown) | 5-C |
+| **T57** | §2.5.7 | Rescale y-axis: either Min=0 or annotate Min/Max/Capacity directly | explicit | 5-B |
+| **T58** | §2.5.7 | Daily surplus / deficit stacked bars (solar + wind, separately) | explicit (Excel layout) | 5-B |
+| **T59** | §2.5.7 | Mangelausgleich overlay bar | explicit | 5-B |
+| **T60** | §2.5.7 | Unit switch GWh → Tagesladung | explicit | 5-B |
+| **T61** | §2.5.8 | Persist each modification step (before/after, who, what, when) | explicit | 6-A |
+| **T62** | §2.5.8 | UI showing snapshots as columns (per Excel layout) | explicit | 6-A |
+| **T63** | §2.5.8 | Inspectable history (tracking of measure + effect — **not** undo/restore) | explicit (PDF says "Nachverfolgung", not "Rückgängig") | 6-A |
+
+**T8–T13 are deferred** (data model rework) — Pascal has the Excel files but this needs its own discovery/scoping session before being pulled into the main plan. See §12 for details.
 
 ---
 
@@ -136,10 +145,10 @@ Any item that requires touching the above is escalated to Pascal before starting
 | **4** | Behaviour fixes | 4-A, 4-B, 4-C, 4-D, 4-E | Medium | 4 days |
 | **5** | Chart rework | 5-A, 5-B, 5-C | Medium | 4 days |
 | **6** | History + details | 6-A, 6-B | High | 5 days |
-| **7** | Data model | 7-A, 7-B | Very high | 2+ weeks |
-| **8** | Acid test + handover | 8-A, 8-B | External-gated | dependent on ErnES |
+| **7** | Acid test + handover | 7-A, 7-B | External-gated | dependent on ErnES |
+| **DEFERRED** | Data model (T8–T13) | — | — | separate scoping session with Pascal |
 
-Phases 0–6 are what we drive; Phase 7 needs a dedicated design doc before code; Phase 8 is blocked on ErnES's platform choice.
+Phases 0–6 are what we drive end-to-end. Phase 7 is blocked on ErnES's platform choice. The data-model work (§2.3 of the PDF) is deferred to a separate effort — Pascal has the Excel files but we need a dedicated scoping session before pulling this into the main plan.
 
 ---
 
@@ -352,22 +361,29 @@ Biggest UX bundle. Each item has real backend touches.
 **V5:** Same, Heroku. **This is the primary acceptance gate** — the original report was on the deployed app.
 **V6:** `CLAUDE.md` if new invariant discovered.
 
-### 4-E. Auto-recalc on every change — `T24`, `T25`, `T26`, `T27`
+### 4-E. Auto-cascade (Excel-style propagation) on every change — `T24`, `T25`, `T26`, `T27`
 
-**Source:** §2.4.4 — Excel auto-recalcs on every change; web requires manual `Recalculate Renewables`.
-**Files:** Verbrauch, Renewable, LandUse save handlers; frontend JS.
+**Source:** §2.4.4. PDF complaint: users are forced to switch to the Erneuerbare page and press "Recalculate Renewables" after every Verbrauch edit; Excel does this cascade automatically on every change.
+
+**Crucial distinction:** this is **cascade propagation** (change in cell A → dependent cells refresh), **not** auto-Balance. Balance (§2.4.3) stays manual with two buttons (Solar / Wind). 4-E only removes the manual "Recalculate Renewables" step; it never triggers a Balance job.
+
+**Files:** Verbrauch / Renewable / LandUse save handlers (`save_and_recalculate_verbrauch` already does this for one surface); frontend JS for the three input pages.
+
 **Approach:**
-- Every save handler already triggers a recalc in many paths (`save_and_recalculate_verbrauch` exists). Extend consistently.
+- Extend the existing `save_and_recalculate_*` pattern to fire on every user save across all three surfaces.
 - **Debounce** on the frontend so rapid typing doesn't spam the backend (200 ms typical).
-- **Fire-and-forget via BalanceJob worker** for any recalc > 1 s on Heroku. Frontend shows "Aktualisiert …" then "Fertig" when job completes.
-- Remove manual "Recalculate Renewables" button (or gate behind admin role).
-- **Critical:** auto-recalc must not regress the 120-s acid test or Phase 8 will fail.
+- The cascade is cheap (milliseconds — formula-evaluator walk, not a Balance run). No async worker required.
+- Remove the manual "Recalculate Renewables" button (or gate behind an admin-only "force refresh" toggle).
+- UI feedback (T27): briefly show "Aktualisiert" after each save so the user sees the cascade ran.
+
+**Non-goal (explicitly):** do NOT auto-trigger Balance on edits. Balance runs only when the user clicks Balance Solar or Balance Wind.
+
 **V1:** T24, T25, T26, T27.
-**V2:** `test_bb_e2e_auto_recalc` — edit every field type, verify recalc fires without explicit button click.
-**V3:** API trace confirms one recalc call per user save (not zero, not many).
-**V4:** Playwright — edit LU_2.1 user_percent, navigate to Renewable, verify computed value updated without clicking any button.
+**V2:** `test_bb_e2e_auto_cascade` — edit every input field type, verify downstream computed cells update without any explicit button click, and without a Balance job firing.
+**V3:** API trace confirms one cascade call per user save; `BalanceJob` table is untouched.
+**V4:** Playwright — edit Verbrauch target, navigate to Erneuerbare, confirm the linked cells reflect the change with no intermediate button press.
 **V5:** Same, Heroku.
-**V6:** `CLAUDE.md` — document debouncing, async recalc pattern.
+**V6:** `CLAUDE.md` — document the cascade-vs-Balance distinction.
 
 ---
 
@@ -455,35 +471,9 @@ Biggest UX bundle. Each item has real backend touches.
 
 ---
 
-## 12. Phase 7 — Data model
+## 12. Phase 7 — Acid test + handover
 
-**⚠️ Needs its own design doc before implementation.** Stakeholder's proposal is "Schnittstelle zur Nutzung der bestehenden Excel-Datenmodell-Dateien" — an interface, not a one-time import. Architectural decision point.
-
-### 7-A. Parameter traceability — `T8`, `T9`, `T10`
-
-**Source:** §2.3.1 — parameter source/assumption visible in UI + admin-updateable without code.
-**Approach (proposed, Option C from `NEXT_CHANGES.md`):**
-1. Extend existing parameter models with `source_ref`, `source_assumption`, `source_url` fields.
-2. Seed pipeline reads these from Excel data model.
-3. UI: every value gets a "ℹ️" icon → tooltip with source + assumption + link.
-4. Admin page to edit these without code.
-**Design doc needed:** `docs/stakeholder/DESIGN_PARAMETER_TRACEABILITY.md`.
-
-### 7-B. Alternative-region data models — `T11`, `T12`, `T13`
-
-**Source:** §2.3.2 — Bundesländer data models via Excel interface.
-**Approach (proposed):**
-1. First-class `Region` model (links to the PyPSA-integration extensibility work in `docs/PYPSA_MIGRATION_RESEARCH.md` §23.3).
-2. Scenario picker: region dropdown at the top.
-3. Region data loaded from per-region Excel file (`datamodels/D_{region}.xlsx`).
-4. Admin uploads new region file → server parses → DB entries appear under that region.
-**Design doc needed:** `docs/stakeholder/DESIGN_REGIONS.md`.
-
----
-
-## 13. Phase 8 — Acid test + handover
-
-### 8-A. Hosting handover — `T1`, `T2`, `T3`, `T4`
+### 7-A. Hosting handover — `T1`, `T2`, `T3`, `T4`
 
 **Source:** §2.1.
 **External gate:** ErnES picks a compute platform. Until then we wait.
@@ -492,13 +482,35 @@ Biggest UX bundle. Each item has real backend touches.
 2. 2× ErnES admin onboarding sessions (live handover, with video).
 3. Credential recovery procedure documented (T4): how to reset a lost superuser, reset testsim, regenerate `DJANGO_SECRET_KEY`, etc.
 
-### 8-B. Acid test on ErnES platform — `T5`, `T6`, `T7`
+### 7-B. Acid test on ErnES platform — `T5`, `T6`, `T7`
 
 **Source:** §2.2.
 **Deliverables:**
 1. Run `scripts/bench_acid_test.sh` against ErnES's deployed URL.
-2. Report: platform specs, response time (s), delta vs. Excel 5.8 s, % of "practically usable" target (stakeholder's word — needs their definition, probably < 10 s).
-3. If fail: trigger architecture review per §2.2 → revisit `docs/PYPSA_MIGRATION_RESEARCH.md` integration plan.
+2. Report: platform specs, response time (s), delta vs. Excel 5.8 s. The PDF uses the word **"praxistauglich"** (practically usable) as the success criterion — it does NOT fix a numeric target. Success threshold must be confirmed with Schmidt-Kanefendt before the run.
+3. If the result is not "praxistauglich": trigger the architecture review §2.2 explicitly calls for → revisit `docs/PYPSA_MIGRATION_RESEARCH.md` integration plan.
+
+---
+
+## 13. Deferred — Data model (§2.3 of the PDF)
+
+**Status:** not on the current plan. Pascal has the source Excel files but this needs its own scoping session before being pulled in.
+
+**Targets (still tracked, still owed to the stakeholder):**
+
+- **T8, T9, T10** (§2.3.1) — parameter traceability: each value in the UI links back to its source reference and underlying assumption (like Excel's hyperlinked cells). Admin can update without code.
+- **T11, T12, T13** (§2.3.2) — alternative regions: Bundesländer scenarios, data loaded from Excel files (`D.xlsx` and variants), admin-uploadable without code changes.
+
+**Why deferred:**
+
+- The stakeholder phrased §2.3 as a **Vorschlag** (proposal), not a must-have. Reading tone: this is the ambitious long-term direction, not the near-term blocker.
+- It is architecturally the largest change on the list — touches import pipeline, data model, formula engine access patterns, and scenario/region concepts. Sizing it honestly is 2+ weeks minimum.
+- Before starting we need to:
+  1. Confirm with Schmidt-Kanefendt which Excel files are current and authoritative.
+  2. Decide between Options A (one-time import + source metadata), B (live Excel binding), C (hybrid — import + `source_excel_path` per row). `NEXT_CHANGES.md` §P4-1 has a first-pass analysis.
+  3. Write a dedicated spec (`docs/stakeholder/DESIGN_DATA_MODEL.md`) and review it with Pascal before touching code.
+
+**Re-entry:** when Pascal is ready, open the scoping session and promote T8–T13 back into the main plan as a new phase (likely 8 or 9 at that point). Until then, no code work on this.
 
 ---
 
@@ -506,12 +518,14 @@ Biggest UX bundle. Each item has real backend touches.
 
 | Risk | Probability | Mitigation |
 |---|---|---|
-| Auto-recalc (4-E) tanks response time on Heroku | Medium | Debounce + async; bench after every 4-E commit against `bench_acid_test.sh`. |
-| Data-model rework (7-B) breaks seeded values | High | Keep DB import path as fallback. Add shadow-parity test (Excel values vs. DB values) before switching any user to Excel-backed region. |
-| Translation breaks layout (long German words) | Low | Playwright screenshot diff catches overflow. |
-| History model (6-A) explodes DB size | Medium | Cap history at N rows per scenario; purge on baseline reset. |
-| Cross-process cache bug re-emerges with auto-recalc | High | V5 (Heroku Playwright) per item. Pre-existing fix `54d4567` should hold but re-verify. |
-| Excel data files not actually available for regions | High | Check with Schmidt-Kanefendt before starting 7-B. If not available → reduce scope to "admin-uploadable region file" and defer to 7-B-v2. |
+| Auto-cascade (4-E) fires too often or in a missing-save path, producing wrong displayed values | Low–Medium | Debounce on frontend; V2 test covers "one cascade per save, no Balance fired"; V5 catches Heroku-only regressions. |
+| Translation breaks layout (long German words overflow columns / buttons) | Low | Playwright screenshot diff per page catches overflow; tweak CSS widths as needed. |
+| History model (6-A) explodes DB size on Heroku `essential-0` plan | Medium | Cap history at N rows per scenario (e.g. 500), auto-purge oldest on overflow, purge on baseline reset. |
+| Cross-process cache bug re-emerges with auto-cascade (4-E) or button consolidation (4-C) | Medium | V5 (Heroku Playwright) per phase is mandatory. Pre-existing fix `54d4567` should hold but re-verify. |
+| "Balance buttons currently already auto-run Goal Seek / Refresh" assumption is wrong — removing 1-B buttons breaks Balance | Medium | 1-B precondition is explicit verification: trace the code path first; if auto-run is NOT in place, either add it before removing buttons, or leave 1-B until 4-C (Balance consolidation) adds the orchestration. |
+| "Save All Values" (T28) is actually doing something that `Scenarios → Save` does NOT cover | Low | Read both code paths side-by-side before deletion. If unique semantics exist, don't delete — ask Pascal. |
+| Acid test on ErnES platform fails and "praxistauglich" threshold is not agreed | Medium | Confirm target with Schmidt-Kanefendt BEFORE running — so "pass/fail" is unambiguous. |
+| Deferred data-model work (§2.3) gets forgotten | Low | T8–T13 stay in the target map and `PROGRESS.md` with ⏸ status. Reviewed at every phase boundary. |
 
 ---
 
