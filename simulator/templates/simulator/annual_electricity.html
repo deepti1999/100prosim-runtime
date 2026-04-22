@@ -149,21 +149,21 @@
                 <text x="140" y="518" text-anchor="middle" class="txt-sub">(konstant)</text>
                 <text x="245" y="556" class="txt-flow" id="hydro_value">0</text>
 
-                <!-- K/J/L -> M arrows -->
-                <line x1="240" y1="266" x2="384" y2="350" class="flow-line"/>
-                <line x1="240" y1="386" x2="384" y2="386" class="flow-line"/>
-                <line x1="240" y1="516" x2="384" y2="422" class="flow-line"/>
+                <!-- K/J/L -> M arrows — endpoints on M-circle boundary to avoid tail overflow. -->
+                <line x1="240" y1="266" x2="395" y2="369" class="flow-line"/>
+                <line x1="240" y1="386" x2="390" y2="386" class="flow-line"/>
+                <line x1="240" y1="516" x2="396" y2="404" class="flow-line"/>
 
                 <!-- M -->
                 <circle cx="420" cy="386" r="30" class="node-circle"/>
                 <text x="490" y="356" text-anchor="middle" class="txt-node-value" id="m_value">0</text>
 
-                <!-- M -> N -->
-                <line x1="440" y1="386" x2="675" y2="386" class="flow-line"/>
+                <!-- M -> N (starts on M right boundary, ends on N left boundary) -->
+                <line x1="450" y1="386" x2="675" y2="386" class="flow-line"/>
 
                 <!-- M down to Elektrolyse nach Angebot -->
-                <line x1="420" y1="412" x2="420" y2="496" class="flow-line"/>
-                <text x="420" y="472" text-anchor="middle" class="txt-value-sm" id="ely_branch_value">0</text>
+                <line x1="420" y1="416" x2="420" y2="500" class="flow-line"/>
+                <text x="445" y="465" class="txt-value-sm" id="ely_branch_value">0</text>
 
                 <!-- Elektrolyse Power to Gas -->
                 <rect x="300" y="500" width="240" height="120" rx="6" class="node-blue"/>
@@ -173,13 +173,13 @@
                 <text x="420" y="605" text-anchor="middle" class="txt-metric" id="eta_ely_value">65% Eta Ely.</text>
 
                 <!-- Gasspeicher Direktverbr -->
-                <line x1="420" y1="620" x2="420" y2="675" class="flow-line-thin"/>
+                <line x1="420" y1="620" x2="420" y2="680" class="flow-line-thin"/>
                 <text x="438" y="658" class="txt-flow-sm" id="gasspeicher_direkt_value">0</text>
                 <rect x="300" y="680" width="240" height="70" rx="6" class="node-blue"/>
                 <text x="420" y="710" text-anchor="middle" class="txt-label">Gasspeicher Direktverbr.</text>
 
                 <!-- Abregelung (Excel page 10: stems from M→N mid-segment, not N-circle) -->
-                <line x1="557" y1="378" x2="557" y2="208" class="flow-line"/>
+                <line x1="557" y1="386" x2="557" y2="208" class="flow-line"/>
                 <text x="557" y="180" text-anchor="middle" class="txt-label-lg">Abregelung</text>
                 <text x="580" y="272" class="txt-flow-sm" id="q_value">0</text>
 
@@ -187,8 +187,8 @@
                 <circle cx="705" cy="386" r="30" class="node-circle"/>
 
                 <!-- N down to Elektrolyse Stromspeicher -->
-                <line x1="705" y1="416" x2="705" y2="496" class="flow-line"/>
-                <text x="705" y="472" text-anchor="middle" class="txt-value-sm" id="n_output_branch_value">0</text>
+                <line x1="705" y1="416" x2="705" y2="500" class="flow-line"/>
+                <text x="730" y="465" class="txt-value-sm" id="n_output_branch_value">0</text>
                 <rect x="585" y="500" width="240" height="120" rx="6" class="node-blue"/>
                 <text x="705" y="538" text-anchor="middle" class="txt-label">Elektrolyse Stromspeicher</text>
                 <text x="705" y="566" text-anchor="middle" class="txt-sub">(Überschuss)</text>
