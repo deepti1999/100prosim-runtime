@@ -33,15 +33,17 @@ Mandatory per item (non-negotiable, see IMPLEMENTATION_PLAN.md §1):
 - ✅ Phase 2 V5 — Heroku Playwright: all 8 user-reachable pages (login, landuse, renewable, verbrauch, ws, cockpit, bilanz, annual-electricity, user-manual) verified on live at `prosim-100-9fa2a64bdb5f.herokuapp.com`. Titles, headings, columns, buttons, card labels, alert text all German. Numbers in German format everywhere including Bilanz (`329.346` not `329,346`), annual flow diagram (`1.211.176 GWh`), WS summary cards (`Speicherdrift: 0,0 GWh`), LandUse areas (`35.759.529 ha`). 0 English leakage on any page. User manual shows 11 German steps + native German prose.
 
 ## Phase 3 — Menu consistency
-- ☐ 3-A Universal side-menu — T37, T38, T39, T40
-- ☐ 3-B Top-bar dedup + brand move — T41, T42 *(conditional: after 3-A)*
+- ✅ 3-A Universal side-menu — T37, T38, T39, T40 — commit `3bc2976`
+- ✅ 3-B Top-bar dedup + brand move — T41, T42 — commit `3bc2976`
+- ✅ Phase 3 V5 — Heroku: all 9 pages report sidebar=1, top-nav-dup=0, brand-in-sidebar=1
 
 ## Phase 4 — Behaviour fixes
-- ☐ 4-A Base-value restore on clear — T14, T15
-- ☐ 4-B Baseline = admin-provided — T16, T17, T18
-- ☐ 4-C Consolidate Balance buttons (4→2) — T21, T22
-- ☐ 4-D Fix buttons non-functional after edits + busy indicator — T23
-- ☐ 4-E Auto-**cascade** (not auto-Balance) on every change — T24, T25, T26, T27
+- ✅ 4-A Base-value restore on clear — T14, T15 — commit `cee9a25` (placeholder shows base value on all 3 editable surfaces)
+- ✅ 4-B Baseline = admin-provided — T16, T17, T18 — commit `d43ca7d` (shared admin baseline, staff-only creation, 5 new contract tests)
+- ✅ 4-C Consolidate Balance buttons (4→2) — T21, T22 — commit `cb62793` (Balance Solar + Balance Wind; underlying endpoints retained)
+- ✅ 4-D Fix buttons non-functional after edits + busy indicator — T23 — commit `eb5a6ae` (persistent `#balanceProgressBanner` with real-time polling status)
+- ✅ 4-E Auto-cascade — T24, T25, T26, T27 — commit `86e3ba2` (removed skip_cascade on Renewable save; manual Recalculate buttons admin-only)
+- ✅ Phase 3+4 batched V5 Heroku: LandUse edit triggered save+cascade live (`Saved to database: Updated LU_2.1 to 1.5% - renewables auto-updated`); Balance Solar/Wind buttons only visible, progress banner DOM in place, base-value data-attrs render (19 on landuse, 44 on verbrauch).
 
 ## Phase 5 — Chart rework
 - ☐ 5-A Rich Cockpit results overview — T43, T44, T45, T46, T47
