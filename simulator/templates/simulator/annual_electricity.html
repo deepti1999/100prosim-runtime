@@ -296,35 +296,36 @@
                      MIDDLE ROW — Elektrolyse P2G, Elektrolyse ES, Rückverstromung
                      ============================================================ -->
 
-                <!-- Elektrolyse Power to Gas — centered on splitter x=630 -->
+                <!-- Elektrolyse Power to Gas — Eta labels OUTSIDE right of box (Excel style). -->
                 <rect x="545" y="520" width="170" height="95" rx="6" class="node-blue"/>
-                <text x="630" y="548" text-anchor="middle" class="txt-src-label">Elektrolyse</text>
-                <text x="630" y="568" text-anchor="middle" class="txt-src-label">Power to Gas</text>
-                <text x="630" y="585" text-anchor="middle" class="txt-src-sub">(nach Angebot)</text>
-                <text x="630" y="605" text-anchor="middle" class="txt-metric" id="eta_ely_value">65% Eta Ely.</text>
+                <text x="630" y="555" text-anchor="middle" class="txt-src-label">Elektrolyse</text>
+                <text x="630" y="575" text-anchor="middle" class="txt-src-label">Power to Gas</text>
+                <text x="630" y="595" text-anchor="middle" class="txt-src-sub">(nach Angebot)</text>
+                <text x="725" y="582" class="txt-red" id="eta_ely_value">65%</text>
+                <text x="725" y="602" class="txt-src-label" style="font-size:13px">Eta Ely.</text>
 
-                <!-- Elektrolyse Stromspeicher — centered on Q x=830 (30px gap from Ely P2G). -->
+                <!-- Elektrolyse Stromspeicher — Eta labels outside right. -->
                 <rect x="745" y="520" width="170" height="95" rx="6" class="node-blue"/>
-                <text x="830" y="548" text-anchor="middle" class="txt-src-label">Elektrolyse</text>
-                <text x="830" y="568" text-anchor="middle" class="txt-src-label">Stromspeicher</text>
-                <text x="830" y="585" text-anchor="middle" class="txt-src-sub">(Überschuss)</text>
-                <text x="830" y="605" text-anchor="middle" class="txt-metric" id="eta_es_value">65% Eta ES</text>
+                <text x="830" y="555" text-anchor="middle" class="txt-src-label">Elektrolyse</text>
+                <text x="830" y="575" text-anchor="middle" class="txt-src-label">Stromspeicher</text>
+                <text x="830" y="595" text-anchor="middle" class="txt-src-sub">(Überschuss)</text>
 
-                <!-- Pmax/Pv sidebar between ES (right=915) and Rückv (left=1095). -->
-                <rect x="965" y="535" width="70" height="55" rx="3" class="metric-bg"/>
-                <text x="1000" y="553" text-anchor="middle" class="txt-sidebar-label">Pmax/Pv</text>
-                <text x="1000" y="570" text-anchor="middle" class="txt-red">100%</text>
-                <text x="1000" y="585" text-anchor="middle" class="txt-sidebar-val">65%</text>
+                <!-- Pmax/Pv — plain label stack (no frame), between ES and Rückv. Includes Eta ES. -->
+                <text x="980" y="548" text-anchor="middle" class="txt-sidebar-label">P_max/P_v</text>
+                <text x="980" y="568" text-anchor="middle" class="txt-red">100%</text>
+                <text x="980" y="586" text-anchor="middle" class="txt-sidebar-val" id="eta_es_value">65%</text>
+                <text x="980" y="606" text-anchor="middle" class="txt-src-label" style="font-size:13px">Eta ES</text>
 
-                <!-- Rückverstromung — centered on S x=1180 -->
+                <!-- Rückverstromung — Eta labels outside right. -->
                 <rect x="1095" y="520" width="170" height="95" rx="6" class="node-yellow"/>
-                <text x="1180" y="548" text-anchor="middle" class="txt-src-label">Rückver-</text>
-                <text x="1180" y="566" text-anchor="middle" class="txt-src-label">stromung</text>
-                <text x="1180" y="583" text-anchor="middle" class="txt-src-sub">(Mangelausgl.)</text>
-                <text x="1180" y="605" text-anchor="middle" class="txt-metric" id="eta_rs_value">59% Eta RS</text>
+                <text x="1180" y="555" text-anchor="middle" class="txt-src-label">Rückver-</text>
+                <text x="1180" y="575" text-anchor="middle" class="txt-src-label">stromung</text>
+                <text x="1180" y="595" text-anchor="middle" class="txt-src-sub">(Mangelausgl.)</text>
 
-                <!-- 261 GW red annotation beside Rückv -->
-                <text x="1275" y="558" class="txt-red">261 GW (elekt.)</text>
+                <!-- 261 GW red + Eta RS stacked outside right of Rückv. -->
+                <text x="1275" y="555" class="txt-red">261 GW (elekt.)</text>
+                <text x="1275" y="582" class="txt-red" id="eta_rs_value">59%</text>
+                <text x="1275" y="602" class="txt-src-label" style="font-size:13px">Eta RS</text>
 
                 <!-- Rückverstromung → S (T arrow): now a clean straight vertical from
                      Rückv top-center (1180, 520) directly to S bottom (1180, 391). -->
@@ -367,9 +368,9 @@
                 <rect x="730" y="740" width="500" height="80" rx="6" class="node-blue"/>
                 <text x="980" y="785" text-anchor="middle" class="txt-label-lg">Gasspeicher Strom</text>
 
-                <!-- Speicherkapazität arrow + labels below Gasspeicher Strom — centered at 980. -->
+                <!-- Speicherkapazität: label / value / Tages — Excel style with colon. -->
                 <line x1="980" y1="820" x2="980" y2="870" class="gas-line"/>
-                <text x="980" y="895" text-anchor="middle" class="txt-label-lg">Speicherkapazität</text>
+                <text x="980" y="895" text-anchor="middle" class="txt-label-lg">Speicherkapazit&#228;t:</text>
                 <text x="980" y="918" text-anchor="middle" class="txt-flow" id="storage_capacity_value">0 GWh</text>
                 <text x="980" y="938" text-anchor="middle" class="txt-tages">80</text>
 
@@ -380,10 +381,12 @@
                 <text x="1135" y="704" text-anchor="middle" class="txt-tages">87</text>
                 <text x="1190" y="684" class="txt-key">U</text>
 
-                <!-- Abgleichdifferenz bottom -->
-                <text x="1240" y="895" text-anchor="middle" class="txt-src-sub">Abgleichdifferenz</text>
-                <text x="1350" y="892" class="txt-flow-sm">160</text>
-                <text x="1350" y="910" class="txt-tages">80</text>
+                <!-- Abgleichdifferenz bottom: 160 (bold) above, "Abgleichdifferenz" label below,
+                     small italic "0" to the right — Excel convention. -->
+                <text x="1320" y="895" text-anchor="middle" class="txt-flow-sm">160</text>
+                <text x="1360" y="897" class="txt-tages">0</text>
+                <text x="1320" y="918" text-anchor="middle" class="txt-src-sub">Abgleichdifferenz</text>
+                <text x="1320" y="938" text-anchor="middle" class="txt-tages">80</text>
 
                 <!-- ============================================================
                      Legend bottom-left + footer right
@@ -540,9 +543,11 @@
         setText('h2_surplus_value', vals.h2_surplus);
         setText('gas_storage_arrow_value', vals.gas_storage);
         setTextWithSuffix('storage_capacity_value', vals.storage_capacity, 'GWh');
-        setPercentText('eta_ely_value', vals.eta_ely_pct, 'Eta Ely.');
-        setPercentText('eta_es_value', vals.eta_es_pct, 'Eta ES');
-        setPercentText('eta_rs_value', vals.eta_rs_pct, 'Eta RS');
+        // Eta labels are now separate static "Eta Ely./Eta ES/Eta RS" texts placed
+        // next to the percentage elements. So we only set the percentage itself.
+        setPercentText('eta_ely_value', vals.eta_ely_pct, '');
+        setPercentText('eta_es_value', vals.eta_es_pct, '');
+        setPercentText('eta_rs_value', vals.eta_rs_pct, '');
         // Excel page 10 parity: eta_storage displayed as "XX,Y" (no trailing %)
         {
           const el = document.getElementById('eta_storage_value');
