@@ -478,19 +478,22 @@ class VerbrauchDataAdmin(admin.ModelAdmin):
     category_display.short_description = 'Category'
     
     def format_number(self, value):
-        """Format number properly: commas for thousands (>=1000), decimals for smaller"""
+        """Format number using German convention (per stakeholder PDF §2.5.2):
+        dot as thousand separator, comma as decimal separator.
+        """
         if value is None:
             return "-"
-        
-        # Always check if it's a whole number first
+
+        def _de(s):
+            # Build with English thousand-comma / decimal-dot first, then swap
+            # using a temporary placeholder so we don't double-replace.
+            return s.replace(",", "⁣").replace(".", ",").replace("⁣", ".")
+
+        # Whole number?
         if value == int(value):
-            if value >= 1000:
-                return f"{int(value):,}"  # Comma separator, no decimals for whole numbers
-            else:
-                return f"{int(value):,}"    # No decimals, comma for smaller whole numbers too
-        else:
-            # For non-whole numbers
-            return f"{value:,.4f}".rstrip('0').rstrip('.')  # up to 4 decimals, comma thousands
+            return _de(f"{int(value):,}")
+        # Non-whole: up to 4 decimals, no trailing zeros.
+        return _de(f"{value:,.4f}".rstrip("0").rstrip("."))
     
     def status_display(self, obj):
         """Format status value for display - only show for fixed values"""
