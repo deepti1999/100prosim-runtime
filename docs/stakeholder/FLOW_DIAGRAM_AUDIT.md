@@ -266,6 +266,63 @@ No code changed. Awaiting Pascal's sign-off on
 (1) N-circle value swap + (2) "Strom nach ES" ghost-box removal
 before touching the template.
 
+---
+
+## Fix shipped (2026-04-22, commit `d0eea4d`)
+
+Pascal signed off. Template-only changes in
+`simulator/templates/simulator/annual_electricity.html`, **no
+backend / formula / calculation edits**:
+
+1. `#n_value_svg` (above N-circle at 705,340) rebound to
+   `vals.n_to_right` — now renders Excel's N-value (947,077 local /
+   948,678 on testsim Heroku seed).
+2. `#o_value_svg` moved from (845,372) to (557,372) on the M→N
+   arrow and rebound to `vals.n_value` — now renders Excel's M→N
+   flow value (1,541,301 local / 1,550,972 Heroku).
+3. Ghost box at (960,326) — rect + *"Strom nach / Elektrolyse
+   Stromspeicher"* labels — deleted. No Excel equivalent.
+4. Two flow-line segments (725→960 + 1210→1320) merged into one
+   continuous line 725→1320 at y=386.
+5. New `#bio_rejoin_value` at (1280,372) binds to `vals.bio` —
+   renders Excel's `S = 4,525` biobrennstoffe rejoin annotation
+   just before Stromnetz zum Endverbrauch.
+
+### Verification done
+
+| Step | Action | Result |
+|---|---|---|
+| V2 | `python manage.py test simulator.test_bb_current_app simulator.test_bb_calc simulator.test_e2e_current_scenario_flow` | 11/11 green |
+| V3 | `regression/compare.py A-baseline-readonly` | `OK: current matches golden (97 fields)` |
+| V4 | `browser_navigate http://localhost:8001/annual-electricity/` + `browser_take_screenshot` | `verification/t54/fixed_jahresstrom.png` — values in Excel positions |
+| V5 | `bash scripts/heroku_up.sh` → navigate → `browser_evaluate` read all text IDs → `browser_take_screenshot` → `bash scripts/heroku_down.sh` | `verification/t54/heroku_fixed.png` — M 1.936.905 → arrow 1.550.972 → N 948.678 → bio 4.525 → I 1.107.646. Ghost box count = 0, rect count 12 → 11. App destroyed, billing stopped. |
+| V6 | this section | ✓ |
+
+### Excel-position parity (side-by-side)
+
+| Excel page 10 node | Excel value | Live Heroku value (testsim) | Position match |
+|---|---:|---:|---|
+| M-circle | 1,927,375 | 1,936,905 | ✓ |
+| M→N arrow label | 1,541,442 | 1,550,972 | ✓ |
+| N-circle | 947,106 | 948,678 | ✓ |
+| S (bio rejoin) | 4,525 | 4,525 | ✓ |
+| I (Stromnetz) | 1,105,556 | 1,107,646 | ✓ |
+
+Numeric differences reflect different scenario inputs
+(Schmidt-Kanefendt's "Deutschland 100%EE 250517" vs our testsim
+seed); structural parity with PDF page 10 is achieved.
+
+### Still outstanding (not in this fix)
+
+The "Deep re-audit" table **a–o** listed 15 missing annotations (column headers
+Brutto/Nettostromerzeugung, letter labels K/J/L/M/N/Q/P/T/I/S, percent-share
+values, Tagesladungen secondary numbers, legend, Pmin/Pv sidebar, "(nach
+Angebot)", "Gas-Verbraucher", "261 GW elekt.", "13.9%" reconversion share,
+Abgleichdifferenz, scenario subtitle). Two of these (`261 GW elekt.` and
+`Abgleichdifferenz`) need new backend metrics. The remaining 13 are
+pure-template additions — filed as open follow-ups pending
+Schmidt-Kanefendt's priority call.
+
 ### T56 — Excel-reference structure
 
 The SVG already follows the PDF page 10 reference layout: sources on

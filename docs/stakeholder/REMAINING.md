@@ -1,52 +1,30 @@
 # What's remaining — single source of truth
 
-**Last updated:** 2026-04-22 (after visual verification sweep — 49/50 shipped tickets now visually confirmed on Heroku; only T6 bench-stub remains non-visual)
+**Last updated:** 2026-04-22 evening (after T54 flow-diagram fix, commit `d0eea4d`, V5-verified on Heroku)
 **Source material:** `260403_Portierung_Bestandsaufnahme.pdf` (stakeholder PDF, 12 pages) + `IMPLEMENTATION_PLAN.md` (our 63-target decomposition)
 
 ---
 
 ## Headline
 
-**50/63 atomic targets shipped and Heroku-verified.** 13 targets outstanding:
+**51/63 atomic targets shipped and Heroku-verified.** 12 targets outstanding:
 
 | Bucket | Count | Blocked on |
 |---|---:|---|
-| **Partially done / waiting on reference data** | 1 | Pascal / Schmidt-Kanefendt share Excel export |
 | **External-gated** | 6 | ErnES picks a compute platform |
 | **Deferred by decision** | 6 | Separate scoping session (Pascal's call) |
+
+T54 (flow-diagram value→position mis-wiring) is now closed — see
+`FLOW_DIAGRAM_AUDIT.md` "Fix shipped (2026-04-22)". The 15 missing
+annotations identified during the deep audit (a–o) are *not* T54 targets,
+they're cosmetic extensions; captured at the bottom of the audit doc for
+Schmidt-Kanefendt's prioritisation.
 
 Every deliverable from the PDF that can be shipped right now **is shipped**. What's left falls into three clear categories below.
 
 ---
 
-## 1. Partially done (1 target) — T54
-
-### PDF §2.5.6 — Flussdiagramm Strom/H2
-
-**Stakeholder complaint (verbatim):** *"Teilweise sind die Werte falsch zugeordnet"* (some values are assigned to the wrong nodes).
-
-**Target breakdown:**
-
-| ID | Description | Shipped? |
-|---|---|---|
-| T53 | Audit current flow diagram vs. Excel reference node-by-node | ✅ — `FLOW_DIAGRAM_AUDIT.md` maps all 13 Excel nodes to SVG element IDs |
-| **T54** | **Correct value-to-node assignments** | ❌ **OPEN** — see below |
-| T55 | Increase font size / allow zoom | ✅ — 7 `.txt-*` classes bumped ~20-30%; zoom controls 75/100/125/150/200% added on the SVG |
-| T56 | Match Excel structure | ✅ — confirmed present in audit |
-
-**Why T54 is open:** fixing specific mislabelled bindings requires a side-by-side numeric comparison against an Excel export of the current seed scenario. The mapping between backend context variables (`bio`, `pv`, `wind`, `m_total`, `ely_branch_value`, etc.) and SVG element IDs (`#bio_value`, `#pv_value`, `#m_value`, `#ely_branch_value`, etc.) was not rewired because we don't yet know which specific bindings the stakeholder considers wrong.
-
-**Unblocker:** Pascal or Schmidt-Kanefendt shares either:
-- An Excel export of the Jahresbilanz-Strom sheet for the current seed scenario, OR
-- A list of specific node/value pairs they consider incorrect.
-
-**Effort once unblocked:** ~1–2 hours. Diff the Excel against the current SVG render (Playwright on a Heroku cycle), file a fix per mismatch, ship + re-verify.
-
-**Where this lives:** `docs/stakeholder/FLOW_DIAGRAM_AUDIT.md`.
-
----
-
-## 2. External-gated (6 targets) — Phase 7
+## 1. External-gated (6 targets) — Phase 7
 
 ### PDF §2.1 — Hosting handover to ErnES
 
@@ -84,7 +62,7 @@ Every deliverable from the PDF that can be shipped right now **is shipped**. Wha
 
 ---
 
-## 3. Deferred by decision (6 targets) — Data-model rework
+## 2. Deferred by decision (6 targets) — Data-model rework
 
 ### PDF §2.3 — Datenmodell
 
@@ -154,7 +132,6 @@ For reference, everything below is done + V5-verified on live Heroku (cost ~$0.3
 
 | Blocker | Who unblocks | Likely timeline |
 |---|---|---|
-| T54 Excel reference | Pascal / Schmidt-Kanefendt | Minutes to share a file |
 | Phase 7 platform | ErnES | Weeks to months |
 | Deferred §2.3 scoping | Pascal | One meeting |
 
