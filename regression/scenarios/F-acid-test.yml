@@ -1,0 +1,26 @@
+id: F-acid-test
+summary: >
+  The "Nagelprobe" from PDF §2.2. Increase onshore wind area from 2.0% to 2.3% and reduce
+  offshore capacity from 70 GW to 60 GW, then press Balance Solar. Measures end-to-end
+  elapsed time. Excel baseline: 5.8 s. Web baseline (Heroku Basic): 120 s (20x slower).
+  Success criterion: "praxistauglich" — to be confirmed with Schmidt-Kanefendt.
+status: stub
+depends_on: Phase 7-B, ErnES compute platform provisioned
+mutations:
+  - path: /landuse/
+    edit: { code: 'LU_6', user_percent: 2.3 }    # onshore wind land-use
+  - path: /renewable/
+    edit: { code: '9.3.4', user_value_gw: 60 }   # offshore wind capacity
+reset: reset-testsim
+probes:
+  - path: /ws/
+    action: click_balance_solar
+    capture: [elapsed_seconds, speicherdrift_gwh, annual_electricity, lu_2_1_after]
+invariants:
+  - name: balance_completed
+    check: speicherdrift_gwh <= 0.1 after Balance Solar
+  - name: time_budget
+    check: elapsed_seconds < AGREED_THRESHOLD  # threshold TBD with stakeholder
+reporting:
+  write_to: docs/stakeholder/BENCHMARK_LOG.md
+  fields: [timestamp, base_url, host_platform, elapsed_seconds, commit_sha]

@@ -17,9 +17,9 @@ Mandatory per item (non-negotiable, see IMPLEMENTATION_PLAN.md §1):
 ---
 
 ## Phase 0 — Scaffolding
-- ☐ 0-A Progress tracker file (this file)
-- ☐ 0-B Playwright regression scenarios (E/F/G)
-- ☐ 0-C `scripts/bench_acid_test.sh` + rolling `BENCHMARK_LOG.md`
+- ✅ 0-A Progress tracker file (this file)
+- ✅ 0-B Playwright regression scenarios (E/F/G) — YAML stubs committed; playbook scripts land when each phase arrives
+- ✅ 0-C `scripts/bench_acid_test.sh` + rolling `BENCHMARK_LOG.md` — harness stub committed; full flow in Phase 7-B
 
 ## Phase 1 — Surface removals
 - ☐ 1-A Remove "Save All Values" — T28 *(conditional: verify Scenarios→Save covers the intent)*
