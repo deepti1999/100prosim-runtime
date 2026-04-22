@@ -50,6 +50,7 @@ from .views_recalc import (
 )
 from .views import update_user_percent_by_code
 from .page_historie import historie_view
+from .page_modifikationsdetails import modifikationsdetails_view
 from .views_ws import (
     ws_api_apply_balance,
     ws_api_apply_balance_wind,
@@ -77,6 +78,8 @@ urlpatterns = [
     path('user-manual/', user_manual, name='user_manual'),
     # Phase 6-A (T61-T63): Modifikations-Historie
     path('historie/', historie_view, name='historie'),
+    # Phase 6-B (T48-T52): Variantenvergleich-Charts
+    path('modifikationsdetails/', modifikationsdetails_view, name='modifikationsdetails'),
     path('landuse/', landuse_list, name='landuse_list'),
     path('landuse/<int:pk>/update_percent/', update_landuse_percent, name='update_landuse_percent'),
     path('landuse/<int:pk>/', landuse_detail, name='landuse_detail'),

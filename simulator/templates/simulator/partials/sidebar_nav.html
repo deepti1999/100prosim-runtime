@@ -52,6 +52,11 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {% if active_section == 'modifikationsdetails' %}active{% endif %}" href="{% url 'simulator:modifikationsdetails' %}">
+                    <i class="fas fa-chart-bar me-2"></i>Modifikationsdetails
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link {% if active_section == 'historie' %}active{% endif %}" href="{% url 'simulator:historie' %}">
                     <i class="fas fa-history me-2"></i>Historie
                 </a>
