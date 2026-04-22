@@ -165,55 +165,80 @@ def _default_scenario_name():
     ts = timezone.localtime().strftime("%Y-%m-%d %H:%M")
     return f"Scenario {ts}"
 
+# Stakeholder PDF §2.4.2 (T16, T17, T18): there is exactly one
+# admin-provided baseline, stored with key="global" and owner=None.
+# All users restore from that single snapshot. Regular users cannot
+# create or overwrite it — only staff can.
+ADMIN_BASELINE_KEY = "global"
+
+
+def _admin_baseline_snapshot():
+    """Return the single shared admin baseline snapshot (or None)."""
+    return BaselineSnapshot.objects.filter(key=ADMIN_BASELINE_KEY).first()
+
+
 @login_required
 @csrf_exempt
 def create_baseline(request):
-    """Create baseline snapshot for current scope (global for admin, workspace for user)."""
+    """Create / update the shared admin baseline. Staff only (T18)."""
     if request.method != 'POST':
         return JsonResponse({'status': 'error', 'error': 'POST required'}, status=405)
 
+    user = request.user
+    if not user.is_staff:
+        return JsonResponse({
+            'status': 'error',
+            'error': 'Nur Administratoren können die Baseline neu anlegen.',
+        }, status=403)
+
     try:
-        scope = _baseline_scope(request)
-        owner = scope["owner"]
-        payload = _snapshot_payload_for_owner(owner)
+        # The admin baseline captures the shared/global rows (owner=None),
+        # matching the "global" scope admins edit. This is what every user
+        # will see when they "Auf Baseline zurücksetzen".
+        payload = _snapshot_payload_for_owner(None)
 
         BaselineSnapshot.objects.update_or_create(
-            key=scope["key"],
+            key=ADMIN_BASELINE_KEY,
             defaults={
-                "owner": owner,
+                "owner": None,
                 "payload": payload,
             },
         )
-        snapshot = BaselineSnapshot.objects.get(key=scope["key"])
+        snapshot = _admin_baseline_snapshot()
 
         return JsonResponse({
             'status': 'ok',
             'message': 'Baseline snapshot created successfully',
             'created_at': snapshot.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
             'size_mb': _snapshot_size_mb(payload),
-            'scope': scope["label"],
+            'scope': 'admin-baseline',
         })
     except Exception as e:
         return JsonResponse({'status': 'error', 'error': str(e)}, status=500)
 
+
 @login_required
 @csrf_exempt
 def restore_baseline(request):
-    """Restore baseline snapshot for current scope (global for admin, workspace for user)."""
+    """Restore the shared admin baseline into THIS user's workspace (T17, T18)."""
     if request.method != 'POST':
         return JsonResponse({'status': 'error', 'error': 'POST required'}, status=405)
 
     try:
-        scope = _baseline_scope(request)
-        owner = scope["owner"]
-        snapshot = BaselineSnapshot.objects.filter(key=scope["key"]).first()
+        snapshot = _admin_baseline_snapshot()
         if snapshot is None:
             return JsonResponse({
                 'status': 'error',
-                'error': 'No baseline snapshot found for this scope. Create one first!'
+                'error': 'Noch keine Baseline vorhanden. Ein Administrator muss die Baseline einmalig anlegen.',
             }, status=404)
 
-        _restore_snapshot_payload(owner, snapshot.payload)
+        # IMPORTANT: restore into the caller's workspace (per-user data),
+        # using the admin baseline as the source-of-truth payload.
+        user = request.user
+        target_owner = None if (user.is_authenticated and user.is_staff) else user
+        _restore_snapshot_payload(target_owner, snapshot.payload)
+
+        scope = _baseline_scope(request)
         _clear_active_scenario_session(request, scope["key"])
 
         return JsonResponse({
@@ -224,18 +249,19 @@ def restore_baseline(request):
     except Exception as e:
         return JsonResponse({'status': 'error', 'error': str(e)}, status=500)
 
+
 @login_required
 @csrf_exempt
 def get_baseline_info(request):
-    """Get baseline snapshot info for current scope."""
+    """Info about the shared admin baseline (visible to all users)."""
     try:
-        scope = _baseline_scope(request)
-        snapshot = BaselineSnapshot.objects.filter(key=scope["key"]).first()
+        snapshot = _admin_baseline_snapshot()
         if snapshot is None:
             return JsonResponse({
                 'status': 'ok',
                 'exists': False,
-                'scope': scope["label"],
+                'scope': 'admin-baseline',
+                'can_create': request.user.is_staff,
             })
 
         payload = snapshot.payload or {}
@@ -244,7 +270,8 @@ def get_baseline_info(request):
             'exists': True,
             'created_at': snapshot.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
             'size_mb': _snapshot_size_mb(payload),
-            'scope': scope["label"],
+            'scope': 'admin-baseline',
+            'can_create': request.user.is_staff,
         })
     except Exception as e:
         return JsonResponse({'status': 'error', 'error': str(e)}, status=500)
