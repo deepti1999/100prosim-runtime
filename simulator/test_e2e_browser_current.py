@@ -138,16 +138,18 @@ class BrowserCurrentAppSmokeTests(StaticLiveServerTestCase):
 
         page_text = self.driver.find_element(By.TAG_NAME, "body").text
         for label in (
-            "Goal Seek ausführen",
             "WS Balance Solar",
             "Sector + WS Solar Balance",
             "WS Balance Wind",
             "Sector + WS Wind Balance",
-            "Aktualisieren",
             "Jahresstrom-Hinweis",
             "Zur Seite Jahresstrom",
         ):
             self.assertIn(label, page_text)
+        # Stakeholder T19/T20 (PDF §2.4.3): "Goal Seek" and "Aktualisieren"
+        # buttons removed — goal-seek runs automatically on page load.
+        for removed_label in ("Goal Seek ausführen", "Aktualisieren"):
+            self.assertNotIn(removed_label, page_text)
 
     def test_user_manual_is_reachable_from_sidebar_in_browser(self):
         self._login()

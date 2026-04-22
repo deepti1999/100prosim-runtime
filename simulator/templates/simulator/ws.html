@@ -16,9 +16,12 @@
                     Szenario-Abgleich
                 </h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
-                    <button type="button" class="btn btn-success me-2" id="runGoalSeekBtn">
-                        <i class="fas fa-bullseye me-1"></i>Goal Seek ausführen
-                    </button>
+                    {# "Goal Seek ausführen" + "Aktualisieren" buttons removed per   #}
+                    {# stakeholder PDF §2.4.3 (T19, T20): both are redundant.        #}
+                    {# Goal Seek runs automatically on page load because             #}
+                    {# refreshWsSummaryCards() calls /api/ws/summary/ which          #}
+                    {# invokes get_ws_365_data(run_goal_seek=True). Aktualisieren    #}
+                    {# just re-calls the same endpoint the page already loaded.     #}
                     <button type="button" class="btn btn-warning me-2" id="applyBalanceBtn" disabled>
                         <i class="fas fa-balance-scale me-1"></i>WS Balance Solar
                     </button>
@@ -30,9 +33,6 @@
                     </button>
                     <button type="button" class="btn btn-primary me-2" id="applyWindFullBalanceBtn" disabled>
                         <i class="fas fa-layer-group me-1"></i>Sector + WS Wind Balance
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary" id="refreshDataBtn">
-                        <i class="fas fa-sync-alt me-1"></i>Aktualisieren
                     </button>
                 </div>
             </div>
@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderSolarSummary(goalSeek) {
         const body = document.getElementById('solarGoalSeekBody');
         if (!goalSeek || !Object.keys(goalSeek).length) {
-            body.innerHTML = '<p class="text-muted mb-0">Klicken Sie auf "Goal Seek ausführen", um Solar zu berechnen.</p>';
+            body.innerHTML = '<p class="text-muted mb-0">Solar-Balance wird automatisch beim Laden der Seite berechnet.</p>';
             document.getElementById('applyBalanceBtn').disabled = true;
             document.getElementById('applyFullBalanceBtn').disabled = true;
             return;
@@ -365,52 +365,13 @@ document.addEventListener('DOMContentLoaded', function() {
         renderCurrentSummary(payload.current);
     }
 
-    // Refresh Data Button
-    document.getElementById('refreshDataBtn').addEventListener('click', async function() {
-        const btn = this;
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Aktualisieren...';
-        try {
-            await refreshWsSummaryCards();
-        } catch (error) {
-            alert('Fehler beim Aktualisieren: ' + (error?.message || error));
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-sync-alt me-1"></i>Aktualisieren';
-        }
-    });
-
+    // Refresh Data + Goal Seek button click handlers removed per
+    // stakeholder PDF §2.4.3 (T19, T20). Goal-seek results populate
+    // automatically via the initial refreshWsSummaryCards() call below
+    // (the summary endpoint runs goal_seek=True internally).
     refreshWsSummaryCards().catch(() => {});
-    
-    // Goal Seek Button
-    document.getElementById('runGoalSeekBtn').addEventListener('click', function() {
-        const btn = this;
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Berechnung läuft...';
-        
-        fetch('{% url "simulator:ws_api_goal_seek" %}')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Goal Seek abgeschlossen!\n\n' +
-                          'Optimales Solar: ' + Math.round(data.optimal_solar).toLocaleString() + ' GWh\n' +
-                          'Änderung: ' + Math.round(data.solar_change).toLocaleString() + ' GWh (' + data.solar_change_pct.toFixed(1) + '%)\n' +
-                          'Speicherdrift: ' + data.storage_drift.toFixed(1) + ' GWh\n\n' +
-                          'Seite wird aktualisiert...');
-                    window.location.reload();
-                } else {
-                    alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
-                }
-            })
-            .catch(error => {
-                alert('Fehler beim Goal Seek: ' + error);
-            })
-            .finally(() => {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-bullseye me-1"></i>Goal Seek ausführen';
-            });
-    });
-    
+
+
     // Apply Balance Button
     document.getElementById('applyBalanceBtn').addEventListener('click', async function() {
         const btn = this;

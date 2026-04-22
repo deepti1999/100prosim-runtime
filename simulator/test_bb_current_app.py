@@ -127,13 +127,16 @@ class BlackBoxCurrentAppTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Szenario-Abgleich")
-        self.assertContains(response, "Goal Seek ausführen")
         self.assertContains(response, "WS Balance Solar")
         self.assertContains(response, "Sector + WS Solar Balance")
         self.assertContains(response, "WS Balance Wind")
         self.assertContains(response, "Sector + WS Wind Balance")
         self.assertContains(response, "Jahresstrom-Hinweis")
         self.assertContains(response, "Zur Seite Jahresstrom")
+        # Stakeholder T19/T20 (PDF §2.4.3): "Goal Seek" and "Aktualisieren"
+        # buttons removed — goal-seek runs automatically on page load.
+        self.assertNotContains(response, 'id="runGoalSeekBtn"')
+        self.assertNotContains(response, 'id="refreshDataBtn"')
 
     @patch("simulator.page_renewable.get_ws_365_data")
     @patch("simulator.page_renewable.get_ws_constants")
