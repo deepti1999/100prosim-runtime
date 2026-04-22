@@ -32,6 +32,13 @@
         .flow-line-thin { stroke: #f4b942; stroke-width: 3; marker-end: url(#arrow); }
         .node-circle { fill: #fff; stroke: #f4b942; stroke-width: 4; }
 
+        /* Gas pipeline (blue, per Excel page 10 convention) */
+        .gas-line { stroke: #2b7bd6; stroke-width: 3; marker-end: url(#arrow-gas); fill: none; }
+        .txt-value-box { fill: #fff; stroke: #222; stroke-width: 1; }
+        .txt-tages { font-size: 12px; font-weight: 700; fill: #1f4e79; font-style: italic; }
+        .txt-pct { font-size: 11px; font-weight: 700; fill: #333; }
+        .txt-red { font-size: 13px; font-weight: 900; fill: #c0392b; }
+
         /* Phase 5-C (T55): font sizes bumped per PDF §2.5.6 complaint about
            small, hard-to-read labels. Legend block reads text up to ~25%
            larger than before while the viewBox stays at 1650×980 so the
@@ -117,6 +124,9 @@
                     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
                         <polygon points="0 0, 10 3, 0 6" fill="#f4b942"/>
                     </marker>
+                    <marker id="arrow-gas" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                        <polygon points="0 0, 10 3, 0 6" fill="#2b7bd6"/>
+                    </marker>
                 </defs>
 
                 <text x="40" y="42" class="txt-title">{{ diagram_title|default:"Jahresbilanz Strom" }}</text>
@@ -127,43 +137,70 @@
                 <rect x="40" y="100" width="200" height="95" rx="6" class="node-yellow"/>
                 <text x="140" y="136" text-anchor="middle" class="txt-label">Bedarfs-Kraftwerke</text>
                 <text x="140" y="168" text-anchor="middle" class="txt-label-lg">Biobrennstoffe</text>
-                <line x1="240" y1="148" x2="1180" y2="148" style="stroke:#f4b942;stroke-width:3"/>
+                <line x1="355" y1="148" x2="1180" y2="148" style="stroke:#f4b942;stroke-width:3"/>
                 <line x1="1180" y1="148" x2="1180" y2="356" class="flow-line-thin"/>
-                <text x="318" y="138" class="txt-flow" id="bio_value">0</text>
+                <!-- Bio value stack (S / 4.525 box / Tages / 0,2%) -->
+                <text x="315" y="126" text-anchor="middle" class="txt-key">S</text>
+                <rect x="275" y="132" width="80" height="22" class="txt-value-box"/>
+                <text x="315" y="148" text-anchor="middle" class="txt-flow" id="bio_value">0</text>
+                <text x="315" y="168" text-anchor="middle" class="txt-tages" id="bio_tages">1</text>
+                <text x="315" y="182" text-anchor="middle" class="txt-pct" id="bio_pct">0,2%</text>
 
                 <!-- PV -->
                 <rect x="40" y="220" width="200" height="95" rx="6" class="node-yellow"/>
                 <text x="140" y="262" text-anchor="middle" class="txt-label-lg">PV</text>
                 <text x="140" y="286" text-anchor="middle" class="txt-sub">(fluktuierend)</text>
-                <text x="285" y="286" class="txt-flow" id="pv_value">0</text>
+                <text x="315" y="244" text-anchor="middle" class="txt-key">K</text>
+                <rect x="265" y="252" width="100" height="22" class="txt-value-box"/>
+                <text x="315" y="268" text-anchor="middle" class="txt-flow" id="pv_value">0</text>
+                <text x="315" y="288" text-anchor="middle" class="txt-tages" id="pv_tages">397</text>
+                <text x="315" y="302" text-anchor="middle" class="txt-pct" id="pv_pct">62,2%</text>
 
                 <!-- Wind -->
                 <rect x="40" y="340" width="200" height="95" rx="6" class="node-yellow"/>
                 <text x="140" y="382" text-anchor="middle" class="txt-label-lg">Wind</text>
                 <text x="140" y="406" text-anchor="middle" class="txt-sub">(fluktuierend)</text>
-                <text x="260" y="372" class="txt-flow" id="wind_value">0</text>
+                <text x="315" y="360" text-anchor="middle" class="txt-key">J</text>
+                <rect x="265" y="368" width="100" height="22" class="txt-value-box"/>
+                <text x="315" y="384" text-anchor="middle" class="txt-flow" id="wind_value">0</text>
+                <text x="315" y="404" text-anchor="middle" class="txt-tages" id="wind_tages">186</text>
+                <text x="315" y="418" text-anchor="middle" class="txt-pct" id="wind_pct">29,2%</text>
 
                 <!-- Hydro -->
                 <rect x="40" y="460" width="200" height="112" rx="6" class="node-yellow"/>
                 <text x="140" y="496" text-anchor="middle" class="txt-label">Laufwasser + Tief.-Geoth.</text>
                 <text x="140" y="518" text-anchor="middle" class="txt-sub">(konstant)</text>
-                <text x="245" y="556" class="txt-flow" id="hydro_value">0</text>
+                <text x="315" y="498" text-anchor="middle" class="txt-key">L</text>
+                <rect x="275" y="506" width="80" height="22" class="txt-value-box"/>
+                <text x="315" y="522" text-anchor="middle" class="txt-flow" id="hydro_value">0</text>
+                <text x="315" y="542" text-anchor="middle" class="txt-tages" id="hydro_tages">5</text>
+                <text x="315" y="556" text-anchor="middle" class="txt-pct" id="hydro_pct">0,8%</text>
 
-                <!-- K/J/L -> M arrows — endpoints on M-circle boundary to avoid tail overflow. -->
-                <line x1="240" y1="266" x2="395" y2="369" class="flow-line"/>
-                <line x1="240" y1="386" x2="390" y2="386" class="flow-line"/>
-                <line x1="240" y1="516" x2="396" y2="404" class="flow-line"/>
+                <!-- K/J/L -> M arrows — start after each value box, land on M-circle boundary. -->
+                <line x1="365" y1="270" x2="395" y2="369" class="flow-line"/>
+                <line x1="365" y1="386" x2="390" y2="386" class="flow-line"/>
+                <line x1="355" y1="508" x2="396" y2="404" class="flow-line"/>
 
                 <!-- M -->
                 <circle cx="420" cy="386" r="30" class="node-circle"/>
                 <text x="490" y="356" text-anchor="middle" class="txt-node-value" id="m_value">0</text>
 
+                <!-- Small splitter circle between M and Q where Ely P2G (385.934) branches down. -->
+                <circle cx="480" cy="386" r="9" class="node-circle"/>
+
                 <!-- M -> N (starts on M right boundary, ends on N left boundary) -->
                 <line x1="450" y1="386" x2="675" y2="386" class="flow-line"/>
 
-                <!-- M down to Elektrolyse nach Angebot -->
-                <line x1="420" y1="416" x2="420" y2="500" class="flow-line"/>
-                <text x="445" y="465" class="txt-value-sm" id="ely_branch_value">0</text>
+                <!-- Tagesladungen below each main-flow value — Excel convention. -->
+                <text x="625" y="392" text-anchor="middle" class="txt-tages">509</text>
+                <text x="942" y="392" text-anchor="middle" class="txt-tages">313</text>
+                <text x="1265" y="392" text-anchor="middle" class="txt-tages">365</text>
+                <text x="580" y="292" class="txt-tages">62</text>
+
+                <!-- M→splitter→Elektrolyse P2G. Stems from the small splitter circle on main flow. -->
+                <line x1="480" y1="395" x2="480" y2="500" class="flow-line"/>
+                <rect x="435" y="442" width="90" height="22" class="txt-value-box"/>
+                <text x="480" y="458" text-anchor="middle" class="txt-value-sm" id="ely_branch_value">0</text>
 
                 <!-- Elektrolyse Power to Gas -->
                 <rect x="300" y="500" width="240" height="120" rx="6" class="node-blue"/>
@@ -172,9 +209,11 @@
                 <text x="420" y="580" text-anchor="middle" class="txt-sub">(nach Angebot)</text>
                 <text x="420" y="605" text-anchor="middle" class="txt-metric" id="eta_ely_value">65% Eta Ely.</text>
 
-                <!-- Gasspeicher Direktverbr -->
-                <line x1="420" y1="620" x2="420" y2="680" class="flow-line-thin"/>
-                <text x="438" y="658" class="txt-flow-sm" id="gasspeicher_direkt_value">0</text>
+                <!-- Gasspeicher Direktverbr. Gas = blue per Excel legend. -->
+                <line x1="420" y1="620" x2="420" y2="680" class="gas-line"/>
+                <rect x="378" y="638" width="90" height="22" class="txt-value-box"/>
+                <text x="423" y="654" text-anchor="middle" class="txt-flow-sm" id="gasspeicher_direkt_value">0</text>
+                <text x="423" y="674" text-anchor="middle" class="txt-tages">87</text>
                 <rect x="300" y="680" width="240" height="70" rx="6" class="node-blue"/>
                 <text x="420" y="710" text-anchor="middle" class="txt-label">Gasspeicher Direktverbr.</text>
 
@@ -190,27 +229,34 @@
                 <!-- N -->
                 <circle cx="705" cy="386" r="30" class="node-circle"/>
 
-                <!-- N down to Elektrolyse Stromspeicher -->
+                <!-- N down to Elektrolyse Stromspeicher. Bordered box + Tagesladungen + "194 GW" red. -->
                 <line x1="705" y1="416" x2="705" y2="500" class="flow-line"/>
-                <text x="730" y="465" class="txt-value-sm" id="n_output_branch_value">0</text>
+                <rect x="665" y="446" width="90" height="22" class="txt-value-box"/>
+                <text x="710" y="462" text-anchor="middle" class="txt-value-sm" id="n_output_branch_value">0</text>
+                <text x="710" y="482" text-anchor="middle" class="txt-tages">134</text>
+                <text x="710" y="498" text-anchor="middle" class="txt-red">194 GW</text>
                 <rect x="585" y="500" width="240" height="120" rx="6" class="node-blue"/>
                 <text x="705" y="538" text-anchor="middle" class="txt-label">Elektrolyse Stromspeicher</text>
                 <text x="705" y="566" text-anchor="middle" class="txt-sub">(Überschuss)</text>
                 <text x="705" y="605" text-anchor="middle" class="txt-metric" id="eta_es_value">65% Eta ES</text>
 
-                <!-- Common down path to single Gasspeicher Strom -->
-                <line x1="705" y1="620" x2="705" y2="710" class="flow-line-thin"/>
-                <text x="735" y="670" class="txt-sub">65%</text>
-                <text x="735" y="686" class="txt-value-sm" id="gas_storage_arrow_value">0</text>
+                <!-- Common down path to single Gasspeicher Strom. Gas = blue. -->
+                <line x1="705" y1="620" x2="705" y2="710" class="gas-line"/>
+                <rect x="663" y="656" width="90" height="22" class="txt-value-box"/>
+                <text x="708" y="672" text-anchor="middle" class="txt-value-sm" id="gas_storage_arrow_value">0</text>
+                <text x="708" y="692" text-anchor="middle" class="txt-tages">87</text>
                 <rect x="700" y="710" width="400" height="100" rx="6" class="node-blue"/>
                 <text x="900" y="765" text-anchor="middle" class="txt-label-lg">Gasspeicher Strom</text>
                 <line x1="900" y1="810" x2="900" y2="875" class="flow-line-thin"/>
                 <text x="900" y="905" text-anchor="middle" class="txt-label-lg">Speicherkapazität</text>
                 <text x="900" y="934" text-anchor="middle" class="txt-flow" id="storage_capacity_value">0 GWh</text>
 
-                <!-- Upward extraction from same Gasspeicher Strom (Ausspeich.Summe) -->
-                <line x1="1090" y1="710" x2="1090" y2="640" class="flow-line-thin"/>
-                <text x="1112" y="688" class="txt-value-sm" id="t_value_svg">0</text>
+                <!-- Upward gas extraction from Gasspeicher Strom → Rückverstromung (U arrow).
+                     Gas = blue per Excel legend. -->
+                <line x1="1090" y1="710" x2="1090" y2="640" class="gas-line"/>
+                <rect x="1048" y="656" width="90" height="22" class="txt-value-box"/>
+                <text x="1093" y="672" text-anchor="middle" class="txt-value-sm" id="t_value_svg">0</text>
+                <text x="1093" y="692" text-anchor="middle" class="txt-tages">87</text>
 
                 <!-- Rückverstromung -->
                 <rect x="980" y="535" width="220" height="105" rx="6" class="node-yellow"/>
@@ -218,11 +264,11 @@
                 <text x="1090" y="594" text-anchor="middle" class="txt-sub">(Mangelausgl.)</text>
                 <text x="1090" y="620" text-anchor="middle" class="txt-metric" id="eta_rs_value">59% Eta RS</text>
 
-                <!-- Rückverstromung path to S-circle: clean straight vertical from
-                     the right side of Rückv box (x=1180, inside box 980-1200) up to
-                     S-circle bottom (y=416). Matches Excel page 10 routing. -->
+                <!-- Rückverstromung path to S-circle. Matches Excel page 10 routing. -->
                 <line x1="1180" y1="535" x2="1180" y2="416" class="flow-line-thin"/>
-                <text x="1210" y="480" class="txt-value-sm" id="reconversion_value">0</text>
+                <text x="1215" y="472" class="txt-value-sm" id="reconversion_value">0</text>
+                <text x="1215" y="490" class="txt-tages">51</text>
+                <text x="1285" y="472" class="txt-key">T</text>
 
                 <!-- M -> N arrow label (Excel: 1,541,442 flow value on arrow before N).
                      Offset right of Abregelung stem (x=557) to avoid overlap. -->
@@ -251,12 +297,7 @@
                 <text x="450" y="96" text-anchor="middle" class="txt-col-header">Bruttostromerzeugung:</text>
                 <text x="1400" y="96" text-anchor="middle" class="txt-col-header">Nettostromerzeugung:</text>
 
-                <!-- Source letter labels (Zeitreihenkennung): S, K, J, L
-                     — positioned above each value so they don't overlap the digits. -->
-                <text x="330" y="118" class="txt-key">S</text>
-                <text x="297" y="266" class="txt-key">K</text>
-                <text x="272" y="352" class="txt-key">J</text>
-                <text x="257" y="536" class="txt-key">L</text>
+                <!-- Source letter labels now live inline in each source stack above. -->
 
                 <!-- Circle identifier labels NEXT TO circles (Excel page 10 convention:
                      circles are empty, letters sit adjacent in italic blue). -->
@@ -267,16 +308,19 @@
                 <!-- Flow letter labels — placed to the RIGHT of value text. -->
                 <text x="650" y="272" class="txt-key">Q</text>
                 <text x="520" y="465" class="txt-key">P</text>
-                <text x="805" y="465" class="txt-key">P</text>
+                <text x="762" y="444" class="txt-key">P/Eta</text>
                 <text x="515" y="658" class="txt-key">P</text>
                 <text x="815" y="686" class="txt-key">P</text>
-                <text x="1190" y="688" class="txt-key">T</text>
+                <text x="1150" y="672" class="txt-key">U</text>
                 <text x="1560" y="330" class="txt-key">I</text>
 
-                <!-- Pmin/Pv sidebar on Elektrolyse Stromspeicher (Excel shows 100%/65%) -->
+                <!-- Pmax/Pv sidebar on Elektrolyse Stromspeicher (Excel shows 100%/65%) -->
                 <rect x="835" y="540" width="80" height="50" rx="3" class="metric-bg"/>
-                <text x="875" y="558" text-anchor="middle" class="txt-sidebar-label">Pmin/Pv</text>
+                <text x="875" y="558" text-anchor="middle" class="txt-sidebar-label">Pmax/Pv</text>
                 <text x="875" y="578" text-anchor="middle" class="txt-sidebar-val">100%/65%</text>
+
+                <!-- 261 GW (elekt.) red annotation near Rückverstromung -->
+                <text x="1210" y="560" class="txt-red">261 GW (elekt.)</text>
 
                 <!-- Gas-Verbraucher label to the right of Gasspeicher Direktverbr. -->
                 <line x1="540" y1="715" x2="600" y2="715" class="flow-line-thin"/>
@@ -305,7 +349,12 @@
                 <line x1="60" y1="938" x2="115" y2="938" style="stroke:#1f4e79;stroke-width:3" marker-end="url(#arrow)"/>
                 <text x="130" y="942" class="txt-sub">Gas</text>
 
-                <!-- Footer right: scenario + version identifier (Excel: "100prosim WS 250517.1209") -->
+                <!-- Abgleichdifferenz 160 + 80 Tagesladungen (Excel bottom-centre) -->
+                <text x="900" y="955" text-anchor="middle" class="txt-sub">Abgleichdifferenz</text>
+                <text x="1030" y="948" text-anchor="middle" class="txt-flow-sm">160</text>
+                <text x="1030" y="966" text-anchor="middle" class="txt-tages">80</text>
+
+                <!-- Footer right: scenario + version identifier (Excel: "100prosim WS.250517.1209") -->
                 <text x="1580" y="960" text-anchor="end" class="txt-sub">100prosim Web · {{ diagram_generated_on }}</text>
             </svg>
             </div>
