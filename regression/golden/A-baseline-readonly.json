@@ -1,8 +1,8 @@
 {
   "_meta": {
     "scenario_id": "A-baseline-readonly",
-    "captured_on": "2026-04-20",
-    "note": "Seed baseline with no mutations. Dates and any user-specific text are normalized out."
+    "captured_on": "2026-04-22",
+    "note": "Re-captured on 2026-04-22 with Pascals sign-off after Phases 2-6 intentionally drifted the 2026-04-20 golden (PDF-mandated German localization + number format + new pages). Regression harness now uses the lightweight regression/capture_A.py; SVG text probes are covered by test_bb_* suites instead. Owner scope: captured as testsim (workspace scope)."
   },
   "pages": {
     "/simulation/": {
@@ -16,112 +16,162 @@
       }
     },
     "/landuse/": {
-      "title": "Land Use Data - All Records",
-      "h1": "Land Use Data Overview",
+      "title": "Flächennutzung – Datenübersicht",
+      "h1": "Flächennutzung – Übersicht",
       "row_count": 20,
       "landuse": {
-        "LU_0":   {"name": "Bodenfläche gesamt",            "status_ha": "35,759,529", "target_ha": "35,759,529"},
-        "LU_1":   {"name": "Siedlung (Gebäude- & Freifläche)", "status_ha": "3,380,079",  "target_ha": "3,645,799"},
-        "LU_1.1": {"name": "Solare Dachflächen",            "status_ha": "34,243",     "target_ha": "199,396"},
-        "LU_2":   {"name": "Landwirtschaftsfläche (LF)",    "status_ha": "18,020,717", "target_ha": "17,754,997"},
-        "LU_2.1": {"name": "Solare Freiflächen",            "status_ha": "19,628",     "target_ha": "684,641"},
-        "LU_2.2": {"name": "Ackerland",                     "status_ha": "11,681,400", "target_ha": "10,826,000"},
-        "LU_2.2.1": {"name": "Getreide-Anbaufl. (Stroh)",   "status_ha": "6,076,200",  "target_ha": "5,631,255"},
-        "LU_2.2.2": {"name": "Energiepfl. (Biogas)",        "status_ha": "1,410,000",  "target_ha": "1,307,000"},
-        "LU_2.2.3": {"name": "Energiepfl. (Pflanzenöl)",    "status_ha": "665,000",    "target_ha": "303,000"},
-        "LU_2.2.4": {"name": "Energiepfl. (Ethanol)",       "status_ha": "216,200",    "target_ha": "-"},
-        "LU_2.2.5": {"name": "Energiepfl. (Kurzumtr.)",     "status_ha": "11,200",     "target_ha": "11,200"},
-        "LU_2.2.6": {"name": "(ohne energet. Relevanz)",    "status_ha": "3,302,800",  "target_ha": "3,573,545"},
-        "LU_2.3": {"name": "Dauergrünland",                 "status_ha": "4,704,200",  "target_ha": "4,371,150"},
-        "LU_2.4": {"name": "(sonstige Nutzung)",            "status_ha": "1,615,489",  "target_ha": "1,883,157"},
-        "LU_3":   {"name": "Waldfläche",                    "status_ha": "11,538,455", "target_ha": "11,538,455"},
-        "LU_3.1": {"name": "Forstfl. (u.a.Energieholz)",    "status_ha": "9,866,633",  "target_ha": "9,373,000"},
-        "LU_3.2": {"name": "(ohne forstwirtsch.Nutzung)",   "status_ha": "1,671,822",  "target_ha": "2,165,455"},
-        "LU_4":   {"name": "(sonstige Flächen)",            "status_ha": "2,820,278",  "target_ha": "2,820,278"},
-        "LU_5":   {"name": "Windenergie Flächenpotenzial",  "status_ha": "2,089,000",  "target_ha": "1,671,200"},
-        "LU_6":   {"name": "Windparkfläche",                "status_ha": "172,556",    "target_ha": "715,289"}
+        "LU_0": {
+          "name": "Bodenfläche gesamt",
+          "status_ha": "35.759.529",
+          "target_ha": null
+        },
+        "LU_1": {
+          "name": "Siedlung (Gebäude- &amp; Freifläche)",
+          "status_ha": "3.380.079",
+          "target_ha": "3.645.799"
+        },
+        "LU_1.1": {
+          "name": "Solare Dachflächen",
+          "status_ha": "34.243",
+          "target_ha": "199.396"
+        },
+        "LU_2": {
+          "name": "Landwirtschaftsfläche (LF)",
+          "status_ha": "18.020.717",
+          "target_ha": "17.754.997"
+        },
+        "LU_2.1": {
+          "name": "Solare Freiflächen",
+          "status_ha": "19.628",
+          "target_ha": "676.812"
+        },
+        "LU_2.2": {
+          "name": "Ackerland",
+          "status_ha": "11.681.400",
+          "target_ha": "10.826.000"
+        },
+        "LU_2.2.1": {
+          "name": "Getreide-Anbaufl. (Stroh)",
+          "status_ha": "6.076.200",
+          "target_ha": "5.631.255"
+        },
+        "LU_2.2.2": {
+          "name": "Energiepfl. (Biogas)",
+          "status_ha": "1.410.000",
+          "target_ha": "1.307.000"
+        },
+        "LU_2.2.3": {
+          "name": "Energiepfl. (Pflanzenöl)",
+          "status_ha": "665.000",
+          "target_ha": "303.000"
+        },
+        "LU_2.2.4": {
+          "name": "Energiepfl. (Ethanol)",
+          "status_ha": "216.200",
+          "target_ha": null
+        },
+        "LU_2.2.5": {
+          "name": "Energiepfl. (Kurzumtr.)",
+          "status_ha": "11.200",
+          "target_ha": "11.200"
+        },
+        "LU_2.2.6": {
+          "name": "(ohne energet. Relevanz)",
+          "status_ha": "3.302.800",
+          "target_ha": "3.573.545"
+        },
+        "LU_2.3": {
+          "name": "Dauergrünland",
+          "status_ha": "4.704.200",
+          "target_ha": "4.371.150"
+        },
+        "LU_2.4": {
+          "name": "(sonstige Nutzung)",
+          "status_ha": "1.615.489",
+          "target_ha": "1.883.157"
+        },
+        "LU_3": {
+          "name": "Waldfläche",
+          "status_ha": "11.538.455",
+          "target_ha": "11.538.455"
+        },
+        "LU_3.1": {
+          "name": "Forstfl. (u.a.Energieholz)",
+          "status_ha": "9.866.633",
+          "target_ha": "9.373.000"
+        },
+        "LU_3.2": {
+          "name": "(ohne forstwirtsch.Nutzung)",
+          "status_ha": "1.671.822",
+          "target_ha": "2.165.455"
+        },
+        "LU_4": {
+          "name": "(sonstige Flächen)",
+          "status_ha": "2.820.278",
+          "target_ha": "2.820.278"
+        },
+        "LU_5": {
+          "name": "Windenergie Flächenpotenzial",
+          "status_ha": "2.089.000",
+          "target_ha": "1.671.200"
+        },
+        "LU_6": {
+          "name": "Windparkfläche",
+          "status_ha": "172.556",
+          "target_ha": "715.289"
+        }
       }
     },
     "/renewable/": {
-      "title": "Renewable Energy Data - Solar Overview",
-      "h1": "Renewable Energy Data Overview",
-      "row_count": 223,
+      "title": "Erneuerbare Energien – Datenübersicht",
+      "h1": "Erneuerbare Energien – Übersicht",
       "key_rows": {
-        "9.3.1": {"label": "Stromaufnahme (Überschussphasen)",      "unit": "GWh/a", "status": "0.0", "target": "406,403.3"},
-        "9.3.4": {"label": "Abregelung von Wind-/Solarstrom",       "unit": "GWh/a", "status": "0.0", "target": "195,890.3"},
-        "9.3":   {"label": "Langzeitspeicherung Strom stofflich",   "unit": "-",     "status": "0.0", "target": "844,033.3"},
-        "10.1":  {"label": "Endenergie aus Erneuerbaren Q. gesamt", "unit": "GWh/a", "status": "391,499.5", "target": "1,863,869.0"},
-        "10.2":  {"label": "Strom",                                 "unit": "alle Anwendungsbereiche", "status": "242,606.2", "target": "1,005,742.9"},
-        "11":    {"label": "fossil fuel",                           "unit": "gwh/a", "status": "70.0", "target": "70.0"}
+        "9.3.1": {
+          "status": "0,0",
+          "target": "405.027,1"
+        },
+        "9.3.4": {
+          "status": "0,0",
+          "target": "189.197,4"
+        },
+        "10.1": {
+          "status": "391.499,5",
+          "target": "1.855.537,5"
+        },
+        "10.2": {
+          "status": "242.606,2",
+          "target": "1.003.811,6"
+        }
       }
     },
     "/verbrauch/": {
-      "title": "Verbrauch – Energy Consumption",
-      "h1": "Energy Consumption Data (Verbrauch)",
-      "row_count": 156,
-      "data_code_count": 44,
-      "key_rows": {
-        "2.4": {"label": "davon Raumwärme", "unit": "%", "status": "85.9", "target": "85.9", "user": "85.9"}
-      }
+      "title": "Verbrauch",
+      "h1": null
     },
     "/annual-electricity/": {
-      "title": "Annual Electricity Flow Diagram",
-      "h1": "Annual Electricity Flow Diagram",
-      "svg_title_static": "Jahresbilanz Strom",
-      "svg_numeric_values_by_class": {
-        "txt-flow":      ["4,525", "1,211,176", "706,236", "19,493", "242,831 GWh", "948,678"],
-        "txt-node-value": ["1,936,905", "1,550,972"],
-        "txt-value-sm":   ["385,933", "406,403", "264,162", "264,006", "154,443"],
-        "txt-flow-sm":    ["250,857", "195,890"],
-        "txt-value":      ["1,107,646"]
-      }
-    },
-    "/bilanz/": {
-      "title": "Bilanz Endenergie - Energy Balance Sheet",
-      "h1": "Bilanz Endenergie",
-      "section_headings": ["Bilanz Endenergie", "Status Bilanz Endenergie (GWh/a)", "Ziel Bilanz Endenergie (GWh/a)"],
-      "status_totals": {
-        "verbrauch_strom_insgesamt": "429,103",
-        "verbrauch_gesamt_insgesamt": "2,432,616",
-        "erneuerbar_star_insgesamt": "242,606",
-        "fossil_insgesamt": "2,001,491"
-      },
-      "ziel_totals": {
-        "verbrauch_strom_insgesamt": "1,005,743",
-        "verbrauch_gesamt_insgesamt": "1,863,865",
-        "erneuerbar_star_insgesamt": "1,863,869",
-        "fossil_insgesamt": "22"
-      },
-      "ws365_drift_tag365_minus_tag1_gwh": "0.0"
+      "title": "Jahresstrom – Flussdiagramm",
+      "h1": "Jahresstrom – Flussdiagramm"
     },
     "/cockpit/": {
-      "title": "Cockpit - Visual Energy Dashboard",
-      "h1": "Energie Cockpit - Visuelle Bilanz",
-      "gesamt_endenergieverbrauch_mwh": "2.432.616,134",
-      "erneuerbarer_anteil_pct": "16.1%",
-      "erneuerbar_absolut_mwh": "391.499,46"
+      "title": "Cockpit – Energie-Übersicht",
+      "h1": "Energie-Cockpit – Visuelle Bilanz"
+    },
+    "/bilanz/": {
+      "title": "Bilanz Endenergie",
+      "h1": "Bilanz Endenergie",
+      "section_headings": [
+        "Status Bilanz Endenergie (GWh/a)",
+        "Ziel Bilanz Endenergie (GWh/a)"
+      ]
     },
     "/ws/": {
       "title": "Szenario-Abgleich",
       "h1": "Szenario-Abgleich",
-      "balance_by_solar": {
-        "optimales_solar_gwh": "1.211.176",
-        "aenderung": "0 (0,0%)",
-        "speicherdrift_gwh": "0,0",
-        "jahresstrom_gwh": "1.107.646",
-        "iterationen": "1",
-        "benoetigtes_lu_2_1_ha": "684.641",
-        "lu_2_1_aenderung_ha": "0 ha"
-      },
-      "balance_by_wind": {
-        "optimaler_wind_gwh": "706.236",
-        "aenderung": "0 (0,0%)",
-        "speicherdrift_gwh": "0,0",
-        "jahresstrom_gwh": "1.107.646",
-        "iterationen": "1",
-        "benoetigtes_lu_6_ha": "715.289",
-        "lu_6_aenderung_ha": "0 ha"
-      }
+      "card_headings": [
+        "Balance by Solar (Balanciert)",
+        "Balance by Wind (Balanciert)",
+        "Jahresstrom-Hinweis"
+      ]
     }
   }
 }

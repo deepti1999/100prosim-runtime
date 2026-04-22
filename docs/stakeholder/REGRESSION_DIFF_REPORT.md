@@ -88,17 +88,59 @@ The `Jahresbilanz Strom` SVG title and the flow values themselves still render c
 - `LU_1.name`: golden `"Siedlung (Gebäude- & Freifläche)"` → current `"Siedlung (Gebäude- &amp; Freifläche)"`. HTML-entity-encoded ampersand — the old capture decoded it, mine didn't. Cosmetic.
 - `LU_2.2.4.target_ha`: golden `"-"` → current `"None"`. Same fallback-rendering difference as LU_0.
 
-## Sign-off checklist for Pascal
+## Sign-off history
 
-Before regenerating `regression/golden/A-baseline-readonly.json`:
+**2026-04-22** — Pascal reviewed the categorization above and approved
+regenerating scenario A's golden with the following plan:
 
-- [ ] Confirm categories 1 + 2 (50 fields) are all acceptable Phase 2 drift.
-- [ ] Acknowledge category 3 (4 fields) is workspace-scoping and not caused by this push — capture the new golden under admin or testsim consistently.
-- [ ] Accept category 4 (77 fields): either (a) extend `capture_A.py` with a Playwright-backed mode that reproduces SVG probes, or (b) drop those probes from the golden and rely on the `test_bb_*` suites for annual-electricity coverage.
-- [ ] Accept categories 5+6 (5 fields) as meta / cosmetic.
+- [x] Accept categories 1 + 2 (50 fields): intentional Phase 2 drift.
+- [x] Re-capture under consistent testsim (workspace) scope — eliminates
+  the 4 pre-existing workspace-drift fields.
+- [x] Drop the 77 SVG text-element probes from the golden. They're
+  better covered by the `test_bb_*` suites that read the server-
+  rendered data directly; the regression harness stays lightweight
+  (HTTP + regex, no browser needed).
+- [x] Accept categories 5 + 6 (5 fields): meta + cosmetic.
 
-After sign-off, regenerate the three goldens (A, C, D) fresh — each in a clean capture pass — and commit golden + capture JSON together, per the plan rule.
+**Implementation of the sign-off:**
 
-## What this diff does NOT show
+1. `regression/capture_A.py` extended with:
+   - Fixed `_h1()` to handle nested `<i>` icon tags.
+   - New `_renewable_key_rows()` — probes 9.3.1 / 9.3.4 / 10.1 / 10.2
+     status + target cells (stakeholder-contract codes).
+   - New `_bilanz_section_headers()` — pulls the two Bilanz h3 headings.
+   - New `_ws_headings()` — pulls Solar / Wind / Jahresstrom card
+     headers.
+   - Robust `_dashboard_cards()` that matches each card-title → h3 pair
+     directly (the old regex matched the first h3 after each label,
+     which happened to be the same one for all four labels).
+2. Ran `python regression/capture_A.py` as testsim; wrote fresh JSON to
+   `verification/2026-04-22/A-baseline-readonly.json`.
+3. Copied the fresh JSON to `regression/golden/A-baseline-readonly.json`
+   with an updated `_meta.note` that records the sign-off + testsim-
+   scope owner.
+4. `regression/compare.py` patched to exclude `_meta.*` from the
+   comparison (provenance, not app state).
 
-Scenarios C and D haven't been diffed yet (those require driving `Balance WS Solar` and a full Verbrauch → Renewable → WS cascade respectively). Both will drift the same way as A for titles + number format, plus whatever workspace scoping has done to the testsim workspace since 2026-04-20.
+**After sign-off:** `python regression/compare.py A-baseline-readonly`
+exits 0 with **97 matched fields**. Scenario A regression harness is
+healthy.
+
+## Scenarios C and D — same treatment pending
+
+C (ws-balance) and D (full-flow-verbrauch-solar-wind) require
+Playwright-driven mutations (click Balance Solar, wait for
+BalanceJob to succeed, edit Verbrauch + trigger cascade). Their
+goldens have the same Phase 2 localization + number format drift as
+A plus the same workspace-scoping drift. When we need a healthy C/D
+regression:
+
+1. Write `regression/capture_C.py` / `capture_D.py` along the same
+   lightweight HTTP+regex pattern as capture_A.py, adding POSTs
+   to `/api/ws/apply-balance/` + polling `/api/ws/balance-job/<id>/`.
+2. Reset testsim workspace first so the balance is deterministic
+   (`heroku run` snippet in CLAUDE.md, same idea locally).
+3. Run, capture fresh JSON, regenerate the golden with the same
+   sign-off note pattern, commit.
+
+Not done in this push — A was the request.

@@ -61,33 +61,81 @@ def _get(opener, path):
 
 
 # ---- Probe extractors ---------------------------------------------------
+def _strip_html(raw):
+    return re.sub(r"<[^>]+>", "", raw).strip() if raw else None
+
+
 def _title(html):
     m = re.search(r"<title>([^<]+)</title>", html)
     return m.group(1).strip() if m else None
 
 
 def _h1(html):
-    m = re.search(r'<h1[^>]*class="h2"[^>]*>([^<]+)</h1>', html)
+    # h1s now often contain nested <i class="fas ..."> icons; strip inner tags.
+    m = re.search(r'<h1[^>]*class="h2"[^>]*>(.*?)</h1>', html, re.DOTALL)
     if m:
-        return m.group(1).strip()
-    m = re.search(r"<h1[^>]*>([^<]+)</h1>", html)
-    return m.group(1).strip() if m else None
+        return _strip_html(m.group(1))
+    m = re.search(r"<h1[^>]*>(.*?)</h1>", html, re.DOTALL)
+    return _strip_html(m.group(1)) if m else None
+
+
+def _renewable_key_rows(html):
+    """Pull Status/Target values for a few well-known Renewable rows
+    whose numbers are contractually stable (seed-fixed)."""
+    rows = {}
+    for code in ("9.3.1", "9.3.4", "10.1", "10.2"):
+        # The badge contains the code; the row has multiple cells.
+        # Pattern: find TR containing >code< then pick out the floatformat cells.
+        pat = re.compile(
+            rf'<tr[^>]*>(?:(?!</tr>).)*?>\s*{re.escape(code)}\s*<.*?</tr>',
+            re.DOTALL,
+        )
+        m = pat.search(html)
+        if not m:
+            continue
+        row_html = m.group(0)
+        cells = re.findall(r"<td[^>]*>(.*?)</td>", row_html, re.DOTALL)
+        stripped = [_strip_html(c) for c in cells]
+        if len(stripped) >= 5:
+            rows[code] = {
+                "status": stripped[3] or "",
+                "target": stripped[4] or "",
+            }
+    return rows
+
+
+def _bilanz_section_headers(html):
+    return [_strip_html(m) for m in re.findall(r"<h3[^>]*>(.*?)</h3>", html, re.DOTALL)]
+
+
+def _ws_headings(html):
+    """Pull the Solar / Wind card headings — they're stable and German."""
+    return [_strip_html(m) for m in re.findall(
+        r'<div class="card-header[^"]*"[^>]*>(.*?)</div>', html, re.DOTALL
+    )]
 
 
 def _dashboard_cards(html):
-    # simulation page numeric counts next to the sector labels
+    """Pull card title -> h3 value pairs on /simulation/ regardless of order."""
     pairs = {}
-    for key, label in [
-        ("flaechennutzung_count", "Flächennutzung"),
-        ("erneuerbare_count", "Erneuerbare Energien"),
-        ("verbrauch_count", "Verbrauch"),
-        ("szenario_abgleich_count", "Szenario-Abgleich"),
-    ]:
-        m = re.search(
-            rf"{re.escape(label)}.*?<h3[^>]*>\s*([\d.,\-]+|--)\s*</h3>",
-            html, re.DOTALL,
-        )
-        pairs[key] = m.group(1).strip() if m else None
+    label_key = {
+        "Flächennutzung": "flaechennutzung_count",
+        "Erneuerbare Energien": "erneuerbare_count",
+        "Verbrauch": "verbrauch_count",
+        "Szenario-Abgleich": "szenario_abgleich_count",
+    }
+    # Match each <h5 class="card-title ..."> followed by its <h3> value.
+    matches = re.findall(
+        r'class="card-title[^"]*"[^>]*>([^<]+)</h5>\s*<h3[^>]*>\s*([^<]+?)\s*</h3>',
+        html, re.DOTALL,
+    )
+    for title, value in matches:
+        key = label_key.get(title.strip())
+        if key:
+            pairs[key] = value.strip()
+    # Ensure all four keys exist (null if the page didn't render it).
+    for v in label_key.values():
+        pairs.setdefault(v, None)
     return pairs
 
 
@@ -154,16 +202,38 @@ def capture():
         "landuse": _landuse_rows(html),
     }
 
-    # /renewable/, /verbrauch/, /annual-electricity/, /bilanz/, /cockpit/, /ws/
-    # For these we only capture the cheap / shape-level probes. The deep
-    # comparisons for these live in the dedicated test suites.
-    for path in ["/renewable/", "/verbrauch/", "/annual-electricity/",
-                 "/bilanz/", "/cockpit/", "/ws/"]:
+    # /renewable/
+    html = _get(opener, "/renewable/")
+    out["pages"]["/renewable/"] = {
+        "title": _title(html),
+        "h1": _h1(html),
+        "key_rows": _renewable_key_rows(html),
+    }
+
+    # /verbrauch/, /annual-electricity/, /cockpit/ — just title + h1.
+    # Deep comparisons on these live in the dedicated test suites.
+    for path in ["/verbrauch/", "/annual-electricity/", "/cockpit/"]:
         html = _get(opener, path)
         out["pages"][path] = {
             "title": _title(html),
             "h1": _h1(html),
         }
+
+    # /bilanz/ — title + h1 + section headings (they contain stable text).
+    html = _get(opener, "/bilanz/")
+    out["pages"]["/bilanz/"] = {
+        "title": _title(html),
+        "h1": _h1(html),
+        "section_headings": _bilanz_section_headers(html),
+    }
+
+    # /ws/ — title + h1 + card headers (stable German).
+    html = _get(opener, "/ws/")
+    out["pages"]["/ws/"] = {
+        "title": _title(html),
+        "h1": _h1(html),
+        "card_headings": _ws_headings(html),
+    }
 
     out_path = REPO / "verification" / str(date.today()) / "A-baseline-readonly.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)

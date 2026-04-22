@@ -80,8 +80,17 @@ def diff(scenario_id: str) -> int:
     g = dict(_flatten(golden))
     c = dict(_flatten(current))
 
+    # The _meta section is provenance (captured_on, note, etc.). It is
+    # inherently per-capture and is NOT a regression signal. Filter it
+    # out of the field comparison. baseline_fingerprint is handled above
+    # as its own precondition.
+    def _is_meta(key):
+        return key.startswith("_meta.") or key == "_meta"
+
     mismatches = []
     for key in sorted(set(g) | set(c)):
+        if _is_meta(key):
+            continue
         if key not in g:
             mismatches.append((key, "<missing>", c[key]))
         elif key not in c:

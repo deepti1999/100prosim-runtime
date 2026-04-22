@@ -86,7 +86,16 @@ Updated in this push:
 
 ### 1. Regression scenarios A/C/D via `compare.py`
 
-**Status:** deferred, not run.
+**Scenario A:** ✅ regenerated on 2026-04-22 with Pascal's sign-off.
+`python regression/compare.py A-baseline-readonly` now exits 0 with
+97 fields matched. Full story in
+`docs/stakeholder/REGRESSION_DIFF_REPORT.md`.
+
+**Scenarios C and D:** same treatment deferred — they need
+Playwright-driven mutation + BalanceJob polling. Written plan in
+`REGRESSION_DIFF_REPORT.md` §"Scenarios C and D — same treatment
+pending". No runtime blocker; just scope for a future session when
+we actually need to run C/D regression.
 
 The goldens at `regression/golden/A-baseline-readonly.json`,
 `C-ws-balance.json`, `D-full-flow-verbrauch-solar-wind.json` were
