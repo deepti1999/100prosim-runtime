@@ -123,12 +123,12 @@
                 <text x="40" y="62" class="txt-title-meta">{{ diagram_scenario_label|default:"Aktuelles Szenario" }} | Stand {{ diagram_generated_on }}</text>
                 <text x="40" y="78" class="txt-datasource">Verwendete Zeitreihen: Anlagenpark Deutschland 2023 [SMARD]</text>
 
-                <!-- Bio -->
+                <!-- Bio (now rejoins at S-circle, not Stromnetz directly — Excel page 10 parity) -->
                 <rect x="40" y="100" width="200" height="95" rx="6" class="node-yellow"/>
                 <text x="140" y="136" text-anchor="middle" class="txt-label">Bedarfs-Kraftwerke</text>
                 <text x="140" y="168" text-anchor="middle" class="txt-label-lg">Biobrennstoffe</text>
-                <line x1="240" y1="148" x2="1450" y2="148" style="stroke:#f4b942;stroke-width:3"/>
-                <line x1="1450" y1="148" x2="1450" y2="300" class="flow-line-thin"/>
+                <line x1="240" y1="148" x2="1180" y2="148" style="stroke:#f4b942;stroke-width:3"/>
+                <line x1="1180" y1="148" x2="1180" y2="356" class="flow-line-thin"/>
                 <text x="318" y="138" class="txt-flow" id="bio_value">0</text>
 
                 <!-- PV -->
@@ -178,14 +178,13 @@
                 <rect x="300" y="680" width="240" height="70" rx="6" class="node-blue"/>
                 <text x="420" y="710" text-anchor="middle" class="txt-label">Gasspeicher Direktverbr.</text>
 
-                <!-- Abregelung -->
-                <line x1="705" y1="356" x2="705" y2="208" class="flow-line"/>
-                <text x="705" y="180" text-anchor="middle" class="txt-label-lg">Abregelung</text>
-                <text x="724" y="272" class="txt-flow-sm" id="q_value">0</text>
+                <!-- Abregelung (Excel page 10: stems from M→N mid-segment, not N-circle) -->
+                <line x1="557" y1="378" x2="557" y2="208" class="flow-line"/>
+                <text x="557" y="180" text-anchor="middle" class="txt-label-lg">Abregelung</text>
+                <text x="580" y="272" class="txt-flow-sm" id="q_value">0</text>
 
                 <!-- N -->
                 <circle cx="705" cy="386" r="30" class="node-circle"/>
-                <text x="705" y="340" text-anchor="middle" class="txt-node-value" id="n_value_svg">0</text>
 
                 <!-- N down to Elektrolyse Stromspeicher -->
                 <line x1="705" y1="416" x2="705" y2="496" class="flow-line"/>
@@ -215,23 +214,30 @@
                 <text x="1090" y="594" text-anchor="middle" class="txt-sub">(Mangelausgl.)</text>
                 <text x="1090" y="620" text-anchor="middle" class="txt-metric" id="eta_rs_value">59% Eta RS</text>
 
-                <!-- 58.5% path from Rückverstromung to final line -->
-                <line x1="1090" y1="535" x2="1090" y2="470" class="flow-line-thin"/>
-                <text x="1103" y="501" class="txt-sub">58.5%</text>
-                <line x1="1090" y1="470" x2="1320" y2="470" class="flow-line-thin"/>
-                <text x="1205" y="458" text-anchor="middle" class="txt-value-sm" id="reconversion_value">0</text>
+                <!-- Rückverstromung path to S-circle (Excel: T-arrow joins main flow at S, not Stromnetz) -->
+                <line x1="1090" y1="535" x2="1090" y2="420" class="flow-line-thin"/>
+                <text x="1050" y="480" class="txt-sub">58,5%</text>
+                <line x1="1090" y1="420" x2="1155" y2="420" class="flow-line-thin"/>
+                <text x="1110" y="412" class="txt-value-sm" id="reconversion_value">0</text>
 
-                <!-- M -> N arrow label (Excel: 1,541,442 flow value on arrow before N) -->
-                <text x="557" y="372" text-anchor="middle" class="txt-flow" id="o_value_svg">0</text>
+                <!-- M -> N arrow label (Excel: 1,541,442 flow value on arrow before N).
+                     Offset right of Abregelung stem (x=557) to avoid overlap. -->
+                <text x="625" y="372" text-anchor="middle" class="txt-flow" id="o_value_svg">0</text>
 
-                <!-- N -> final (biobrennstoffe S rejoins before Stromnetz; Excel page 10) -->
-                <line x1="735" y1="386" x2="1320" y2="386" class="flow-line"/>
-                <text x="1255" y="372" text-anchor="middle" class="txt-value-sm" id="bio_rejoin_value">0</text>
+                <!-- N -> S arrow (Excel page 10: N→S carries 947,106) -->
+                <line x1="735" y1="386" x2="1150" y2="386" class="flow-line"/>
+                <text x="942" y="372" text-anchor="middle" class="txt-flow" id="bio_rejoin_value">0</text>
+
+                <!-- S-circle: sums main flow + bio (from top) + Rückverstromung (from below) -->
+                <circle cx="1180" cy="386" r="30" class="node-circle"/>
+
+                <!-- S -> Stromnetz arrow (Excel: carries final_stromnetz = 1,105,556) -->
+                <line x1="1210" y1="386" x2="1320" y2="386" class="flow-line"/>
+                <text x="1265" y="372" text-anchor="middle" class="txt-flow" id="final_value">0</text>
 
                 <rect x="1320" y="300" width="260" height="170" rx="6" class="node-yellow"/>
-                <text x="1450" y="350" text-anchor="middle" class="txt-label-lg">Stromnetz zum</text>
-                <text x="1450" y="385" text-anchor="middle" class="txt-label-lg">Endverbrauch</text>
-                <text x="1450" y="458" text-anchor="middle" class="txt-value" id="final_value">0</text>
+                <text x="1450" y="378" text-anchor="middle" class="txt-label-lg">Stromnetz zum</text>
+                <text x="1450" y="408" text-anchor="middle" class="txt-label-lg">Endverbrauch</text>
 
                 <!-- ====================================================== -->
                 <!-- Excel page 10 parity (T54 visual pass 2, 2026-04-22) -->
@@ -248,18 +254,18 @@
                 <text x="272" y="352" class="txt-key">J</text>
                 <text x="257" y="536" class="txt-key">L</text>
 
-                <!-- Circle letter labels INSIDE M and N (values are above circles at y=340/356) -->
+                <!-- Circle letter labels INSIDE M, N, and S -->
                 <text x="420" y="394" text-anchor="middle" class="txt-key-circle">M</text>
                 <text x="705" y="394" text-anchor="middle" class="txt-key-circle">N</text>
+                <text x="1180" y="394" text-anchor="middle" class="txt-key-circle">S</text>
 
-                <!-- Flow letter labels — placed clear of the value text (accounting for ~70px width). -->
-                <text x="800" y="272" class="txt-key">Q</text>
+                <!-- Flow letter labels — placed clear of the value text. -->
+                <text x="530" y="272" class="txt-key">Q</text>
                 <text x="465" y="472" class="txt-key">P</text>
                 <text x="752" y="472" class="txt-key">P</text>
                 <text x="515" y="658" class="txt-key">P</text>
                 <text x="815" y="686" class="txt-key">P</text>
                 <text x="1190" y="688" class="txt-key">T</text>
-                <text x="1290" y="372" class="txt-key">S</text>
                 <text x="1560" y="330" class="txt-key">I</text>
 
                 <!-- Pmin/Pv sidebar on Elektrolyse Stromspeicher (Excel shows 100%/65%) -->
@@ -425,8 +431,6 @@
         setText('hydro_value', vals.hydro);
         setText('m_value', vals.m_total);
         setText('ely_branch_value', vals.ely_branch_value);
-        // T54 fix: N-circle displays n_to_right (Excel N-value = 947,106), not n_value
-        setText('n_value_svg', vals.n_to_right);
         setText('n_output_branch_value', vals.n_output_branch);
         setText('q_value', vals.q_abregelung);
         setText('ely_offer_value', vals.ely_offer);
@@ -454,9 +458,10 @@
         setText('gasspeicher_direkt_value', vals.gasspeicher_direkt);
         setText('t_value_svg', vals.t_value);
         setText('reconversion_value', vals.reconversion);
-        // T54 fix: M→N arrow label shows n_value (Excel 1,541,442 flow value)
+        // M→N arrow shows n_value (Excel 1,541,442); N→S arrow shows n_to_right (Excel 947,106);
+        // S→Stromnetz arrow shows final_stromnetz (Excel 1,105,556).
         setText('o_value_svg', vals.n_value);
-        setText('bio_rejoin_value', vals.bio);
+        setText('bio_rejoin_value', vals.n_to_right);
         setText('final_value', vals.final_stromnetz);
 
         const exportCsvBtn = document.getElementById('exportCsvBtn');
