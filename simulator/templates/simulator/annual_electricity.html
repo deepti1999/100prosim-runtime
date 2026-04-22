@@ -226,7 +226,7 @@
 
                 <!-- N -> final (biobrennstoffe S rejoins before Stromnetz; Excel page 10) -->
                 <line x1="735" y1="386" x2="1320" y2="386" class="flow-line"/>
-                <text x="1280" y="372" text-anchor="middle" class="txt-value-sm" id="bio_rejoin_value">0</text>
+                <text x="1255" y="372" text-anchor="middle" class="txt-value-sm" id="bio_rejoin_value">0</text>
 
                 <rect x="1320" y="300" width="260" height="170" rx="6" class="node-yellow"/>
                 <text x="1450" y="350" text-anchor="middle" class="txt-label-lg">Stromnetz zum</text>
@@ -241,27 +241,26 @@
                 <text x="450" y="96" text-anchor="middle" class="txt-col-header">Bruttostromerzeugung:</text>
                 <text x="1400" y="96" text-anchor="middle" class="txt-col-header">Nettostromerzeugung:</text>
 
-                <!-- Source letter labels (Zeitreihenkennung): S, K, J, L -->
-                <text x="268" y="132" class="txt-key">S</text>
-                <text x="268" y="252" class="txt-key">K</text>
-                <text x="268" y="372" class="txt-key">J</text>
-                <text x="228" y="534" class="txt-key">L</text>
+                <!-- Source letter labels (Zeitreihenkennung): S, K, J, L
+                     — positioned above each value so they don't overlap the digits. -->
+                <text x="330" y="118" class="txt-key">S</text>
+                <text x="297" y="266" class="txt-key">K</text>
+                <text x="272" y="352" class="txt-key">J</text>
+                <text x="257" y="536" class="txt-key">L</text>
 
-                <!-- Circle letter labels inside M and N -->
-                <text x="420" y="392" text-anchor="middle" class="txt-key-circle">M</text>
-                <text x="705" y="392" text-anchor="middle" class="txt-key-circle">N</text>
+                <!-- Circle letter labels INSIDE M and N (values are above circles at y=340/356) -->
+                <text x="420" y="394" text-anchor="middle" class="txt-key-circle">M</text>
+                <text x="705" y="394" text-anchor="middle" class="txt-key-circle">N</text>
 
-                <!-- Flow letter labels: Q (Abregelung), P (Ely input), P (ES input),
-                     P (Gasspeicher Direkt), P (Gas Storage arrow), T (Rückverstr.),
-                     I (Stromnetz), S (bio rejoin) -->
-                <text x="750" y="272" class="txt-key">Q</text>
-                <text x="448" y="472" class="txt-key">P</text>
-                <text x="735" y="472" class="txt-key">P</text>
-                <text x="470" y="658" class="txt-key">P</text>
-                <text x="765" y="686" class="txt-key">P</text>
-                <text x="1140" y="688" class="txt-key">T</text>
-                <text x="1310" y="372" class="txt-key">S</text>
-                <text x="1410" y="458" class="txt-key">I</text>
+                <!-- Flow letter labels — placed clear of the value text (accounting for ~70px width). -->
+                <text x="800" y="272" class="txt-key">Q</text>
+                <text x="465" y="472" class="txt-key">P</text>
+                <text x="752" y="472" class="txt-key">P</text>
+                <text x="515" y="658" class="txt-key">P</text>
+                <text x="815" y="686" class="txt-key">P</text>
+                <text x="1190" y="688" class="txt-key">T</text>
+                <text x="1290" y="372" class="txt-key">S</text>
+                <text x="1560" y="330" class="txt-key">I</text>
 
                 <!-- Pmin/Pv sidebar on Elektrolyse Stromspeicher (Excel shows 100%/65%) -->
                 <rect x="835" y="540" width="80" height="50" rx="3" class="metric-bg"/>
