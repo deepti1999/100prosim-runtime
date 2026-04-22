@@ -29,6 +29,15 @@ Deployment guide for the live app at `prosim-100.herokuapp.com`. Covers:
 
 Earlier research on selective PyPSA integration. Not adopted (see §23 for the final decision). Kept as reference for a future engineer who wants to revisit long-duration storage optimization.
 
+## [stakeholder/](stakeholder/)
+
+ErnES stakeholder input and the action items derived from it.
+
+- [`260403_Portierung_Bestandsaufnahme.pdf`](stakeholder/260403_Portierung_Bestandsaufnahme.pdf) — original German stocktaking by H. Schmidt-Kanefendt (03.04.2026)
+- [`260403_Bestandsaufnahme_DE.md`](stakeholder/260403_Bestandsaufnahme_DE.md) — clean German Markdown extraction
+- [`260403_Bestandsaufnahme_EN.md`](stakeholder/260403_Bestandsaufnahme_EN.md) — English translation
+- [`NEXT_CHANGES.md`](stakeholder/NEXT_CHANGES.md) — action-item digest (P0–P4), prioritized and grouped into sprints
+
 ---
 
 ## The headline number
