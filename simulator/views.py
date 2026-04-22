@@ -35,6 +35,9 @@ def update_user_percent(request):
         # Get the land use record (with parent for target calc)
         landuse = get_object_or_404(LandUse.objects.select_related('parent'), code=code)
 
+        # Capture pre-edit value for history logging (Phase 6-A, T61).
+        old_user_percent = landuse.user_percent
+
         # Update user_percent (allow None/empty for clearing)
         if user_percent == '' or user_percent is None:
             landuse.user_percent = None
@@ -70,9 +73,24 @@ def update_user_percent(request):
             landuse.user_percent = percent_val
 
         landuse.save()
-        
+
+        # Phase 6-A (T61): log user-initiated modification.
+        try:
+            from .models import ModificationHistoryEntry
+            ModificationHistoryEntry.objects.create(
+                owner=request.user if request.user.is_authenticated else None,
+                model_label="LandUse",
+                code=code or "",
+                field="user_percent",
+                value_before=old_user_percent,
+                value_after=landuse.user_percent,
+                source="user",
+            )
+        except Exception:
+            pass
+
         return JsonResponse({
-            'success': True, 
+            'success': True,
             'message': f'Saved {code}: {landuse.user_percent}%',
             'code': code,
             'user_percent': landuse.user_percent,

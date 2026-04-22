@@ -1563,6 +1563,49 @@ class ScenarioSnapshot(models.Model):
         scope = "global" if self.owner_id is None else f"user:{self.owner_id}"
         return f"{scope}:{self.name}"
 
+class ModificationHistoryEntry(models.Model):
+    """
+    Append-only log of user-driven modifications (T61-T63, PDF §2.5.8).
+    Each row captures: which parameter, before/after values, who/when,
+    and an optional snapshot label (e.g. 'Status', 'Basisszenario').
+
+    Per stakeholder plan: inspectable only. This model is NOT used for
+    time-travel restore; that's what ScenarioSnapshot is for.
+    """
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="modification_history",
+    )
+    # Which domain surface (e.g. 'LandUse', 'VerbrauchData', 'RenewableData').
+    model_label = models.CharField(max_length=64)
+    # The domain cell code (LU_2.1, 9.3.1, etc.). Stakeholder contract: never
+    # rename — stays as-is in the log.
+    code = models.CharField(max_length=64)
+    # Human-facing field name (e.g. 'user_percent', 'user_input').
+    field = models.CharField(max_length=64)
+    value_before = models.JSONField(null=True, blank=True)
+    value_after = models.JSONField(null=True, blank=True)
+    source = models.CharField(
+        max_length=16,
+        default="user",
+        help_text="'user' = direct edit; 'auto' = cascade-applied change",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at", "-id"]
+        indexes = [
+            models.Index(fields=["owner", "-created_at"]),
+            models.Index(fields=["code"]),
+        ]
+
+    def __str__(self):
+        return f"{self.code}.{self.field} {self.value_before} -> {self.value_after}"
+
+
 class BalanceJob(models.Model):
     """
     Background queue item for long-running WS sector balance operations.

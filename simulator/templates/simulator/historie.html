@@ -1,0 +1,138 @@
+{% extends 'simulator/base.html' %}
+
+{% block title %}Modifikations-Historie{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {% include 'simulator/partials/sidebar_nav.html' with active_section='historie' %}
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2"><i class="fas fa-history me-2"></i>Modifikations-Historie</h1>
+            </div>
+
+            <div class="alert alert-info" role="alert">
+                <strong>Hinweis:</strong> Diese Seite zeigt die Nachverfolgung Ihrer Änderungen (Phase 6-A, PDF §2.5.8).
+                Sie ist einsehbar, aber nicht rücksetzbar – zum Zurückkehren auf einen früheren Stand verwenden Sie
+                <em>Szenarien &rarr; Wiederherstellen</em> oder <em>Auf Baseline zurücksetzen</em>.
+            </div>
+
+            {% if entries %}
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>Einträge</strong>
+                    <span class="text-muted small">
+                        Angezeigt: {{ display_count }} von insgesamt {{ total_count }}{% if total_count > capped_at %} (begrenzt auf die letzten {{ capped_at }}){% endif %}
+                    </span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Zeitpunkt</th>
+                                    <th>Typ</th>
+                                    <th>Code</th>
+                                    <th>Feld</th>
+                                    <th class="text-end">Vorher</th>
+                                    <th class="text-end">Nachher</th>
+                                    <th>Quelle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entry in entries %}
+                                <tr>
+                                    <td class="text-nowrap">{{ entry.created_at|date:"d.m.Y H:i:s" }}</td>
+                                    <td><span class="badge bg-secondary">{{ entry.model_label }}</span></td>
+                                    <td><code>{{ entry.code }}</code></td>
+                                    <td>{{ entry.field }}</td>
+                                    <td class="text-end text-muted">
+                                        {% if entry.value_before is not None %}{{ entry.value_before }}{% else %}—{% endif %}
+                                    </td>
+                                    <td class="text-end fw-bold">
+                                        {% if entry.value_after is not None %}{{ entry.value_after }}{% else %}—{% endif %}
+                                    </td>
+                                    <td>
+                                        {% if entry.source == 'user' %}
+                                            <span class="badge bg-primary">manuell</span>
+                                        {% else %}
+                                            <span class="badge bg-info text-dark">automatisch</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {# Phase 6-A (T62): also render a column-layout view matching the Excel AH.Monitor     #}
+            {# reference — each modification step is a column, each parameter a row.              #}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <strong>Spalten-Ansicht (nach Muster 100prosim-Excel AH.Monitor)</strong>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 480px;">
+                        <table class="table table-sm table-bordered mb-0" id="historieColumnTable">
+                            <thead class="table-light sticky-top">
+                                <tr>
+                                    <th style="min-width: 200px;">Parameter</th>
+                                    {% for entry in entries %}
+                                    <th class="text-end text-nowrap">
+                                        <div class="small text-muted">{{ forloop.revcounter }}</div>
+                                        <div class="small">{{ entry.created_at|date:"H:i:s" }}</div>
+                                        <div class="small text-muted">{{ entry.created_at|date:"d.m." }}</div>
+                                    </th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody id="historieColumnBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-warning" role="alert">
+                Noch keine Modifikationen protokolliert. Sobald Sie einen Wert auf Verbrauch,
+                Flächennutzung oder Erneuerbare Energien ändern, erscheint der Eintrag hier.
+            </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+
+{% if entries %}
+{{ entries|length|json_script:"historie-count" }}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Phase 6-A (T62): build column-layout from the entries on the page.
+    // We expose the entries as JSON via hidden script tags rendered below
+    // so the column layout can be built client-side with JS (Excel-style).
+    const entries = JSON.parse(document.getElementById('historie-entries').textContent || '[]');
+    // Group by parameter (model_label + code + field) so each row is a
+    // single parameter and each column is one modification step.
+    const byParam = {};
+    entries.forEach((e, i) => {
+        const key = e.model_label + '|' + e.code + '|' + e.field;
+        if (!byParam[key]) {
+            byParam[key] = { label: e.model_label + ' · ' + e.code + '.' + e.field, values: new Array(entries.length).fill('') };
+        }
+        byParam[key].values[i] = (e.value_after === null || e.value_after === undefined) ? '—' : e.value_after;
+    });
+    const body = document.getElementById('historieColumnBody');
+    if (body) {
+        body.innerHTML = Object.values(byParam).map(row => (
+            '<tr>' +
+            '<td class="text-nowrap"><strong>' + row.label + '</strong></td>' +
+            row.values.map(v => '<td class="text-end">' + v + '</td>').join('') +
+            '</tr>'
+        )).join('');
+    }
+});
+</script>
+{{ entries_serialized|json_script:"historie-entries" }}
+{% endif %}
+{% endblock %}

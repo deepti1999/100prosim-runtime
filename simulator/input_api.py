@@ -9,7 +9,28 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from simulator.verbrauch_recalculator import recalc_all_verbrauch
-from .models import LandUse, RenewableData, VerbrauchData
+from .models import LandUse, ModificationHistoryEntry, RenewableData, VerbrauchData
+
+
+def _log_modification(*, user, model_label, code, field, before, after, source="user"):
+    """Phase 6-A (T61): append-only log of user-initiated modifications.
+
+    Wraps in try/except so logging failures never break the underlying
+    save. We only log from the API endpoints (this module) so cascade-
+    driven saves don't spam the log.
+    """
+    try:
+        ModificationHistoryEntry.objects.create(
+            owner=user if (user is not None and user.is_authenticated) else None,
+            model_label=model_label,
+            code=code or "",
+            field=field,
+            value_before=before,
+            value_after=after,
+            source=source,
+        )
+    except Exception:
+        pass
 
 _SIMULATOR_VERBOSE_PRINTS = os.environ.get("SIMULATOR_VERBOSE_PRINTS", "false").lower() == "true"
 if not _SIMULATOR_VERBOSE_PRINTS:
@@ -312,6 +333,17 @@ def save_verbrauch_user_input(request):
         item.user_percent = float(user_percent) if user_percent is not None else None
         item.save(skip_cascade=True)
 
+        # Phase 6-A (T61): log user-initiated modification.
+        _log_modification(
+            user=request.user,
+            model_label="VerbrauchData",
+            code=code,
+            field="user_percent",
+            before=old_value,
+            after=item.user_percent,
+            source="user",
+        )
+
         rebalanced = {}
         try:
             from simulator.percentage_rebalancer import get_percentage_group
@@ -383,6 +415,17 @@ def save_renewable_user_input(request):
 
         # Re-read after save so target_value reflects any cascade-updated state.
         item.refresh_from_db()
+
+        # Phase 6-A (T61): log user-initiated modification.
+        _log_modification(
+            user=request.user,
+            model_label="RenewableData",
+            code=code,
+            field="user_input",
+            before=old_value,
+            after=item.user_input,
+            source="user",
+        )
 
         return JsonResponse({
             'success': True,
