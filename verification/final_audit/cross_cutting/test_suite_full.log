@@ -1,0 +1,29 @@
+Found 224 test(s).
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+/usr/local/lib/python3.11/site-packages/django/core/handlers/base.py:61: UserWarning: No directory at: /app/staticfiles/
+  mw_instance = middleware(adapted_handler)
+...{"timestamp": "2026-04-23T23:15:18.600313Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Forbidden: /api/baseline/create/", "eventType": "other", "context": {}, "stack": null}
+.{"timestamp": "2026-04-23T23:15:18.630248Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Not Found: /api/baseline/restore/", "eventType": "other", "context": {}, "stack": null}
+.s........................{"timestamp": "2026-04-23T23:15:21.981441Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Bad Request: /api/save-renewable-user-input/", "eventType": "other", "context": {}, "stack": null}
+.{"timestamp": "2026-04-23T23:15:21.994225Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Bad Request: /api/save-renewable-user-input/", "eventType": "other", "context": {}, "stack": null}
+...{"timestamp": "2026-04-23T23:15:22.170588Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Bad Request: /landuse/59/update_percent/", "eventType": "other", "context": {}, "stack": null}
+.{"timestamp": "2026-04-23T23:15:22.182586Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Bad Request: /landuse/58/update_percent/", "eventType": "other", "context": {}, "stack": null}
+.{"timestamp": "2026-04-23T23:15:22.193908Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Bad Request: /landuse/59/update_percent/", "eventType": "other", "context": {}, "stack": null}
+.{"timestamp": "2026-04-23T23:15:22.205491Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Bad Request: /api/save-verbrauch-user-input/", "eventType": "other", "context": {}, "stack": null}
+........../usr/local/lib/python3.11/site-packages/openpyxl/worksheet/_reader.py:329: UserWarning: Conditional Formatting extension is not supported and will be removed
+  warn(msg)
+...................................sss..........................{"timestamp": "2026-04-23T23:20:54.703896Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Method Not Allowed: /api/ws/apply-balance/", "eventType": "other", "context": {}, "stack": null}
+.{"timestamp": "2026-04-23T23:20:54.733509Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Forbidden: /api/ws/balance-job/3b08422c-0a76-425d-9ee6-970145ebcef4/", "eventType": "other", "context": {}, "stack": null}
+........................................{"timestamp": "2026-04-23T23:20:56.592288Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Method Not Allowed (GET): /api/region/set/", "eventType": "other", "context": {}, "stack": null}
+.{"timestamp": "2026-04-23T23:20:56.848720Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Bad Request: /api/region/set/", "eventType": "other", "context": {}, "stack": null}
+.{"timestamp": "2026-04-23T23:20:57.088582Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Bad Request: /api/region/set/", "eventType": "other", "context": {}, "stack": null}
+.{"timestamp": "2026-04-23T23:20:57.319887Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Bad Request: /api/region/set/", "eventType": "other", "context": {}, "stack": null}
+...{"timestamp": "2026-04-23T23:20:57.739016Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Bad Request: /api/scenario/create/", "eventType": "other", "context": {}, "stack": null}
+.....................................s{"timestamp": "2026-04-23T23:21:03.632541Z", "level": "warning", "component": "django.request", "file": "/usr/local/lib/python3.11/site-packages/django/utils/log.py", "line": 246, "function": "log_response", "message": "Not Found: /api/baseline/restore/", "eventType": "other", "context": {}, "stack": null}
+...ss..........
+----------------------------------------------------------------------
+Ran 207 tests in 375.381s
+
+OK (skipped=7)
+Destroying test database for alias 'default'...
