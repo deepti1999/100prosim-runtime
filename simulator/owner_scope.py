@@ -40,10 +40,29 @@ class OwnerScopedManager(models.Manager):
     - If an owner context exists and owner rows exist -> return only owner rows
     - If owner context exists but owner rows missing -> fallback to global rows (owner is null)
     - If no owner context -> return global rows (owner is null)
+
+    Phase B (T65): if the model has a `region` field AND a region
+    thread-local is set (`simulator.region_scope`), the queryset is
+    additionally filtered by `region__code=current_region`. The
+    owner-presence cache key is extended with the region so switching
+    region between requests doesn't surface a stale "user has rows"
+    answer from the previous region.
+
+    Region filter is no-op when no region context is set, preserving
+    back-compat for callers that pre-date Phase B.
     """
 
     def get_queryset(self):
+        from simulator.region_scope import get_current_region_code
+
         qs = super().get_queryset()
+
+        region_code = get_current_region_code()
+        has_region_field = any(
+            f.name == "region" for f in self.model._meta.concrete_fields
+        )
+        if region_code and has_region_field:
+            qs = qs.filter(region__code=region_code)
 
         if not any(f.name == "owner" for f in self.model._meta.concrete_fields):
             return qs
@@ -53,7 +72,11 @@ class OwnerScopedManager(models.Manager):
             return qs.filter(owner__isnull=True)
 
         cache = getattr(_state, "owner_presence_cache", {})
-        cache_key = self.model._meta.label_lower
+        # Region included in the cache key so DE/BB don't share the
+        # owner-presence answer for a single user.
+        cache_key = (
+            f"{self.model._meta.label_lower}::{region_code or '__none__'}"
+        )
         has_owner_rows = cache.get(cache_key)
         if has_owner_rows is None:
             has_owner_rows = qs.filter(owner_id=owner_id).exists()
