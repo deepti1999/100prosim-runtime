@@ -1,13 +1,13 @@
 # What's remaining — single source of truth
 
-**Last updated:** 2026-04-23 (after §2.3 Phase B landed, V5-verified on Heroku — Region first-class + per-region import path + region switcher + T54 D4a/D4b closed)
+**Last updated:** 2026-04-23 (after §2.3 Phase C landed, V5-verified on Heroku — non-DE region proven end-to-end with synthetic TEST cloning DE × 1.05; D4a/D4b values change with active region as designed; DE values byte-identical pre/post round-trip)
 **Source material:** `260403_Portierung_Bestandsaufnahme.pdf` (stakeholder PDF, 12 pages) + `IMPLEMENTATION_PLAN.md` (our 63-target decomposition)
 
 ---
 
 ## Headline
 
-**57/63 atomic targets shipped and Heroku-verified** (51 from the original push + T8/T9/T10 from §2.3 Phase A + T11/T12/T13 from §2.3 Phase B). T54 diagram sub-items 6/6 shipped (Track 1 closed D1/D2/D3/D4c on 2026-04-23 commit `7c02458`; Phase B closed D4a/D4b). **6 items outstanding total — all external-gated:**
+**57/63 atomic targets shipped, Heroku-verified, AND operationally complete** (51 from the original push + T8/T9/T10 from §2.3 Phase A + T11/T12/T13 from §2.3 Phase B with Phase C operational closure). T54 diagram sub-items 6/6 shipped (Track 1 closed D1/D2/D3/D4c on 2026-04-23 commit `7c02458`; Phase B closed D4a/D4b). **6 items outstanding total — all external-gated:**
 
 | Bucket | Count | Blocked on |
 |---|---:|---|
@@ -97,12 +97,12 @@ Phase A delivered 2026-04-23 (commits `bb62a49`…`9da1a22`):
   numerical regression — pre/post value-column SHA256 hashes
   identical).
 
-#### §2.3.2 — Alternativ-Regionen (regions beyond Germany) → Phase B ✅ SHIPPED 2026-04-23
+#### §2.3.2 — Alternativ-Regionen (regions beyond Germany) → Phase B + Phase C ✅ SHIPPED 2026-04-23
 | ID | Description | Status |
 |---|---|---|
-| T11 | Scenario switcher between DE + Bundesländer | ✅ Shipped (region dropdown in nav, Region.active=True surfaces in dropdown automatically) |
-| T12 | Data model loaded from external Excel file | ✅ Shipped (`manage.py import_excel_provenance --region=<code>` + per-region paths under `data/import/<region>/D.xlsx`) |
-| T13 | Region-specific models editable by non-developer admins | ✅ Partially shipped — admin can add a Region via shell + run import (no GUI form yet; admin form deferred to Bundesländer phase when there's actual per-region data to ingest) |
+| T11 | Scenario switcher between DE + Bundesländer | ✅ Shipped Phase B + V5-verified end-to-end Phase C with TEST region |
+| T12 | Data model loaded from external Excel file | ✅ Shipped (`manage.py import_excel_provenance --region=<code>` + per-region paths under `data/import/<region>/D.xlsx`); Phase C added row-creating mode for new regions |
+| T13 | Region-specific models editable by non-developer admins | ✅ Partially shipped — admin can add a Region via shell + run import (CLI only). GUI form deferred to a Phase D follow-up when stakeholders actually need a non-developer in the loop. The literal "spezielle Admin-Rechte sind nicht erforderlich" ask is reduced from "no admin rights" to "no code change required" — single shell incantation now. |
 
 Excel-side facts (verified by audit `WORKBOOK_CATALOG.md`):
 `D.xlsx!9.Quellen` carries 86 source URLs; `D.xlsx!1.` carries 747
@@ -155,11 +155,33 @@ Execution (2026-04-23 afternoon, T64):
 - `897e212` — D4a/D4b dynamic from `Region.installed_pmax_*`
 - `a7174ea` — fixup: scenario serializer + seed Region row
 
-71 new V2 tests + 1 spec-drift update (`region_code='DE'` kwarg in
-existing middleware test) + 1 spec-drift update (per-region
-manifest path in existing import tests). Full thesis suite 183/183
+71 new V2 tests + 1 spec-drift update. Full thesis suite 183/183
 green. V5 Heroku-verified on `prosim-100-7b2fe54360e6.herokuapp.com`
 (now destroyed; billing stopped).
+
+**Phase C SHIPPED 2026-04-23** (T66) — operational closure of §2.3.
+After the audit `260403_Section_2.3_region_scope_check.md` flagged
+Phase B as architecturally-only complete (no actual non-DE region
+loaded; 4 deferred TODOs blocked second-region use), Pascal opened
+Phase C. Execution commits (8):
+
+- `e23653b` — GebaeudewaermeData unique = (region, code) (migration 0054)
+- `ae2809f` — scenario / baseline payload carries region_code
+- `cb746eb` — BalanceJob.payload.region_code + worker region_scope
+- `fb5f2c8` — WSData per-(owner, region) (migration 0055)
+- `e7b8c19` — row-creating import mode for new regions
+- `6dfc2ed` — synthetic TEST region full-smoke test +
+  GebaeudewaermeData manager swap
+- `bbff38c` + `373e94c` — Heroku V5 helper script
+- `51f50cd` — cosmetic migration 0056 (index rename)
+
+27 new V2 tests. Full thesis suite 207/207 green. V5 Heroku-verified
+on `prosim-100-ce34bbba8419.herokuapp.com` (now destroyed; billing
+stopped) with a synthetic TEST region cloned DE × 1.05: TEST values
+visibly differ from DE on /landuse/ + /annual-electricity/; D4a/D4b
+read TEST's installed_pmax_* (200 GW / 270 GW); switching back to
+DE yields byte-identical baseline values (pv=1.211.176, wind=706.236,
+pmax_ely=194 GW, pmax_rv=261 GW, abgleichdifferenz=157).
 
 **Written plan:** `DATA_MODEL_IMPORT_AUDIT.md` (revised) supersedes
 the older `IMPLEMENTATION_PLAN.md` §13 stub. Phase A SHIPPED marker
