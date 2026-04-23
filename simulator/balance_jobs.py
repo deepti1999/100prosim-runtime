@@ -9,6 +9,7 @@ from simulator.models import BalanceJob, CalculationRun
 from simulator.input_api import _run_verbrauch_recalc_passes
 from simulator.owner_scope import owner_scope
 from simulator.recalc_service import unified_recalc_all
+from simulator.region_scope import region_scope
 from simulator.workspace_service import ensure_user_workspace_data
 from simulator.recalc_service import recalc_all_renewables_full
 from simulator.ws_365_service import (
@@ -33,13 +34,13 @@ def _json_safe(value: Any) -> Any:
 def run_balance_job(job: BalanceJob) -> Dict[str, Any]:
     """Execute one queued balance job and return JSON-safe result payload."""
     user = job.created_by
+    # Phase C (T66): payload carries region_code so the worker (a
+    # separate process) runs the dispatch under the user's active
+    # region scope instead of always-DE. Pre-Phase-C jobs (or
+    # internal callers that didn't stamp it) fall back to DE.
+    payload_region_code = (job.payload or {}).get("region_code") or "DE"
     if user and not user.is_staff:
-        # Phase B (T65): defaults to DE workspace. When per-Bundesland
-        # data ships, BalanceJob.payload should carry "region_code"
-        # so the worker can run the user's currently-selected region
-        # workspace instead of always-DE; wrap the dispatcher below
-        # with `region_scope(payload_region)` accordingly.
-        ensure_user_workspace_data(user)
+        ensure_user_workspace_data(user, region_code=payload_region_code)
 
     # Invalidate ALL process-local caches at entry. Workers process many
     # jobs per lifetime; signals fire in-process only (the web process's
@@ -65,7 +66,7 @@ def run_balance_job(job: BalanceJob) -> Dict[str, Any]:
     except Exception:
         pass
 
-    with owner_scope(user):
+    with region_scope(payload_region_code), owner_scope(user):
         if job.job_type == BalanceJob.TYPE_SOLAR_SECTOR_WS:
             result = apply_balanced_landuse_sector_first()
         elif job.job_type == BalanceJob.TYPE_WIND_SECTOR_WS:

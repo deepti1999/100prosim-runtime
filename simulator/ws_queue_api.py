@@ -107,6 +107,26 @@ def _get_existing_active_balance_job(user, job_type):
         .first()
     )
 
+def _active_region_code_from_request(request):
+    """Read active_region_code from session, default DE.
+
+    Used to stamp the user's active region into BalanceJob.payload so
+    the worker (a separate process) runs the dispatch in the right
+    region scope.
+    """
+    try:
+        return (request.session.get("active_region_code") or "DE")
+    except AttributeError:
+        return "DE"
+
+
+def _stamp_region(payload, request):
+    """Merge the active region into a BalanceJob payload (idempotent)."""
+    payload = dict(payload or {})
+    payload.setdefault("region_code", _active_region_code_from_request(request))
+    return payload
+
+
 def _queue_or_reuse_balance_job(user, job_type, payload):
     existing_job = _get_existing_active_balance_job(user, job_type)
     if existing_job:
@@ -130,7 +150,7 @@ def _run_balance_job_inline_debug(request, job_type):
         job_type=job_type,
         status=BalanceJob.STATUS_RUNNING,
         created_by=request.user,
-        payload={},
+        payload=_stamp_region({}, request),
     )
     return run_balance_job(temp_job)
 
@@ -148,7 +168,7 @@ def ws_api_apply_balance(request):
         job = _queue_or_reuse_balance_job(
             request.user,
             BalanceJob.TYPE_SOLAR_WS_ONLY,
-            {},
+            _stamp_region({}, request),
         )
         return JsonResponse({
             'success': True,
@@ -175,7 +195,7 @@ def ws_api_apply_full_balance(request):
         job = _queue_or_reuse_balance_job(
             request.user,
             BalanceJob.TYPE_SOLAR_SECTOR_WS,
-            {},
+            _stamp_region({}, request),
         )
         return JsonResponse({
             'success': True,
@@ -202,7 +222,7 @@ def ws_api_apply_balance_wind(request):
         job = _queue_or_reuse_balance_job(
             request.user,
             BalanceJob.TYPE_WIND_WS_ONLY,
-            {},
+            _stamp_region({}, request),
         )
         return JsonResponse({
             'success': True,
@@ -229,7 +249,7 @@ def ws_api_apply_full_balance_wind(request):
         job = _queue_or_reuse_balance_job(
             request.user,
             BalanceJob.TYPE_WIND_SECTOR_WS,
-            {},
+            _stamp_region({}, request),
         )
         return JsonResponse({
             'success': True,

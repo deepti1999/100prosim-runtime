@@ -69,7 +69,9 @@ class WBBalanceJobsTests(TestCase):
                 with patch("simulator.balance_jobs.apply_balanced_wind_landuse", return_value={"ok": True}) as apply_ws:
                     run_balance_job(job)
 
-        ensure_workspace.assert_called_once_with(self.normal_user)
+        # Phase C (T66): ensure_user_workspace_data now receives region_code
+        # from BalanceJob.payload (default DE when payload empty).
+        ensure_workspace.assert_called_once_with(self.normal_user, region_code="DE")
         apply_ws.assert_called_once_with(
             include_sector_balance=False,
             run_final_renewable_sync=True,
