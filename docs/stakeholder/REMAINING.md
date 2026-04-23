@@ -1,18 +1,18 @@
 # What's remaining — single source of truth
 
-**Last updated:** 2026-04-23 (after T54 Track 1 landed, commit `7c02458`, V5-verified on Heroku — 4 of 6 hardcoded diagram values now backend-computed)
+**Last updated:** 2026-04-23 (after §2.3 Phase A landed, V5-verified on Heroku — provenance popovers live on all 4 parameter pages)
 **Source material:** `260403_Portierung_Bestandsaufnahme.pdf` (stakeholder PDF, 12 pages) + `IMPLEMENTATION_PLAN.md` (our 63-target decomposition)
 
 ---
 
 ## Headline
 
-**51/63 atomic targets shipped and Heroku-verified** from the original plan; T54 diagram sub-items tracked separately (4/6 shipped via Track 1 on 2026-04-23). **14 items outstanding total:**
+**54/63 atomic targets shipped and Heroku-verified** from the original plan (51 + T8 + T9 + T10 from §2.3 Phase A). T54 diagram sub-items tracked separately (4/6 shipped via Track 1 2026-04-23). **11 items outstanding total:**
 
 | Bucket | Count | Blocked on |
 |---|---:|---|
 | **External-gated (Phase 7)** | 6 | ErnES picks a compute platform |
-| **§2.3 Phase A + B** | 6 | Pascal answers D1–D8 in `DATA_MODEL_IMPORT_AUDIT.md` §9 |
+| **§2.3 Phase B** | 3 (T11/T12/T13) | None — Pascal can open Phase B now |
 | **T54 backend-data** | 2 (D4a/D4b) | §2.3 Phase B (Region.installed_pmax_*) |
 
 T54 D1/D2/D3/D4c (source Tagesladungen, flow Tagesladungen, percent shares, Abgleichdifferenz) shipped 2026-04-23 in commit `7c02458`; see `HARDCODED_VALUES_TRACE.md` §6 for the verification ledger.
@@ -63,7 +63,7 @@ matching Excel is the 4 backend-data items below.
 
 ---
 
-## 2. Deferred by decision (6 targets) — Data-model rework
+## 2. §2.3 status — Phase A SHIPPED, Phase B remaining (3 targets)
 
 ### PDF §2.3 — Datenmodell
 
@@ -73,14 +73,33 @@ Stakeholder's **proposal** (Vorschlag, not mandate):
 
 Two sub-asks:
 
-#### §2.3.1 — Nachvollziehbarkeit (traceability) → Phase A
-| ID | Description | Phase |
+#### §2.3.1 — Nachvollziehbarkeit (traceability) → Phase A ✅ SHIPPED 2026-04-23
+| ID | Description | Status |
 |---|---|---|
-| T8 | Parameter source (Quellbezug) surfaced in UI | A |
-| T9 | Parameter assumption (Annahme) surfaced in UI | A |
-| T10 | Admin can update parameters without code changes | A |
+| T8 | Parameter source (Quellbezug) surfaced in UI | ✅ Shipped (info-icon click popover, 4 pages) |
+| T9 | Parameter assumption (Annahme) surfaced in UI | ✅ Shipped (popover Annahme section, 4 pages) |
+| T10 | Admin can update parameters without code changes | ✅ Partially shipped — `manage.py import_excel_provenance` (T11+T12+T13 / Phase B will surface this in admin UI) |
 
-#### §2.3.2 — Alternativ-Regionen (regions beyond Germany) → Phase B
+Phase A delivered 2026-04-23 (commits `bb62a49`…`9da1a22`):
+- 0051_phase_a_provenance_fields migration adds source_url +
+  notes_assumption + origin to LandUse / RenewableData /
+  VerbrauchData / GebaeudewaermeData (additive, no rename, default
+  origin=internal).
+- `manage.py import_excel_provenance D.xlsx --apply` — idempotent;
+  fails loud on missing file / bad sheet schema; populates 265 of
+  420 rows (80.5 % of 329 HIGH-confidence rows from
+  `s_xlsx_map_summary.json`); writes
+  `data/import/d_xlsx.manifest.json` (file_hash + sheet_hashes +
+  per-model counters) and `data/import/orphan_classification.csv`.
+- Info-icon "i" badge per row of /landuse/, /renewable/, /verbrauch/,
+  /gebaeudewarme/ → Bootstrap popover with origin badge + source URL
+  link + assumption text.
+- V5 Heroku verified — popovers render on `prosim-100-2c767e32f236`
+  (now destroyed). Track 1 Jahresstrom diagram unaffected (zero
+  numerical regression — pre/post value-column SHA256 hashes
+  identical).
+
+#### §2.3.2 — Alternativ-Regionen (regions beyond Germany) → Phase B (open)
 | ID | Description | Phase |
 |---|---|---|
 | T11 | Scenario switcher between DE + Bundesländer | B |
@@ -94,39 +113,39 @@ whose sheets are 1:1 with our app pages. Per-Bundesland Excel
 files exist on <https://www.ernes.de/seite/422657/softwaretools.html>
 but are not yet in Pascal's local bundle (only `D.xlsx` for Germany).
 
-**Audit completed 2026-04-23** (commits `d2a4c28`, `55cf302`, `58a1b90`,
-`4c78f61`, `4b7b063`). Full record:
+**Phase A SHIPPED 2026-04-23** (T64). Audit + execution commits:
 
-- Step A — `260403_Section_2.3_literal.md` — verbatim §2.3 text + 11
-  literal asks (L1–L11).
-- Step B — `WORKBOOK_CATALOG.md` — per-file catalog of all 9 workbooks.
-- Step C — `scripts/audit_out/s_xlsx_map_*.csv` — 420 DB rows mapped
-  to `_S.xlsx` at **78.3 % HIGH-confidence + 14.5 % MED + 6 % label-only
-  + 1.2 % NONE.**
-- Step D — `260403_Section_2.3_decision.md` — binding decision record:
-  §2.3 is a **provenance + region + admin-edit** ask, NOT a value import.
-  Values already exist in DB; the gap is source URLs, assumption notes,
-  region first-class, and admin re-import without code change.
-- Step E — `DATA_MODEL_IMPORT_AUDIT.md` (rewritten) — 12 SRs, 10 risks
-  (RISK-01 drops H/H → L/L because Phase A is provenance-only),
-  2-phase plan (A: ~3 days, B: ~3 days), V2–V6 ritual per phase.
+Audit (2026-04-23 morning):
+- `d2a4c28` — Step A literal §2.3 paraphrase
+- `55cf302` — Step B workbook catalog (all 9 .xls* files)
+- `58a1b90` — Step C: 420 DB rows mapped to _S.xlsx at 78.3 % HIGH
+- `4c78f61` — Step D: framing decision (provenance + region, NOT value
+  import)
+- `4b7b063` — Step E: rewrite DATA_MODEL_IMPORT_AUDIT.md (12 SRs, 10
+  risks revised, 2-phase plan)
+- `c4b7b6a` — Step F: REMAINING + FLOW_DIAGRAM_AUDIT refresh
+- `f04598d` — Step G: D1–D8 recommendations
+- `bb62a49` — D1–D8 locked per Pascal approval
 
-**Phase A** (provenance + tooltip + DE admin import) closes T8 + T9 + T10.
+Execution (2026-04-23 afternoon, T64):
+- `d2bd620` — schema migration (3 cols × 4 models)
+- `f401ab8` — import command + V2 tests (13 green)
+- `344e089` — D.xlsx import run (265/420 changed, 80.5 % HIGH coverage,
+  zero numerical diff)
+- `e991949` — UI info-icon popover on 4 pages
+- `9db0aec` — workspace propagation (247 user rows) + /gebaeudewarme/
+  URL wired + V4 Playwright local
+- `9da1a22` — provenance_seed fixture + workspace clone fix +
+  heroku_up update for V5
+
 **Phase B** (region first-class + Bundesländer-ready import) closes
-T11 + T12 + T13 AND unblocks T54 D4a/D4b (see §3 below).
-
-Both phases are **additive** — provenance columns + region FK with
-default `DE` — so the 51 shipped targets stay green. Track 1 D1/D2/D3/D4c
-outputs are unaffected.
-
-**Unblocker:** Pascal answers 8 actually-blocking decisions (D1–D8) in
-`DATA_MODEL_IMPORT_AUDIT.md` §9. Once D1–D8 are settled, Phase A
-opens a single ~3-day implementation. The earlier 4 v1 questions
-(`one-shot vs live binding`, etc.) are now resolved (live binding is
-out; import + tooltip + admin diff is in).
+T11 + T12 + T13 AND unblocks T54 D4a/D4b (see §3 below). ~3 days,
+single V5 Heroku cycle. **Unblocker:** Pascal opens it (no further
+audit decisions needed — Phase B picks up the patterns from Phase A).
 
 **Written plan:** `DATA_MODEL_IMPORT_AUDIT.md` (revised) supersedes
-the older `IMPLEMENTATION_PLAN.md` §13 stub.
+the older `IMPLEMENTATION_PLAN.md` §13 stub. Phase A SHIPPED marker
+in §1 of that file.
 
 ---
 

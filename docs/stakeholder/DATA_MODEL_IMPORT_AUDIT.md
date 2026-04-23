@@ -1,6 +1,6 @@
 # §2.3 Data-Model Audit (revised) — provenance + region, not value import
 
-**Status:** Audit only. No code changes proposed yet.
+**Status:** **Phase A SHIPPED 2026-04-23 (T64)** — V5-verified on Heroku. Phase B open.
 **Date:** 2026-04-23 (revised; v1 from earlier same day preserved in git history at commit `f5c738b` and back).
 **Author:** Claude (Opus 4.7) under Pascal's direction.
 **Scope:** Stakeholder PDF §2.3 "Datenmodell" (Schmidt-Kanefendt 2026-04-03).
@@ -25,6 +25,31 @@ Steps A / B / C of this audit (committed `d2a4c28` / `55cf302` / `58a1b90`) veri
 The v1 audit's headline ("Algorithmic mapping from our DB → D.xlsx is NOT clean enough to automate, 35–75 % match") was a side-effect of mapping against the wrong file. Mapping against _S.xlsx (the right file) gives 92.8 % at MED-or-better with no hand curation.
 
 This document fully supersedes v1. The decision record sits in `260403_Section_2.3_decision.md` (Step D); this file is the implementation-facing audit.
+
+---
+
+## 0a. Phase A SHIPPED 2026-04-23 (T64)
+
+Phase A landed on `main` across 9 commits (`bb62a49` … `9da1a22`).
+
+| Deliverable | Status | Evidence |
+|---|---|---|
+| Schema migration: source_url + notes_assumption + origin on 4 models | ✅ Shipped | `simulator/migrations/0051_phase_a_provenance_fields.py`; 11/11 V2 tests in `test_wb_provenance_schema.py` |
+| `manage.py import_excel_provenance D.xlsx --apply` (idempotent, fail-loud, manifest + orphan CSV) | ✅ Shipped | `simulator/management/commands/import_excel_provenance.py`; 13/13 V2 tests in `test_wb_excel_provenance_import.py` |
+| Provenance import run on real D.xlsx | ✅ Done | 265 / 420 rows changed (63.1 % overall, **80.5 % of 329 HIGH-confidence** rows). Zero numerical diff (pre/post value-column SHA256 identical across all 4 models). `data/import/d_xlsx.manifest.json` + `data/import/orphan_classification.csv` committed. |
+| UI info-icon click popover on /landuse/ /renewable/ /verbrauch/ /gebaeudewarme/ | ✅ Shipped | `simulator/templates/simulator/_provenance_icon.html` partial + popover initializer in `base.html`; 4 templates updated; verbrauch + gebaeudewaerme + renewable views extended to pass provenance fields |
+| /gebaeudewarme/ URL wired up | ✅ Shipped | `simulator/urls.py` — view existed but was dead code prior to Phase A |
+| User-workspace propagation | ✅ Shipped | `_propagate_to_workspace_rows()` in import command (247 user-workspace rows) + `_clone_landuse_for_user` updated to carry provenance for fresh users (Heroku-verified) |
+| V2 unit tests | ✅ 24/24 green | `test_wb_provenance_schema` (11) + `test_wb_excel_provenance_import` (13) |
+| V4 Playwright localhost — popovers render on all 4 pages with substantive German content | ✅ Verified | `verification/phase_a/landuse_popover_open.png`, `renewable_popover_open.png`, `verbrauch_popover_open.png`, `gebaeudewarme_popover_open.png` (gitignored per project convention) |
+| V5 Playwright Heroku — same 4 pages on `prosim-100-2c767e32f236.herokuapp.com` | ✅ Verified | `verification/phase_a/heroku_*_popover.png`; Jahresstrom diagram regression check (no movement of Track 1 D1–D4c values) `heroku_jahresstrom_no_regression.png` |
+| V6 docs | ✅ Done | This section + `REMAINING.md` §2 marked SHIPPED |
+
+What remains for §2.3:
+
+- **Phase B** (Region first-class + Bundesländer import + admin UI) — closes T11 + T12 + T13 + unblocks T54 D4a/D4b. Pascal can open at any time; no further audit decisions blocking.
+
+The 8 D1–D8 decisions in §9 are all in **LOCKED** state from 2026-04-23 (Pascal approved on the recommendation defaults plus D4 = click popover).
 
 ---
 
