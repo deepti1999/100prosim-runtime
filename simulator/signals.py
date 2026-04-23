@@ -121,6 +121,51 @@ def compute_ws_diagram_reference(use_ws_overrides: bool = True):
     h2_offer = ely_branch_value * ws_consts["ETA_STROM_GAS"]
     h2_surplus = n_output_branch * ws_consts["ETA_STROM_GAS"]
 
+    # Derived metrics for the Jahresstrom diagram labels (T54 D1-D4c).
+    # Formulas confirmed by direct inspection of WS.xlsm cells on 2026-04-23:
+    #   D1/D2: Tages = annual * TLproEingabeEinheit, where
+    #          TLproEingabeEinheit = 365 / final_stromnetz
+    #          (Wind + Hydro use "AE-adjusted" value = raw * (1 - ely_branch/m_total);
+    #           PV + Bio use raw).
+    #   D3:    four_source = pv + wind + hydro + bio; percent numerators
+    #          are raw for PV/Bio and "AE-adjusted" for Wind/Hydro.
+    #   D4c:   Abgleichdifferenz = gas_storage - t_value (gas tank drift).
+    # See docs/stakeholder/HARDCODED_VALUES_TRACE.md §4 for the derivation.
+    tl_factor = (365.0 / final_stromnetz) if final_stromnetz > 0 else 0.0
+    ely_p2g_factor = (1.0 - (ely_branch_value / m_total)) if m_total > 0 else 0.0
+    adjusted_wind = wind_value * ely_p2g_factor
+    adjusted_hydro = hydro_value * ely_p2g_factor
+    four_source_total = m_total + bio_value
+
+    # D1 — source Tagesladungen
+    pv_tages = pv_value * tl_factor
+    wind_tages = adjusted_wind * tl_factor
+    hydro_tages = adjusted_hydro * tl_factor
+    bio_tages = bio_value * tl_factor
+
+    # D2 — flow Tagesladungen (applied to every annual segment value)
+    flow_n_value_tages = n_value * tl_factor
+    flow_q_abregelung_tages = q_abregelung * tl_factor
+    flow_n_to_right_tages = n_to_right * tl_factor
+    flow_final_tages = final_stromnetz * tl_factor  # = 365 by definition
+    flow_ely_branch_tages = ely_branch_value * tl_factor
+    flow_n_output_branch_tages = n_output_branch * tl_factor
+    flow_gasspeicher_direkt_tages = (ely_branch_value * ws_consts["ETA_STROM_GAS"]) * tl_factor
+    flow_gas_storage_tages = gas_storage * tl_factor
+    flow_t_value_tages = t_value * tl_factor
+    flow_reconversion_tages = t_output * tl_factor
+    flow_storage_capacity_tages = storage_capacity * tl_factor
+
+    # D3 — percent shares (NOTE asymmetric: PV/Bio use raw; Wind/Hydro use adjusted)
+    pv_pct = (pv_value / four_source_total * 100.0) if four_source_total > 0 else 0.0
+    wind_pct = (adjusted_wind / four_source_total * 100.0) if four_source_total > 0 else 0.0
+    hydro_pct = (adjusted_hydro / four_source_total * 100.0) if four_source_total > 0 else 0.0
+    bio_pct = (bio_value / four_source_total * 100.0) if four_source_total > 0 else 0.0
+
+    # D4c — Abgleichdifferenz (gas-tank drift residual over the year)
+    abgleichdifferenz = gas_storage - t_value
+    abgleichdifferenz_tages = abgleichdifferenz * tl_factor
+
     return {
         "pv_value": pv_value,
         "wind_value": wind_value,
@@ -147,6 +192,31 @@ def compute_ws_diagram_reference(use_ws_overrides: bool = True):
         "windstrom_366": windstrom_366,
         "sonst_kraft_konstant_366": sonst_kraft_konstant_366,
         "h2_surplus": h2_surplus,
+        # T54 D1 — source Tagesladungen
+        "pv_tages": pv_tages,
+        "wind_tages": wind_tages,
+        "hydro_tages": hydro_tages,
+        "bio_tages": bio_tages,
+        # T54 D2 — flow Tagesladungen
+        "flow_n_value_tages": flow_n_value_tages,
+        "flow_q_abregelung_tages": flow_q_abregelung_tages,
+        "flow_n_to_right_tages": flow_n_to_right_tages,
+        "flow_final_tages": flow_final_tages,
+        "flow_ely_branch_tages": flow_ely_branch_tages,
+        "flow_n_output_branch_tages": flow_n_output_branch_tages,
+        "flow_gasspeicher_direkt_tages": flow_gasspeicher_direkt_tages,
+        "flow_gas_storage_tages": flow_gas_storage_tages,
+        "flow_t_value_tages": flow_t_value_tages,
+        "flow_reconversion_tages": flow_reconversion_tages,
+        "flow_storage_capacity_tages": flow_storage_capacity_tages,
+        # T54 D3 — percent shares (asymmetric formula matches Excel)
+        "pv_pct": pv_pct,
+        "wind_pct": wind_pct,
+        "hydro_pct": hydro_pct,
+        "bio_pct": bio_pct,
+        # T54 D4c — Abgleichdifferenz
+        "abgleichdifferenz": abgleichdifferenz,
+        "abgleichdifferenz_tages": abgleichdifferenz_tages,
     }
 
 def recalculate_ws_data(stromverbr_override=None, use_diagram_reference=True):

@@ -140,7 +140,7 @@
 
                 <!-- Title + data-source strip -->
                 <text x="40" y="38" class="txt-title">Jahresbilanz Strom</text>
-                <text x="40" y="60" class="txt-title-meta">Aktuelles Szenario | Stand {{ diagram_generated_on }}</text>
+                <text x="40" y="60" class="txt-title-meta">{{ diagram_scenario_label|default:"Aktuelles Szenario" }} | Stand {{ diagram_generated_on }}</text>
                 <text x="40" y="78" class="txt-datasource">Verwendete Zeitreihen: Anlagenpark Deutschland 2023 [SMARD]</text>
 
                 <!-- Column headers -->
@@ -166,8 +166,8 @@
                 <text x="305" y="138" text-anchor="middle" class="txt-key">S</text>
                 <rect x="260" y="144" width="90" height="22" class="value-box"/>
                 <text x="305" y="160" text-anchor="middle" class="txt-box-val" id="bio_value">0</text>
-                <text x="305" y="178" text-anchor="middle" class="txt-tages">1</text>
-                <text x="305" y="192" text-anchor="middle" class="txt-pct">0,2%</text>
+                <text x="305" y="178" text-anchor="middle" class="txt-tages" id="bio_tages">{{ bio_tages|default:1 }}</text>
+                <text x="305" y="192" text-anchor="middle" class="txt-pct" id="bio_pct">0,2%</text>
 
                 <!-- PV source -->
                 <rect x="30" y="220" width="190" height="80" rx="6" class="node-yellow"/>
@@ -178,8 +178,8 @@
                 <text x="305" y="238" text-anchor="middle" class="txt-key">K</text>
                 <rect x="255" y="244" width="100" height="22" class="value-box"/>
                 <text x="305" y="260" text-anchor="middle" class="txt-box-val" id="pv_value">0</text>
-                <text x="305" y="278" text-anchor="middle" class="txt-tages">397</text>
-                <text x="305" y="292" text-anchor="middle" class="txt-pct">62,2%</text>
+                <text x="305" y="278" text-anchor="middle" class="txt-tages" id="pv_tages">{{ pv_tages|default:397 }}</text>
+                <text x="305" y="292" text-anchor="middle" class="txt-pct" id="pv_pct">62,2%</text>
 
                 <!-- Wind source -->
                 <rect x="30" y="320" width="190" height="80" rx="6" class="node-yellow"/>
@@ -190,8 +190,8 @@
                 <text x="305" y="338" text-anchor="middle" class="txt-key">J</text>
                 <rect x="255" y="344" width="100" height="22" class="value-box"/>
                 <text x="305" y="360" text-anchor="middle" class="txt-box-val" id="wind_value">0</text>
-                <text x="305" y="378" text-anchor="middle" class="txt-tages">186</text>
-                <text x="305" y="392" text-anchor="middle" class="txt-pct">29,2%</text>
+                <text x="305" y="378" text-anchor="middle" class="txt-tages" id="wind_tages">{{ wind_tages|default:186 }}</text>
+                <text x="305" y="392" text-anchor="middle" class="txt-pct" id="wind_pct">29,2%</text>
 
                 <!-- Hydro source -->
                 <rect x="30" y="420" width="190" height="90" rx="6" class="node-yellow"/>
@@ -203,8 +203,8 @@
                 <text x="305" y="438" text-anchor="middle" class="txt-key">L</text>
                 <rect x="260" y="444" width="90" height="22" class="value-box"/>
                 <text x="305" y="460" text-anchor="middle" class="txt-box-val" id="hydro_value">0</text>
-                <text x="305" y="478" text-anchor="middle" class="txt-tages">5</text>
-                <text x="305" y="492" text-anchor="middle" class="txt-pct">0,8%</text>
+                <text x="305" y="478" text-anchor="middle" class="txt-tages" id="hydro_tages">{{ hydro_tages|default:5 }}</text>
+                <text x="305" y="492" text-anchor="middle" class="txt-pct" id="hydro_pct">0,8%</text>
 
                 <!-- ============================================================
                      MAIN FLOW (y=375). M-circle, splitter, Q-circle, N, S.
@@ -234,7 +234,7 @@
                 <line x1="640" y1="375" x2="854" y2="375" class="flow-line"/>
                 <rect x="697" y="335" width="100" height="24" class="value-box"/>
                 <text x="747" y="352" text-anchor="middle" class="txt-box-val" id="o_value_svg">0</text>
-                <text x="747" y="406" text-anchor="middle" class="txt-tages">509</text>
+                <text x="747" y="406" text-anchor="middle" class="txt-tages" id="flow_n_value_tages">509</text>
 
                 <!-- Q-circle shifted to x=870 (aligned with new Stromspeicher center). -->
                 <circle cx="870" cy="375" r="16" class="node-circle"/>
@@ -244,14 +244,14 @@
                 <text x="870" y="185" text-anchor="middle" class="txt-label-lg">Abregelung</text>
                 <rect x="885" y="240" width="90" height="22" class="value-box"/>
                 <text x="930" y="256" text-anchor="middle" class="txt-box-val" id="q_value">0</text>
-                <text x="930" y="276" text-anchor="middle" class="txt-tages">62</text>
+                <text x="930" y="276" text-anchor="middle" class="txt-tages" id="flow_q_abregelung_tages">62</text>
                 <text x="985" y="256" class="txt-key">Q</text>
 
                 <!-- Q → S arrow. -->
                 <line x1="886" y1="375" x2="1164" y2="375" class="flow-line"/>
                 <rect x="920" y="335" width="100" height="24" class="value-box"/>
                 <text x="970" y="352" text-anchor="middle" class="txt-box-val" id="bio_rejoin_value">0</text>
-                <text x="970" y="406" text-anchor="middle" class="txt-tages">313</text>
+                <text x="970" y="406" text-anchor="middle" class="txt-tages" id="flow_n_to_right_tages">313</text>
                 <text x="1030" y="352" class="txt-key">N</text>
 
                 <!-- S-circle (r=16) shifted +30 from last stretch (now x=1180) -->
@@ -262,7 +262,7 @@
                 <line x1="1196" y1="375" x2="1326" y2="375" class="flow-line"/>
                 <rect x="1225" y="335" width="100" height="24" class="value-box"/>
                 <text x="1275" y="352" text-anchor="middle" class="txt-box-val" id="final_value">0</text>
-                <text x="1275" y="406" text-anchor="middle" class="txt-tages">365</text>
+                <text x="1275" y="406" text-anchor="middle" class="txt-tages" id="flow_final_tages">365</text>
                 <text x="1355" y="320" class="txt-key">I</text>
 
                 <!-- Stromnetz box shifted +30 -->
@@ -288,7 +288,7 @@
                 <line x1="870" y1="391" x2="870" y2="520" class="flow-line"/>
                 <rect x="880" y="440" width="90" height="22" class="value-box"/>
                 <text x="925" y="456" text-anchor="middle" class="txt-box-val" id="n_output_branch_value">0</text>
-                <text x="925" y="478" text-anchor="middle" class="txt-tages">134</text>
+                <text x="925" y="478" text-anchor="middle" class="txt-tages" id="flow_n_output_branch_tages">134</text>
                 <text x="925" y="494" text-anchor="middle" class="txt-red">194 GW</text>
                 <text x="980" y="456" class="txt-key">P/Eta</text>
 
@@ -335,7 +335,7 @@
                 <line x1="1180" y1="520" x2="1180" y2="391" class="flow-line-thin"/>
                 <rect x="1190" y="430" width="90" height="22" class="value-box"/>
                 <text x="1235" y="446" text-anchor="middle" class="txt-box-val" id="reconversion_value">0</text>
-                <text x="1235" y="464" text-anchor="middle" class="txt-tages">51</text>
+                <text x="1235" y="464" text-anchor="middle" class="txt-tages" id="flow_reconversion_tages">51</text>
                 <text x="1235" y="480" text-anchor="middle" class="txt-sub" id="reconversion_share">0,0%</text>
                 <text x="1290" y="446" class="txt-key">T</text>
 
@@ -347,7 +347,7 @@
                 <line x1="630" y1="615" x2="630" y2="680" class="gas-line"/>
                 <rect x="640" y="632" width="90" height="22" class="value-box"/>
                 <text x="685" y="648" text-anchor="middle" class="txt-box-val" id="gasspeicher_direkt_value">0</text>
-                <text x="685" y="668" text-anchor="middle" class="txt-tages">87</text>
+                <text x="685" y="668" text-anchor="middle" class="txt-tages" id="flow_gasspeicher_direkt_tages">87</text>
                 <text x="740" y="648" class="txt-key">P</text>
 
                 <!-- Gasspeicher Direktverbr box — centered at x=630 -->
@@ -363,7 +363,7 @@
                 <line x1="870" y1="615" x2="870" y2="740" class="gas-line"/>
                 <rect x="880" y="668" width="90" height="22" class="value-box"/>
                 <text x="925" y="684" text-anchor="middle" class="txt-box-val" id="gas_storage_arrow_value">0</text>
-                <text x="925" y="704" text-anchor="middle" class="txt-tages">87</text>
+                <text x="925" y="704" text-anchor="middle" class="txt-tages" id="flow_gas_storage_tages">87</text>
                 <text x="980" y="684" class="txt-key">P</text>
 
                 <!-- Gasspeicher Strom — shifted right so it doesn't share a horizontal edge with
@@ -375,21 +375,21 @@
                 <line x1="980" y1="820" x2="980" y2="870" class="gas-line"/>
                 <text x="980" y="895" text-anchor="middle" class="txt-label-lg">Speicherkapazit&#228;t:</text>
                 <text x="980" y="918" text-anchor="middle" class="txt-flow" id="storage_capacity_value">0 GWh</text>
-                <text x="980" y="938" text-anchor="middle" class="txt-tages">80</text>
+                <text x="980" y="938" text-anchor="middle" class="txt-tages" id="flow_storage_capacity_tages">80</text>
 
                 <!-- Rückverstromung ← Gasspeicher (U arrow, UP) — centered on Rückv x=1180. -->
                 <line x1="1180" y1="740" x2="1180" y2="615" class="gas-line"/>
                 <rect x="1090" y="668" width="90" height="22" class="value-box"/>
                 <text x="1135" y="684" text-anchor="middle" class="txt-box-val" id="t_value_svg">0</text>
-                <text x="1135" y="704" text-anchor="middle" class="txt-tages">87</text>
+                <text x="1135" y="704" text-anchor="middle" class="txt-tages" id="flow_t_value_tages">87</text>
                 <text x="1190" y="684" class="txt-key">U</text>
 
                 <!-- Abgleichdifferenz bottom: 160 (bold) above, "Abgleichdifferenz" label below,
                      small italic "0" to the right — Excel convention. -->
-                <text x="1320" y="895" text-anchor="middle" class="txt-flow-sm">160</text>
+                <text x="1320" y="895" text-anchor="middle" class="txt-flow-sm" id="abgleichdifferenz_value">160</text>
                 <text x="1360" y="897" class="txt-tages">0</text>
                 <text x="1320" y="918" text-anchor="middle" class="txt-src-sub">Abgleichdifferenz</text>
-                <text x="1320" y="938" text-anchor="middle" class="txt-tages">80</text>
+                <text x="1320" y="938" text-anchor="middle" class="txt-tages" id="abgleichdifferenz_tages">80</text>
 
                 <!-- ============================================================
                      Legend bottom-left + footer right
@@ -507,7 +507,31 @@
             eta_storage_pct: {{ eta_storage_pct|default:0|unlocalize }},
             t_value: {{ t_value|default:0|unlocalize }},
             reconversion: {{ reconversion|default:0|unlocalize }},
-            final_stromnetz: {{ final_stromnetz|default:0|unlocalize }}
+            final_stromnetz: {{ final_stromnetz|default:0|unlocalize }},
+            // T54 D1 source Tagesladungen
+            pv_tages: {{ pv_tages|default:397|unlocalize }},
+            wind_tages: {{ wind_tages|default:186|unlocalize }},
+            hydro_tages: {{ hydro_tages|default:5|unlocalize }},
+            bio_tages: {{ bio_tages|default:1|unlocalize }},
+            // T54 D2 flow Tagesladungen
+            flow_n_value_tages: {{ flow_n_value_tages|default:509|unlocalize }},
+            flow_q_abregelung_tages: {{ flow_q_abregelung_tages|default:62|unlocalize }},
+            flow_n_to_right_tages: {{ flow_n_to_right_tages|default:313|unlocalize }},
+            flow_final_tages: {{ flow_final_tages|default:365|unlocalize }},
+            flow_n_output_branch_tages: {{ flow_n_output_branch_tages|default:134|unlocalize }},
+            flow_gasspeicher_direkt_tages: {{ flow_gasspeicher_direkt_tages|default:87|unlocalize }},
+            flow_gas_storage_tages: {{ flow_gas_storage_tages|default:87|unlocalize }},
+            flow_t_value_tages: {{ flow_t_value_tages|default:87|unlocalize }},
+            flow_reconversion_tages: {{ flow_reconversion_tages|default:51|unlocalize }},
+            flow_storage_capacity_tages: {{ flow_storage_capacity_tages|default:80|unlocalize }},
+            // T54 D3 percent shares
+            pv_pct: {{ pv_pct|default:62.2|unlocalize }},
+            wind_pct: {{ wind_pct|default:29.2|unlocalize }},
+            hydro_pct: {{ hydro_pct|default:0.8|unlocalize }},
+            bio_pct: {{ bio_pct|default:0.2|unlocalize }},
+            // T54 D4c Abgleichdifferenz
+            abgleichdifferenz: {{ abgleichdifferenz|default:160|unlocalize }},
+            abgleichdifferenz_tages: {{ abgleichdifferenz_tages|default:0|unlocalize }}
         };
 
         function formatNumber(v) {
@@ -572,6 +596,38 @@
         setText('o_value_svg', vals.n_value);
         setText('bio_rejoin_value', vals.n_to_right);
         setText('final_value', vals.final_stromnetz);
+
+        // T54 D1 — source Tagesladungen (integer, de-DE formatted)
+        setText('bio_tages', vals.bio_tages);
+        setText('pv_tages', vals.pv_tages);
+        setText('wind_tages', vals.wind_tages);
+        setText('hydro_tages', vals.hydro_tages);
+
+        // T54 D2 — flow Tagesladungen
+        setText('flow_n_value_tages', vals.flow_n_value_tages);
+        setText('flow_q_abregelung_tages', vals.flow_q_abregelung_tages);
+        setText('flow_n_to_right_tages', vals.flow_n_to_right_tages);
+        setText('flow_final_tages', vals.flow_final_tages);
+        setText('flow_n_output_branch_tages', vals.flow_n_output_branch_tages);
+        setText('flow_gasspeicher_direkt_tages', vals.flow_gasspeicher_direkt_tages);
+        setText('flow_gas_storage_tages', vals.flow_gas_storage_tages);
+        setText('flow_t_value_tages', vals.flow_t_value_tages);
+        setText('flow_reconversion_tages', vals.flow_reconversion_tages);
+        setText('flow_storage_capacity_tages', vals.flow_storage_capacity_tages);
+
+        // T54 D3 — percent shares (German format: comma decimal, 1 digit)
+        function setPct(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = Number(val || 0).toFixed(1).replace('.', ',') + '%';
+        }
+        setPct('bio_pct', vals.bio_pct);
+        setPct('pv_pct', vals.pv_pct);
+        setPct('wind_pct', vals.wind_pct);
+        setPct('hydro_pct', vals.hydro_pct);
+
+        // T54 D4c — Abgleichdifferenz (integer GWh, integer Tagesladungen)
+        setText('abgleichdifferenz_value', vals.abgleichdifferenz);
+        setText('abgleichdifferenz_tages', vals.abgleichdifferenz_tages);
 
         const exportCsvBtn = document.getElementById('exportCsvBtn');
         if (exportCsvBtn) {
