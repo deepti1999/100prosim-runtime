@@ -504,16 +504,18 @@ wired to backend in commit `7c02458`. See
 | **D1** | Source Tagesladungen (`397`/`186`/`5`/`1`) | ✅ Shipped in `7c02458` — computed as `annual × TLproEingabeEinheit`, `TLproEingabeEinheit = 365 / final_stromnetz` |
 | **D2** | Flow Tagesladungen (`509`/`62`/`313`/`365`/`134`/`83`/`87`/`87`/`51`/`80`) | ✅ Shipped in `7c02458` — same factor applied to each flow segment |
 | **D3** | Percent shares (`62,2`/`29,2`/`0,8`/`0,2`) | ✅ Shipped in `7c02458` — asymmetric formula from Excel E14/E21/E27/E33 |
-| **D4a** | `194 GW` (Pmax Elektrolyse Stromspeicher) | ⏸ Still hardcoded — region-config constant, bundled with §2.3 Excel import |
-| **D4b** | `261 GW (elekt.)` (Rückverstromung peak) | ⏸ Same as D4a |
+| **D4a** | `194 GW` (Pmax Elektrolyse Stromspeicher) | ⏸ Still hardcoded — ride on §2.3 Phase B (`Region.installed_pmax_ely_gw`) |
+| **D4b** | `261 GW (elekt.)` (Rückverstromung peak) | ⏸ Same as D4a (`Region.installed_pmax_rv_gw`) |
 | **D4c** | `Abgleichdifferenz 160` | ✅ Shipped in `7c02458` — computed as `gas_storage - t_value` |
 
 **Verified on Heroku 2026-04-23**: all 20 new DOM IDs populate
 with live backend values that track scenario data correctly.
 
 **Remaining only 2 items** (D4a/D4b) — region installed-power
-constants, will ride on Track 2 (§2.3 Excel import). See
-`docs/stakeholder/DATA_MODEL_AUDIT.md` for §2.3 scope.
+constants, sourced from `D.xlsx!I_Basisdaten` per the §2.3 audit
+(`WORKBOOK_CATALOG.md` §2.1). They become dynamic when §2.3 Phase B
+ships the `Region` model. See `DATA_MODEL_IMPORT_AUDIT.md` (revised
+2026-04-23) for the §2.3 scope and Phase B definition.
 
 ## Verification done in Phase 5-C
 
