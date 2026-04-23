@@ -57,6 +57,9 @@ git push heroku main
 say "Seeding data"
 heroku run -a "$APP" "DISABLE_SIMULATOR_SIGNALS=true python manage.py loaddata seed/sqlite_seed.json" || echo "seed load skipped (already present?)"
 
+say "Loading §2.3 Phase A provenance fixture (overlays source_url + notes_assumption + origin onto base rows)"
+heroku run -a "$APP" "DISABLE_SIMULATOR_SIGNALS=true python manage.py loaddata seed/provenance_seed.json" || echo "provenance overlay skipped"
+
 say "Creating testsim user"
 heroku run -a "$APP" "python manage.py shell -c \"
 from django.contrib.auth import get_user_model

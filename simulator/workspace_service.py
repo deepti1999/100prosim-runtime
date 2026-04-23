@@ -42,6 +42,11 @@ def _clone_landuse_for_user(LandUse, user):
                 target_locked=row.target_locked,
                 parent=None,
                 quelle=row.quelle,
+                # §2.3 Phase A provenance — carry from base so popover renders
+                # immediately when a fresh user gets a workspace.
+                source_url=row.source_url,
+                notes_assumption=row.notes_assumption,
+                origin=row.origin,
             )
         )
 
