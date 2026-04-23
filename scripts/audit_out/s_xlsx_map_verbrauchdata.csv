@@ -1,0 +1,152 @@
+our_code,our_label,our_status,our_ziel,s_sheet,s_row,s_label,s_status_value,s_ziel_value,s_status_formula,s_ziel_formula,d_status_ref,d_ziel_ref,label_overlap,status_match,status_scale,ziel_match,ziel_scale,confidence
+1,"Kraft, Licht, Information, Kommunikation, Kälte (KLIK)",329214.0,312753.30000000005,4. Verbrauch,42,Endverbrauch Strom für KLIK gesamt,329214.0656749311,312753.36239118455,=L26+L33+L40,=M26+M33+M40,,,0.17,True,1.0,True,1.0,HIGH
+1.0,"Bedarfsniveau (statisch), 100% Strom",329214.0,329214.0,4. Verbrauch,22,"Bedarfsniveau (statisch), 100% Strom",329214.0656749311,329214.0656749311,=AG22,"=IF(P22="""",AH22,P22)",,,1.0,True,1.0,True,1.0,HIGH
+1.1,davon Haushalte,18.64,18.6,4. Verbrauch,23,*,18.60082304526749,18.60082304526749,=AK23,"=IF(P23="""",AL23,P23)",,,0.0,True,1.0,True,1.0,HIGH
+1.1.1,Endenergie Haushalte,61365.4896,61233.804000000004,4. Verbrauch,24,GWh/a,61236.52579632463,61236.52579632463,=L22*L23%,=M22*M23%,,,0.0,True,1.0,True,1.0,HIGH
+1.1.2,Zieleinfluss Endanwendungs-Effizienz,100.0,95.0,4. Verbrauch,25,*,100,95,=AK25,"=IF(P25="""",AL25,P25)",,,0.0,True,1.0,True,1.0,HIGH
+1.1.3,Endenergie nach Effizienz,61365.4896,58172.11380000001,4. Verbrauch,26,GWh/a,61236.52579632463,58174.6995065084,=L24*L25%,=M24*M25%,,,0.0,True,1.0,True,1.0,HIGH
+1.2,davon Handel/Dienstleistungen,34.7,34.7,3. Bedarfsniveau,19,davon Brennstoffe (gasförmig),346430.05089072546,346430.05089072546,=AI19,=L19*M$10/L$10,,,0.33,True,10000.0,True,10000.0,HIGH
+1.2.1,Endenergie Handel/Dienstl.,114237.258,114237.258,4. Verbrauch,29,GWh/a,114097.98370417365,114097.98370417365,=L22*L28%,=M22*M28%,,,0.0,True,1.0,True,1.0,HIGH
+1.2.2,Zieleinfluss Handels-/Dienstl.-Vol./Pers.,100.0,100.0,4. Verbrauch,9,Entwicklung BIP/Kopf gesamt,100,100,=L8/L8%,=M8/L8%,,,0.0,True,1.0,True,1.0,HIGH
+1.2.3,Nach Vol./Pers. Anpassung,114237.258,114237.258,4. Verbrauch,29,GWh/a,114097.98370417365,114097.98370417365,=L22*L28%,=M22*M28%,,,0.0,True,1.0,True,1.0,HIGH
+1.2.4,Zieleinfluss Prozess-Effizienz,100.0,95.0,4. Verbrauch,25,*,100,95,=AK25,"=IF(P25="""",AL25,P25)",,,0.0,True,1.0,True,1.0,HIGH
+1.2.5,Endenergie nach Prozess-Effizienz,114237.258,108525.3951,4. Verbrauch,33,GWh/a,114097.98370417365,108393.08451896496,=L31*L32%,=M31*M32%,,,0.0,True,1.0,True,1.0,HIGH
+1.3,davon Industrie + Gewerbeanteil GHD,46.7,46.7,4. Verbrauch,35,*,46.741488963711184,46.741488963711184,=AK35,"=IF(P35="""",AL35,P35)",,,0.0,True,1.0,True,1.0,HIGH
+1.3.1,Endenergie Industrie,153742.938,153742.938,4. Verbrauch,36,GWh/a,153879.55617443283,153879.55617443283,=L22*L35%,=M22*M35%,,,0.0,True,1.0,True,1.0,HIGH
+1.3.2,Zieleinfluss Materialdurchsatz/Pers.,100.0,100.0,4. Verbrauch,9,Entwicklung BIP/Kopf gesamt,100,100,=L8/L8%,=M8/L8%,,,0.0,True,1.0,True,1.0,HIGH
+1.3.3,Nach Materialdurchsatz Anpassung,153742.938,153742.938,4. Verbrauch,36,GWh/a,153879.55617443283,153879.55617443283,=L22*L35%,=M22*M35%,,,0.0,True,1.0,True,1.0,HIGH
+1.3.4,Zieleinfluss Prozess-Effizienz,100.0,95.0,4. Verbrauch,25,*,100,95,=AK25,"=IF(P25="""",AL25,P25)",,,0.0,True,1.0,True,1.0,HIGH
+1.3.5,Endenergie nach Prozess-Effizienz,153742.938,146055.7911,4. Verbrauch,40,GWh/a,153879.55617443283,146185.57836571118,=L38*L39%,=M38*M39%,,,0.0,True,1.0,True,1.0,HIGH
+1.4,Endverbrauch Strom für KLIK gesamt,329345.68559999997,312753.30000000005,4. Verbrauch,42,Endverbrauch Strom für KLIK gesamt,329214.0656749311,312753.36239118455,=L26+L33+L40,=M26+M33+M40,,,1.0,True,1.0,True,1.0,HIGH
+2.0,Bedarfsniveau (statisch),798867.0,798867.0,4. Verbrauch,45,Bedarfsniveau (statisch),798867.2532382089,798867.2532382089,=AG45,"=IF(P45="""",AH45,P45)",,,1.0,True,1.0,True,1.0,HIGH
+2.1,davon Haushalte,71.64,71.64,4. Verbrauch,46,*,71.64093767867352,71.64093767867352,=AK46,"=IF(P46="""",AL46,P46)",,,0.0,True,1.0,True,1.0,HIGH
+2.1.0,=,572308.3188,572308.3188,4. Verbrauch,47,GWh/a,572315.9910277162,572315.9910277162,=L45*L46%,=M45*M46%,,,0.0,True,1.0,True,1.0,HIGH
+2.1.1,Wohnfläche pro Person,44.7,44.7,4. Verbrauch,48,*,44.67669791064594,44.67669791064594,=AK48,"=IF(P48="""",AL48,P48)",,,0.0,True,1.0,True,1.0,HIGH
+2.1.2,Zieleinfluss Wohnflächen-Entwicklung,100.0,100.0,4. Verbrauch,9,Entwicklung BIP/Kopf gesamt,100,100,=L8/L8%,=M8/L8%,,,0.25,True,1.0,True,1.0,HIGH
+2.1.9,=,572308.3188,572308.3188,4. Verbrauch,47,GWh/a,572315.9910277162,572315.9910277162,=L45*L46%,=M45*M46%,,,0.0,True,1.0,True,1.0,HIGH
+2.2,dav.Gewerbe/Handel/Dienstl. + Industr.,28.4,28.4,4. Verbrauch,52,*,28.35906232132647,28.35906232132647,=AK52,"=IF(P52="""",AL52,P52)",,,0.0,True,1.0,True,1.0,HIGH
+2.2.0,=,226878.22799999997,226878.22799999997,4. Verbrauch,53,GWh/a,226551.2622104926,226551.2622104926,=L45*L52%,=M45*M52%,,,0.0,True,1.0,True,1.0,HIGH
+2.2.1,Zieleinfluss Erwerbstätigkeit,100.0,100.0,4. Verbrauch,9,Entwicklung BIP/Kopf gesamt,100,100,=L8/L8%,=M8/L8%,,,0.0,True,1.0,True,1.0,HIGH
+2.2.9,=,226878.22799999997,226878.22799999997,4. Verbrauch,53,GWh/a,226551.2622104926,226551.2622104926,=L45*L52%,=M45*M52%,,,0.0,True,1.0,True,1.0,HIGH
+2.3,Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.),799186.5468,799186.5468,4. Verbrauch,57,Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.),798867.2532382088,798867.2532382088,=L55+L50,=M55+M50,,,1.0,True,1.0,True,1.0,HIGH
+2.4,davon Raumwärme,85.9,85.9,4. Verbrauch,58,*,85.92911239479102,85.92911239479102,=AK58,"=IF(P58="""",AL58,P58)",,,0.0,True,1.0,True,1.0,HIGH
+2.4.0,=,686501.2437012,686501.2437012,4. Verbrauch,59,GWh/a,686459.5399202403,686459.5399202403,=L57*L58%,=M57*M58%,,,0.0,True,1.0,True,1.0,HIGH
+2.4.1,Spez.Raumwärmebed.Status/Saniert,136.0,80.0,4. Verbrauch,60,Spez.Raumwärmebed.Status/Saniert,136,75,=AK60,"=IF(P60="""",AL60,P60)",,,1.0,True,1.0,False,1.0,MED
+2.4.2,= Veränderung zum Status,100.0,-41.17647058823529,4. Verbrauch,61,Veränderung zum Status,99.99999999999999,-44.85294117647059,=L60/L60%,=(M60-L60)/L60%,,,1.0,True,1.0,False,1.0,MED
+2.4.3,Gebäude - Sanierungs-/Ersatzrate,1.5,1.5,4. Verbrauch,15,BIP/Kopf Anteil Produzierende Bereiche,15006.074999999999,15006.074999999999,=L8*L14%,=M8*M14%,,,0.0,True,10000.0,True,10000.0,HIGH
+2.4.4,Sanierungszeitraum: 22 Jahre,2023.0,2045.0,4. Verbrauch,6,Betrachteter Zeitraum: 22 Jahre,2023,2045,=AK6,"=IF(P6="""",AL6,P6)",,,0.5,True,1.0,True,1.0,HIGH
+2.4.5,= Gebäudeanteil mit Ziel-Wärmeschutz,0.0,33.0,4. Verbrauch,65,*,0,33,,"=IF(L63*(M64-L64)>100,100,L63*(M64-L64))",,,0.0,True,1.0,True,1.0,HIGH
+2.4.6,= Result.spez.Raumwärmebed. ges.,136.0,117.51999999999998,4. Verbrauch,66,Result.spez.Raumwärmebed. ges.,136,115.86999999999999,=L60,=L66*(1-M65%)+M60*M65%,,,1.0,True,1.0,False,1.0,MED
+2.4.7,= Raumwärmebedarf Veränderung,0.0,-13.588235294117647,4. Verbrauch,76,*,79.16331241968767,0,=AK76,"=IF(P76="""",AL76,P76)",,,0.0,True,10000.0,True,0.0001,HIGH
+2.4.9,= Bedarfsniveau (Sanierung/Ersatz),686501.2437012,593217.8394100369,4. Verbrauch,59,GWh/a,686459.5399202403,686459.5399202403,=L57*L58%,=M57*M58%,,,0.0,True,1.0,False,1.0,MED
+2.5,davon Warmwasser,14.1,14.1,4. Verbrauch,70,*,14.070887605208974,14.070887605208974,=AK70,"=IF(P70="""",AL70,P70)",,,0.0,True,1.0,True,1.0,HIGH
+2.5.0,=,112685.3030988,112685.3030988,4. Verbrauch,71,GWh/a,112407.7133179685,112407.7133179685,=L57*L70%,=M57*M70%,,,0.0,True,1.0,True,1.0,HIGH
+2.5.1,Zieleinfluss Anwendungs-/Prozess-Effizienz,100.0,70.0,4. Verbrauch,72,*,100,70,=AK72,"=IF(P72="""",AL72,P72)",,,0.0,True,1.0,True,1.0,HIGH
+2.5.2,=,112685.3030988,78879.71216915999,4. Verbrauch,73,+,112407.7133179685,78685.39932257794,=L71*L72%,=M71*M72%,,,0.0,True,1.0,True,1.0,HIGH
+2.5.3,= Res. Anteil Warmwasser an Gebäudew.,14.099999999999998,11.736348686856534,4. Verbrauch,74,Res. Anteil Warmwasser an Gebäudew.,14.070887605208974,11.858446783728635,=L73/L75%,=M73/M75%,,,1.0,True,1.0,False,1.0,MED
+2.6,Bedarfsniveau (Sanierung/ Anwendungseff.),799186.5468,672097.5515791969,4. Verbrauch,75,"Bedarfsniveau (Sanierung, Anwendungseff.)",798867.2532382088,663538.8323413887,=L73+L68,=M73+M68,,,1.0,True,1.0,False,1.0,MED
+2.7,davon Brennstoffe,79.2,0.0,4. Verbrauch,65,*,0,33,,"=IF(L63*(M64-L64)>100,100,L63*(M64-L64))",,,0.0,True,0.0001,True,10000.0,HIGH
+2.7.0,= Endenergieverbrauch,632955.7450656,0.0,4. Verbrauch,77,Endenergieverbrauch,632409.7794995407,0,=L$75*L76%,=M$75*M76%,,,1.0,True,1.0,True,1.0,HIGH
+2.7.1,> Nutzungsgrad Endanwendung,86.0,88.0,4. Verbrauch,78,>,86,88,=AK78,"=IF(P78="""",AL78,P78)",,,0.0,True,1.0,True,1.0,HIGH
+2.7.2,> Wandlungsverluste Endanwendung,11.088000000000001,0.0,4. Verbrauch,65,*,0,33,,"=IF(L63*(M64-L64)>100,100,L63*(M64-L64))",,,0.0,True,0.0001,True,10000.0,HIGH
+2.7.3,= Einsparung gegenüber Status (relativ),0.0,11.088000000000001,4. Verbrauch,80,Einsparung gegenüber Status (relativ),0,11.082863738756275,,=L79-M79,,,1.0,True,1.0,True,1.0,HIGH
+2.7.4,= Einsparung gegenüber Status (absolut),0.0,0.0,4. Verbrauch,80,Einsparung gegenüber Status (relativ),0,11.082863738756275,,=L79-M79,,,0.75,True,1.0,True,10000.0,HIGH
+2.8,davon Wärme (30-100°C/verlustarm nutzbar),16.7,79.47464129801271,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.0001,True,0.0001,HIGH
+2.8.0,= Endenergieverbrauch,133464.15331559998,534147.1182902928,4. Verbrauch,84,Endenergieverbrauch,133580.49552011892,527517.7575261146,=L$75*L83%,=M$75*M83%,,,1.0,True,1.0,False,1.0,MED
+2.9,davon Strom (verlustarm nutzb.),4.099999999999994,20.525358701987287,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.001,True,0.0001,HIGH
+2.9.0,= Endenergieverbrauch,32766.648418799956,137950.4332889042,4. Verbrauch,87,Endenergieverbrauch,32876.978218549186,136021.07481527407,=L75*L86%,=M75*M86%,,,1.0,True,1.0,False,1.0,MED
+2.9.1,davon für Wärmepumpen,30.8484403739032,100.0,4. Verbrauch,88,davon für Wärmepumpen,30.744918017730317,100,=L89/L87%,=M89/M87%,,,1.0,True,1.0,True,1.0,HIGH
+2.9.2,=,10108.0,137950.4332889042,4. Verbrauch,89,GWh/a,10108,136021.07481527407,=AK89,"=IF(P89="""",AL89,P89)",,,0.0,True,1.0,False,1.0,MED
+2.10,Endenergieverbrauch GW gesamt,799186.5467999999,672097.5515791969,4. Verbrauch,91,Endenergieverbrauch GW gesamt,798867.2532382088,663538.8323413887,=L87+L84+L77,=M87+M84+M77,,,1.0,True,1.0,False,1.0,MED
+3.0,Bedarfsniveau (statisch),555395.0,555395.0,4. Verbrauch,94,Bedarfsniveau (statisch),555394.5695538963,555394.5695538963,=AG94,"=IF(P94="""",AH94,P94)",,,1.0,True,1.0,True,1.0,HIGH
+3.1,davon Haushalte,8.7164,8.7164,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.001,True,0.001,HIGH
+3.1.0,=,48410.44978,48410.44978,4. Verbrauch,96,GWh/a,48410.76646330204,48410.76646330204,=L94*L95%,=M94*M95%,,,0.0,True,1.0,True,1.0,HIGH
+3.1.1,Zieleinfluss Endanwendungs-Effizienz,100.0,95.0,4. Verbrauch,25,*,100,95,=AK25,"=IF(P25="""",AL25,P25)",,,0.0,True,1.0,True,1.0,HIGH
+3.1.2,=,48410.44978,45989.927291,4. Verbrauch,98,GWh/a,48410.76646330204,45990.22814013693,=L96*L97%,=M96*M97%,,,0.0,True,1.0,True,1.0,HIGH
+3.2,dav.Industrie + Gewerbeant.GHD,91.2835,91.2835,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.0001,True,0.0001,HIGH
+3.2.0,=,506983.994825,506983.994825,4. Verbrauch,101,GWh/a,506983.8030905943,506983.8030905943,=L94*L100%,=M94*M100%,,,0.0,True,1.0,True,1.0,HIGH
+3.2.1,Zieleinfluss Materialdurchsatz/Pers.,100.0,100.0,4. Verbrauch,9,Entwicklung BIP/Kopf gesamt,100,100,=L8/L8%,=M8/L8%,,,0.0,True,1.0,True,1.0,HIGH
+3.2.2,Zieleinfluss Prozess-Effizienz,100.0,89.00004,4. Verbrauch,104,*,100,89,=AK104,"=IF(P104="""",AL104,P104)",,,0.0,True,1.0,True,1.0,HIGH
+3.2.3,=,506983.994825,451215.958187848,4. Verbrauch,105,GWh/a,506983.8030905943,451215.5847506289,=L103*L104%,=M103*M104%,,,0.0,True,1.0,True,1.0,HIGH
+3.3,"Bedarfsniveau (Prod.-Vol., Proz.-Effiz.)",555394.444605,497205.885478848,4. Verbrauch,107,"Bedarfsniveau (Prod.-Vol., Proz.-Effiz.)",555394.5695538963,497205.81289076584,=L105+L98,=M105+M98,,,1.0,True,1.0,True,1.0,HIGH
+3.4,davon Brennstoffe,60.3,26.69623513695287,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.0001,True,0.0001,HIGH
+3.4.0,= Endenergieverbrauch,334902.850096815,132735.25230220184,4. Verbrauch,109,Endenergieverbrauch,334934.21560146933,132747.16619173347,=L107*L108%,=M107*M108%,,,1.0,True,1.0,True,1.0,HIGH
+3.4.1,> Nutzungsgrad Endanwendung,86.0,88.0,4. Verbrauch,78,>,86,88,=AK78,"=IF(P78="""",AL78,P78)",,,0.0,True,1.0,True,1.0,HIGH
+3.4.2,> Wandlungsverluste Endanwendung,8.442,3.203548216434344,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.001,True,0.001,HIGH
+3.4.3,= Einsparung gegenüber Status (relativ),0.0,5.238451783565656,4. Verbrauch,112,Einsparung gegenüber Status (relativ),0,5.238952516242992,=L111-L111,=L111-M111,,,1.0,True,1.0,True,1.0,HIGH
+3.4.4,= Einsparung gegenüber Status (absolut),0.0,6953.272191645067,4. Verbrauch,80,Einsparung gegenüber Status (relativ),0,11.082863738756275,,=L79-M79,,,0.75,True,1.0,False,1.0,MED
+3.5,"davon Wärme (>100°C,verlustarm nutzbar)",25.9,0.0,4. Verbrauch,65,*,0,33,,"=IF(L63*(M64-L64)>100,100,L63*(M64-L64))",,,0.0,True,0.0001,True,10000.0,HIGH
+3.5.0,= Endenergieverbrauch,143847.161152695,0.0,4. Verbrauch,116,Endenergieverbrauch,143571.5425612425,0,=L107*L115%,=M107*M115%,,,1.0,True,1.0,True,1.0,HIGH
+3.6,davon Strom (verlustarm nutzbar),12.895500000000004,71.90529545737054,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.0001,True,0.0001,HIGH
+3.6.0,= Endenergieverbrauch,71620.89060403779,357517.3609850011,4. Verbrauch,118,Endenergieverbrauch,76888.8113911845,357504.08569558925,=L117*L107%,=M117*M107%,,,1.0,False,1.0,True,1.0,MED
+3.7,Endenergieverbrauch PW gesamt,550370.9018535478,490252.6132872029,4. Verbrauch,120,Endenergieverbrauch PW gesamt,555394.5695538963,490251.25188732275,=L118+L116+L109,=M109+M116+M118,,,1.0,False,1.0,True,1.0,MED
+3.2.1.5,=,506983.994825,506983.994825,4. Verbrauch,101,GWh/a,506983.8030905943,506983.8030905943,=L94*L100%,=M94*M100%,,,0.0,True,1.0,True,1.0,HIGH
+4.0,Mobile Anwendungen (MA),,,4. Verbrauch,122,Mobile Anwendungen (MA),,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+4.1,"MA am Boden (Straße, Schiene, Schifffahrt, Maschinen)",100.0,100.0,4. Verbrauch,9,Entwicklung BIP/Kopf gesamt,100,100,=L8/L8%,=M8/L8%,,,0.0,True,1.0,True,1.0,HIGH
+4.1.0,Bedarfsniveau (statisch),639193.0,639193.0,4. Verbrauch,124,Bedarfsniveau (statisch),639192.8837834619,639192.8837834619,=AG124,"=IF(P124="""",AH124,P124)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.1,davon Personenverkehr (PVk),67.4,67.4,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.0001,True,0.0001,HIGH
+4.1.1.1,Zieleinfluss Pers.-Verkehrsleist./Pers.,100.0,100.0,4. Verbrauch,9,Entwicklung BIP/Kopf gesamt,100,100,=L8/L8%,=M8/L8%,,,0.0,True,1.0,True,1.0,HIGH
+4.1.1.2,Bedarfsniveau PVk (nach Entwicklung),430816.08200000005,430816.08200000005,4. Verbrauch,127,Bedarfsniveau PVk (nach Entwicklung),430933.11543676304,430933.11543676304,=L124*L125%*L126%,=M124*M125%*M126%,,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.3,Nutzungsgrad Traktionsmix,27.075,62.6736,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.0001,True,0.0001,HIGH
+4.1.1.5,Anteil Elektrotraktion an PvK-Leistung,8.6,86.0,4. Verbrauch,131,Anteil Elektrotraktion an PvK-Leistung,8.642659279778393,86,=L135,"=IF(P131="""",AL131,P131)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.6,Anteil Elektrotraktion an Endverbr. PVk,3.0,69.1,4. Verbrauch,132,Anteil Elektrotraktion an Endverbr. PVk,3,69.1071584230155,=AK132,"=IF(P132="""",AL132,P132)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.7,Nutzungsgrad Elektrotraktion (NG e),78.0,78.0,4. Verbrauch,133,Nutzungsgrad Elektrotraktion (NG e),78,78,=AK133,"=IF(P133="""",AL133,P133)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.8,Anteil NE Elektrotrakt.an Endverbr. PVk,2.34,53.897999999999996,4. Verbrauch,134,Anteil NE Elektrotrakt.an Endverbr. PVk,2.34,53.9035835699521,=L132*L133%,=M132*M133%,,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.9,Anteil NE Elektrotrakt.an NE ges.PVk,8.642659279778393,85.99793214367772,4. Verbrauch,135,Anteil NE Elektrotrakt.an NE ges.PVk,8.642659279778393,85.99900178224422,=L134/L128%,=M134/M128%,,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.10,Stromverbrauch PVk,12924.48246,128603.79306954842,4. Verbrauch,136,Stromverbrauch PVk,12927.99346310289,128640.32896397308,=L129*L135/L133,=M130*M135/M133,,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.11,Anteil Verbrenn.Trakt.an Endverbr.PVk,97.0,30.900000000000006,4. Verbrauch,138,Anteil Verbrenn.Trakt.an Endverbr.PVk,97,30.892841576984495,=100-L132,"=IF(M143=""Aktiv"",0,100-M132)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.12,Nutzungsgrad Verbrenn.Traktion (NG k),25.5,28.4,4. Verbrauch,139,Nutzungsgrad Verbrenn.Traktion (NG k),25.5,28.407000000000004,=AK139,"=IF(P139="""",AL139,P139)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.13,Anteil NE Verbrenn.Trakt.an Endverbr.PVk,24.735,8.775600000000003,4. Verbrauch,140,Anteil NE Verbrenn.Trakt.an Endverbr.PVk,24.735,8.775729506773986,=L138*L139%,=M138*M139%,,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.14,Anteil NE Verbrenn.Trakt.an NE ges.PVk,91.3573407202216,14.002067856322284,4. Verbrauch,141,Anteil NE Verbrenn.Trakt.an NE ges.PVk,91.3573407202216,14.000998217755779,=100-L135,"=IF(M143=""Aktiv"",0,100-M135)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.15,Kohlenwasserstoff-Verbr.(gasf.) PVk,417891.59954,57508.78734947971,4. Verbrauch,142,Kohlenwasserstoff-Verbr.(gasf.) PVk,418005.12197366013,57505.84156230714,=L129*L141/L139,=M$130*M141/M139,,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.16,Anteil FC-Trakt.an Endverbr.PVk,0.0,0.0,4. Verbrauch,132,Anteil Elektrotraktion an Endverbr. PVk,3,69.1071584230155,=AK132,"=IF(P132="""",AL132,P132)",,,0.67,True,1000.0,True,10000.0,HIGH
+4.1.1.17,Nutzungsgrad FC-Traktion (NG FC),35.0,35.0,4. Verbrauch,145,Nutzungsgrad FC-Traktion (NG FC),35,35,=AK145,"=IF(P145="""",AL145,P145)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.18,Anteil NE FC-Trakt.an Endverbr.PVk,0.0,0.0,4. Verbrauch,134,Anteil NE Elektrotrakt.an Endverbr. PVk,2.34,53.9035835699521,=L132*L133%,=M132*M133%,,,0.71,True,1000.0,True,10000.0,HIGH
+4.1.1.19,Anteil NE FC-Trakt.an NE ges.PVk,0.0,0.0,4. Verbrauch,135,Anteil NE Elektrotrakt.an NE ges.PVk,8.642659279778393,85.99900178224422,=L134/L128%,=M134/M128%,,,0.71,True,1000.0,True,10000.0,HIGH
+4.1.1.20,Wasserstoffverbrauch PVk,0.0,0.0,4. Verbrauch,10,*,69.7,69.7,=AK10,"=IF(P10="""",AL10,P10)",,,0.0,True,10000.0,True,10000.0,HIGH
+4.1.2,davon Güterverkehr u. a. (GVk),32.599999999999994,32.599999999999994,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.0001,True,0.0001,HIGH
+4.1.2.1,Zieleinfluss Güterverk.-Leistung/Pers.,100.0,100.0,4. Verbrauch,9,Entwicklung BIP/Kopf gesamt,100,100,=L8/L8%,=M8/L8%,,,0.0,True,1.0,True,1.0,HIGH
+4.1.2.2,Bedarfsniveau GVk (nach Entwicklung),208376.91799999998,208376.91799999998,4. Verbrauch,152,Bedarfsniveau GVk (nach Entwicklung),208259.76834669884,208259.76834669884,=L124*L150%*L151%,=M124*M150%*M151%,,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.3,Nutzungsgrad Traktionsmix,30.723,62.145100000000006,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.0001,True,0.0001,HIGH
+4.1.2.5,Anteil Elektrotraktion an GVk-Leistung,18.6,84.0,4. Verbrauch,156,Anteil Elektrotraktion an GVk-Leistung,18.555220450955044,84,=L160,"=IF(P156="""",AL156,P156)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.6,Anteil Elektrotraktion an Endverbr. GVk,7.3,66.9,4. Verbrauch,157,Anteil Elektrotraktion an Endverbr. GVk,7.309805499327357,66.92128278900917,=AK157,"=IF(P157="""",AL157,P157)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.7,Nutzungsgrad Elektrotraktion (NG e),78.0,78.0,4. Verbrauch,133,Nutzungsgrad Elektrotraktion (NG e),78,78,=AK133,"=IF(P133="""",AL133,P133)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.8,Anteil NE Elektrotrakt.an Endverbr. GVk,5.694,52.18200000000001,4. Verbrauch,159,Anteil NE Elektrotrakt.an Endverbr. GVk,5.701648289475338,52.19860057542715,=L157*L158%,=M157*M158%,,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.9,Anteil NE Elektrotrakt.an NE ges.GVk,18.533346352895226,83.96800391342198,4. Verbrauch,160,Anteil NE Elektrotrakt.an NE ges.GVk,18.555220450955044,83.99077392830533,=L159/L153%,=M159/M153%,,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.10,Stromverbrauch GVk,15211.515014,68917.96699332153,4. Verbrauch,161,Stromverbrauch GVk,15223.383999493406,68909.11413878783,=L154*L160/L158,=M155*M160/M158,,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.11,Anteil Verbrenn.-Trakt.an Endverbr.GVk,92.7,33.099999999999994,4. Verbrauch,163,Anteil Verbrenn.-Trakt.an Endverbr.GVk,92.69019450067265,33.07871721099083,=100-L157,"=IF(M168=""Aktiv"",0,100-M157)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.12,Nutzungsgrad Verbrenn.-Traktion (NG k),27.0,30.1,4. Verbrauch,164,Nutzungsgrad Verbrenn.-Traktion (NG k),27,30.078000000000003,=AK164,"=IF(P164="""",AL164,P164)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.13,Anteil NE Verbrenn-Trakt.an Endverbr.GVk,25.029,9.963099999999999,4. Verbrauch,165,Anteil NE Verbrenn-Trakt.an Endverbr.GVk,25.026352515181618,9.949416562721824,=L163*L164%,=M163*M164%,,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.14,Anteil NE Verbrenn.Trakt.an NE ges.GVk,81.46665364710478,16.03199608657802,4. Verbrauch,166,Anteil NE Verbrenn.Trakt.an NE ges.GVk,81.44477954904495,16.00922607169467,=100-L160,"=IF(M168=""Aktiv"",0,100-M160)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.15,Kohlenwasserstoff-Verbr.(gasf.) GVk,193165.40298599997,34098.42612076146,4. Verbrauch,167,Kohlenwasserstoff-Verbr.(gasf.) GVk,193036.38434720546,34061.28820099684,=L154*L166/L164,=M155*M166/M164,,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.16,Anteil FC-Trakt.an Endverbr.GVk,0.0,0.0,4. Verbrauch,138,Anteil Verbrenn.Trakt.an Endverbr.PVk,97,30.892841576984495,=100-L132,"=IF(M143=""Aktiv"",0,100-M132)",,,0.67,True,10000.0,True,10000.0,HIGH
+4.1.2.17,Nutzungsgrad FC-Traktion (NG FC),35.0,35.0,4. Verbrauch,145,Nutzungsgrad FC-Traktion (NG FC),35,35,=AK145,"=IF(P145="""",AL145,P145)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.18,Anteil NE FC-Trakt.an Endverbr.GVk,0.0,0.0,4. Verbrauch,140,Anteil NE Verbrenn.Trakt.an Endverbr.PVk,24.735,8.775729506773986,=L138*L139%,=M138*M139%,,,0.71,True,10000.0,True,1000.0,HIGH
+4.1.2.19,Anteil NE FC-Trakt.an NE ges.GVk,0.0,0.0,4. Verbrauch,141,Anteil NE Verbrenn.Trakt.an NE ges.PVk,91.3573407202216,14.000998217755779,=100-L135,"=IF(M143=""Aktiv"",0,100-M135)",,,0.71,True,10000.0,True,10000.0,HIGH
+4.1.2.20,Wasserstoffverbrauch GVk,0.0,0.0,4. Verbrauch,10,*,69.7,69.7,=AK10,"=IF(P10="""",AL10,P10)",,,0.0,True,10000.0,True,10000.0,HIGH
+4.1.1.4.0,Nutzenergie (NE) gesamt PVk,116643.4542015,0.0,4. Verbrauch,129,Nutzenergie (NE) gesamt PVk,116675.14100450359,,=L127*L128%,,,,1.0,True,1.0,False,1.0,MED
+4.1.1.4.1,Nutzenergie (NE) gesamt PVk,0.0,116643.4542015,4. Verbrauch,134,Anteil NE Elektrotrakt.an Endverbr. PVk,2.34,53.9035835699521,=L132*L133%,=M132*M133%,,,0.33,True,1000.0,False,1.0,MED
+4.1.2.4.0,Nutzenergie (NE) gesamt GVk,64019.64051714,0.0,4. Verbrauch,154,Nutzenergie (NE) gesamt GVk,63994.06329335034,,=L152*L153%,,,,1.0,True,1.0,False,1.0,MED
+4.1.2.4.1,Nutzenergie (NE) gesamt GVk,0.0,64019.64051714,4. Verbrauch,159,Anteil NE Elektrotrakt.an Endverbr. GVk,5.701648289475338,52.19860057542715,=L157*L158%,=M157*M158%,,,0.33,True,1000.0,False,1.0,MED
+4.1.1.15.1,Alternativ zur Verbrennungsmotoren: Brennstoffzellen (FC) -Traktion: (Passiv),,,4. Verbrauch,143,Alternativ zur Verbrennungsmotoren: Brennstoffzellen (FC) -Traktion:,,,,"=IF(P143="""",AL143,P143)",,,0.86,False,1.0,False,1.0,LABEL_ONLY
+4.1.2.15.1,Alternativ zur Kraftstofftraktion: Brennstoffzellen (FC) -Traktion: (Passiv),,,4. Verbrauch,143,Alternativ zur Verbrennungsmotoren: Brennstoffzellen (FC) -Traktion:,,,,"=IF(P143="""",AL143,P143)",,,0.71,False,1.0,False,1.0,LABEL_ONLY
+5.0,Bedarfsniveau (statisch),114520.0,114520.0,4. Verbrauch,176,Bedarfsniveau (statisch),114519.90062392101,114519.900623921,=AG176,"=IF(P176="""",AH176,P176)",,,1.0,True,1.0,True,1.0,HIGH
+5.1,Zieleinfluss Luftverk.-Leistung/Person,100.0,100.0,4. Verbrauch,9,Entwicklung BIP/Kopf gesamt,100,100,=L8/L8%,=M8/L8%,,,0.0,True,1.0,True,1.0,HIGH
+5.2,Bedarfsniv. Luftverk. (nach Entwicklung),114520.0,114520.0,4. Verbrauch,178,Bedarfsniv. Luftverk. (nach Entwicklung),114519.90062392101,114519.900623921,=L176*L177%,=M176*M177%,,,1.0,True,1.0,True,1.0,HIGH
+5.2.1,Zieleinfluss Luftverkehrs-Effizienz,100.0,87.0,4. Verbrauch,179,*,100,87,=AK179,"=IF(P179="""",AL179,P179)",,,0.0,True,1.0,True,1.0,HIGH
+5.2.2,Kraftstoffverbrauch (flüssig) Luftverkehr,114520.0,99632.4,4. Verbrauch,180,Kraftstoffverbrauch (flüssig) Luftverkehr,114519.90062392101,99632.31354281127,=L178*L179%,=M178*M179%,,,1.0,True,1.0,True,1.0,HIGH
+6.0,Endenergieverbrauch MA gesamt,753713.0,388761.3735331111,4. Verbrauch,182,Endenergieverbrauch MA gesamt,753712.784407383,388748.88640887616,=L183+L187,=M183+M187,,,1.0,True,1.0,True,1.0,HIGH
+6.1,davon Kraftstoffe,725577.002526,191239.61347024117,4. Verbrauch,183,davon Kraftstoffe,725561.4069447867,191199.44330611525,=L142+L167+L180,=SUM(M184:M186),,,1.0,True,1.0,True,1.0,HIGH
+6.1.1,davon Wasserstoff (FC-Traktion),0.0,0.0,4. Verbrauch,184,davon Wasserstoff (FC-Traktion),0,0,,=M148+M173,,,1.0,True,1.0,True,1.0,HIGH
+6.1.2,davon Kohlenwassserst.(gasförmig),611057.002526,91607.21347024117,4. Verbrauch,185,davon Kohlenwassserst.(gasförmig),611041.5063208656,91567.12976330398,=L142+L167,=M142+M167,,,1.0,True,1.0,True,1.0,HIGH
+6.1.3,"dav.Kohlenwasserst. (flüssig, für Luftverk.)",114520.0,99632.4,4. Verbrauch,186,"dav.Kohlenwasserst. (flüssig, für Luftverk.)",114519.90062392101,99632.31354281127,=L180,=M180,,,1.0,True,1.0,True,1.0,HIGH
+6.2,davon Strom,28135.997474,197521.76006286996,4. Verbrauch,187,davon Strom,28151.377462596298,197549.4431027609,=L136+L161,=M136+M161,,,1.0,True,1.0,True,1.0,HIGH
+7,Strom-Endverbrauch insgesamt,461869.2220968377,1005742.8543367754,4. Verbrauch,189,Strom-Endverbrauch insgesamt,467131.23274726106,1003827.9660048089,=L42+L87+L118+L187,=M42+M87+M118+M187,,,1.0,False,1.0,True,1.0,MED
+8,Endenergieverbrauch insgesamt,2432616.134253548,1863864.838399511,4. Verbrauch,18,Endenergieverbrauch insgesamt,2437188.6728744195,1855292.3330287721,=L191,=M191,,,1.0,True,1.0,True,1.0,HIGH
+9,Grundstoff-Synthetisierung,,,4. Verbrauch,193,Grundstoff-Synthetisierung,,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+9.1,Bedarfsniveau Grundstoffe (statisch),2337.0,2337.0,4. Verbrauch,194,Bedarfsniveau Grundstoffe (statisch),2336.626000262364,2336.626000262364,=AK194,=AK194,,,1.0,True,1.0,True,1.0,HIGH
+9.1.1,* Zieleinfluss Kunststofferzeugung/Pers.,100.0,53.0,4. Verbrauch,195,*,100,53,,"=IF(P195="""",AL194/AK194%,P195)",,,0.0,True,1.0,True,1.0,HIGH
+9.1.2,= Bedarf an Grundstoffen,197841.0,104855.0,4. Verbrauch,196,Bedarf an Grundstoffen,197840.5485562902,104855.4907348338,=L194*'3. Bedarfsniveau'!L10/1000000,=M194*M195%*'3. Bedarfsniveau'!M10/1000000,,,1.0,True,1.0,True,1.0,HIGH
+9.1.3,* Anteil aus H2 synthetisierter Grundstoffe,0.0,73.0,4. Verbrauch,76,*,79.16331241968767,0,=AK76,"=IF(P76="""",AL76,P76)",,,0.0,True,10000.0,True,0.0001,HIGH
+9.1.4,= Bedarf an synthetischen Grundstoffen,0.0,76544.15,4. Verbrauch,198,Bedarf an synthetischen Grundstoffen,0,76544.50823642868,=L196*L197%,=M196*M197%,,,1.0,True,1.0,True,1.0,HIGH
+10,fossil,50.0,60.0,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.0001,True,0.0001,HIGH

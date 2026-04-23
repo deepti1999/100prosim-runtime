@@ -1,0 +1,81 @@
+{
+  "total_rows": 420,
+  "high": 329,
+  "med": 61,
+  "label_only": 25,
+  "none": 5,
+  "models": [
+    {
+      "model": "LandUse",
+      "rows": 20,
+      "high": 18,
+      "med": 2,
+      "label_only": 0,
+      "none": 0,
+      "primary_sheet": "1. Fl\u00e4chen",
+      "fallback_sheets": [],
+      "status_col": 9,
+      "ziel_col": 12,
+      "csv": "scripts/audit_out\\s_xlsx_map_landuse.csv"
+    },
+    {
+      "model": "RenewableData",
+      "rows": 223,
+      "high": 157,
+      "med": 40,
+      "label_only": 21,
+      "none": 5,
+      "primary_sheet": "2. Erneuerbare",
+      "fallback_sheets": [
+        "1. Fl\u00e4chen"
+      ],
+      "status_col": 12,
+      "ziel_col": 13,
+      "csv": "scripts/audit_out\\s_xlsx_map_renewabledata.csv"
+    },
+    {
+      "model": "VerbrauchData",
+      "rows": 151,
+      "high": 129,
+      "med": 18,
+      "label_only": 4,
+      "none": 0,
+      "primary_sheet": "4. Verbrauch",
+      "fallback_sheets": [
+        "3. Bedarfsniveau",
+        "7. Verbrauch Status"
+      ],
+      "status_col": 12,
+      "ziel_col": 13,
+      "csv": "scripts/audit_out\\s_xlsx_map_verbrauchdata.csv"
+    },
+    {
+      "model": "GebaeudewaermeData",
+      "rows": 26,
+      "high": 25,
+      "med": 1,
+      "label_only": 0,
+      "none": 0,
+      "primary_sheet": "3. Bedarfsniveau",
+      "fallback_sheets": [
+        "4. Verbrauch"
+      ],
+      "status_col": 12,
+      "ziel_col": 13,
+      "csv": "scripts/audit_out\\s_xlsx_map_gebaeudewaermedata.csv"
+    }
+  ],
+  "scale_set_used": [
+    1.0,
+    0.001,
+    0.0001,
+    1000.0,
+    10000.0
+  ],
+  "_S_external_link_map": {
+    "[1]": "C.xlsx",
+    "[2]": "WS.xlsm",
+    "[3]": "BS.xlsx (NOT in bundle)",
+    "[4]": "D.xlsx"
+  }
+}

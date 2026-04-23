@@ -1,0 +1,224 @@
+our_code,our_label,our_status,our_ziel,s_sheet,s_row,s_label,s_status_value,s_ziel_value,s_status_formula,s_ziel_formula,d_status_ref,d_ziel_ref,label_overlap,status_match,status_scale,ziel_match,ziel_scale,confidence
+1,Solarenergie,,,2. Erneuerbare,5,Solarenergie,,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+1.1,Solare Dachflächen,34243.0,199396.038908,2. Erneuerbare,6,Solare Dachflächen,34242.69,199398.4011935508,=AP6,"=IF(P6="""",AQ6,P6)",,,1.0,True,1.0,True,1.0,HIGH
+1.1.1,Solarthermie,132641.73084648,87627.957854937,2. Erneuerbare,7,Solarthermie,,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+1.1.1.1,Anteil an solaren Dachflächen,6.4,1.1,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.001,True,0.001,HIGH
+1.1.1.1.1,Energieertrag,3878.0,5250.0,2. Erneuerbare,9,*,3878.356667431719,5250,=AT9,"=IF(P9="""",AU9,P9)",,,0.0,True,1.0,True,1.0,HIGH
+1.1.1.1.2,Gebäudewärme,8498.838656000002,11515.121246937,2. Erneuerbare,10,Gebäudewärme,8448.999999999998,11515.25766892756,=L6*L8%*L9/1000,=M6*M8%*M9/1000,,,1.0,False,1.0,True,1.0,MED
+1.1.2,Solarstrom,114220.68413793105,483416.2937742548,2. Erneuerbare,12,Solarstrom,,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+1.1.2.1,Anteil an solaren Dachflächen (Strom),93.6,98.9,2. Erneuerbare,13,*,93.63805822498175,98.9,=100-L8,=100-M8,,,0.0,True,1.0,True,1.0,HIGH
+1.1.2.1.1,Energieertrag,1383.0,1853.0,2. Erneuerbare,14,*,1382.8358208955224,1853,=AT14,"=IF(P14="""",AU14,P14)",,,0.0,True,1.0,True,1.0,HIGH
+1.1.2.1.2,Bruttostromerzeugung,44327.152583999996,365416.57063546224,2. Erneuerbare,15,Bruttostromerzeugung,44339.5105,365420.8998001215,=L6*L13%*L14/1000,=M6*M13%*M14/1000,,,1.0,True,1.0,True,1.0,HIGH
+1.1.2.1.2.1,Vollbetriebstunden jährlich,927.0,927.0,2. Erneuerbare,16,/,926.5,926.5,=AT16,"=IF(P16="""",AU16,P16)",,,0.0,True,1.0,True,1.0,HIGH
+1.1.2.1.2.2,Installierte Leistung,47817.8560776699,394192.6328322139,2. Erneuerbare,17,Installierte Leistung,47857,394410.03756084346,=L15*1000/L16,=M15*1000/M16,,,1.0,True,1.0,True,1.0,HIGH
+1.2,Solar genutzte Freiflächen,19628.0,684640.8016282017,2. Erneuerbare,19,Solar genutzte Freiflächen,19627.65,887749.85,=AP19,"=IF(P19="""",AQ19,P19)",,,1.0,True,1.0,False,1.0,MED
+1.2.1,Solarstrom,65093.948584,1214891.585294698,2. Erneuerbare,12,Solarstrom,,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+1.2.1.1,Energieertrag,922.0,1235.33333,2. Erneuerbare,21,*,921.8905472636816,1235.3333333333333,=AT21,"=IF(P21="""",AU21,P21)",,,0.0,True,1.0,True,1.0,HIGH
+1.2.1.2,Bruttostromerzeugung,18097.016,845759.6013292358,2. Erneuerbare,22,Bruttostromerzeugung,18094.545,1096666.9813666665,=L19*L21/1000,=M19*M21/1000,,,1.0,True,1.0,False,1.0,MED
+1.2.1.2.1,Vollbetriebstunden jährlich,927.0,927.0,2. Erneuerbare,16,/,926.5,926.5,=AT16,"=IF(P16="""",AU16,P16)",,,0.0,True,1.0,True,1.0,HIGH
+1.2.1.2.2,Installierte Leistung,19522.131607335494,912362.0294813763,2. Erneuerbare,24,Installierte Leistung,19530,1183666.4666666666,=L22*1000/L23,=M22*1000/M23,,,1.0,True,1.0,False,1.0,MED
+2.1,Onshore-Windstrom,267722.61958400003,2578592.1435145442,2. Erneuerbare,27,Onshore-Windstrom,,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+2.1.1,Windparkfläche,172556.0,715288.6652322228,2. Erneuerbare,28,Windparkfläche,172555.8,715289.0305038091,=AP28,"=IF(P28="""",AQ28,P28)",,,1.0,True,1.0,True,1.0,HIGH
+2.1.1.1,spezifischer Flächenbedarf,2.9,3.8,2. Erneuerbare,29,*,2.9,3.8,=AT29,"=IF(P29="""",AU29,P29)",,,0.0,True,1.0,True,1.0,HIGH
+2.1.1.2,Installierte Leistung,59502.06896551725,188233.85927163757,2. Erneuerbare,30,Installierte Leistung,59502,188233.95539573923,=L28/L29,=M28/M29,,,1.0,True,1.0,True,1.0,HIGH
+2.1.1.2.1,Vollbetriebstunden jährlich,1874.0,2550.0,2. Erneuerbare,31,*,1874.420205529969,2550,=AT31,"=IF(P31="""",AU31,P31)",,,0.0,True,1.0,True,1.0,HIGH
+2.1.1.2.2,Bruttostromerzeugung jährlich,111506.87724137932,479996.34114267584,2. Erneuerbare,32,Bruttostromerzeugung,111531.75106944422,479996.58625913505,=L30*L31/1000,=M30*M31/1000,,,0.5,True,1.0,True,1.0,HIGH
+2.1.1.2.3,Energieertrag,646.2068965517242,671.0526315789474,2. Erneuerbare,33,Energieertrag,646.3517950103343,671.0526315789474,=L32*1000/L28,=M32*1000/M28,,,1.0,True,1.0,True,1.0,HIGH
+2.2,Offshore-Windstrom,8337.0,70000.0,2. Erneuerbare,35,Install. Offshore-Leistung Deutschland,8337,70000,=AT35,"=IF(P35="""",AU35,P35)",,,0.25,True,1.0,True,1.0,HIGH
+2.2.1.1,Vollbetriebstunden jährlich,2823.0,3232.0,2. Erneuerbare,36,*,2823,3232,=AT36,"=IF(P36="""",AU36,P36)",,,0.0,True,1.0,True,1.0,HIGH
+2.2.1.2,Bruttostromerzeugung Deutschland,23535.351,226240.0,2. Erneuerbare,37,Bruttostromerzeugung Deutschland,23535.351,226240,=L35*L36/1000,=M35*M36/1000,,,1.0,True,1.0,True,1.0,HIGH
+2.2.1.2.1,Einwohner Deutschland,84669326.0,84669326.0,2. Erneuerbare,38,/,84669326,84669326,=AT38,"=IF(P38="""",AU38,P38)",,,0.0,True,1.0,True,1.0,HIGH
+2.2.1.2.2,Energieverbraucher Deutschland 100%EE,84669326.0,84669326.0,2. Erneuerbare,38,/,84669326,84669326,=AT38,"=IF(P38="""",AU38,P38)",,,0.0,True,1.0,True,1.0,HIGH
+2.2.1.2.3,Bruttostromerz.Anteil Deutschland 100%EE,23535.350999999995,226239.99999999997,2. Erneuerbare,40,Bruttostromerz.Anteil Deutschland 100%EE,23535.350999999995,226239.99999999997,=L37/L38*L39,=M37/M38*M39,,,1.0,True,1.0,True,1.0,HIGH
+2.2.1,Install. Offshore-Leistung Deutschland,8337.0,70000.0,2. Erneuerbare,35,Install. Offshore-Leistung Deutschland,8337,70000,=AT35,"=IF(P35="""",AU35,P35)",,,1.0,True,1.0,True,1.0,HIGH
+3.,Laufwasser,39949342.27816993,42301794.86816328,2. Erneuerbare,42,Laufwasser,,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+3.1,Bodenfläche Nds.,35759529.0,35759529.0,2. Erneuerbare,43,Bodenfläche Nds.,35759529,35759529,=AP43,"=IF(P43="""",AQ43,P43)",,,1.0,True,1.0,True,1.0,HIGH
+3.1.1,Nutzanteil am techn. Potenzial,79.0,79.0,2. Erneuerbare,44,*,79.01899631414801,79.01899631414801,=AT44,"=IF(P44="""",AU44,P44)",,,0.0,True,1.0,True,1.0,HIGH
+3.1.1.1,Energieertrag (techn. Potenzial),0.69,0.69,2. Erneuerbare,45,*,0.6904173709894221,0.6904173709894221,=AT45,"=IF(P45="""",AU45,P45)",,,0.0,True,1.0,True,1.0,HIGH
+3.1.1.2,Bruttostromerzeugung,19492.5192579,19492.5192579,2. Erneuerbare,46,Bruttostromerzeugung,19509.000000000004,19509.000000000004,=L43*L44%*L45/1000,=M43*M44%*M45/1000,,,1.0,True,1.0,True,1.0,HIGH
+4.,Biogene Brennstoffe (fest),47659883.00765544,47934441.2626911,2. Erneuerbare,17,Installierte Leistung,47857,394410.03756084346,=L15*1000/L16,=M15*1000/M16,,,0.0,True,0.001,False,1.0,MED
+4.1,Energieholz,10086723.667438,9472655.639714886,2. Erneuerbare,49,Energieholz,,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+4.1.1,Aus Forstwirtschaft,9866633.0,9373000.0,2. Erneuerbare,51,Nutzbare Forstfläche,9866633,9373000,=AP51,"=IF(P51="""",AQ51,P51)",,,0.0,True,1.0,True,1.0,HIGH
+4.1.1.1,Nutzbare Forstfläche,9866633.0,9373000.0,2. Erneuerbare,51,Nutzbare Forstfläche,9866633,9373000,=AP51,"=IF(P51="""",AQ51,P51)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.1.1.1,Energet. genutzter Anteil am Zuwachs,53.6,33.2,2. Erneuerbare,52,*,53.62904409218901,33.241067207024656,=AT52,"=IF(P52="""",AU52,P52)",,,0.0,True,1.0,True,1.0,HIGH
+4.1.1.1.1.1,Energieertrag,22.71,22.728,2. Erneuerbare,53,*,22.7,22.7,=AT53,"=IF(P53="""",AU53,P53)",,,0.0,True,1.0,True,1.0,HIGH
+4.1.1.1.1.2,Energieholzaufkommen,120102.18219047999,70725.808608,2. Erneuerbare,54,Energieholzaufkommen,120114.3478370475,70726.05470543735,=L51*L52%*L53/1000,=M51*M52%*M53/1000,,,1.0,True,1.0,True,1.0,HIGH
+4.1.2,"Aus Ackerbau (KUP, Miscanthus usw.)",11200.0,11200.0,2. Erneuerbare,57,Anbaufläche,11200,11200,=AP57,"=IF(P57="""",AQ57,P57)",,,0.0,True,1.0,True,1.0,HIGH
+4.1.2.1,Anbaufläche,11200.0,11200.0,2. Erneuerbare,57,Anbaufläche,11200,11200,=AP57,"=IF(P57="""",AQ57,P57)",,,1.0,True,1.0,True,1.0,HIGH
+4.1.2.1.1,Energieertrag,29.9,51.4,2. Erneuerbare,58,*,29.877260981912144,51.388888888888886,=AT58,"=IF(P58="""",AU58,P58)",,,0.0,True,1.0,True,1.0,HIGH
+4.1.2.1.2,Energieholzaufkommen,334.88,575.68,2. Erneuerbare,59,Energieholzaufkommen,334.625322997416,575.5555555555555,=L57*L58/1000,=M57*M58/1000,,,1.0,True,1.0,True,1.0,HIGH
+4.1.3,Energieholzaufkommen gesamt,120437.06219047999,71301.488608,2. Erneuerbare,61,Energieholzaufkommen gesamt,120448.97316004492,71301.61026099291,=L54+L59,=M54+M59,,,1.0,True,1.0,True,1.0,HIGH
+4.1.3.1,davon für Gebäudewärme,73.3,0.0,2. Erneuerbare,89,davon Einsatz für Heiwerke/Wärmenetze,0,0,=L61*L65%+L71*L75%,=M61*M65%+M71*M75%,,,0.4,True,0.0001,True,1.0,HIGH
+4.1.3.2,davon für Prozesswärme,21.300000000000004,100.0,2. Erneuerbare,63,*,21.33447833119341,100,=AT63,=100-M62-M64-M65,,,0.0,True,1.0,True,1.0,HIGH
+4.1.3.3,davon für Verstromung,5.4,0.0,2. Erneuerbare,89,davon Einsatz für Heiwerke/Wärmenetze,0,0,=L61*L65%+L71*L75%,=M61*M65%+M71*M75%,,,0.4,True,0.001,True,1.0,HIGH
+4.1.3.4,davon für Wärmenetze GW,0.0,0.0,2. Erneuerbare,89,davon Einsatz für Heiwerke/Wärmenetze,0,0,=L61*L65%+L71*L75%,=M61*M65%+M71*M75%,,,0.6,True,1.0,True,1.0,HIGH
+4.2,Stroh aus Getreideanbau,6128961.64905,5631325.0,2. Erneuerbare,67,Stroh aus Getreideanbau,,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+4.2.1,Getreide-Anbaufläche,6076200.0,5631255.0,2. Erneuerbare,68,Getreide-Anbaufläche,6076200,5631254.918074889,=AP68,"=IF(P68="""",AQ68,P68)",,,1.0,True,1.0,True,1.0,HIGH
+4.2.1.1,Energet. genutzter Teil am Strohanfall,0.2,33.0,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.001,True,0.0001,HIGH
+4.2.1.1.1,Energieertrag,20.1,23.8339,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+4.2.1.1.2,Strohbrennstoff-Aufkommen,244.26324000000002,44290.87361968499,2. Erneuerbare,71,Strohbrennstoff-Aufkommen,243.92361111111106,44289.819930659,=L68*L69%*L70/1000,=M68*M69%*M70/1000,,,1.0,True,1.0,True,1.0,HIGH
+4.2.1.1.2.1,davon für Gebäudewärme,0.0,0.0,2. Erneuerbare,89,davon Einsatz für Heiwerke/Wärmenetze,0,0,=L61*L65%+L71*L75%,=M61*M65%+M71*M75%,,,0.4,True,1.0,True,1.0,HIGH
+4.2.1.1.2.2,davon für Prozesswärme,0.0,100.0,2. Erneuerbare,63,*,21.33447833119341,100,=AT63,=100-M62-M64-M65,,,0.0,True,10000.0,True,1.0,HIGH
+4.2.1.1.2.3,davon für Verstromung,100.0,0.0,2. Erneuerbare,74,*,100,0,=AT74,"=IF(P74="""",AU74,P74)",,,0.0,True,1.0,True,1.0,HIGH
+4.2.1.1.2.4,davon für Wärmenetze GW,0.0,0.0,2. Erneuerbare,89,davon Einsatz für Heiwerke/Wärmenetze,0,0,=L61*L65%+L71*L75%,=M61*M65%+M71*M75%,,,0.6,True,1.0,True,1.0,HIGH
+4.3,Brennstoffaufkommen (fest) NAWARO gesamt,120681.32543047999,115592.362227685,2. Erneuerbare,77,Brennstoffaufk.(fest) NAWARO gesamt,120692.89677115603,115591.43019165192,=L54+L59+L71,=M54+M59+M71,,,0.75,True,1.0,True,1.0,HIGH
+4.3.1,davon Einsatz für Gebäudewärme,88453.6052475208,0.0,2. Erneuerbare,79,davon Einsatz für Gebäudewärme,88254.46556022266,0,=L61*L62%+L71*L72%,=M61*M62%+M71*M72%,,,1.0,True,1.0,True,1.0,HIGH
+4.3.2,davon Einsatz für Prozesswärme,25653.094246572244,115592.362227685,2. Erneuerbare,81,davon Einsatz für Prozesswärme,25697.16007897475,115591.43019165192,=L61*L63%+L71*L73%,=M61*M63%+M71*M73%,,,1.0,True,1.0,True,1.0,HIGH
+4.3.3,davon Einsatz für Verstromung,6747.86459828592,0.0,2. Erneuerbare,83,davon Einsatz für Verstromung,6741.271131958609,0,=L61*L64%+L71*L74%,=M61*M64%+M71*M74%,,,1.0,True,1.0,True,1.0,HIGH
+4.3.3.1,Nutzungsgrad Kraftwerk,25.0,35.0,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+4.3.3.2,Bruttostromerzeugung,1686.96614957148,0.0,2. Erneuerbare,85,Bruttostromerzeugung,1685.3177829896522,0,=L83*L84%,=M83*M84%,,,1.0,True,1.0,True,1.0,HIGH
+4.3.3.3,Nutzungsgrad KWK-Abwärme effektiv,45.0,45.0,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+4.3.3.4,Wärmenetze GW (Endenergie),3036.539069228664,0.0,2. Erneuerbare,87,Wärmenetze GW (Endenergie),3033.572009381374,0,=L83*L86%,=M83*M86%,,,1.0,True,1.0,True,1.0,HIGH
+4.3.4,davon Einsatz für Heizwerke/Wärmenetze,0.0,0.0,2. Erneuerbare,89,davon Einsatz für Heiwerke/Wärmenetze,0,0,=L61*L65%+L71*L75%,=M61*M65%+M71*M75%,,,0.8,True,1.0,True,1.0,HIGH
+4.3.4.1,Nutzungsgrad Heizwerk/Wärmenetz,75.0,75.0,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+4.3.4.2,Wärmenetze GW (Endenergie),0.0,0.0,2. Erneuerbare,91,Wärmenetze GW (Endenergie),0,0,=L89*L90%,=M89*M90%,,,1.0,True,1.0,True,1.0,HIGH
+4.4,Biogener Anteil der Abfälle (fest),14438.0,14438.0,2. Erneuerbare,93,Biogener Anteil der Abfälle (fest),14438,14438,=L94+L95,=M94+M95,,,1.0,True,1.0,True,1.0,HIGH
+4.4.1,Bruttostromerzeugung,4525.0,4525.0,2. Erneuerbare,94,Bruttostromerzeugung,4525,4525,=AT94,"=IF(P94="""",AU94,P94)",,,1.0,True,1.0,True,1.0,HIGH
+4.4.2,Wärmenetze GW (Endenergie),9913.0,9913.0,2. Erneuerbare,95,Wärmenetze GW (Endenergie),9913,9913,=AT95,"=IF(P95="""",AU95,P95)",,,1.0,True,1.0,True,1.0,HIGH
+5,,,,,,,,,,,,,0.0,False,1.0,False,1.0,NONE
+5.1,Anbaufläche Energiepflanzen für Biogas,1410000.0,1307000.0,2. Erneuerbare,98,Anbaufläche Energiepflanzen für Biogas,1410000,1307000,=AP98,"=IF(P98="""",AQ98,P98)",,,1.0,True,1.0,True,1.0,HIGH
+5.1.1,Biogas – Methanertrag,50.9,40.7528,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+5.1.2,Biogas aus Energiepflanzen-Anbau,71769.0,53263.9096,2. Erneuerbare,100,+,71826.66666666667,53263.80330969268,=L98*L99/1000,=M98*M99/1000,,,0.0,True,1.0,True,1.0,HIGH
+5.2,Biogas aus Abfall-/Reststoffverwertung,15998.0,44571.0,2. Erneuerbare,102,+,15997.66081871345,44571.22807017545,=AT102,"=IF(P102="""",AU102,P102)",,,0.0,True,1.0,True,1.0,HIGH
+5.3,Biogas aus Kläranlagen und Deponien,4558.0,12762.0,2. Erneuerbare,103,+,4557.894736842105,12762.105263157895,=AT103,"=IF(P103="""",AU103,P103)",,,0.0,True,1.0,True,1.0,HIGH
+5.4,Biogasaufkommen insgesamt,92325.0,110596.9096,2. Erneuerbare,104,Biogasaufkommen insgesamt,92382.22222222223,110597.13664302602,=L100+L102+L103,=M100+M102+M103,,,1.0,True,1.0,True,1.0,HIGH
+5.4.1,davon Einsatz für Prozesswärme,0.0,15.510515772029533,2. Erneuerbare,89,davon Einsatz für Heiwerke/Wärmenetze,0,0,=L61*L65%+L71*L75%,=M61*M65%+M71*M75%,,,0.6,True,1.0,True,0.0001,HIGH
+5.4.1.1,Biogas für Prozesswärme,0.0,17154.151106885245,2. Erneuerbare,106,Biogas für Prozesswärme,0,17161.289945777084,=L$104*L105%,=M$104*M105%,,,1.0,True,1.0,True,1.0,HIGH
+5.4.2,davon für Verstromung,96.1,0.0,2. Erneuerbare,89,davon Einsatz für Heiwerke/Wärmenetze,0,0,=L61*L65%+L71*L75%,=M61*M65%+M71*M75%,,,0.4,True,0.0001,True,1.0,HIGH
+5.4.2.1,Nutzungsgrad Kraftwerk,37.5,45.0,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+5.4.2.2,Bruttostromerzeugung,33271.621875,0.0,2. Erneuerbare,110,Bruttostromerzeugung,33290.55039524163,0,=L104*L108%*L109%,=M104*M108%*M109%,,,1.0,True,1.0,True,1.0,HIGH
+5.4.2.3,Nutzungsgrad KWK-Abwärme effektiv,21.9,25.0,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+5.4.2.4,Gebäudewärme (Endenergie),19430.627174999998,0.0,2. Erneuerbare,112,Gebäudewärme (Endenergie),19431.7392172003,0,=L104*L108%*L111%,=M104*M108%*M111%,,,1.0,True,1.0,True,1.0,HIGH
+5.4.3,davon Biomethan für mobile Anwendungen,1.2,84.5,2. Erneuerbare,89,davon Einsatz für Heiwerke/Wärmenetze,0,0,=L61*L65%+L71*L75%,=M61*M65%+M71*M75%,,,0.4,True,0.001,True,0.0001,HIGH
+5.4.3.1,Nutzungsgrad Kraftstoffbereitstellung,98.0,98.0,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+5.4.3.2,Biokraftstoff (gasförmig),1085.7420000000002,91585.30083975999,2. Erneuerbare,116,Biokraftstoff (gasförmig),1131.580013848367,91567.12976330396,=L$104*L114%*L115%,=M$104*M114%*M115%,,,1.0,False,1.0,True,1.0,MED
+5.4.4,davon Flüssigkraftstoff für mobile Anwendungen,2.7,0.0,2. Erneuerbare,89,davon Einsatz für Heiwerke/Wärmenetze,0,0,=L61*L65%+L71*L75%,=M61*M65%+M71*M75%,,,0.4,True,0.001,True,1.0,HIGH
+5.4.4.1,Nutzungsgrad Kraftstofferzeugung,45.0,45.0,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+5.4.4.2,Biokraftstoff (flüssig),1121.74875,0.0,2. Erneuerbare,120,Biokraftstoff (flüssig),1103.7364581266124,0,=L$104*L118%*L119%,=M$104*M118%*M119%,,,1.0,False,1.0,True,1.0,MED
+6,Biogene Brennstoffe (flüssig),,,2. Erneuerbare,48,Biogene Brennstoffe (fest),,,,,,,0.67,False,1.0,False,1.0,LABEL_ONLY
+6.1,Biodiesel (inkl. Pflanzenöl),738429.602,498520.30083976,2. Erneuerbare,123,Biodiesel (inkl. Pflanzenöl),,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+6.1.1,Anbaufläche Ölpflanzen für Biodiesel,665000.0,303000.0,2. Erneuerbare,124,Anbaufläche Ölpflanzen für Biodiesel,665000,303000,=AP124,"=IF(P124="""",AQ124,P124)",,,1.0,True,1.0,True,1.0,HIGH
+6.1.1.1,Biodiesel – Energieertrag,17.8,14.2,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+6.1.1.2,Biodiesel aus eigenem Anbau,11837.0,4302.6,2. Erneuerbare,126,+,11803.75,4302.6,=L124*L125/1000,=M124*M125/1000,,,0.0,True,1.0,True,1.0,HIGH
+6.1.2,Biodiesel aus Import (+) / Export (-),13403.0,0.0,2. Erneuerbare,128,+,13402.583333333332,0,=AT128,"=IF(P128="""",AU128,P128)",,,0.0,True,1.0,True,1.0,HIGH
+6.1.3,Biodiesel Gesamtaufkommen,25240.0,4302.6,2. Erneuerbare,129,Biodiesel Gesamtaufkommen,25206.333333333332,4302.6,=L126+L128,=M126+M128,,,1.0,True,1.0,True,1.0,HIGH
+6.1.3.1,davon Einsatz für mobile Anwendungen,99.1,100.0,2. Erneuerbare,73,*,0,100,=AT73,=100-M72-M74-M75,,,0.0,True,0.0001,True,1.0,HIGH
+6.1.3.1.1,Biokraftstoff (flüssig),25012.84,4302.6,2. Erneuerbare,131,Biokraftstoff (flüssig),24973,4302.6,=L129*L130%,=M129*M130%,,,1.0,True,1.0,True,1.0,HIGH
+6.1.3.2,davon Einsatz für Verstromung,0.9,0.0,2. Erneuerbare,89,davon Einsatz für Heiwerke/Wärmenetze,0,0,=L61*L65%+L71*L75%,=M61*M65%+M71*M75%,,,0.6,True,0.001,True,1.0,HIGH
+6.1.3.2.1,Nutzungsgrad Blockheizkraftwerk,39.0,39.0,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+6.1.3.2.2,Bruttostromerzeugung,88.5924,0.0,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,1.0,HIGH
+6.1.3.2.3,Nutzungsgrad KWK-Abwärme effektiv,50.0,50.0,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+6.1.3.2.4,Gebäudewärme (Endenergie),113.58000000000001,0.0,2. Erneuerbare,112,Gebäudewärme (Endenergie),19431.7392172003,0,=L104*L108%*L111%,=M104*M108%*M111%,,,1.0,False,1.0,True,1.0,MED
+6.2,Bioethanol,0.0,0.0,2. Erneuerbare,8,*,6.361941775018258,1.1,=AT8,"=IF(P8="""",AU8,P8)",,,0.0,True,1000.0,True,1000.0,HIGH
+6.2.1,Anbaufläche Energiepflanzen für Bioethanol,216200.0,0.0,2. Erneuerbare,140,Anbaufläche Energiepfl. für Bioethanol,216200,0,=AP140,"=IF(P140="""",AQ140,P140)",,,0.75,True,1.0,True,1.0,HIGH
+6.2.1.1,Bioethanol – Energieertrag (brutto),17.1,13.7,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+6.2.1.2,Bioethanol aus eigenem Anbau,3697.0200000000004,0.0,2. Erneuerbare,142,+,3700.71702,0,=L140*L141/1000,=M140*M141/1000,,,0.0,True,1.0,True,1.0,HIGH
+6.2.2,Bioethanol aus Import (+) / Export (-),4991.0,0.0,2. Erneuerbare,144,+,4991.28298,0,=AT144,"=IF(P144="""",AU144,P144)",,,0.0,True,1.0,True,1.0,HIGH
+6.2.3,Bioethanol gesamt – Mobile Anwendungen,8688.02,0.0,2. Erneuerbare,145,Bioethanol ges. - Mobile Anwendungen,8692,0,=L142+L144,=M142+M144,,,0.75,True,1.0,True,1.0,HIGH
+7.1,Wärmepumpen-Antriebsstromaufnahme,256726.09350785078,137950.4332889042,2. Erneuerbare,148,Wärmepumpen-Antriebsstromaufnahme,10108,136021.07481527407,='4. Verbrauch'!L89,='4. Verbrauch'!M89,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+7.1.1,davon Anlagen mit Luftkopplung,71.2,92.23333,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+7.1.2,WP-Luft – Antriebsstromaufnahme,182788.97857758976,127236.27837178485,2. Erneuerbare,150,WP-Luft - Antriebsstromaufnahme,7192.908345294238,125449.48868973464,=L148*L149%,=M$148*M149%,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+7.1.2.1,WP-Luft – Jahresarbeitszahl,3.2,4.2,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.001,True,0.001,HIGH
+7.1.2.2,Nutzwärme (inkl. Antriebsstrom),584924.7314482873,534392.3691614964,2. Erneuerbare,152,Nutzwärme (inkl. Antriebsstrom),23273.06376871027,526887.8524968856,=L$150*L151,=M150*M151,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+7.1.2.3,davon Wärmgewinn aus der Luft,402135.7528706975,407156.09078971157,2. Erneuerbare,99,*,50.94089834515367,40.75271867612294,=AT99,"=IF(P99="""",AU99,P99)",,,0.0,False,1.0,True,0.0001,MED
+7.1.3,davon Anlagen mit Erdreich-/Wasserkopplung,28.8,7.8,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.001,HIGH
+7.1.4.1,WP-Erdr./Wasser – Jahresarbeitszahl,3.8,4.9,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.001,True,0.001,HIGH
+7.1.4.2,Nutzwärme (inkl. Antriebsstrom),280961.0367349919,52724.655603019186,2. Erneuerbare,152,Nutzwärme (inkl. Antriebsstrom),23273.06376871027,526887.8524968856,=L$150*L151,=M150*M151,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+7.1.4.3,davon Wärmgewinn Erdreich/Grundwasser,207023.92180473084,41964.521806484656,2. Erneuerbare,151,*,3.2355568361907507,4.2,=AT151,"=IF(P151="""",AU151,P151)",,,0.0,False,1.0,True,0.0001,MED
+7.1.4.3.1,Wärmeertrag Erdreich/Grundwasser,1000.0,1000.0,2. Erneuerbare,160,/,1000,1000,=AT160,"=IF(P160="""",AU160,P160)",,,0.0,True,1.0,True,1.0,HIGH
+7.1.4.3.2,Beanspruchte Entzugsfläche,207023.92180473084,41964.521806484656,2. Erneuerbare,151,*,3.2355568361907507,4.2,=AT151,"=IF(P151="""",AU151,P151)",,,0.0,False,1.0,True,0.0001,MED
+7.1.4.3.3,Gebäude- & Freifläche (Siedlung),3380079.0,3645799.0,2. Erneuerbare,162,/,3380079,3645799.0000000005,=AP162,"=IF(P162="""",AQ162,P162)",,,0.0,True,1.0,True,1.0,HIGH
+7.1.4.3.4,Anteil beanspruchter Siedlungsfläche,0.241,1.1,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.001,True,0.001,HIGH
+7,Umgebungswärme (Wärmepumpe),,,2. Erneuerbare,147,Umgebungswärme (Wärmepumpe),,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+8,Tiefengeothermie,,,2. Erneuerbare,165,Tiefengeothermie,,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+8.1,Netzanschlussleistung (elektrisch),57.0,0.0,2. Erneuerbare,166,Netzanschlussleistung (elektrisch),57,0,=AT166,"=IF(P166="""",AU166,P166)",,,1.0,True,1.0,True,1.0,HIGH
+8.1.1,Stromerzeugung – Vollbetriebsstunden,3421.0,3421.0,2. Erneuerbare,167,*,3421.0526315789475,3421.0526315789475,=AT167,"=IF(P167="""",AU167,P167)",,,0.0,True,1.0,True,1.0,HIGH
+8.1.2,Bruttostromerzeugung,194.997,0.0,2. Erneuerbare,168,Bruttostromerzeugung,195,0,=L166*L167/1000,=M166*M167/1000,,,1.0,True,1.0,True,1.0,HIGH
+8.2,Gebäudewärmebereitstellung (Endenergie),1797.0,12000.0,2. Erneuerbare,178,Gebäudewärmebereitstellung (Endenergie),1797,12000,=AT178,"=IF(P178="""",AU178,P178)",,,1.0,True,1.0,True,1.0,HIGH
+9,Stromwandlung / Stromspeicherung,,,2. Erneuerbare,180,Stromwandlung / Stromspeicherung,,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+9.1,Bruttostromerzeugung aus Erneuerbaren Energien gesamt (inkl. Abregelung),256726.09350785078,1941430.032365274,2. Erneuerbare,181,Bruttostromerzeugung aus Erneuerbaren Energien gesamt (inklusive Abregelung),,,,,,,0.86,False,1.0,False,1.0,LABEL_ONLY
+9.1.1,aus Windenergie,135042.22824137931,706236.3411426758,2. Erneuerbare,182,+,135067.1020694442,706236.586259135,=L32+L40,=M32+M40,,,0.0,True,1.0,True,1.0,HIGH
+9.1.2,aus Solarenergie (Photovoltaik),62424.168584,1211176.171964698,2. Erneuerbare,183,+,62434.055499999995,1462087.881166788,=L15+L22,=M15+M22,,,0.0,True,1.0,False,1.0,MED
+9.1.3,aus Wasserkraft + Tiefengeothermie,19687.5162579,19492.5192579,2. Erneuerbare,184,+,19704.000000000004,19509.000000000004,=L46+L168,=M46+M168,,,0.0,True,1.0,True,1.0,HIGH
+9.1.4,aus Biobrennstoffen,39572.18042457148,4525.0,2. Erneuerbare,185,+,39591.868178231285,4525,=L85+L94+L110+L135,=M85+M94+M110+M135,,,0.0,True,1.0,True,1.0,HIGH
+9.2,Bruttostromerzeugung Erneuerbar (inkl. Abregelung),256726.09350785078,1941430.032365274,2. Erneuerbare,186,Bruttostromerzeug. Erneuerb. (inkl.Abregelung),256797.0257476755,2192358.467425923,"=SUMIF($AD$5:$AD$179,$AD186,L$5:L$179)","=SUMIF($AD$5:$AD$179,$AD186,M$5:M$179)",,,0.5,True,1.0,False,1.0,MED
+9.2.1,"Wasser-Elektrolyse (H₂ für Brennstoff, Kraftstoff- und Grundstoff-Synthese)",0.0,418893.192987624,2. Erneuerbare,8,*,6.361941775018258,1.1,=AT8,"=IF(P8="""",AU8,P8)",,,0.0,True,1000.0,False,1.0,MED
+9.2.1.1,Wasserstoff als Brennstoff für PW,0.0,0.0,2. Erneuerbare,8,*,6.361941775018258,1.1,=AT8,"=IF(P8="""",AU8,P8)",,,0.0,True,1000.0,True,1000.0,HIGH
+9.2.1.1.1,Wasserstoff (komprim.) f. FC-Traktion,0.0,0.0,2. Erneuerbare,191,Wasserstoff (komprim.) f.FC-Traktion,0,0,='4. Verbrauch'!L184,='4. Verbrauch'!M184,,,1.0,True,1.0,True,1.0,HIGH
+9.2.1.1.1.1,Nutzungsgrad tankfähiger Wasserstoff,80.0,80.0,2. Erneuerbare,251,davon Wasserstoff,0,0,"=SUMIF($AD$5:$AD$228,$AD251,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD251,M$5:M$228)",,,0.33,True,0.0001,True,0.0001,HIGH
+9.2.1.1.2,Wasserstoff für MA mit FC-Traktion,0.0,0.0,2. Erneuerbare,191,Wasserstoff (komprim.) f.FC-Traktion,0,0,='4. Verbrauch'!L184,='4. Verbrauch'!M184,,,0.5,True,1.0,True,1.0,HIGH
+9.2.1.2,Kraftstoff (gasförm. Methan) für MA aus H₂,0.0,21.912630481179804,2. Erneuerbare,195,Kraftst.(gasförm.Methan) f.MA aus H2,0,0,=AT195,"=IF('4. Verbrauch'!M185>'2. Erneuerbare'!M116,'4. Verbrauch'!M185-'2. Erneuerbare'!M116,0)",,,0.57,True,1.0,True,0.0001,HIGH
+9.2.1.2.1,Nutzungsgrad Methansynthese,0.0,80.0,2. Erneuerbare,62,*,73.27124776975538,0,=AT62,"=IF(P62="""",AU62,P62)",,,0.0,True,10000.0,True,0.0001,HIGH
+9.2.1.2.2,Wasserstoff für Kraftstoffsynthese,0.0,0.0,2. Erneuerbare,251,davon Wasserstoff,0,0,"=SUMIF($AD$5:$AD$228,$AD251,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD251,M$5:M$228)",,,0.33,True,1.0,True,1.0,HIGH
+9.2.1.3,Kraftstoffe (flüssig) für MA aus H₂,0.0,95329.79999999999,2. Erneuerbare,199,Kraftstoffe (flüssig)  für MA aus H2,0,95329.71354281127,=AT199,"=IF('4. Verbrauch'!M186>(M120+M131+M145),'4. Verbrauch'!M186-(M120+M131+M145),0)",,,0.83,True,1.0,True,1.0,HIGH
+9.2.1.3.1,Nutzungsgrad Kraftstofferzeugung,0.0,63.0,2. Erneuerbare,62,*,73.27124776975538,0,=AT62,"=IF(P62="""",AU62,P62)",,,0.0,True,10000.0,True,0.0001,HIGH
+9.2.1.3.2,Wasserstoff für Kraftstoffsynthese,0.0,151317.14285714284,2. Erneuerbare,201,+,0,151317.00562350993,=L189*L198%,=M199/M200%,,,0.0,True,1.0,True,1.0,HIGH
+9.2.1.4,Synth. Methan als Grundstoff,0.0,76544.15,2. Erneuerbare,202,Synth. Methan als Grundstoff,0,76544.50823642868,='4. Verbrauch'!L198,='4. Verbrauch'!M198,,,1.0,True,1.0,True,1.0,HIGH
+9.2.1.4.1,Nutzungsgrad Methansynthese,0.0,80.0,2. Erneuerbare,62,*,73.27124776975538,0,=AT62,"=IF(P62="""",AU62,P62)",,,0.0,True,10000.0,True,0.0001,HIGH
+9.2.1.4.2,Wasserstoff für Grundstoffsynthese,0.0,95680.18749999999,2. Erneuerbare,199,Kraftstoffe (flüssig)  für MA aus H2,0,95329.71354281127,=AT199,"=IF('4. Verbrauch'!M186>(M120+M131+M145),'4. Verbrauch'!M186-(M120+M131+M145),0)",,,0.17,True,1.0,True,1.0,HIGH
+9.2.1.5,Wasserstofferzeugung,0.0,246997.33035714284,2. Erneuerbare,205,Wasserstofferzeugung,0,246997.64091904578,=L189+L201+L204,=M189+M193+M197+M201+M204,,,1.0,True,1.0,True,1.0,HIGH
+9.2.1.5.1,Nutzungsgrad Wasserelektrolyse,0.0,64.0,2. Erneuerbare,62,*,73.27124776975538,0,=AT62,"=IF(P62="""",AU62,P62)",,,0.0,True,10000.0,True,0.0001,HIGH
+9.2.1.5.2,Stromeinsatz Wasserstofferzeugung,0.0,385933.3286830357,2. Erneuerbare,207,Stromeinsatz Wasserstofferzeug.,0,385933.813936009,=AT208,=M205/M206%,,,0.5,True,1.0,True,1.0,HIGH
+9.2.1.5.2.1,davon in der Zielregion,0.0,385933.3286830357,2. Erneuerbare,207,Stromeinsatz Wasserstofferzeug.,0,385933.813936009,=AT208,=M205/M206%,,,0.0,True,1.0,True,1.0,HIGH
+9.2.1.5.2.2,davon extern für Importwasserstoff,0.0,0.0,2. Erneuerbare,209,davon extern f. Importwasserstoff,0,0,,"=IF(P209="""",0,P209)",,,0.75,True,1.0,True,1.0,HIGH
+9.3,Langzeitspeicherung Strom stofflich (saisonaler Ausgleich > 1 Tag),0.0,844033.3254470965,2. Erneuerbare,114,*,1.2498871057044014,84.48306125576423,=AT114,"=IF(P114="""",AJ114,P114)",,,0.0,True,1000.0,True,0.0001,HIGH
+9.3.1,Stromaufnahme (Überschussphasen),0.0,406403.3340795594,2. Erneuerbare,99,*,50.94089834515367,40.75271867612294,=AT99,"=IF(P99="""",AU99,P99)",,,0.0,True,10000.0,True,0.0001,HIGH
+9.3.1.1,Nutzungsgrad Stromspeicherung,0.0,38.0,2. Erneuerbare,62,*,73.27124776975538,0,=AT62,"=IF(P62="""",AU62,P62)",,,0.0,True,10000.0,True,0.0001,HIGH
+9.3.1.2,Stromabgabe (Mangelphasen),0.0,154433.26695023256,2. Erneuerbare,105,*,0,15.516938744235773,=AT105,=100-M114-M108-M118,,,0.0,True,1.0,True,0.0001,HIGH
+9.3.2,Nutzungsgrad KWK-Abwärme effektiv,0.0,12.7,2. Erneuerbare,62,*,73.27124776975538,0,=AT62,"=IF(P62="""",AU62,P62)",,,0.0,True,10000.0,True,0.0001,HIGH
+9.3.2.1,Gebäudewärme (Endenergie),0.0,51613.223428104044,2. Erneuerbare,58,*,29.877260981912144,51.388888888888886,=AT58,"=IF(P58="""",AU58,P58)",,,0.0,True,10000.0,True,0.001,HIGH
+9.3.3,Erforderliche Speicherkapazität,0.0,241727.0,2. Erneuerbare,219,Erforderliche Speicherkapazität,0,286224,=AT219,"=IF(P219="""",AU219,P219)",,,1.0,True,1.0,False,1.0,MED
+9.3.4,Abregelung von Wind-/Solarstrom,0.0,195890.29136753705,2. Erneuerbare,8,*,6.361941775018258,1.1,=AT8,"=IF(P8="""",AU8,P8)",,,0.0,True,1000.0,False,1.0,MED
+9.4,Stromangebot aus Erneuerbaren Energien (EE),256726.09392385077,1107646.315348871,2. Erneuerbare,224,Stromangebot aus Erneuerbaren E.,256797.0257476755,1323581.8273640631,=L222+L223,=M222+M223,,,0.6,True,1.0,False,1.0,MED
+9.4.1,Stromangebot aus eigenen Erneuerb. E.,256726.09392385077,1107646.315348871,2. Erneuerbare,222,Stromangebot aus eigenen Erneuerb.E.,256797.0257476755,1323581.8273640631,=L186-L208-L212+L214-L220,=M186-M208-M212+M214-M220,,,1.0,True,1.0,False,1.0,MED
+9.4.2,Stromeinfuhr (Erneuerb.) aus dem Ausland,0.0,0.0,2. Erneuerbare,8,*,6.361941775018258,1.1,=AT8,"=IF(P8="""",AU8,P8)",,,0.0,True,1000.0,True,1000.0,HIGH
+9.4.3,Stromangebot aus Erneuerbaren E. (gesamt),256726.09392385077,1107646.315348871,2. Erneuerbare,222,Stromangebot aus eigenen Erneuerb.E.,256797.0257476755,1323581.8273640631,=L186-L208-L212+L214-L220,=M186-M208-M212+M214-M220,,,0.6,True,1.0,False,1.0,MED
+9.4.3.1,Übertragungsverluste Stromnetz,5.5,9.2,2. Erneuerbare,225,Übertragungsverluste Stromnetz,5.512143039125169,9.2,=AT225,"=IF(P225="""",AU225,P225)",,,1.0,True,1.0,True,1.0,HIGH
+9.4.3.2,inkl. Kurzzeitspeicher,14119.935165811794,101903.46101209613,2. Erneuerbare,226,-,14155.019379430963,121769.5281174938,=L224*L225%,=M224*M225%,,,0.0,True,1.0,False,1.0,MED
+9.4.3.3,Stromangebot Erneuerb. (Endenergie),242606.15875803898,1005742.8543367749,2. Erneuerbare,227,Stromangeb.Erneuerb.(Endenergie),242642.00636824453,1201812.2992465694,=L224-L226,=M224-M226,,,0.67,True,1.0,False,1.0,MED
+10,Endenergieangebot aus erneuerbaren Quellen gesamt,,,2. Erneuerbare,229,Endenergieangebot aus erneuerbaren Quellen gesamt,,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+10.1,Endenergie aus Erneuerbaren Q. gesamt,391499.46025213203,1863869.0257823425,2. Erneuerbare,134,*,39,39,=AT134,"=IF(P134="""",AU134,P134)",,,0.0,True,0.0001,False,1.0,MED
+10.2,Strom,242606.15875803898,1005742.8543367749,2. Erneuerbare,232,Strom (alle Anwendungsbereiche),242642.00636824453,1201812.2992465694,=L227,=M227,,,0.33,True,1.0,False,1.0,MED
+10.2.1,Stromverbrauch insgesamt,461869.2220968377,1005742.8543367754,2. Erneuerbare,233,/,467131.23274726106,1003827.9660048089,='4. Verbrauch'!L189,='4. Verbrauch'!M189,,,0.0,False,1.0,True,1.0,MED
+10.2.2,Anteil Erneuerb. an Stromverbrauch,52.52702435044979,99.99999999999996,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+10.3,Kraft/Licht/Inform.Komm.Tech./Kälte,172995.4884722678,312753.29999999993,2. Erneuerbare,28,Windparkfläche,172555.8,715289.0305038091,=AP28,"=IF(P28="""",AQ28,P28)",,,0.0,True,1.0,False,1.0,MED
+10.3.1,davon Strom,172995.4884722678,312753.29999999993,2. Erneuerbare,28,Windparkfläche,172555.8,715289.0305038091,=AP28,"=IF(P28="""",AQ28,P28)",,,0.0,True,1.0,False,1.0,MED
+10.4,Gebäudewärme,105664.95064129012,672112.3905601414,2. Erneuerbare,10,Gebäudewärme,8448.999999999998,11515.25766892756,=L6*L8%*L9/1000,=M6*M8%*M9/1000,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+10.4.1,davon Brennstoffe,88453.6052475208,0.0,2. Erneuerbare,240,davon Brennstoffe,88254.46556022266,0,=SUM(L241:L243),=SUM(M241:M243),,,1.0,True,1.0,True,1.0,HIGH
+10.4.1.1,davon Kohlenwasserstoffe,0.0,0.0,2. Erneuerbare,241,davon Kohlenwasserstoffe (gasförmig),0,0,"=SUMIF($AD$5:$AD$228,$AD241,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD241,M$5:M$228)",,,0.67,True,1.0,True,1.0,HIGH
+10.4.1.2,davon Kohlenwasserstoffe,0.0,0.0,2. Erneuerbare,241,davon Kohlenwasserstoffe (gasförmig),0,0,"=SUMIF($AD$5:$AD$228,$AD241,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD241,M$5:M$228)",,,0.67,True,1.0,True,1.0,HIGH
+10.4.1.3,davon Kohlenwasserstoffe,88453.6052475208,0.0,2. Erneuerbare,243,davon Kohlenwasserstoffe (fest),88254.46556022266,0,"=SUMIF($AD$5:$AD$228,$AD243,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD243,M$5:M$228)",,,0.67,True,1.0,True,1.0,HIGH
+10.4.2,davon Wärme,0.0,534161.9572712373,2. Erneuerbare,245,davon Wärme,66958.10440544847,536228.7194817524,"=SUMIF($AD$5:$AD$228,$AD245,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD245,M$5:M$228)",,,1.0,False,1.0,True,1.0,MED
+10.4.3,davon Strom,17211.345393769323,137950.43328890414,2. Erneuerbare,232,Strom (alle Anwendungsbereiche),242642.00636824453,1201812.2992465694,=L227,=M227,,,0.33,False,1.0,False,1.0,NONE
+10.5,Prozesswärme,63273.416894164184,490263.8743195712,2. Erneuerbare,106,Biogas für Prozesswärme,0,17161.289945777084,=L$104*L105%,=M$104*M105%,,,0.33,False,1.0,False,1.0,NONE
+10.5.1,davon Brennstoffe,25653.094246572244,132746.51333457025,2. Erneuerbare,249,davon Brennstoffe,25697.16007897475,132752.72013742902,=SUM(L250:L253),=SUM(M250:M253),,,1.0,True,1.0,True,1.0,HIGH
+10.5.1.1,davon Kohlenwasserstoffe,0.0,17154.151106885245,2. Erneuerbare,250,davon Kohlenwasserstoffe (gasförmig),0,17161.289945777084,"=SUMIF($AD$5:$AD$228,$AD250,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD250,M$5:M$228)",,,0.67,True,1.0,True,1.0,HIGH
+10.5.1.2,davon Wasserstoff,0.0,0.0,2. Erneuerbare,251,davon Wasserstoff,0,0,"=SUMIF($AD$5:$AD$228,$AD251,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD251,M$5:M$228)",,,1.0,True,1.0,True,1.0,HIGH
+10.5.1.3,davon Kohlenwasserstoffe,0.0,0.0,2. Erneuerbare,241,davon Kohlenwasserstoffe (gasförmig),0,0,"=SUMIF($AD$5:$AD$228,$AD241,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD241,M$5:M$228)",,,0.67,True,1.0,True,1.0,HIGH
+10.5.1.4,davon Kohlenwasserstoffe,25653.094246572244,115592.362227685,2. Erneuerbare,253,davon Kohlenwasserstoffe (fest),25697.16007897475,115591.43019165192,"=SUMIF($AD$5:$AD$228,$AD253,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD253,M$5:M$228)",,,0.67,True,1.0,True,1.0,HIGH
+10.5.2,davon Wärme,0.0,0.0,2. Erneuerbare,255,davon Wärme,0,0,"=SUMIF($AD$5:$AD$228,$AD255,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD255,M$5:M$228)",,,1.0,True,1.0,True,1.0,HIGH
+10.5.3,davon Strom,37620.32264759194,357517.36098500097,2. Erneuerbare,109,*,37.5,45,=AT109,"=IF(P109="""",AU109,P109)",,,0.0,True,0.001,False,1.0,MED
+10.6,Mobile Anwendungen,49565.604244409915,388739.4609026299,2. Erneuerbare,134,*,39,39,=AT134,"=IF(P134="""",AU134,P134)",,,0.0,False,1.0,True,0.0001,MED
+10.6.1,davon Kraftstoffe,34786.602,191217.70083976,2. Erneuerbare,259,davon Kraftstoffe,35900.316471974984,191199.44330611522,=SUM(L261:L262),=SUM(M260:M262),,,1.0,False,1.0,True,1.0,MED
+10.6.1.1,davon Wasserstoff,0.0,0.0,2. Erneuerbare,251,davon Wasserstoff,0,0,"=SUMIF($AD$5:$AD$228,$AD251,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD251,M$5:M$228)",,,1.0,True,1.0,True,1.0,HIGH
+10.6.1.2,davon Kohlenwasserstoffe,1085.7420000000002,91585.30083975999,2. Erneuerbare,261,davon Kohlenwasserst.(gasförmig),1131.580013848367,91567.12976330396,"=SUMIF($AD$5:$AD$228,$AD261,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD261,M$5:M$228)",,,0.33,False,1.0,True,1.0,MED
+10.6.1.3,davon Kohlenwasserstoffe flüssig,33700.86,99632.4,2. Erneuerbare,269,davon Kohlenwasserstoffe (flüssig),34768.736458126616,99632.31354281127,"=SUMIF($AB$5:$AB$228,$AB269,L$5:L$228)","=SUMIF($AB$5:$AB$228,$AB269,M$5:M$228)",,,1.0,False,1.0,True,1.0,MED
+10.6.2,davon Strom,14779.00224440992,197521.76006286987,2. Erneuerbare,232,Strom (alle Anwendungsbereiche),242642.00636824453,1201812.2992465694,=L227,=M227,,,0.33,False,1.0,False,1.0,NONE
+10.7,Brennstoffe,148893.30149409303,323964.21417433023,2. Erneuerbare,266,Brennstoffe (alle Anwendungsbereiche),149851.9421111724,323952.16344354424,=SUM(L268:L270),=SUM(M267:M270),,,0.33,False,1.0,True,1.0,MED
+10.7.1,davon Wasserstoff,0.0,0.0,2. Erneuerbare,251,davon Wasserstoff,0,0,"=SUMIF($AD$5:$AD$228,$AD251,L$5:L$228)","=SUMIF($AD$5:$AD$228,$AD251,M$5:M$228)",,,1.0,True,1.0,True,1.0,HIGH
+10.7.2,davon Kohlenwasserstoffe,1085.7420000000002,108739.45194664523,2. Erneuerbare,268,davon Kohlenwasserstoffe (gasförmig),1131.580013848367,108728.41970908105,"=SUMIF($AB$5:$AB$228,$AB268,L$5:L$228)","=SUMIF($AB$5:$AB$228,$AB268,M$5:M$228)",,,0.67,False,1.0,True,1.0,MED
+10.7.3,davon Kohlenwasserstoffe,33700.86,99632.4,2. Erneuerbare,269,davon Kohlenwasserstoffe (flüssig),34768.736458126616,99632.31354281127,"=SUMIF($AB$5:$AB$228,$AB269,L$5:L$228)","=SUMIF($AB$5:$AB$228,$AB269,M$5:M$228)",,,0.67,False,1.0,True,1.0,MED
+10.7.4,davon Kohlenwasserstoffe,114106.69949409305,115592.362227685,2. Erneuerbare,270,davon Kohlenwasserstoffe (fest),113951.6256391974,115591.43019165192,"=SUMIF($AB$5:$AB$228,$AB270,L$5:L$228)","=SUMIF($AB$5:$AB$228,$AB270,M$5:M$228)",,,0.67,True,1.0,True,1.0,HIGH
+10.8,Grundstoff Methan,0.0,76544.15,2. Erneuerbare,202,Synth. Methan als Grundstoff,0,76544.50823642868,='4. Verbrauch'!L198,='4. Verbrauch'!M198,,,0.5,True,1.0,True,1.0,HIGH
+10.9,Primärenergie-Einsatz Biobrennstoffe,,,2. Erneuerbare,274,Primärenergie-Einsatz Biobrennstoffe,,,,,,,1.0,False,1.0,False,1.0,LABEL_ONLY
+10.9.1,Brennstoffe,261372.34543048003,244929.87182768498,2. Erneuerbare,275,Brennstoffe (alle Anwendungsbereiche),257710.73530671158,244929.16683467795,=SUM(L276:L278),=SUM(M276:M278),,,0.33,False,1.0,True,1.0,MED
+10.9.1.1,davon Kohlenwasserstoffe,92325.0,110596.9096,2. Erneuerbare,276,davon Kohlenwasserstoffe (gasförmig),92382.22222222223,110597.13664302602,"=SUMIF($AB$5:$AB$228,$AB276,L$5:L$228)","=SUMIF($AB$5:$AB$228,$AB276,M$5:M$228)",,,0.67,True,1.0,True,1.0,HIGH
+10.9.1.2,davon Kohlenwasserstoffe,33928.020000000004,4302.6,2. Erneuerbare,277,davon Kohlenwasserstoffe (flüssig),30197.616313333332,4302.6,"=SUMIF($AB$5:$AB$228,$AB277,L$5:L$228)","=SUMIF($AB$5:$AB$228,$AB277,M$5:M$228)",,,0.67,False,1.0,True,1.0,MED
+10.9.1.3,davon Kohlenwasserstoffe,135119.32543048,130030.362227685,2. Erneuerbare,278,davon Kohlenwasserstoffe (fest),135130.89677115603,130029.43019165192,"=SUMIF($AB$5:$AB$228,$AB278,L$5:L$228)","=SUMIF($AB$5:$AB$228,$AB278,M$5:M$228)",,,0.67,True,1.0,True,1.0,HIGH
+7.1.4,Biogene Kraftstoffe (Wärme),73937.11493026103,10760.133796534526,2. Erneuerbare,48,Biogene Brennstoffe (fest),,,,,,,0.33,False,1.0,False,1.0,NONE
+11,fossil fuel,70.0,70.0,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+11.1,fossil wood,80.0,90.0,2. Erneuerbare,65,*,0,0,=AT65,"=IF(P65="""",AU65,P65)",,,0.0,True,0.0001,True,0.0001,HIGH
+11.2,fossil plastic,80.0,100.0,2. Erneuerbare,73,*,0,100,=AT73,=100-M72-M74-M75,,,0.0,True,0.0001,True,1.0,HIGH
+11.3,total fossil,160.0,190.0,2. Erneuerbare,69,*,0.1684368044099455,33,=AT69,"=IF(P69="""",AU69,P69)",,,0.0,True,0.001,False,1.0,MED
+11.4,fossil 5,160.0,,2. Erneuerbare,69,*,0.1684368044099455,33,=AT69,"=IF(P69="""",AU69,P69)",,,0.0,True,0.001,False,1.0,MED
+12,Naina,160.0,,2. Erneuerbare,69,*,0.1684368044099455,33,=AT69,"=IF(P69="""",AU69,P69)",,,0.0,True,0.001,False,1.0,MED

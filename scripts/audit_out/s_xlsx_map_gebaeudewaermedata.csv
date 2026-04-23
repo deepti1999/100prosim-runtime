@@ -1,0 +1,27 @@
+our_code,our_label,our_status,our_ziel,s_sheet,s_row,s_label,s_status_value,s_ziel_value,s_status_formula,s_ziel_formula,d_status_ref,d_ziel_ref,label_overlap,status_match,status_scale,ziel_match,ziel_scale,confidence
+2.0,Bedarfsniveau (statisch),798.867,798.867,4. Verbrauch,45,Bedarfsniveau (statisch),798867.2532382089,798867.2532382089,=AG45,"=IF(P45="""",AH45,P45)",,,1.0,True,1000.0,True,1000.0,HIGH
+2.1,davon Haushalte,71.6,71.6,4. Verbrauch,46,*,71.64093767867352,71.64093767867352,=AK46,"=IF(P46="""",AL46,P46)",,,0.0,True,1.0,True,1.0,HIGH
+2.1.1,Wohnfläche pro Person,44.7,44.7,4. Verbrauch,48,*,44.67669791064594,44.67669791064594,=AK48,"=IF(P48="""",AL48,P48)",,,0.0,True,1.0,True,1.0,HIGH
+2.1.2,Zieleinfluss Wohnflächen-Entwicklung,100.0,100.0,4. Verbrauch,9,Entwicklung BIP/Kopf gesamt,100,100,=L8/L8%,=M8/L8%,,,0.25,True,1.0,True,1.0,HIGH
+2.2,"davon Gewerbe, Handel, Dienstl. + Industr.",28.4,28.4,4. Verbrauch,52,*,28.35906232132647,28.35906232132647,=AK52,"=IF(P52="""",AL52,P52)",,,0.0,True,1.0,True,1.0,HIGH
+2.2.1,Zieleinfluss Erwerbstätigkeit,100.0,100.0,4. Verbrauch,9,Entwicklung BIP/Kopf gesamt,100,100,=L8/L8%,=M8/L8%,,,0.0,True,1.0,True,1.0,HIGH
+2.3,Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.),798.867,798.867,4. Verbrauch,57,Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.),798867.2532382088,798867.2532382088,=L55+L50,=M55+M50,,,1.0,True,1000.0,True,1000.0,HIGH
+2.4,davon Raumwärme,85.9,85.9,4. Verbrauch,58,*,85.92911239479102,85.92911239479102,=AK58,"=IF(P58="""",AL58,P58)",,,0.0,True,1.0,True,1.0,HIGH
+2.4.1,Spez. Raumwärmebed. Status/Saniert,136.0,75.0,4. Verbrauch,60,Spez.Raumwärmebed.Status/Saniert,136,75,=AK60,"=IF(P60="""",AL60,P60)",,,1.0,True,1.0,True,1.0,HIGH
+2.4.2,Veränderung zum Status,100.0,-44.9,4. Verbrauch,61,Veränderung zum Status,99.99999999999999,-44.85294117647059,=L60/L60%,=(M60-L60)/L60%,,,1.0,True,1.0,True,1.0,HIGH
+2.4.3,Gebäude - Sanierungs-/Ersatzrate,1.5,,4. Verbrauch,63,Gebäude - Sanierungs-/Ersatzrate,1.5,,"=IF(P63="""",AK63,P63)",,,,1.0,True,1.0,False,1.0,MED
+2.4.4,Sanierungszeitraum,2023.0,2045.0,4. Verbrauch,6,Betrachteter Zeitraum: 22 Jahre,2023,2045,=AK6,"=IF(P6="""",AL6,P6)",,,0.0,True,1.0,True,1.0,HIGH
+2.4.5,Gebäudeanteil mit Ziel-Wärmeschutz,0.0,33.0,4. Verbrauch,65,*,0,33,,"=IF(L63*(M64-L64)>100,100,L63*(M64-L64))",,,0.0,True,1.0,True,1.0,HIGH
+2.4.6,Result. spez. Raumwärmebed. ges.,136.0,115.9,4. Verbrauch,66,Result.spez.Raumwärmebed. ges.,136,115.86999999999999,=L60,=L66*(1-M65%)+M60*M65%,,,1.0,True,1.0,True,1.0,HIGH
+2.5,davon Warmwasser,14.1,14.1,4. Verbrauch,70,*,14.070887605208974,14.070887605208974,=AK70,"=IF(P70="""",AL70,P70)",,,0.0,True,1.0,True,1.0,HIGH
+2.5.1,Zieleinfluss Anwendungs-/Prozess-Effizienz,100.0,70.0,4. Verbrauch,72,*,100,70,=AK72,"=IF(P72="""",AL72,P72)",,,0.0,True,1.0,True,1.0,HIGH
+2.5.2,Res. Anteil Warmwasser an Gebäudew.,14.1,11.9,4. Verbrauch,74,Res. Anteil Warmwasser an Gebäudew.,14.070887605208974,11.858446783728635,=L73/L75%,=M73/M75%,,,1.0,True,1.0,True,1.0,HIGH
+2.6,"Bedarfsniveau (Sanierung, Anwendungseff.)",798.867,663.539,4. Verbrauch,75,"Bedarfsniveau (Sanierung, Anwendungseff.)",798867.2532382088,663538.8323413887,=L73+L68,=M73+M68,,,1.0,True,1000.0,True,1000.0,HIGH
+2.7,davon Brennstoffe,79.2,0.0,4. Verbrauch,65,*,0,33,,"=IF(L63*(M64-L64)>100,100,L63*(M64-L64))",,,0.0,True,0.0001,True,10000.0,HIGH
+2.7.1,Nutzungsgrad Endanwendung,86.0,88.0,4. Verbrauch,78,>,86,88,=AK78,"=IF(P78="""",AL78,P78)",,,0.0,True,1.0,True,1.0,HIGH
+2.7.2,Wandlungsverluste Endanwendung,11.1,0.0,4. Verbrauch,65,*,0,33,,"=IF(L63*(M64-L64)>100,100,L63*(M64-L64))",,,0.0,True,0.0001,True,10000.0,HIGH
+2.7.3,Einsparung gegenüber Status (relativ),0.0,11.1,4. Verbrauch,80,Einsparung gegenüber Status (relativ),0,11.082863738756275,,=L79-M79,,,1.0,True,1.0,True,1.0,HIGH
+2.8,"davon Wärme (30–100°C, verlustarm nutzbar)",16.7,79.5,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.0001,True,0.0001,HIGH
+2.9,davon Strom (verlustarm nutzbar),4.1,20.5,4. Verbrauch,81,(absolut),0,0,=L75*L80%,=M75*M80%*M76%,,,0.0,True,0.001,True,0.0001,HIGH
+2.9.1,davon für Wärmepumpen,30.7,100.0,4. Verbrauch,88,davon für Wärmepumpen,30.744918017730317,100,=L89/L87%,=M89/M87%,,,1.0,True,1.0,True,1.0,HIGH
+2.10,Endenergieverbrauch GW gesamt,798.867,663.539,4. Verbrauch,91,Endenergieverbrauch GW gesamt,798867.2532382088,663538.8323413887,=L87+L84+L77,=M87+M84+M77,,,1.0,True,1000.0,True,1000.0,HIGH

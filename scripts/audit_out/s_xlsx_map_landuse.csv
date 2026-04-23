@@ -1,0 +1,21 @@
+our_code,our_label,our_status,our_ziel,s_sheet,s_row,s_label,s_status_value,s_ziel_value,s_status_formula,s_ziel_formula,d_status_ref,d_ziel_ref,label_overlap,status_match,status_scale,ziel_match,ziel_scale,confidence
+LU_0,Bodenfläche gesamt,35759529.0,35759529.0,1. Flächen,8,Bodenfläche gesamt,35759529,35759529,=AE8,=AF8,,,1.0,True,1.0,True,1.0,HIGH
+LU_1,Siedlung (Gebäude- & Freifläche),3380079.0,3645799.0,1. Flächen,9,Siedlung (Gebäude- & Freifläche),3380079,3645799.0000000005,=AE9,"=IF(R9="""",AF9,IF(T9="""",INDIRECT(""L""&AB9)*R9/100,R9))",,,1.0,True,1.0,True,1.0,HIGH
+LU_1.1,Solare Dachflächen,34243.0,199396.038908,1. Flächen,10,Solare Dachflächen,34242.69,199398.4011935508,=AE10,"=IF(R10="""",AF10,IF(T10="""",INDIRECT(""L""&AB10)*R10/100,R10))",,,1.0,True,1.0,True,1.0,HIGH
+LU_2,Landwirtschaftsfläche (LF),18020717.0,17754997.0,1. Flächen,12,Landwirtschaftsfläche (LF),18020717,17754997,=AE12,"=IF(R12="""",AF12,IF(T12="""",INDIRECT(""L""&AB12)*R12/100,R12))",,,1.0,True,1.0,True,1.0,HIGH
+LU_2.1,Solare Freiflächen,19628.0,684640.8016282017,1. Flächen,13,Solare Freiflächen,19627.65,887749.85,=AE13,"=IF(R13="""",AF13,IF(T13="""",INDIRECT(""L""&AB13)*R13/100,R13))",,,1.0,True,1.0,False,1.0,MED
+LU_2.2,Ackerland,11681400.0,10826000.0,1. Flächen,14,Ackerland,11681400,10826000,=AE14,"=IF(R14="""",AF14,IF(T14="""",INDIRECT(""L""&AB14)*R14/100,R14))",,,1.0,True,1.0,True,1.0,HIGH
+LU_2.2.1,Getreide-Anbaufl. (Stroh),6076200.0,5631255.0,1. Flächen,15,Getreide-Anbaufl. (Stroh),6076200,5631254.918074889,=AE15,"=IF(R15="""",AF15,IF(T15="""",INDIRECT(""L""&AB15)*R15/100,R15))",,,1.0,True,1.0,True,1.0,HIGH
+LU_2.2.2,Energiepfl. (Biogas),1410000.0,1307000.0,1. Flächen,16,Energiepfl. (Biogas),1410000,1307000,=AE16,"=IF(R16="""",AF16,IF(T16="""",INDIRECT(""L""&AB16)*R16/100,R16))",,,1.0,True,1.0,True,1.0,HIGH
+LU_2.2.3,Energiepfl. (Pflanzenöl),665000.0,303000.0,1. Flächen,17,Energiepfl. (Pflanzenöl),665000,303000,=AE17,"=IF(R17="""",AF17,IF(T17="""",INDIRECT(""L""&AB17)*R17/100,R17))",,,1.0,True,1.0,True,1.0,HIGH
+LU_2.2.4,Energiepfl. (Ethanol),216200.0,0.0,1. Flächen,18,Energiepfl. (Ethanol),216200,0,=AE18,"=IF(R18="""",AF18,IF(T18="""",INDIRECT(""L""&AB18)*R18/100,R18))",,,1.0,True,1.0,True,1.0,HIGH
+LU_2.2.5,Energiepfl. (Kurzumtr.),11200.0,11200.0,1. Flächen,19,Energiepfl. (Kurzumtr.),11200,11200,=AE19,"=IF(R19="""",AF19,IF(T19="""",INDIRECT(""L""&AB19)*R19/100,R19))",,,1.0,True,1.0,True,1.0,HIGH
+LU_2.2.6,(ohne energet. Relevanz),3302800.0,3573545.0,1. Flächen,20,(ohne energet. Relevanz),3302800,3573545.081925111,=I14-SUM(I15:I19),=L14-SUM(L15:L19),,,1.0,True,1.0,True,1.0,HIGH
+LU_2.3,Dauergrünland,4704200.0,4371150.0,1. Flächen,22,Dauergrünland,4704200,4371149.768479563,=AE22,"=IF(R22="""",AF22,IF(T22="""",INDIRECT(""L""&AB22)*R22/100,R22))",,,1.0,True,1.0,True,1.0,HIGH
+LU_2.4,(sonstige Nutzung),1615489.0,1883157.0,1. Flächen,25,(sonstige Nutzung),1615489.35,1670097.3815204366,=I12-I14-I22-I13,=L12-L14-L22-L13,,,1.0,True,1.0,False,1.0,MED
+LU_3,Waldfläche,11538455.0,11538455.0,1. Flächen,27,Waldfläche,11538455,11538455,=AE27,"=IF(R27="""",AF27,IF(T27="""",INDIRECT(""L""&AB27)*R27/100,R27))",,,1.0,True,1.0,True,1.0,HIGH
+LU_3.1,Forstfl. (u.a.Energieholz),9866633.0,9373000.0,1. Flächen,28,Forstfl. (u.a.Energieholz),9866633,9373000,=AE28,"=IF(R28="""",AF28,IF(T28="""",INDIRECT(""L""&AB28)*R28/100,R28))",,,1.0,True,1.0,True,1.0,HIGH
+LU_3.2,(ohne forstwirtsch.Nutzung),1671822.0,2165455.0,1. Flächen,29,(ohne forstwirtsch.Nutzung),1671822,2165455,=I27-I28,=L27-L28,,,1.0,True,1.0,True,1.0,HIGH
+LU_4,(sonstige Flächen),2820278.0,2820278.0,1. Flächen,31,(sonstige Flächen),2820278,2820278,=I8-I9-I12-I27,=L8-L9-L12-L27,,,1.0,True,1.0,True,1.0,HIGH
+LU_5,Windenergie Flächenpotenzial,2089000.0,1671200.0,1. Flächen,33,Windenergie Flächenpotenzial,2089000,1671200,=AE33,"=IF(R33="""",AF33,IF(T33="""",INDIRECT(""L""&AB33)*R33/100,R33))",,,1.0,True,1.0,True,1.0,HIGH
+LU_6,Windparkfläche,172556.0,715288.6652322228,1. Flächen,34,Windparkfläche*,172555.8,715289.0305038091,=AE34,"=IF(R34="""",AF34,IF(T34="""",INDIRECT(""L""&AB34)*R34/100,R34))",,,1.0,True,1.0,True,1.0,HIGH
