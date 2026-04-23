@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 
-from .models import BaselineSnapshot, LandUse, RenewableData, ScenarioSnapshot, VerbrauchData
+from .models import BaselineSnapshot, LandUse, RenewableData, Region, ScenarioSnapshot, VerbrauchData
 from .ws_models import WSData
 
 MAX_SCENARIOS_PER_SCOPE = 30
@@ -43,25 +43,31 @@ def _clear_active_scenario_session(request, scope_key=None):
     request.session.pop(ACTIVE_SCENARIO_UPDATED_AT_KEY, None)
     request.session.modified = True
 
-def _serialize_model_rows(model, owner, exclude_fields=None):
+def _serialize_model_rows(model, owner, region=None, exclude_fields=None):
     exclude = set(exclude_fields or [])
     field_names = [
         f.name
         for f in model._meta.concrete_fields
         # Phase B (T65): skip `region` here — the FK serializes to a Region
-        # object which isn't JSON-serializable. On restore, the model's
-        # default callable assigns DE; per-region snapshots arrive with
-        # the Bundesländer phase via a top-level region_code key instead.
+        # object which isn't JSON-serializable. Phase C (T66) writes the
+        # region_code at the top-level of the payload instead so restore
+        # can re-bind rows to the saved region.
         if f.name not in {"id", "owner", "region", "created_at", "updated_at"} and f.name not in exclude
     ]
-    rows = model.all_objects.filter(**_scope_filter(owner)).order_by("id")
+    qs = model.all_objects.filter(**_scope_filter(owner))
+    if region is not None and any(f.name == "region" for f in model._meta.concrete_fields):
+        qs = qs.filter(region=region)
+    rows = qs.order_by("id")
     serialized = []
     for row in rows:
         serialized.append({name: getattr(row, name) for name in field_names})
     return serialized
 
-def _serialize_landuse_rows(owner):
-    rows = LandUse.all_objects.filter(**_scope_filter(owner)).order_by("id")
+def _serialize_landuse_rows(owner, region=None):
+    qs = LandUse.all_objects.filter(**_scope_filter(owner))
+    if region is not None:
+        qs = qs.filter(region=region)
+    rows = qs.order_by("id")
     serialized = []
     for row in rows:
         serialized.append({
@@ -79,8 +85,13 @@ def _serialize_landuse_rows(owner):
         })
     return serialized
 
-def _restore_model_rows(model, owner, rows):
+def _restore_model_rows(model, owner, rows, region=None):
+    has_region = region is not None and any(
+        f.name == "region" for f in model._meta.concrete_fields
+    )
     existing_qs = model.all_objects.filter(**_scope_filter(owner))
+    if has_region:
+        existing_qs = existing_qs.filter(region=region)
     if existing_qs.exists():
         existing_qs._raw_delete(existing_qs.db)
     if not rows:
@@ -89,19 +100,23 @@ def _restore_model_rows(model, owner, rows):
     allowed_fields = {
         f.name for f in model._meta.concrete_fields
         # Phase B (T65): match the serialize-side exclusion of `region`;
-        # restored rows get DE via the model's default callable.
+        # Phase C (T66) re-binds via the top-level region_code key.
         if f.name not in {"id", "owner", "region", "created_at", "updated_at"}
     }
     to_create = []
     for row in rows:
         payload = {k: v for k, v in row.items() if k in allowed_fields}
         payload["owner"] = owner
+        if has_region:
+            payload["region"] = region
         to_create.append(model(**payload))
     model.all_objects.bulk_create(to_create, batch_size=1000)
     return len(to_create)
 
-def _restore_landuse_rows(owner, rows):
+def _restore_landuse_rows(owner, rows, region=None):
     existing_qs = LandUse.all_objects.filter(**_scope_filter(owner))
+    if region is not None:
+        existing_qs = existing_qs.filter(region=region)
     if existing_qs.exists():
         existing_qs._raw_delete(existing_qs.db)
     if not rows:
@@ -109,25 +124,29 @@ def _restore_landuse_rows(owner, rows):
 
     create_objs = []
     for row in rows:
-        create_objs.append(
-            LandUse(
-                owner=owner,
-                code=row.get("code"),
-                name=row.get("name"),
-                status_ha=row.get("status_ha"),
-                target_ha=row.get("target_ha"),
-                status_formula_key=row.get("status_formula_key"),
-                target_formula_key=row.get("target_formula_key"),
-                user_percent=row.get("user_percent"),
-                increase_limit_baseline_percent=row.get("increase_limit_baseline_percent"),
-                target_locked=bool(row.get("target_locked")),
-                quelle=row.get("quelle"),
-                parent=None,
-            )
+        kwargs = dict(
+            owner=owner,
+            code=row.get("code"),
+            name=row.get("name"),
+            status_ha=row.get("status_ha"),
+            target_ha=row.get("target_ha"),
+            status_formula_key=row.get("status_formula_key"),
+            target_formula_key=row.get("target_formula_key"),
+            user_percent=row.get("user_percent"),
+            increase_limit_baseline_percent=row.get("increase_limit_baseline_percent"),
+            target_locked=bool(row.get("target_locked")),
+            quelle=row.get("quelle"),
+            parent=None,
         )
+        if region is not None:
+            kwargs["region"] = region
+        create_objs.append(LandUse(**kwargs))
     LandUse.all_objects.bulk_create(create_objs, batch_size=1000)
 
-    created = list(LandUse.all_objects.filter(**_scope_filter(owner)).order_by("id"))
+    landuse_qs = LandUse.all_objects.filter(**_scope_filter(owner))
+    if region is not None:
+        landuse_qs = landuse_qs.filter(region=region)
+    created = list(landuse_qs.order_by("id"))
     by_code = {item.code: item for item in created}
     updates = []
     for row in rows:
@@ -148,21 +167,56 @@ def _snapshot_size_mb(payload):
     size_bytes = len(json.dumps(payload, default=str).encode("utf-8"))
     return round(size_bytes / (1024 * 1024), 2)
 
-def _snapshot_payload_for_owner(owner):
+def _resolve_region(region_code):
+    """Look up a Region row by code; return None if missing.
+
+    Used when building / restoring snapshots so a typo or pre-Phase-C
+    payload (no region_code) falls back to no-region-filter (DE default
+    via the model FK callable).
+    """
+    if not region_code:
+        return None
+    try:
+        return Region.objects.get(code=region_code)
+    except Region.DoesNotExist:
+        return None
+
+
+def _snapshot_payload_for_owner(owner, region_code=None):
+    """Phase C (T66): payload carries top-level region_code so a snapshot
+    saved while DE is active doesn't restore into BB (or vice versa).
+
+    Falls back to the active region context (set by OwnerScopeMiddleware)
+    or DE if neither is set.
+    """
+    if region_code is None:
+        from simulator.region_scope import get_current_region_code
+
+        region_code = get_current_region_code() or "DE"
+    region = _resolve_region(region_code)
     return {
-        "landuse": _serialize_landuse_rows(owner),
-        "renewable": _serialize_model_rows(RenewableData, owner),
-        "verbrauch": _serialize_model_rows(VerbrauchData, owner),
-        "ws": _serialize_model_rows(WSData, owner),
+        "region_code": region_code,
+        "landuse": _serialize_landuse_rows(owner, region),
+        "renewable": _serialize_model_rows(RenewableData, owner, region),
+        "verbrauch": _serialize_model_rows(VerbrauchData, owner, region),
+        # WSData has no region FK in Phase C step 2; step 4 adds it. The
+        # serializer is region-aware via the optional `region` arg, so
+        # passing region here is harmless either way.
+        "ws": _serialize_model_rows(WSData, owner, region),
     }
 
 def _restore_snapshot_payload(owner, payload):
     payload = payload or {}
+    # Pre-Phase-C payloads have no region_code key — default to DE for
+    # back-compat (the only region that existed when those snapshots
+    # were saved).
+    region_code = payload.get("region_code") or "DE"
+    region = _resolve_region(region_code)
     with transaction.atomic():
-        _restore_landuse_rows(owner, payload.get("landuse", []))
-        _restore_model_rows(RenewableData, owner, payload.get("renewable", []))
-        _restore_model_rows(VerbrauchData, owner, payload.get("verbrauch", []))
-        _restore_model_rows(WSData, owner, payload.get("ws", []))
+        _restore_landuse_rows(owner, payload.get("landuse", []), region=region)
+        _restore_model_rows(RenewableData, owner, payload.get("renewable", []), region=region)
+        _restore_model_rows(VerbrauchData, owner, payload.get("verbrauch", []), region=region)
+        _restore_model_rows(WSData, owner, payload.get("ws", []), region=region)
 
 def _scenario_scope_filter(owner):
     return {"owner__isnull": True} if owner is None else {"owner": owner}
