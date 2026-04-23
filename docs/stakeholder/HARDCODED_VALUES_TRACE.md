@@ -324,12 +324,66 @@ With formulas now confirmed:
 
 | Item | Blocker | Status |
 |---|---|---|
-| D1 source Tagesladungen | None — formula confirmed | Ready to wire |
-| D2 flow Tagesladungen | None — same formula | Ready to wire |
-| D3 percent shares | None — formula confirmed | Ready to wire |
-| D4a/b installed-power | Where to store the constants (D.xlsx vs config) | Track 1: hardcode with TODO; Track 2: migrate to Region model |
-| D4c Abgleichdifferenz | None — formula confirmed | Ready to wire |
+| D1 source Tagesladungen | None — formula confirmed | **SHIPPED 2026-04-23** (commit `7c02458`) |
+| D2 flow Tagesladungen | None — same formula | **SHIPPED 2026-04-23** (commit `7c02458`) |
+| D3 percent shares | None — formula confirmed | **SHIPPED 2026-04-23** (commit `7c02458`) |
+| D4a/b installed-power | Where to store the constants (D.xlsx vs config) | Pending Track 2 (§2.3 import) |
+| D4c Abgleichdifferenz | None — formula confirmed | **SHIPPED 2026-04-23** (commit `7c02458`) |
 
-Total effort to close D1/D2/D3/D4c as Track 1: ~3 hours (backend
-fields + template bindings + tests). D4a/D4b stays on Track 2
-(§2.3).
+Total effort actual: ~2 hours (backend fields + template bindings
++ tests + V4 localhost + V5 Heroku full verification).
+
+## 6. Track 1 shipped 2026-04-23 — what landed
+
+Commit `7c02458` wired **4 of 6 T54 blockers** to backend values:
+
+### Code changes
+- `simulator/signals.py::compute_ws_diagram_reference()` returns
+  21 new dict keys (pv_tages, pv_pct, flow_*_tages, abgleich-
+  differenz, ...). All divisions guarded against zero denominators.
+- `simulator/page_renewable.py::annual_electricity_view` exposes
+  new context vars with Excel-reference-value defaults.
+- `simulator/templates/simulator/annual_electricity.html` —
+  20 hardcoded `<text>` literals got `id="..."` attributes and
+  are populated at DOMContentLoaded from the vals dict. German
+  number formatting preserved (percents via
+  `.toFixed(1).replace('.', ',')`; integers via
+  `toLocaleString('de-DE')`).
+
+### Pre-existing regression caught and fixed
+Pass 10's SVG rewrite had accidentally dropped the
+`{{ diagram_scenario_label }}` binding on template line 143
+(replaced with hardcoded "Aktuelles Szenario"). The
+`test_annual_electricity_page_shows_active_scenario_header_when_session_is_set`
+test was therefore failing at baseline (5/6 green, not 6/6).
+Restored the Django interpolation; tests now 6/6 green.
+
+### Known discrepancy, documented
+The Tages for "Gasspeicher Direktverbr" (250.857 GWh) computes
+to **83** per the formula `val × TLproEingabeEinheit`, but the
+Excel diagram shows **87**. Inspection of Excel cell `H37`
+revealed it contains no formula at all — the "87" there is a
+visual copy, not a computed value. Our 83 is the mathematically
+correct output. This is an Excel-diagram-internal inconsistency;
+our backend corrects it. Kept 83 in code; future Track 2 scoping
+can choose to match Excel's "87" visually if Pascal prefers.
+
+### Verification ledger
+
+| Step | Result |
+|---|---|
+| V2 `test_bb_current_app` | 6/6 green (was 5/6 pre-fix) |
+| V2 full `test_bb_current_app + test_bb_calc + test_ws365_formulas` | 15/15 green |
+| V3 localhost `/annual-electricity/` 200 OK | ✓ |
+| V4 Playwright DOM-value check on all 20 new IDs | 20/20 populated, values match Excel reference |
+| V4 full-page screenshot localhost | `verification/t54/track1_localhost.png` — diagram renders identically to pass 22 |
+| V5 Heroku spin-up at `prosim-100-f9853cedfcb7`, deploy, Playwright DOM check (27 IDs), fullPage screenshot, teardown + force-destroy | All 27 IDs populate with live-computed values (Heroku seed has PV=1,211,176 → Tages=399; localhost seed has PV=1,201,506 → Tages=397 — values track the scenario data correctly). Regression-checked 9 other pages all 200 OK. `verification/t54/track1_heroku.png`. |
+| V6 doc | This section + `REMAINING.md` §3 updated |
+
+### What remains (Track 2)
+
+| Item | Where it goes |
+|---|---|
+| D4a (194 GW installed Pmax-ES) | Region config — belongs in D.xlsx `I_Basisdaten` or a small `RegionConfig` model. Ships with §2.3 Excel import. |
+| D4b (261 GW installed Pmax-RV) | Same as D4a |
+| §2.3 full Excel import (Source model, 86 hyperlinks, 747 assumption comments, region swap) | ~4 days, covered by `DATA_MODEL_AUDIT.md` |

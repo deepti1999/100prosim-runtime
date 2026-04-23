@@ -7,13 +7,15 @@
 
 ## Headline
 
-**51/63 atomic targets shipped and Heroku-verified.** 12 targets outstanding from the original plan, plus 4 backend-data items surfaced during T54 visual passes:
+**51/63 atomic targets shipped and Heroku-verified** from the original plan; T54 diagram sub-items tracked separately (4/6 shipped via Track 1 on 2026-04-23). **14 items outstanding total:**
 
 | Bucket | Count | Blocked on |
 |---|---:|---|
-| **External-gated** | 6 | ErnES picks a compute platform |
-| **Deferred by decision** | 6 | Separate scoping session (Pascal's call) |
-| **T54 backend-data** | 4 | Schmidt-Kanefendt formulas / fields (see §3 below) |
+| **External-gated (Phase 7)** | 6 | ErnES picks a compute platform |
+| **Deferred by decision (§2.3)** | 6 | Separate scoping session (Pascal's call) |
+| **T54 backend-data** | 2 (D4a/D4b) | Region installed-power config — ships with §2.3 |
+
+T54 D1/D2/D3/D4c (source Tagesladungen, flow Tagesladungen, percent shares, Abgleichdifferenz) shipped 2026-04-23 in commit `7c02458`; see `HARDCODED_VALUES_TRACE.md` §6 for the verification ledger.
 
 T54 (flow-diagram value→position mis-wiring) is structurally closed
 through visual pass 22 — see `FLOW_DIAGRAM_AUDIT.md` "Visual pass 4
