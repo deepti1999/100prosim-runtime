@@ -6,3 +6,4 @@ psycopg[binary]
 gunicorn
 whitenoise
 django-redis
+openpyxl>=3.1
