@@ -84,6 +84,16 @@ MODEL_PLANS = [
 ]
 
 
+class _NoopAtomic:
+    """Stand-in for transaction.atomic() when running dry-run; simply yields."""
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        return False
+
+
 def _code_hierarchy_parent(code: str) -> Optional[str]:
     if not code or "." not in code:
         return None
@@ -223,6 +233,39 @@ class Command(BaseCommand):
                 f"({len(d1_label_index)} unique labels)."
             )
         )
+
+        # Phase C (T66): row-creating mode. If the target region has zero
+        # base rows in any of the parameter models (i.e. it's a fresh
+        # Bundesland), clone the DE row structure first then run the
+        # standard UPDATE path on the new rows for provenance.
+        de_region = None
+        if region_code != "DE":
+            try:
+                de_region = Region.objects.get(code="DE")
+            except Region.DoesNotExist:
+                de_region = None
+        target_has_rows = any(
+            (plan.model.all_objects.filter(region=region_obj).exists()
+             if any(f.name == "owner" for f in plan.model._meta.get_fields())
+             else plan.model.objects.filter(region=region_obj).exists())
+            for plan in MODEL_PLANS
+        )
+        if not target_has_rows and de_region is not None:
+            created_total = self._create_region_rows_from_de_template(
+                de_region, region_obj, d1_label_index, apply_changes,
+            )
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"CREATE mode: cloned {created_total} base rows from DE "
+                    f"into region '{region_code}' "
+                    f"(values overlaid from xlsx where label matches)."
+                )
+            )
+        elif not target_has_rows and region_code != "DE":
+            raise CommandError(
+                f"Region '{region_code}' has zero base rows but DE region "
+                f"is missing — cannot clone structure. Seed DE first."
+            )
 
         # Load value-based audit mapping (final_map_*.csv) as a second-pass index.
         value_maps = self._load_value_maps()
@@ -554,6 +597,111 @@ class Command(BaseCommand):
                 )
 
         return diff
+
+    # ------------------------------------------------------------------
+    # Phase C (T66) — create-mode helper
+    # ------------------------------------------------------------------
+
+    # Per-model field that receives the xlsx column-W value at clone time.
+    # The other status/target fields stay at DE values until per-region
+    # target / ziel ingest is added (Phase D).
+    _STATUS_FIELDS_FOR_CREATE = {
+        "LandUse": ("status_ha", "target_ha"),
+        "RenewableData": ("status_value", "target_value"),
+        "VerbrauchData": ("status", "ziel"),
+        "GebaeudewaermeData": ("status", "ziel"),
+    }
+
+    def _create_region_rows_from_de_template(
+        self, de_region, target_region, d1_label_index, apply_changes,
+    ) -> int:
+        """For each parameter model, clone DE base rows into target_region
+        with status/target overridden by the new region's xlsx W value
+        (when label matches). Fields other than the value pair (codes,
+        names, parents, formulas, etc.) carry over verbatim from DE.
+
+        Dry-run prints a summary; --apply commits.
+        """
+        from django.db import transaction
+
+        total_created = 0
+        with (transaction.atomic() if apply_changes else _NoopAtomic()):
+            for plan in MODEL_PLANS:
+                model = plan.model
+                manager = getattr(model, "all_objects", model.objects)
+                de_qs = manager.filter(region=de_region)
+                if any(f.name == "owner" for f in model._meta.get_fields()):
+                    de_qs = de_qs.filter(owner__isnull=True)
+                de_rows = list(de_qs.order_by("id"))
+                if not de_rows:
+                    continue
+
+                # Build map of code → xlsx W value.
+                value_map = {}
+                for de_row in de_rows:
+                    label = getattr(de_row, plan.label_field, None) or ""
+                    entry = d1_label_index.get(_normalize_label(label))
+                    if entry and isinstance(entry.get("value_w"), (int, float)):
+                        value_map[de_row.pk] = float(entry["value_w"])
+
+                value_pair = self._STATUS_FIELDS_FOR_CREATE.get(model.__name__, ())
+                concrete = {f.name for f in model._meta.concrete_fields}
+                # Skip auto / managed / FK fields we set explicitly.
+                skip = {
+                    "id", "owner", "region", "created_at", "updated_at",
+                    "parent",  # LandUse parent FK — we re-link by code below
+                }
+
+                clones = []
+                de_pk_to_clone_index = {}
+                for idx, de_row in enumerate(de_rows):
+                    data = {
+                        name: getattr(de_row, name)
+                        for name in concrete
+                        if name not in skip
+                    }
+                    new_value = value_map.get(de_row.pk)
+                    if new_value is not None and value_pair:
+                        for fname in value_pair:
+                            if fname in concrete:
+                                data[fname] = new_value
+                    data["region"] = target_region
+                    if "owner" in concrete:
+                        data["owner"] = None
+                    clones.append(model(**data))
+                    de_pk_to_clone_index[de_row.pk] = idx
+
+                if apply_changes:
+                    manager.bulk_create(clones, batch_size=1000)
+                total_created += len(clones)
+
+                # LandUse: re-link parent FK by code after bulk_create
+                if apply_changes and model.__name__ == "LandUse":
+                    created = list(
+                        manager.filter(
+                            region=target_region, owner__isnull=True
+                        ).order_by("id")
+                    )
+                    by_code = {row.code: row for row in created}
+                    updates = []
+                    for de_row in de_rows:
+                        if not de_row.parent_id:
+                            continue
+                        try:
+                            de_parent = de_row.parent
+                        except model.DoesNotExist:
+                            continue
+                        if de_parent is None:
+                            continue
+                        clone = by_code.get(de_row.code)
+                        clone_parent = by_code.get(de_parent.code)
+                        if clone is not None and clone_parent is not None and clone.parent_id != clone_parent.id:
+                            clone.parent_id = clone_parent.id
+                            updates.append(clone)
+                    if updates:
+                        manager.bulk_update(updates, ["parent"])
+
+        return total_created
 
     def _propagate_to_workspace_rows(self, region_obj) -> int:
         """For each base row with non-default provenance, copy the 3 provenance
