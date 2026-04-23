@@ -71,6 +71,10 @@ def renewable_list(request):
             'landuse_code': renewable.landuse_code if hasattr(renewable, 'landuse_code') else None,
             'user_editable': renewable.user_editable,
             'user_input_value': renewable.user_input if renewable.user_input is not None else renewable.target_value,
+            # §2.3 Phase A provenance fields
+            'source_url': renewable.source_url,
+            'notes_assumption': renewable.notes_assumption,
+            'origin': renewable.origin,
         }
         hierarchical_data.append(item)
 

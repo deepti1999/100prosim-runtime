@@ -39,6 +39,7 @@
                 <th style="width: 12%;">Ziel</th>
                 <th style="width: 12%;">Benutzer %</th>
                 <th style="width: 8%;">Aktionen</th>
+                <th style="width: 30px;" title="Datenquelle (§2.3)">Q</th>
             </tr>
         </thead>
         <tbody>
@@ -46,7 +47,7 @@
             {% if row.is_section_header %}
             <!-- Section Header Row -->
             <tr class="table-secondary">
-                <td colspan="7" class="text-center fw-bold py-2">
+                <td colspan="8" class="text-center fw-bold py-2">
                     <h6 class="mb-0 text-primary">{{ row.category }}</h6>
                 </td>
             </tr>
@@ -62,6 +63,7 @@
                         <i class="fas fa-folder-open"></i>
                     </button>
                 </td>
+                <td></td>
             </tr>
             {% else %}
             <!-- Data Row -->
@@ -119,6 +121,9 @@
                     <button class="btn btn-sm btn-outline-primary" onclick="editRow('{{ row.code }}')">
                         <i class="fas fa-edit"></i>
                     </button>
+                </td>
+                <td class="text-center align-middle">
+                    {% include "simulator/_provenance_icon.html" with source_url=row.source_url notes_assumption=row.notes_assumption origin=row.origin %}
                 </td>
             </tr>
             {% endif %}

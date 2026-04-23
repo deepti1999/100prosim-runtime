@@ -401,6 +401,10 @@ def verbrauch_view(request):
             'user_percent': show_user_percent,  # Empty for calculated fields
             'is_calculated': item.is_calculated,
             'user_editable': is_user_editable,  # Never editable if calculated
+            # §2.3 Phase A provenance fields
+            'source_url': item.source_url,
+            'notes_assumption': item.notes_assumption,
+            'origin': item.origin,
         })
     
     # Apply natural sorting (same as renewable energy)
@@ -491,6 +495,10 @@ def gebaeudewaerme_view(request):
             'formula': item.formula,
             'user_percent': item.user_percent,
             'is_calculated': item.is_calculated,
+            # §2.3 Phase A provenance fields
+            'source_url': item.source_url,
+            'notes_assumption': item.notes_assumption,
+            'origin': item.origin,
         })
     
     # Apply natural sorting (same as other modules)

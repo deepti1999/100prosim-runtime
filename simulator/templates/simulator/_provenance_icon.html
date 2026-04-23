@@ -1,0 +1,28 @@
+{% comment %}
+  §2.3 Phase A — provenance info-icon click popover (Pascal D4 = click).
+
+  Usage:
+    {% include "simulator/_provenance_icon.html" with source_url=row.source_url notes_assumption=row.notes_assumption origin=row.origin %}
+
+  Renders nothing if all 3 fields are empty/internal (avoid clutter on
+  truly orphan rows).
+
+  Popover content includes:
+    - Origin badge (d_xlsx / derived / internal)
+    - Source URL as clickable link (if present)
+    - Assumption text (if present)
+{% endcomment %}
+{% if source_url or notes_assumption or origin == 'd_xlsx' or origin == 'derived' %}
+<button type="button"
+        class="btn btn-link btn-sm p-0 provenance-icon"
+        data-bs-toggle="popover"
+        data-bs-trigger="click"
+        data-bs-html="true"
+        data-bs-placement="left"
+        data-bs-title="Datenquelle (§2.3)"
+        data-bs-content="<div class='small'>{% if origin %}<span class='badge bg-secondary mb-1'>Herkunft: {{ origin }}</span>{% endif %}{% if source_url %}<div class='mt-1'><strong>Quelle:</strong> <a href='{{ source_url|escape }}' target='_blank' rel='noopener noreferrer'>{{ source_url|escape|truncatechars:50 }}</a></div>{% endif %}{% if notes_assumption %}<div class='mt-2'><strong>Annahme:</strong><br><em>{{ notes_assumption|escape|linebreaksbr|truncatechars:600 }}</em></div>{% endif %}</div>"
+        aria-label="Datenquelle anzeigen"
+        title="Klicken für Quelle &amp; Annahme">
+  <span class="badge rounded-pill bg-info-subtle text-info border border-info">i</span>
+</button>
+{% endif %}

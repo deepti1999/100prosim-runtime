@@ -38,6 +38,7 @@
                                     <th class="number-column">Ziel (ha)</th>
                                     <th class="number-column">Ziel (%)</th>
                                     <th class="number-column">Benutzer (%)</th>
+                                    <th style="width: 30px;" title="Datenquelle (§2.3)">Q</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -97,10 +98,13 @@
                                         <span class="text-muted">-</span>
                                         {% endif %}
                                     </td>
+                                    <td class="text-center align-middle">
+                                        {% include "simulator/_provenance_icon.html" with source_url=data.landuse.source_url notes_assumption=data.landuse.notes_assumption origin=data.landuse.origin %}
+                                    </td>
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted py-5">
+                                    <td colspan="8" class="text-center text-muted py-5">
                                         <h5>Keine Daten verfügbar</h5>
                                         <p>Importieren Sie CSV-Daten, um zu beginnen.</p>
                                     </td>

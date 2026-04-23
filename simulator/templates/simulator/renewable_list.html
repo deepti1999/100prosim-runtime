@@ -58,6 +58,7 @@
                                     <th class="text-center" style="width: 100px;">Status</th>
                                     <th class="text-center" style="width: 100px;">Ziel</th>
                                     <th class="text-center" style="width: 100px;">Benutzereingabe</th>
+                                    <th style="width: 30px;" title="Datenquelle (§2.3)">Q</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -124,6 +125,9 @@
                                         {% else %}
                                         <span class="text-muted">-</span>
                                         {% endif %}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {% include "simulator/_provenance_icon.html" with source_url=item.source_url notes_assumption=item.notes_assumption origin=item.origin %}
                                     </td>
                                 </tr>
                                 {% endfor %}

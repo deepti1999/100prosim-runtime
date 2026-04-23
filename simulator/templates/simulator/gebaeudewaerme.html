@@ -30,6 +30,7 @@
                 <th style="width: 12%;">Formel</th>
                 <th style="width: 8%;">Benutzer %</th>
                 <th style="width: 8%;">Aktionen</th>
+                <th style="width: 30px;" title="Datenquelle (§2.3)">Q</th>
             </tr>
         </thead>
         <tbody>
@@ -70,6 +71,9 @@
                     <button class="btn btn-sm btn-outline-primary" onclick="editRow('{{ row.code }}')">
                         <i class="fas fa-edit"></i>
                     </button>
+                </td>
+                <td class="text-center align-middle">
+                    {% include "simulator/_provenance_icon.html" with source_url=row.source_url notes_assumption=row.notes_assumption origin=row.origin %}
                 </td>
             </tr>
             {% endfor %}
