@@ -1,0 +1,224 @@
+our_code,our_label,status_ours,ziel_ours,status_excel_row,status_col,status_scale,status_excel_label,ziel_excel_row,ziel_col,ziel_scale,ziel_excel_label,confidence
+1, / Solar,,,,,,,,,,,ZERO
+1.1,Dachflächen / Solar,34243.0,199396.038908,,,,,127,W,1,Im Datenteil der Agora-Studie [9.19] sind 36 Milli,MED
+1.1.1,Solarthermie / Solar,132641.73084648,87627.957854937,129,W,0.001,Solar genutzte Freiflächen,,,,,MED
+1.1.1.1,Dachflächen / Solar,6.4,1.1,138,W,1,- STATUS-Ansatz: Fläche der solarthermischen Flach,,,,,MED
+1.1.1.1.1, / Solar,3878.0,5250.0,,,,,,,,,LOW
+1.1.1.1.2, / Solar,8498.838656000002,11515.121246937,,,,,2055,AG,0.001,Im Landkreis Osnabrück sind gemäß Solardachkataste,MED
+1.1.2,Solarstrom / Solar,114220.68413793105,483416.2937742548,2055,AG,0.0001,Im Landkreis Osnabrück sind gemäß Solardachkataste,,,,,MED
+1.1.2.1,Dachflächen / Solar,93.6,98.9,149,W,1,- STATUS-Ansatz: Die nicht durch Solarthermie bean,151,W,1,- ZIEL-Ansatz: Die nicht durch Solarthermie beansp,HIGH
+1.1.2.1.1, / Solar,1383.0,1853.0,,,,,,,,,LOW
+1.1.2.1.2, / Solar,44327.152583999996,365416.57063546224,,,,,,,,,LOW
+1.1.2.1.2.1, / Solar,927.0,927.0,,,,,,,,,LOW
+1.1.2.1.2.2, / Solar,47817.8560776699,394192.6328322139,,,,,,,,,LOW
+1.2,Freiflächen / Solar,19628.0,684640.8016282017,,,,,,,,,LOW
+1.2.1,Solarstrom / Solar,65093.948584,1214891.585294698,138,W,0.0001,- STATUS-Ansatz: Fläche der solarthermischen Flach,587,W,0.001,- ZIEL-Ansatz: Die Methansynthese mit elektrolytis,HIGH
+1.2.1.1, / Solar,922.0,1235.33333,,,,,,,,,LOW
+1.2.1.2, / Solar,18097.016,845759.6013292358,,,,,,,,,LOW
+1.2.1.2.1, / Solar,927.0,927.0,,,,,,,,,LOW
+1.2.1.2.2, / Solar,19522.131607335494,912362.0294813763,,,,,,,,,LOW
+2.1,Onshore / Solar,267722.61958400003,2578592.1435145442,,,,,,,,,LOW
+2.1.1,Onshore / Solar,172556.0,715288.6652322228,189,W,1,- STATUS-Ansatz: 172.556 ha Windparkfläche wurden ,192,W,1,- ZIEL-Ansatz: 715.191 ha Windparkfläche resultier,HIGH
+2.1.1.1,Onshore / Solar,2.9,3.8,198,W,1,"- STATUS-Ansatz: 2,90 ha/MW gemäß einer eigenen Wi",,,,,MED
+2.1.1.2,Onshore / Solar,59502.06896551725,188233.85927163757,190,W,1,59.502 MW installierte Onshore-Windenergie-Leistun,197,U,0.001,Spezifischer Flächenbedarf Onshore-Windenergie,HIGH
+2.1.1.2.1,Onshore / Solar,1874.0,2550.0,206,W,1,- STATUS-Ansatz: Die durchschnittliche Vollbetrieb,,,,,MED
+2.1.1.2.2,Onshore / Solar,111506.87724137932,479996.34114267584,206,AG,1,- STATUS-Ansatz: Die durchschnittliche Vollbetrieb,,,,,MED
+2.1.1.2.3,Onshore / Solar,646.2068965517242,671.0526315789474,,,,,,,,,LOW
+2.2,Offshore / Solar,8337.0,70000.0,2031,W,0.001,"An Offshore-Windleistung waren Im 2023 breits 8,33",,,,,MED
+2.2.1.1,Offshore / Solar,2823.0,3232.0,223,W,1,- STATUS-Ansatz: Die durchschnittliche Vollbetrieb,226,W,1,In einer Aktualisierung der Offshore-Szenarienreih,HIGH
+2.2.1.2,Offshore / Solar,23535.351,226240.0,223,AG,1,- STATUS-Ansatz: Die durchschnittliche Vollbetrieb,222,W,0.001,Offshore Deutschl.: Vollbetriebsstunden jährlich,HIGH
+2.2.1.2.1,Offshore / Solar,84669326.0,84669326.0,,,,,,,,,LOW
+2.2.1.2.2,Offshore / Solar,84669326.0,84669326.0,,,,,,,,,LOW
+2.2.1.2.3,Offshore / Solar,23535.350999999995,226239.99999999997,223,AG,1,- STATUS-Ansatz: Die durchschnittliche Vollbetrieb,222,W,0.001,Offshore Deutschl.: Vollbetriebsstunden jährlich,HIGH
+2.2.1,Offshore / Solar,8337.0,70000.0,2031,W,0.001,"An Offshore-Windleistung waren Im 2023 breits 8,33",,,,,MED
+3.,Laufwasser / Solar,39949342.27816993,42301794.86816328,,,,,,,,,LOW
+3.1,Laufwasser / Solar,35759529.0,35759529.0,,,,,,,,,LOW
+3.1.1,Laufwasser / Solar,79.0,79.0,,,,,,,,,LOW
+3.1.1.1,Laufwasser / Solar,0.69,0.69,,,,,,,,,LOW
+3.1.1.2,Laufwasser / Solar,19492.5192579,19492.5192579,,,,,,,,,LOW
+4.,Biogene Brennstoffe / Solar,47659883.00765544,47934441.2626911,,,,,,,,,LOW
+4.1,Energieholz / Solar,10086723.667438,9472655.639714886,,,,,,,,,LOW
+4.1.1,Energieholz / Solar,9866633.0,9373000.0,,,,,,,,,LOW
+4.1.1.1,Energieholz / Solar,9866633.0,9373000.0,,,,,,,,,LOW
+4.1.1.1.1,Energieholz / Solar,53.6,33.2,,,,,252,W,1,- ZIEL-Ansatz: Das Potenzial an Energieholz direkt,MED
+4.1.1.1.1.1,Energieholz / Solar,22.71,22.728,,,,,,,,,LOW
+4.1.1.1.1.2,Energieholz / Solar,120102.18219047999,70725.808608,2055,AG,0.0001,Im Landkreis Osnabrück sind gemäß Solardachkataste,282,W,0.001,"- STATUS-Ansatz: 73,3 % als Verhältnis von 87.883 ",HIGH
+4.1.2,Energieholz / Solar,11200.0,11200.0,255,AN,0.0001,Auf Hinweis aus dem Nds. Landwirtschaftsministeriu,255,AN,0.0001,Auf Hinweis aus dem Nds. Landwirtschaftsministeriu,HIGH
+4.1.2.1,Energieholz / Solar,11200.0,11200.0,255,AN,0.0001,Auf Hinweis aus dem Nds. Landwirtschaftsministeriu,255,AN,0.0001,Auf Hinweis aus dem Nds. Landwirtschaftsministeriu,HIGH
+4.1.2.1.1,Energieholz / Solar,29.9,51.4,,,,,,,,,LOW
+4.1.2.1.2,Energieholz / Solar,334.88,575.68,,,,,,,,,LOW
+4.1.3,Energieholz / Solar,120437.06219047999,71301.488608,2055,AG,0.0001,Im Landkreis Osnabrück sind gemäß Solardachkataste,282,W,0.001,"- STATUS-Ansatz: 73,3 % als Verhältnis von 87.883 ",HIGH
+4.1.3.1,Energieholz / Solar,73.3,0.0,282,W,1,"- STATUS-Ansatz: 73,3 % als Verhältnis von 87.883 ",,,,,MED
+4.1.3.2,Energieholz / Solar,21.300000000000004,100.0,287,W,1,"- STATUS-Ansatz: 21,3 % als Verhältnis von 25.589 ",289,W,1,- ZIEL-Ansatz: Energieholz ist hier vorrangig für ,HIGH
+4.1.3.3,Energieholz / Solar,5.4,0.0,292,W,1,"- STATUS-Ansatz: 5,4 % als Verhältnis von 6.470 GW",,,,,MED
+4.1.3.4,Energieholz / Solar,0.0,0.0,,,,,,,,,ZERO
+4.2,Stroh / Solar,6128961.64905,5631325.0,,,,,,,,,LOW
+4.2.1,Stroh / Solar,6076200.0,5631255.0,,,,,,,,,LOW
+4.2.1.1,Stroh / Solar,0.2,33.0,,,,,,,,,LOW
+4.2.1.1.1,Stroh / Solar,20.1,23.8339,,,,,,,,,LOW
+4.2.1.1.2,Stroh / Solar,244.26324000000002,44290.87361968499,,,,,,,,,LOW
+4.2.1.1.2.1,Stroh / Solar,0.0,0.0,,,,,,,,,ZERO
+4.2.1.1.2.2,Stroh / Solar,0.0,100.0,,,,,,,,,LOW
+4.2.1.1.2.3,Stroh / Solar,100.0,0.0,,,,,,,,,LOW
+4.2.1.1.2.4,Stroh / Solar,0.0,0.0,,,,,,,,,ZERO
+4.3,NAWARO gesamt / Solar,120681.32543047999,115592.362227685,365,AG,0.0001,Biogas - NAWARO-Anbau,365,AG,0.0001,Biogas - NAWARO-Anbau,HIGH
+4.3.1,NAWARO gesamt / Solar,88453.6052475208,0.0,43,W,1000,"- STATUS-Ansatz: GENESIS [9.224], Tabelle 12411-01",,,,,MED
+4.3.2,NAWARO gesamt / Solar,25653.094246572244,115592.362227685,,,,,365,AG,0.0001,Biogas - NAWARO-Anbau,MED
+4.3.3,NAWARO gesamt / Solar,6747.86459828592,0.0,,,,,,,,,LOW
+4.3.3.1,NAWARO gesamt / Solar,25.0,35.0,,,,,,,,,LOW
+4.3.3.2,NAWARO gesamt / Solar,1686.96614957148,0.0,,,,,,,,,LOW
+4.3.3.3,NAWARO gesamt / Solar,45.0,45.0,,,,,,,,,LOW
+4.3.3.4,NAWARO gesamt / Solar,3036.539069228664,0.0,,,,,,,,,LOW
+4.3.4,NAWARO gesamt / Solar,0.0,0.0,,,,,,,,,ZERO
+4.3.4.1,NAWARO gesamt / Solar,75.0,75.0,,,,,,,,,LOW
+4.3.4.2,NAWARO gesamt / Solar,0.0,0.0,,,,,,,,,ZERO
+4.4,Biogener Anteil Abfälle / Solar,14438.0,14438.0,,,,,,,,,LOW
+4.4.1,Biogener Anteil Abfälle / Solar,4525.0,4525.0,357,W,1,- STATUS-Ansatz: 4.525 GWh  Nettostromerzeugung au,357,W,1,- STATUS-Ansatz: 4.525 GWh  Nettostromerzeugung au,HIGH
+4.4.2,Biogener Anteil Abfälle / Solar,9913.0,9913.0,362,W,1,- ZIEL-Ansatz: Beibehaltung des Statuswertes aufgr,362,W,1,- ZIEL-Ansatz: Beibehaltung des Statuswertes aufgr,HIGH
+5, / Biogas,,,,,,,,,,,ZERO
+5.1,Main / Biogas,1410000.0,1307000.0,378,W,1,"Gemäß FNR [9.109], S. 17,46, lag die Anbaufläche n",,,,,MED
+5.1.1,Main / Biogas,50.9,40.7528,393,AN,1,1.732 GWh Stromerzeugung aus Deponie- und Klärgase,,,,,MED
+5.1.2,Main / Biogas,71769.0,53263.9096,,,,,393,AN,0.001,1.732 GWh Stromerzeugung aus Deponie- und Klärgase,MED
+5.2,Main / Biogas,15998.0,44571.0,,,,,410,W,0.001,- ZIEL-Ansatz: Orientiert am oberen Ende der Bandb,MED
+5.3,Main / Biogas,4558.0,12762.0,386,W,1,4.500 GWh  Stromerzeugung aus Biogas entfallen im ,363,AG,0.001,Biogas,HIGH
+5.4,Main / Biogas,92325.0,110596.9096,,,,,,,,,LOW
+5.4.1,Main / Biogas,0.0,15.510515772029533,,,,,,,,,LOW
+5.4.1.1,Main / Biogas,0.0,17154.151106885245,,,,,,,,,LOW
+5.4.2,Main / Biogas,96.1,0.0,425,W,1,- STATUS-Ansatz: ein Wandlungsnutzungsgrad Biogas ,,,,,MED
+5.4.2.1,Main / Biogas,37.5,45.0,413,AG,1,- STATUS-Ansatz: Mit 18.372 GWh ist die Wärmeberei,410,W,1,- ZIEL-Ansatz: Orientiert am oberen Ende der Bandb,HIGH
+5.4.2.2,Main / Biogas,33271.621875,0.0,,,,,,,,,LOW
+5.4.2.3,Main / Biogas,21.9,25.0,413,W,1,- STATUS-Ansatz: Mit 18.372 GWh ist die Wärmeberei,,,,,MED
+5.4.2.4,Main / Biogas,19430.627174999998,0.0,,,,,,,,,LOW
+5.4.3,Main / Biogas,1.2,84.5,,,,,422,W,1,- ZIEL-Ansatz: Biogas ist vorrangig zur Kraftstoff,MED
+5.4.3.1,Main / Biogas,98.0,98.0,425,W,1,- STATUS-Ansatz: ein Wandlungsnutzungsgrad Biogas ,425,W,1,- STATUS-Ansatz: ein Wandlungsnutzungsgrad Biogas ,HIGH
+5.4.3.2,Main / Biogas,1085.7420000000002,91585.30083975999,,,,,,,,,LOW
+5.4.4,Main / Biogas,2.7,0.0,376,W,10000,26.935 GWh  Stromerzeugung aus Biogas entfallen au,,,,,MED
+5.4.4.1,Main / Biogas,45.0,45.0,410,W,1,- ZIEL-Ansatz: Orientiert am oberen Ende der Bandb,410,W,1,- ZIEL-Ansatz: Orientiert am oberen Ende der Bandb,HIGH
+5.4.4.2,Main / Biogas,1121.74875,0.0,,,,,,,,,LOW
+6,Main / Biogene Brennstoffe (flüssig),,,,,,,,,,,ZERO
+6.1,Biodiesel / Biogene Brennstoffe (flüssig),738429.602,498520.30083976,,,,,477,W,0.001,Biodiesel - Anteil für Verstromung,MED
+6.1.1,Biodiesel Anbau / Biogene Brennstoffe (flüssig),665000.0,303000.0,446,W,1,"- STATUS-Ansatz: Gemäß FNR [9.109], S. 16, 19, lag",448,W,1,- ZIEL-Ansatz: Innerhalb der Extrempositionen (bez,HIGH
+6.1.1.1,Biodiesel Details / Biogene Brennstoffe (flüssig),17.8,14.2,452,W,1,"Heizwert Biodiesel gemäß [9.109] S. 38-39: 32,65 M",,,,,MED
+6.1.1.2,Biodiesel Details / Biogene Brennstoffe (flüssig),11837.0,4302.6,,,,,,,,,LOW
+6.1.2,Biodiesel Anbau / Biogene Brennstoffe (flüssig),13403.0,0.0,459,W,1,- STATUS-Ansatz: Ein Biodiesel-Import von 13.403 G,,,,,MED
+6.1.3,Biodiesel Anbau / Biogene Brennstoffe (flüssig),25240.0,4302.6,459,AG,1,- STATUS-Ansatz: Ein Biodiesel-Import von 13.403 G,,,,,MED
+6.1.3.1,Biodiesel Details / Biogene Brennstoffe (flüssig),99.1,100.0,323,W,1,- ZIEL-Ansatz: Strohbrennstoffe sind hier vorrangi,323,W,1,- ZIEL-Ansatz: Strohbrennstoffe sind hier vorrangi,HIGH
+6.1.3.1.1,Biodiesel Details / Biogene Brennstoffe (flüssig),25012.84,4302.6,459,AG,1,- STATUS-Ansatz: Ein Biodiesel-Import von 13.403 G,,,,,MED
+6.1.3.2,Biodiesel Details / Biogene Brennstoffe (flüssig),0.9,0.0,857,W,1000,Nutzungsgrad Endanwend. Brennstoffe für PW,,,,,MED
+6.1.3.2.1,Biodiesel Details / Biogene Brennstoffe (flüssig),39.0,39.0,463,AG,1,233 GWh  Verbrauch an flüssigen Biobrennstoffen fü,463,AG,1,233 GWh  Verbrauch an flüssigen Biobrennstoffen fü,HIGH
+6.1.3.2.2,Biodiesel Details / Biogene Brennstoffe (flüssig),88.5924,0.0,249,AG,1000,Energiebereitstellung aus Holz in Deutschland 2023,,,,,MED
+6.1.3.2.3,Biodiesel Details / Biogene Brennstoffe (flüssig),50.0,50.0,277,W,1,"- ZIEL-Ansatz: 51,4 MWh/ha/a [274], wobei im Gegen",277,W,1,"- ZIEL-Ansatz: 51,4 MWh/ha/a [274], wobei im Gegen",HIGH
+6.1.3.2.4,Biodiesel Details / Biogene Brennstoffe (flüssig),113.58000000000001,0.0,,,,,,,,,LOW
+6.2,Bioethanol / Biogene Brennstoffe (flüssig),0.0,0.0,,,,,,,,,ZERO
+6.2.1,Bioethanol Anbau / Biogene Brennstoffe (flüssig),216200.0,0.0,495,W,1,"- STATUS-Ansatz: Gemäß FNR [9.109], S. 19, lag die",,,,,MED
+6.2.1.1,Bioethanol Details / Biogene Brennstoffe (flüssig),17.1,13.7,500,W,1,- STATUS-Ansatz: Resultiert aus einem durchschnitt,,,,,MED
+6.2.1.2,Bioethanol Details / Biogene Brennstoffe (flüssig),3697.0200000000004,0.0,,,,,,,,,LOW
+6.2.2,Bioethanol Anbau / Biogene Brennstoffe (flüssig),4991.0,0.0,510,W,1,- STATUS-Ansatz: Ein Bioethanol-Import von 4.991 G,,,,,MED
+6.2.3,Bioethanol Anbau / Biogene Brennstoffe (flüssig),8688.02,0.0,510,AG,1,- STATUS-Ansatz: Ein Bioethanol-Import von 4.991 G,,,,,MED
+7.1,Wärmepumpe / Umgebungswärme,256726.09350785078,137950.4332889042,,,,,,,,,LOW
+7.1.1,Wärmepumpe / Umgebungswärme,71.2,92.23333,807,W,1,- ZIEL-Ansatz: Ansatz in Anlehnung an IWES [808] u,,,,,MED
+7.1.2,Wärmepumpe / Umgebungswärme,182788.97857758976,127236.27837178485,,,,,,,,,LOW
+7.1.2.1,Wärmepumpe / Umgebungswärme,3.2,4.2,,,,,,,,,LOW
+7.1.2.2,Wärmepumpe / Umgebungswärme,584924.7314482873,534392.3691614964,,,,,,,,,LOW
+7.1.2.3,Wärmepumpe / Umgebungswärme,402135.7528706975,407156.09078971157,,,,,,,,,LOW
+7.1.3,Wärmepumpe / Umgebungswärme,28.8,7.8,,,,,,,,,LOW
+7.1.4.1,Wärmepumpe / Umgebungswärme,3.8,4.9,538,W,1,Nach früheren Angaben des Bundesverbandes Wärmepum,,,,,MED
+7.1.4.2,Wärmepumpe / Umgebungswärme,280961.0367349919,52724.655603019186,,,,,,,,,LOW
+7.1.4.3,Wärmepumpe / Umgebungswärme,207023.92180473084,41964.521806484656,,,,,,,,,LOW
+7.1.4.3.1,Wärmepumpe / Umgebungswärme,1000.0,1000.0,,,,,,,,,LOW
+7.1.4.3.2,Wärmepumpe / Umgebungswärme,207023.92180473084,41964.521806484656,,,,,,,,,LOW
+7.1.4.3.3,Wärmepumpe / Umgebungswärme,3380079.0,3645799.0,,,,,,,,,LOW
+7.1.4.3.4,Wärmepumpe / Umgebungswärme,0.241,1.1,,,,,,,,,LOW
+7,Wärmepumpe / Umgebungswärme,,,,,,,,,,,ZERO
+8,Geothermie / Tiefengeothermie,,,,,,,,,,,ZERO
+8.1,Geothermie / Tiefengeothermie,57.0,0.0,,,,,,,,,LOW
+8.1.1,Geothermie / Tiefengeothermie,3421.0,3421.0,,,,,,,,,LOW
+8.1.2,Geothermie / Tiefengeothermie,194.997,0.0,,,,,,,,,LOW
+8.2,Geothermie / Tiefengeothermie,1797.0,12000.0,578,W,1,- STATUS-Ansatz: Die Bereitstellung von Gebäudewär,,,,,MED
+9,Stromspeicherung / Stromwandlung,,,,,,,,,,,ZERO
+9.1,Stromwandlung / Stromwandlung,256726.09350785078,1941430.032365274,,,,,,,,,LOW
+9.1.1,Stromwandlung / Stromwandlung,135042.22824137931,706236.3411426758,,,,,,,,,LOW
+9.1.2,Stromwandlung / Stromwandlung,62424.168584,1211176.171964698,,,,,,,,,LOW
+9.1.3,Stromwandlung / Stromwandlung,19687.5162579,19492.5192579,,,,,,,,,LOW
+9.1.4,Stromwandlung / Stromwandlung,39572.18042457148,4525.0,,,,,,,,,LOW
+9.2,Stromwandlung / Stromwandlung,256726.09350785078,1941430.032365274,,,,,,,,,LOW
+9.2.1,Stromwandlung / Stromwandlung,0.0,418893.192987624,,,,,,,,,LOW
+9.2.1.1,Stromwandlung / Stromwandlung,0.0,0.0,,,,,,,,,ZERO
+9.2.1.1.1,Stromwandlung / Stromwandlung,0.0,0.0,,,,,,,,,ZERO
+9.2.1.1.1.1,Stromwandlung / Stromwandlung,80.0,80.0,,,,,,,,,LOW
+9.2.1.1.2,Stromwandlung / Stromwandlung,0.0,0.0,,,,,,,,,ZERO
+9.2.1.2,Stromwandlung / Stromwandlung,0.0,21.912630481179804,,,,,,,,,LOW
+9.2.1.2.1,Stromwandlung / Stromwandlung,0.0,80.0,,,,,,,,,LOW
+9.2.1.2.2,Stromwandlung / Stromwandlung,0.0,0.0,,,,,,,,,ZERO
+9.2.1.3,Stromwandlung / Stromwandlung,0.0,95329.79999999999,,,,,,,,,LOW
+9.2.1.3.1,Stromwandlung / Stromwandlung,0.0,63.0,,,,,,,,,LOW
+9.2.1.3.2,Stromwandlung / Stromwandlung,0.0,151317.14285714284,,,,,,,,,LOW
+9.2.1.4,Stromwandlung / Stromwandlung,0.0,76544.15,,,,,,,,,LOW
+9.2.1.4.1,Stromwandlung / Stromwandlung,0.0,80.0,,,,,,,,,LOW
+9.2.1.4.2,Stromwandlung / Stromwandlung,0.0,95680.18749999999,,,,,,,,,LOW
+9.2.1.5,Stromwandlung / Stromwandlung,0.0,246997.33035714284,,,,,,,,,LOW
+9.2.1.5.1,Stromwandlung / Stromwandlung,0.0,64.0,,,,,,,,,LOW
+9.2.1.5.2,Stromwandlung / Stromwandlung,0.0,385933.3286830357,,,,,,,,,LOW
+9.2.1.5.2.1,Stromwandlung / Stromwandlung,0.0,385933.3286830357,,,,,,,,,LOW
+9.2.1.5.2.2,Stromwandlung / Stromwandlung,0.0,0.0,,,,,,,,,ZERO
+9.3,Stromspeicherung / Stromwandlung,0.0,844033.3254470965,,,,,,,,,LOW
+9.3.1,Stromwandlung / Stromwandlung,0.0,406403.3340795594,,,,,,,,,LOW
+9.3.1.1,Stromspeicherung / Stromwandlung,0.0,38.0,,,,,,,,,LOW
+9.3.1.2,Stromwandlung / Stromwandlung,0.0,154433.26695023256,,,,,,,,,LOW
+9.3.2,Stromwandlung / Stromwandlung,0.0,12.7,,,,,,,,,LOW
+9.3.2.1,Stromwandlung / Stromwandlung,0.0,51613.223428104044,,,,,,,,,LOW
+9.3.3,Stromspeicherung / Stromwandlung,0.0,241727.0,,,,,,,,,LOW
+9.3.4,Stromwandlung / Stromwandlung,0.0,195890.29136753705,,,,,,,,,LOW
+9.4,Stromwandlung / Stromwandlung,256726.09392385077,1107646.315348871,,,,,,,,,LOW
+9.4.1,Stromwandlung / Stromwandlung,256726.09392385077,1107646.315348871,,,,,,,,,LOW
+9.4.2,Stromwandlung / Stromwandlung,0.0,0.0,,,,,,,,,ZERO
+9.4.3,Stromwandlung / Stromwandlung,256726.09392385077,1107646.315348871,,,,,,,,,LOW
+9.4.3.1,Stromwandlung / Stromwandlung,5.5,9.2,,,,,,,,,LOW
+9.4.3.2,Stromspeicherung / Stromwandlung,14119.935165811794,101903.46101209613,,,,,,,,,LOW
+9.4.3.3,Stromwandlung / Stromwandlung,242606.15875803898,1005742.8543367749,,,,,,,,,LOW
+10,Erneuerbare Quellen / Endenergie,,,,,,,,,,,ZERO
+10.1,Erneuerbare Quellen / Endenergie,391499.46025213203,1863869.0257823425,,,,,,,,,LOW
+10.2,Erneuerbare Quellen / Endenergie,242606.15875803898,1005742.8543367749,,,,,,,,,LOW
+10.2.1,Erneuerbare Quellen / Endenergie,461869.2220968377,1005742.8543367754,,,,,,,,,LOW
+10.2.2,Erneuerbare Quellen / Endenergie,52.52702435044979,99.99999999999996,,,,,,,,,LOW
+10.3,Erneuerbare Quellen / Endenergie,172995.4884722678,312753.29999999993,,,,,,,,,LOW
+10.3.1,Erneuerbare Quellen / Endenergie,172995.4884722678,312753.29999999993,,,,,,,,,LOW
+10.4,Erneuerbare Quellen / Endenergie,105664.95064129012,672112.3905601414,,,,,,,,,LOW
+10.4.1,Erneuerbare Quellen / Endenergie,88453.6052475208,0.0,,,,,,,,,LOW
+10.4.1.1,Erneuerbare Quellen / Endenergie,0.0,0.0,,,,,,,,,ZERO
+10.4.1.2,Erneuerbare Quellen / Endenergie,0.0,0.0,,,,,,,,,ZERO
+10.4.1.3,Erneuerbare Quellen / Endenergie,88453.6052475208,0.0,,,,,,,,,LOW
+10.4.2,Erneuerbare Quellen / Endenergie,0.0,534161.9572712373,,,,,,,,,LOW
+10.4.3,Erneuerbare Quellen / Endenergie,17211.345393769323,137950.43328890414,,,,,,,,,LOW
+10.5,Erneuerbare Quellen / Endenergie,63273.416894164184,490263.8743195712,,,,,,,,,LOW
+10.5.1,Erneuerbare Quellen / Endenergie,25653.094246572244,132746.51333457025,,,,,,,,,LOW
+10.5.1.1,Erneuerbare Quellen / Endenergie,0.0,17154.151106885245,,,,,,,,,LOW
+10.5.1.2,Erneuerbare Quellen / Endenergie,0.0,0.0,,,,,,,,,ZERO
+10.5.1.3,Erneuerbare Quellen / Endenergie,0.0,0.0,,,,,,,,,ZERO
+10.5.1.4,Erneuerbare Quellen / Endenergie,25653.094246572244,115592.362227685,,,,,,,,,LOW
+10.5.2,Erneuerbare Quellen / Endenergie,0.0,0.0,,,,,,,,,ZERO
+10.5.3,Erneuerbare Quellen / Endenergie,37620.32264759194,357517.36098500097,,,,,,,,,LOW
+10.6,Erneuerbare Quellen / Endenergie,49565.604244409915,388739.4609026299,,,,,,,,,LOW
+10.6.1,Erneuerbare Quellen / Endenergie,34786.602,191217.70083976,252,W,0.001,- ZIEL-Ansatz: Das Potenzial an Energieholz direkt,,,,,MED
+10.6.1.1,Erneuerbare Quellen / Endenergie,0.0,0.0,,,,,,,,,ZERO
+10.6.1.2,Erneuerbare Quellen / Endenergie,1085.7420000000002,91585.30083975999,255,AN,0.001,Auf Hinweis aus dem Nds. Landwirtschaftsministeriu,,,,,MED
+10.6.1.3,Erneuerbare Quellen / Endenergie,33700.86,99632.4,252,W,0.001,- ZIEL-Ansatz: Das Potenzial an Energieholz direkt,,,,,MED
+10.6.2,Erneuerbare Quellen / Endenergie,14779.00224440992,197521.76006286987,782,W,0.0001,Obwohl so zur Erreichung der Klimaziele mehr erneu,,,,,MED
+10.7,Erneuerbare Quellen / Endenergie,148893.30149409303,323964.21417433023,,,,,252,W,0.0001,- ZIEL-Ansatz: Das Potenzial an Energieholz direkt,MED
+10.7.1,Erneuerbare Quellen / Endenergie,0.0,0.0,,,,,,,,,ZERO
+10.7.2,Erneuerbare Quellen / Endenergie,1085.7420000000002,108739.45194664523,255,AN,0.001,Auf Hinweis aus dem Nds. Landwirtschaftsministeriu,,,,,MED
+10.7.3,Erneuerbare Quellen / Endenergie,33700.86,99632.4,252,W,0.001,- ZIEL-Ansatz: Das Potenzial an Energieholz direkt,,,,,MED
+10.7.4,Erneuerbare Quellen / Endenergie,114106.69949409305,115592.362227685,,,,,,,,,LOW
+10.8,Erneuerbare Quellen / Endenergie,0.0,76544.15,,,,,,,,,LOW
+10.9,Erneuerbare Quellen / Endenergie,,,,,,,,,,,ZERO
+10.9.1,Erneuerbare Quellen / Endenergie,261372.34543048003,244929.87182768498,,,,,,,,,LOW
+10.9.1.1,Erneuerbare Quellen / Endenergie,92325.0,110596.9096,,,,,,,,,LOW
+10.9.1.2,Erneuerbare Quellen / Endenergie,33928.020000000004,4302.6,252,W,0.001,- ZIEL-Ansatz: Das Potenzial an Energieholz direkt,,,,,MED
+10.9.1.3,Erneuerbare Quellen / Endenergie,135119.32543048,130030.362227685,,,,,,,,,LOW
+7.1.4, / EE,73937.11493026103,10760.133796534526,,,,,,,,,LOW
+11, / fossil,70.0,70.0,,,,,,,,,LOW
+11.1, / fossil,80.0,90.0,,,,,,,,,LOW
+11.2, / fossil,80.0,100.0,,,,,,,,,LOW
+11.3, / fossil,160.0,190.0,,,,,,,,,LOW
+11.4, / fossil,160.0,,,,,,,,,,LOW
+12, / Renewable,160.0,,,,,,,,,,LOW

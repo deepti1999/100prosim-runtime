@@ -1,0 +1,112 @@
+{
+  "landuse": {
+    "total": 20,
+    "both": 7,
+    "status_only": 3,
+    "ziel_only": 2,
+    "zero": 0,
+    "unmatched": 8,
+    "status_cols": {
+      "W": 10
+    },
+    "ziel_cols": {
+      "W": 7,
+      "AG": 1,
+      "U": 1
+    },
+    "status_scales": {
+      "1": 9,
+      "0.0001": 1
+    },
+    "ziel_scales": {
+      "1": 5,
+      "0.0001": 3,
+      "0.001": 1
+    }
+  },
+  "renewabledata": {
+    "total": 223,
+    "both": 23,
+    "status_only": 36,
+    "ziel_only": 9,
+    "zero": 27,
+    "unmatched": 128,
+    "status_cols": {
+      "W": 41,
+      "AG": 13,
+      "AN": 5
+    },
+    "ziel_cols": {
+      "W": 23,
+      "AG": 5,
+      "U": 1,
+      "AN": 3
+    },
+    "status_scales": {
+      "0.001": 9,
+      "1": 38,
+      "0.0001": 8,
+      "1000": 3,
+      "10000": 1
+    },
+    "ziel_scales": {
+      "1": 16,
+      "0.001": 11,
+      "0.0001": 5
+    }
+  },
+  "verbrauchdata": {
+    "total": 151,
+    "both": 42,
+    "status_only": 9,
+    "ziel_only": 27,
+    "zero": 14,
+    "unmatched": 59,
+    "status_cols": {
+      "W": 43,
+      "AN": 4,
+      "AG": 4
+    },
+    "ziel_cols": {
+      "W": 62,
+      "AN": 5,
+      "AG": 2
+    },
+    "status_scales": {
+      "0.001": 4,
+      "1": 35,
+      "0.0001": 9,
+      "10000": 2,
+      "1000": 1
+    },
+    "ziel_scales": {
+      "0.001": 7,
+      "1": 48,
+      "0.0001": 12,
+      "10000": 1,
+      "1000": 1
+    }
+  },
+  "gebaeudewaermedata": {
+    "total": 26,
+    "both": 9,
+    "status_only": 1,
+    "ziel_only": 5,
+    "zero": 0,
+    "unmatched": 11,
+    "status_cols": {
+      "W": 10
+    },
+    "ziel_cols": {
+      "W": 14
+    },
+    "status_scales": {
+      "1": 10
+    },
+    "ziel_scales": {
+      "1": 12,
+      "10000": 1,
+      "1000": 1
+    }
+  }
+}

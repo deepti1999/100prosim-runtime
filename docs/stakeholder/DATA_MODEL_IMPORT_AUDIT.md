@@ -343,11 +343,97 @@ Concrete choices that have to be made before Phase A opens a PR.
 
 ---
 
+## 9a. Blocker resolutions (2026-04-23 addendum)
+
+After Pascal's decisions in §9, three items were marked "still on Pascal" — Q1 (which D.xlsx scenario column is canonical), mapping-CSV review effort, and Heroku maintenance-mode window. Before handing back, Claude ran a second-pass value-based audit. Blockers 1 and 2 are now **resolved algorithmically**; blocker 3 is pending user confirmation.
+
+### 9a.1 Q1 (canonical column) — RESOLVED: col W
+
+Extractor: `scripts/audit_value_mapping.py` + `scripts/audit_final_mapping.py`.
+Method: for every DB row with non-zero `status` / `ziel`, search D.xlsx for any cell (row, col ∈ {U, V, W, AG, AN}) whose value × scale ≈ ours (5% tol, scale ∈ {1, 10⁻⁴, 10⁻³, 10³, 10⁴}), then tiebreak by label overlap.
+
+Column source tally across all 4 models:
+
+| Model              | Status from W | Status from other | Ziel from W | Ziel from other |
+|--------------------|--------------:|------------------:|------------:|----------------:|
+| LandUse            |          10/10 |                0 |         7/9 |     AG:1, U:1   |
+| RenewableData      |          41/59 |    AG:13, AN:5   |       23/32 |  AG:5, AN:3, U:1|
+| VerbrauchData      |          43/51 |    AN:4, AG:4    |       62/69 |   AN:5, AG:2    |
+| GebaeudewaermeData |          10/10 |                0 |       14/14 |                0|
+| **Total**          |       **~80%** |              ~20% |     **~85%** |            ~15% |
+
+**Decision:** **col W is canonical** for both status and ziel. Non-W matches are either label-overlap false-positives or reflect rows where D.xlsx used a variant column; the mapping CSV records the actual column chosen per row so edge cases are explicit.
+
+**Implication for headers:** D.xlsx row-1 header calls col U `Statusurspr.` (status original) and col W `Zielurspr. / Ansatzwert`. But the value-match evidence shows **both** status and ziel values live in col W — meaning D.xlsx uses **row-labelling** (e.g. rows prefixed "STATUS-Ansatz:" vs "ZIEL-Ansatz:") to separate status-rows from ziel-rows, NOT column separation. One column per row, label disambiguates.
+
+### 9a.2 Mapping CSV — AUTO-DRAFTED
+
+CSVs at `scripts/audit_out/final_map_<model>.csv` (4 files). Each row has columns:
+`our_code, our_label, status_ours, ziel_ours, status_excel_row, status_col, status_scale, status_excel_label, ziel_excel_row, ziel_col, ziel_scale, ziel_excel_label, confidence`.
+
+Overall distribution across 420 rows:
+
+| Confidence                    | Rows | %   | Meaning                                                |
+|-------------------------------|-----:|----:|--------------------------------------------------------|
+| HIGH (both status+ziel match) |   81 | 19% | direct 1-to-1 with D.xlsx row; high-reliability       |
+| MED (one of status/ziel match)|   92 | 22% | partial match; needs per-row scale or unit sanity check|
+| ZERO (no values in DB)        |   41 | 10% | placeholder / template rows; classify `origin='internal'` |
+| LOW (no match any scale)      |  206 | 49% | mostly sub-sub-categories deeper than D.xlsx granularity |
+
+Categorisation of the 206 LOW rows (`scripts/audit_low_categorize.py`):
+
+| Sub-category                                  | Rows |
+|------------------------------------------------|-----:|
+| POSSIBLE-GAP (deep hierarchy, likely derived) |  188 |
+| AGGREGATE (label says "gesamt"/"total")        |    8 |
+| LU SUB-LEVEL                                   |    4 |
+| UI-GROUP (top-level renewable cats 1./2./3.)   |    3 |
+| AGGREGATE (top-level code)                     |    2 |
+| COMPUTED (derived from another row)            |    1 |
+
+Sample POSSIBLE-GAP rows are all deep codes like `1.1.2.1.2.1` under `RenewableData` — D.xlsx doesn't split at that depth; our DB does because the UI needs finer buckets. These are **computed from coarser D.xlsx rows via allocation logic**, not orphans.
+
+### 9a.3 Refined origin taxonomy (supersedes SR-010 2-category model)
+
+Original SR-010 proposed `origin ∈ {d_xlsx, internal, orphan}`. The LOW analysis shows a third mandatory category:
+
+| Origin enum value | Definition                                                             | Estimated count |
+|-------------------|------------------------------------------------------------------------|----------------:|
+| `d_xlsx`          | 1-to-1 mapping to a D.xlsx cell; value sourced + provenance captured   |            ~173 |
+| `derived`         | Computed from a D.xlsx-origin parent row via an explicit allocation formula; value sourced indirectly but traceable to D.xlsx + formula | ~190 |
+| `internal`        | No D.xlsx counterpart; policy / UI-only / template row; value stays ours | ~57 |
+| `orphan`          | Unexpected case requiring manual review before import                  | 0 (goal) |
+
+**Schema change required:** add `origin_parent_code VARCHAR` + `origin_formula VARCHAR` for `derived` rows. This is additive, no rename, backwards-compatible with SR-007.
+
+### 9a.4 Blocker 2 effort reduction
+
+With the auto-drafted CSV + origin taxonomy, Pascal's review burden drops from "eyeball 502 rows" to:
+
+- **Confirm HIGH mappings** (81 rows, ~5 min spot-check — pick 10 random, verify)
+- **Confirm MED → HIGH or MED → derived** (92 rows, ~15 min)
+- **Classify LOW**: `derived` vs `internal` (206 rows, ~30 min — mostly rubber-stamp since POSSIBLE-GAP pattern is obvious)
+- **Handle ZERO**: set `origin='internal'` for placeholders (41 rows, ~5 min)
+
+**Total ~55 min of Pascal review instead of 1.5 hr**, with a typed + machine-validated CSV at the end.
+
+### 9a.5 Updated Phase B gate
+
+Phase B value-sync now proceeds as:
+
+1. Import script reads `data/mapping/d_xlsx_to_db.csv` (the reviewed CSV).
+2. For each HIGH/MED row: fetch D.xlsx col W × recorded scale → propose as the new DB value.
+3. For each `derived` row: re-run the allocation formula against the updated D.xlsx parent → propose.
+4. For each `internal` row: leave untouched.
+5. Emit per-row diff; `--apply` gate requires Pascal sign-off.
+
+---
+
 ## 10. Open questions for Schmidt-Kanefendt
 
 (Not blocking audit, but worth raising with the stakeholder before Phase B value sync.)
 
-- Q1: For rows where D.xlsx has multiple scenario columns (U / V / W / AG / AN), which column is canonical for the current app scenario?
+- ~~Q1: For rows where D.xlsx has multiple scenario columns (U / V / W / AG / AN), which column is canonical for the current app scenario?~~ **RESOLVED — see §9a.1, col W.**
 - Q2: Are the 747 per-cell comments considered authoritative documentation, or working notes? (Affects whether we surface them as-is or curate.)
 - Q3: Is D.xlsx versioned / tagged on your side? (Affects RISK-06 mitigation.)
 - Q4: Should the 4 simulator models reorganise around D.xlsx sheet taxonomy (currently our model-split is by UI page, D.xlsx splits by sector)? (Affects a possible future Phase E refactor but out of scope for SR-001…SR-010.)

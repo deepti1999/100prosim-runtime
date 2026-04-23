@@ -1,0 +1,27 @@
+our_code,our_label,status_ours,ziel_ours,excel_row,excel_label,status_col,status_excel,ziel_col,ziel_excel,confidence,notes
+2.0,Bedarfsniveau (statisch),798.867,798.867,794,Zieleinfluss Verwend.-/Proz.Effizienz Warmwasser,W,797.0,W,797.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+2.1,davon Haushalte,71.6,71.6,749,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für das (fiktive) künftige Bedarfs,W,71.64093767867352,W,71.64093767867352,MED-VALUE-ONLY,both-match; label_overlap=0.05
+2.1.1,Wohnfläche pro Person,44.7,44.7,754,- ZIEL-Ansatz: Abweichend vom Ansatz der BMU-Leitstudie als ein Beispiel für die,W,44.67669791064594,W,44.67669791064594,MED-VALUE-ONLY,both-match; label_overlap=0.11
+2.1.2,Zieleinfluss Wohnflächen-Entwicklung,100.0,100.0,971,- ZIEL-Ansatz: Die weitere Entwicklung des Luftverkehrs (größtenteils Personenve,W,100.0,W,100.0,MED-VALUE-ONLY,both-match; label_overlap=0.05
+2.2,"davon Gewerbe, Handel, Dienstl. + Industr.",28.4,28.4,757,- STATUS-Ansatz: Gemäß Arbeitsgemeinschaft Energiebilanzen [9.14] für das Jahr 2,W,28.35906232132647,W,28.35906232132647,MED-VALUE-ONLY,both-match; label_overlap=0.00
+2.2.1,Zieleinfluss Erwerbstätigkeit,100.0,100.0,762,- STATUS-Ansatz: Repräsentiert den Status des spezifischen Bedarfs an Gebäudewär,W,100.0,W,100.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+2.3,Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.),798.867,798.867,794,Zieleinfluss Verwend.-/Proz.Effizienz Warmwasser,W,797.0,W,797.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+2.4,davon Raumwärme,85.9,85.9,817,- STATUS-Ansatz: 86 % Schätzwert resultierend aus einem Endenergieverbrauch von ,W,86.0,W,86.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+2.4.1,Spez. Raumwärmebed. Status/Saniert,136.0,75.0,,,,,,,LOW,no value+label match
+2.4.2,Veränderung zum Status,100.0,-44.9,,,,,,,LOW,no value+label match
+2.4.3,Gebäude - Sanierungs-/Ersatzrate,1.5,,,,,,,,LOW,no value+label match
+2.4.4,Sanierungszeitraum,2023.0,2045.0,,,,,,,LOW,no value+label match
+2.4.5,Gebäudeanteil mit Ziel-Wärmeschutz,0.0,33.0,,,,,,,LOW,no value+label match
+2.4.6,Result. spez. Raumwärmebed. ges.,136.0,115.9,,,,,,,LOW,no value+label match
+2.5,davon Warmwasser,14.1,14.1,790,- STATUS-Ansatz: Gemäß Arbeitsgemeinschaft Energiebilanzen [9.14] für das Jahr 2,W,14.070887605208974,W,14.070887605208974,MED-VALUE-ONLY,both-match; label_overlap=0.00
+2.5.1,Zieleinfluss Anwendungs-/Prozess-Effizienz,100.0,70.0,,,,,,,LOW,no value+label match
+2.5.2,Res. Anteil Warmwasser an Gebäudew.,14.1,11.9,,,,,,,LOW,no value+label match
+2.6,"Bedarfsniveau (Sanierung, Anwendungseff.)",798.867,663.539,,,,,,,LOW,no value+label match
+2.7,davon Brennstoffe,79.2,0.0,,,,,,,LOW,no value+label match
+2.7.1,Nutzungsgrad Endanwendung,86.0,88.0,85,Getreide-Anbaufl. (Stroh),U,86.0,W,88.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+2.7.2,Wandlungsverluste Endanwendung,11.1,0.0,,,,,,,LOW,no value+label match
+2.7.3,Einsparung gegenüber Status (relativ),0.0,11.1,,,,,,,LOW,no value+label match
+2.8,"davon Wärme (30–100°C, verlustarm nutzbar)",16.7,79.5,,,,,,,LOW,no value+label match
+2.9,davon Strom (verlustarm nutzbar),4.1,20.5,,,,,,,LOW,no value+label match
+2.9.1,davon für Wärmepumpen,30.7,100.0,,,,,,,LOW,no value+label match
+2.10,Endenergieverbrauch GW gesamt,798.867,663.539,799,Anteil Strom an GW,U,800.0,,,MED,status-only; label_overlap=0.25

@@ -1,0 +1,224 @@
+our_code,our_label,status_ours,ziel_ours,excel_row,excel_label,status_col,status_excel,ziel_col,ziel_excel,confidence,notes
+1, / Solar,,,,,,,,,LOW,no value+label match
+1.1,Dachflächen / Solar,34243.0,199396.038908,,,,,,,LOW,no value+label match
+1.1.1,Solarthermie / Solar,132641.73084648,87627.957854937,,,,,,,LOW,no value+label match
+1.1.1.1,Dachflächen / Solar,6.4,1.1,,,,,,,LOW,no value+label match
+1.1.1.1.1, / Solar,3878.0,5250.0,,,,,,,LOW,no value+label match
+1.1.1.1.2, / Solar,8498.838656000002,11515.121246937,,,,,,,LOW,no value+label match
+1.1.2,Solarstrom / Solar,114220.68413793105,483416.2937742548,,,,,,,LOW,no value+label match
+1.1.2.1,Dachflächen / Solar,93.6,98.9,,,,,,,LOW,no value+label match
+1.1.2.1.1, / Solar,1383.0,1853.0,,,,,,,LOW,no value+label match
+1.1.2.1.2, / Solar,44327.152583999996,365416.57063546224,,,,,,,LOW,no value+label match
+1.1.2.1.2.1, / Solar,927.0,927.0,167,"- STATUS-Ansatz: Gemäß  [9.4], Photovoltaik Ausnutzungsdauer, lag die mittlere j",AG,926.0,AG,926.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+1.1.2.1.2.2, / Solar,47817.8560776699,394192.6328322139,,,,,,,LOW,no value+label match
+1.2,Freiflächen / Solar,19628.0,684640.8016282017,,,,,,,LOW,no value+label match
+1.2.1,Solarstrom / Solar,65093.948584,1214891.585294698,,,,,,,LOW,no value+label match
+1.2.1.1, / Solar,922.0,1235.33333,,,,,,,LOW,no value+label match
+1.2.1.2, / Solar,18097.016,845759.6013292358,,,,,,,LOW,no value+label match
+1.2.1.2.1, / Solar,927.0,927.0,167,"- STATUS-Ansatz: Gemäß  [9.4], Photovoltaik Ausnutzungsdauer, lag die mittlere j",AG,926.0,AG,926.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+1.2.1.2.2, / Solar,19522.131607335494,912362.0294813763,,,,,,,LOW,no value+label match
+2.1,Onshore / Solar,267722.61958400003,2578592.1435145442,,,,,,,LOW,no value+label match
+2.1.1,Onshore / Solar,172556.0,715288.6652322228,,,,,,,LOW,no value+label match
+2.1.1.1,Onshore / Solar,2.9,3.8,,,,,,,LOW,no value+label match
+2.1.1.2,Onshore / Solar,59502.06896551725,188233.85927163757,,,,,,,LOW,no value+label match
+2.1.1.2.1,Onshore / Solar,1874.0,2550.0,,,,,,,LOW,no value+label match
+2.1.1.2.2,Onshore / Solar,111506.87724137932,479996.34114267584,,,,,,,LOW,no value+label match
+2.1.1.2.3,Onshore / Solar,646.2068965517242,671.0526315789474,,,,,,,LOW,no value+label match
+2.2,Offshore / Solar,8337.0,70000.0,,,,,,,LOW,no value+label match
+2.2.1.1,Offshore / Solar,2823.0,3232.0,,,,,,,LOW,no value+label match
+2.2.1.2,Offshore / Solar,23535.351,226240.0,,,,,,,LOW,no value+label match
+2.2.1.2.1,Offshore / Solar,84669326.0,84669326.0,34,Energieverbrauch ermittelt gemäß:,AG,84669326.0,AG,84669326.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+2.2.1.2.2,Offshore / Solar,84669326.0,84669326.0,34,Energieverbrauch ermittelt gemäß:,AG,84669326.0,AG,84669326.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+2.2.1.2.3,Offshore / Solar,23535.350999999995,226239.99999999997,,,,,,,LOW,no value+label match
+2.2.1,Offshore / Solar,8337.0,70000.0,,,,,,,LOW,no value+label match
+3.,Laufwasser / Solar,39949342.27816993,42301794.86816328,,,,,,,LOW,no value+label match
+3.1,Laufwasser / Solar,35759529.0,35759529.0,54,"Bodenfläche Deutschland 31.12.2012 gemäß GENESIS [9.224], Tabelle 449-01-5:   35",W,35716856.0,W,35716856.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+3.1.1,Laufwasser / Solar,79.0,79.0,232,- STATUS-Ansatz: Die Stromerzeugung aus Wasserkraft in Deutschland lag gemäß BMW,W,79.01899631414801,W,79.01899631414801,MED-VALUE-ONLY,both-match; label_overlap=0.00
+3.1.1.1,Laufwasser / Solar,0.69,0.69,237,"- STATUS-Ansatz: Ein Energieertrag aus Wasserkraft in Deutschland von 0,690 MWh/",W,0.6904173709894221,W,0.6904173709894221,MED-VALUE-ONLY,both-match; label_overlap=0.00
+3.1.1.2,Laufwasser / Solar,19492.5192579,19492.5192579,446,"- STATUS-Ansatz: Gemäß FNR [9.109], S. 16, 19, lag die Anbaufläche für Biodiesel",AN,19400.0,AN,19400.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.,Biogene Brennstoffe / Solar,47659883.00765544,47934441.2626911,,,,,,,LOW,no value+label match
+4.1,Energieholz / Solar,10086723.667438,9472655.639714886,,,,,,,LOW,no value+label match
+4.1.1,Energieholz / Solar,9866633.0,9373000.0,,,,,,,LOW,no value+label match
+4.1.1.1,Energieholz / Solar,9866633.0,9373000.0,,,,,,,LOW,no value+label match
+4.1.1.1.1,Energieholz / Solar,53.6,33.2,,,,,,,LOW,no value+label match
+4.1.1.1.1.1,Energieholz / Solar,22.71,22.728,258,"- STATUS-Ansatz: Einen Heizwert von 22,7 MWh/ha/a weist der jährliche Holzzuwach",W,22.7,W,22.7,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.1.1.1.1.2,Energieholz / Solar,120102.18219047999,70725.808608,,,,,,,LOW,no value+label match
+4.1.2,Energieholz / Solar,11200.0,11200.0,267,"- STATUS-Ansatz:  Gemäß einer Studie des Von Thünen-Instituts [9.109], S. 17, wa",W,11200.0,W,11200.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.1.2.1,Energieholz / Solar,11200.0,11200.0,267,"- STATUS-Ansatz:  Gemäß einer Studie des Von Thünen-Instituts [9.109], S. 17, wa",W,11200.0,W,11200.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.1.2.1.1,Energieholz / Solar,29.9,51.4,,,,,,,LOW,no value+label match
+4.1.2.1.2,Energieholz / Solar,334.88,575.68,,,,,,,LOW,no value+label match
+4.1.3,Energieholz / Solar,120437.06219047999,71301.488608,,,,,,,LOW,no value+label match
+4.1.3.1,Energieholz / Solar,73.3,0.0,,,,,,,LOW,no value+label match
+4.1.3.2,Energieholz / Solar,21.300000000000004,100.0,,,,,,,LOW,no value+label match
+4.1.3.3,Energieholz / Solar,5.4,0.0,,,,,,,LOW,no value+label match
+4.1.3.4,Energieholz / Solar,0.0,0.0,284,"- ZIEL-Ansatz: Energieholz für Gebäudewärme (Kamine, Öfen, Kessel) erscheinen fü",W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.05
+4.2,Stroh / Solar,6128961.64905,5631325.0,,,,,,,LOW,no value+label match
+4.2.1,Stroh / Solar,6076200.0,5631255.0,,,,,,,LOW,no value+label match
+4.2.1.1,Stroh / Solar,0.2,33.0,,,,,,,LOW,no value+label match
+4.2.1.1.1,Stroh / Solar,20.1,23.8339,,,,,,,LOW,no value+label match
+4.2.1.1.2,Stroh / Solar,244.26324000000002,44290.87361968499,,,,,,,LOW,no value+label match
+4.2.1.1.2.1,Stroh / Solar,0.0,0.0,328,- ZIEL-Ansatz: Auf die Verstromung von Stroh wird zugunsten der Prozesswärme ver,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+4.2.1.1.2.2,Stroh / Solar,0.0,100.0,,,,,,,LOW,no value+label match
+4.2.1.1.2.3,Stroh / Solar,100.0,0.0,,,,,,,LOW,no value+label match
+4.2.1.1.2.4,Stroh / Solar,0.0,0.0,328,- ZIEL-Ansatz: Auf die Verstromung von Stroh wird zugunsten der Prozesswärme ver,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+4.3,NAWARO gesamt / Solar,120681.32543047999,115592.362227685,,,,,,,LOW,no value+label match
+4.3.1,NAWARO gesamt / Solar,88453.6052475208,0.0,,,,,,,LOW,no value+label match
+4.3.2,NAWARO gesamt / Solar,25653.094246572244,115592.362227685,,,,,,,LOW,no value+label match
+4.3.3,NAWARO gesamt / Solar,6747.86459828592,0.0,,,,,,,LOW,no value+label match
+4.3.3.1,NAWARO gesamt / Solar,25.0,35.0,338,- STATUS-Ansatz: Annahme von 25% el. orientiert der jüngeren der beiden recherch,W,25.0,AG,35.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.3.3.2,NAWARO gesamt / Solar,1686.96614957148,0.0,,,,,,,LOW,no value+label match
+4.3.3.3,NAWARO gesamt / Solar,45.0,45.0,37,Energieverbraucher (nach Verursacher-Prinzip),AG,45.0,AG,45.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.3.3.4,NAWARO gesamt / Solar,3036.539069228664,0.0,,,,,,,LOW,no value+label match
+4.3.4,NAWARO gesamt / Solar,0.0,0.0,284,"- ZIEL-Ansatz: Energieholz für Gebäudewärme (Kamine, Öfen, Kessel) erscheinen fü",W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.3.4.1,NAWARO gesamt / Solar,75.0,75.0,126,- ZIEL-Ansatz: 199.398 ha solare Absorberfläche auf Dächern. Der Wert resultiert,AG,75.0,AG,75.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.3.4.2,NAWARO gesamt / Solar,0.0,0.0,284,"- ZIEL-Ansatz: Energieholz für Gebäudewärme (Kamine, Öfen, Kessel) erscheinen fü",W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.4,Biogener Anteil Abfälle / Solar,14438.0,14438.0,,,,,,,LOW,no value+label match
+4.4.1,Biogener Anteil Abfälle / Solar,4525.0,4525.0,357,- STATUS-Ansatz: 4.525 GWh  Nettostromerzeugung aus biogenem Anteil des Abfalls ,W,4525.0,W,4525.0,MED-VALUE-ONLY,both-match; label_overlap=0.05
+4.4.2,Biogener Anteil Abfälle / Solar,9913.0,9913.0,362,- ZIEL-Ansatz: Beibehaltung des Statuswertes aufgrund einer aus heutiger Sicht s,W,9913.0,W,9913.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+5, / Biogas,,,,,,,,,LOW,no value+label match
+5.1,Main / Biogas,1410000.0,1307000.0,,,,,,,LOW,no value+label match
+5.1.1,Main / Biogas,50.9,40.7528,,,,,,,LOW,no value+label match
+5.1.2,Main / Biogas,71769.0,53263.9096,,,,,,,LOW,no value+label match
+5.2,Main / Biogas,15998.0,44571.0,,,,,,,LOW,no value+label match
+5.3,Main / Biogas,4558.0,12762.0,395,"- ZIEL-Ansatz: 12.762 GWh resultieren aus der Annahme, dass diese Biogasmenge si",AG,4557.894736842105,W,12762.105263157895,MED-VALUE-ONLY,both-match; label_overlap=0.00
+5.4,Main / Biogas,92325.0,110596.9096,,,,,,,LOW,no value+label match
+5.4.1,Main / Biogas,0.0,15.510515772029533,,,,,,,LOW,no value+label match
+5.4.1.1,Main / Biogas,0.0,17154.151106885245,,,,,,,LOW,no value+label match
+5.4.2,Main / Biogas,96.1,0.0,403,- STATUS-Ansatz: Lediglich 25 % von 11.219 GWh zu Biomethan verarbeiteten Biogas,W,96.0951132355671,AN,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+5.4.2.1,Main / Biogas,37.5,45.0,,,,,,,LOW,no value+label match
+5.4.2.2,Main / Biogas,33271.621875,0.0,,,,,,,LOW,no value+label match
+5.4.2.3,Main / Biogas,21.9,25.0,,,,,,,LOW,no value+label match
+5.4.2.4,Main / Biogas,19430.627174999998,0.0,,,,,,,LOW,no value+label match
+5.4.3,Main / Biogas,1.2,84.5,,,,,,,LOW,no value+label match
+5.4.3.1,Main / Biogas,98.0,98.0,425,- STATUS-Ansatz: ein Wandlungsnutzungsgrad Biogas - Biomethan von 98% resultiert,W,98.0,W,98.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+5.4.3.2,Main / Biogas,1085.7420000000002,91585.30083975999,,,,,,,LOW,no value+label match
+5.4.4,Main / Biogas,2.7,0.0,,,,,,,LOW,no value+label match
+5.4.4.1,Main / Biogas,45.0,45.0,410,- ZIEL-Ansatz: Orientiert am oberen Ende der Bandbreite heutiger elektrischer Wi,W,45.0,W,45.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+5.4.4.2,Main / Biogas,1121.74875,0.0,,,,,,,LOW,no value+label match
+6,Main / Biogene Brennstoffe (flüssig),,,,,,,,,LOW,no value+label match
+6.1,Biodiesel / Biogene Brennstoffe (flüssig),738429.602,498520.30083976,,,,,,,LOW,no value+label match
+6.1.1,Biodiesel Anbau / Biogene Brennstoffe (flüssig),665000.0,303000.0,,,,,,,LOW,no value+label match
+6.1.1.1,Biodiesel Details / Biogene Brennstoffe (flüssig),17.8,14.2,,,,,,,LOW,no value+label match
+6.1.1.2,Biodiesel Details / Biogene Brennstoffe (flüssig),11837.0,4302.6,,,,,,,LOW,no value+label match
+6.1.2,Biodiesel Anbau / Biogene Brennstoffe (flüssig),13403.0,0.0,,,,,,,LOW,no value+label match
+6.1.3,Biodiesel Anbau / Biogene Brennstoffe (flüssig),25240.0,4302.6,,,,,,,LOW,no value+label match
+6.1.3.1,Biodiesel Details / Biogene Brennstoffe (flüssig),99.1,100.0,,,,,,,LOW,no value+label match
+6.1.3.1.1,Biodiesel Details / Biogene Brennstoffe (flüssig),25012.84,4302.6,,,,,,,LOW,no value+label match
+6.1.3.2,Biodiesel Details / Biogene Brennstoffe (flüssig),0.9,0.0,,,,,,,LOW,no value+label match
+6.1.3.2.1,Biodiesel Details / Biogene Brennstoffe (flüssig),39.0,39.0,463,233 GWh  Verbrauch an flüssigen Biobrennstoffen für Verstromung in Deutschland 2,AG,39.0,AG,39.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+6.1.3.2.2,Biodiesel Details / Biogene Brennstoffe (flüssig),88.5924,0.0,,,,,,,LOW,no value+label match
+6.1.3.2.3,Biodiesel Details / Biogene Brennstoffe (flüssig),50.0,50.0,488,- STATUS-Ansatz: Repräsentative Statistikdaten zum thermischen Jahresnutzungsgra,W,50.0,W,50.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+6.1.3.2.4,Biodiesel Details / Biogene Brennstoffe (flüssig),113.58000000000001,0.0,,,,,,,LOW,no value+label match
+6.2,Bioethanol / Biogene Brennstoffe (flüssig),0.0,0.0,596,- STATUS-Ansatz: Die elektrolytische Erzeugung von Wasserstoff aus Wind- und Sol,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.05
+6.2.1,Bioethanol Anbau / Biogene Brennstoffe (flüssig),216200.0,0.0,,,,,,,LOW,no value+label match
+6.2.1.1,Bioethanol Details / Biogene Brennstoffe (flüssig),17.1,13.7,,,,,,,LOW,no value+label match
+6.2.1.2,Bioethanol Details / Biogene Brennstoffe (flüssig),3697.0200000000004,0.0,,,,,,,LOW,no value+label match
+6.2.2,Bioethanol Anbau / Biogene Brennstoffe (flüssig),4991.0,0.0,,,,,,,LOW,no value+label match
+6.2.3,Bioethanol Anbau / Biogene Brennstoffe (flüssig),8688.02,0.0,,,,,,,LOW,no value+label match
+7.1,Wärmepumpe / Umgebungswärme,256726.09350785078,137950.4332889042,,,,,,,LOW,no value+label match
+7.1.1,Wärmepumpe / Umgebungswärme,71.2,92.23333,,,,,,,LOW,no value+label match
+7.1.2,Wärmepumpe / Umgebungswärme,182788.97857758976,127236.27837178485,,,,,,,LOW,no value+label match
+7.1.2.1,Wärmepumpe / Umgebungswärme,3.2,4.2,,,,,,,LOW,no value+label match
+7.1.2.2,Wärmepumpe / Umgebungswärme,584924.7314482873,534392.3691614964,,,,,,,LOW,no value+label match
+7.1.2.3,Wärmepumpe / Umgebungswärme,402135.7528706975,407156.09078971157,,,,,,,LOW,no value+label match
+7.1.3,Wärmepumpe / Umgebungswärme,28.8,7.8,,,,,,,LOW,no value+label match
+7.1.4.1,Wärmepumpe / Umgebungswärme,3.8,4.9,,,,,,,LOW,no value+label match
+7.1.4.2,Wärmepumpe / Umgebungswärme,280961.0367349919,52724.655603019186,,,,,,,LOW,no value+label match
+7.1.4.3,Wärmepumpe / Umgebungswärme,207023.92180473084,41964.521806484656,,,,,,,LOW,no value+label match
+7.1.4.3.1,Wärmepumpe / Umgebungswärme,1000.0,1000.0,547,"- STATUS-Ansatz: Für Erdreichgekoppelte Wärmepumpenanlagen wird in [9.163], S. 4",W,1000.0,W,1000.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+7.1.4.3.2,Wärmepumpe / Umgebungswärme,207023.92180473084,41964.521806484656,,,,,,,LOW,no value+label match
+7.1.4.3.3,Wärmepumpe / Umgebungswärme,3380079.0,3645799.0,,,,,,,LOW,no value+label match
+7.1.4.3.4,Wärmepumpe / Umgebungswärme,0.241,1.1,,,,,,,LOW,no value+label match
+7,Wärmepumpe / Umgebungswärme,,,,,,,,,LOW,no value+label match
+8,Geothermie / Tiefengeothermie,,,,,,,,,LOW,no value+label match
+8.1,Geothermie / Tiefengeothermie,57.0,0.0,,,,,,,LOW,no value+label match
+8.1.1,Geothermie / Tiefengeothermie,3421.0,3421.0,559,- STATUS-Ansatz: 3.421 h/a  resultieren aus einer Stromerzeugung von 195 GWh/a g,W,3421.0526315789475,W,3421.0526315789475,MED-VALUE-ONLY,both-match; label_overlap=0.00
+8.1.2,Geothermie / Tiefengeothermie,194.997,0.0,,,,,,,LOW,no value+label match
+8.2,Geothermie / Tiefengeothermie,1797.0,12000.0,,,,,,,LOW,no value+label match
+9,Stromspeicherung / Stromwandlung,,,,,,,,,LOW,no value+label match
+9.1,Stromwandlung / Stromwandlung,256726.09350785078,1941430.032365274,,,,,,,LOW,no value+label match
+9.1.1,Stromwandlung / Stromwandlung,135042.22824137931,706236.3411426758,,,,,,,LOW,no value+label match
+9.1.2,Stromwandlung / Stromwandlung,62424.168584,1211176.171964698,,,,,,,LOW,no value+label match
+9.1.3,Stromwandlung / Stromwandlung,19687.5162579,19492.5192579,,,,,,,LOW,no value+label match
+9.1.4,Stromwandlung / Stromwandlung,39572.18042457148,4525.0,,,,,,,LOW,no value+label match
+9.2,Stromwandlung / Stromwandlung,256726.09350785078,1941430.032365274,,,,,,,LOW,no value+label match
+9.2.1,Stromwandlung / Stromwandlung,0.0,418893.192987624,,,,,,,LOW,no value+label match
+9.2.1.1,Stromwandlung / Stromwandlung,0.0,0.0,284,"- ZIEL-Ansatz: Energieholz für Gebäudewärme (Kamine, Öfen, Kessel) erscheinen fü",W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+9.2.1.1.1,Stromwandlung / Stromwandlung,0.0,0.0,284,"- ZIEL-Ansatz: Energieholz für Gebäudewärme (Kamine, Öfen, Kessel) erscheinen fü",W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+9.2.1.1.1.1,Stromwandlung / Stromwandlung,80.0,80.0,614,- ZIEL-Ansatz: Aus einem breiten Spektrum von Einschätzungen wird hier ein optim,W,80.0,W,80.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+9.2.1.1.2,Stromwandlung / Stromwandlung,0.0,0.0,284,"- ZIEL-Ansatz: Energieholz für Gebäudewärme (Kamine, Öfen, Kessel) erscheinen fü",W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+9.2.1.2,Stromwandlung / Stromwandlung,0.0,21.912630481179804,,,,,,,LOW,no value+label match
+9.2.1.2.1,Stromwandlung / Stromwandlung,0.0,80.0,,,,,,,LOW,no value+label match
+9.2.1.2.2,Stromwandlung / Stromwandlung,0.0,0.0,284,"- ZIEL-Ansatz: Energieholz für Gebäudewärme (Kamine, Öfen, Kessel) erscheinen fü",W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+9.2.1.3,Stromwandlung / Stromwandlung,0.0,95329.79999999999,,,,,,,LOW,no value+label match
+9.2.1.3.1,Stromwandlung / Stromwandlung,0.0,63.0,,,,,,,LOW,no value+label match
+9.2.1.3.2,Stromwandlung / Stromwandlung,0.0,151317.14285714284,,,,,,,LOW,no value+label match
+9.2.1.4,Stromwandlung / Stromwandlung,0.0,76544.15,,,,,,,LOW,no value+label match
+9.2.1.4.1,Stromwandlung / Stromwandlung,0.0,80.0,,,,,,,LOW,no value+label match
+9.2.1.4.2,Stromwandlung / Stromwandlung,0.0,95680.18749999999,,,,,,,LOW,no value+label match
+9.2.1.5,Stromwandlung / Stromwandlung,0.0,246997.33035714284,,,,,,,LOW,no value+label match
+9.2.1.5.1,Stromwandlung / Stromwandlung,0.0,64.0,,,,,,,LOW,no value+label match
+9.2.1.5.2,Stromwandlung / Stromwandlung,0.0,385933.3286830357,,,,,,,LOW,no value+label match
+9.2.1.5.2.1,Stromwandlung / Stromwandlung,0.0,385933.3286830357,,,,,,,LOW,no value+label match
+9.2.1.5.2.2,Stromwandlung / Stromwandlung,0.0,0.0,284,"- ZIEL-Ansatz: Energieholz für Gebäudewärme (Kamine, Öfen, Kessel) erscheinen fü",W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+9.3,Stromspeicherung / Stromwandlung,0.0,844033.3254470965,,,,,,,LOW,no value+label match
+9.3.1,Stromwandlung / Stromwandlung,0.0,406403.3340795594,,,,,,,LOW,no value+label match
+9.3.1.1,Stromspeicherung / Stromwandlung,0.0,38.0,,,,,,,LOW,no value+label match
+9.3.1.2,Stromwandlung / Stromwandlung,0.0,154433.26695023256,,,,,,,LOW,no value+label match
+9.3.2,Stromwandlung / Stromwandlung,0.0,12.7,,,,,,,LOW,no value+label match
+9.3.2.1,Stromwandlung / Stromwandlung,0.0,51613.223428104044,,,,,,,LOW,no value+label match
+9.3.3,Stromspeicherung / Stromwandlung,0.0,241727.0,,,,,,,LOW,no value+label match
+9.3.4,Stromwandlung / Stromwandlung,0.0,195890.29136753705,,,,,,,LOW,no value+label match
+9.4,Stromwandlung / Stromwandlung,256726.09392385077,1107646.315348871,,,,,,,LOW,no value+label match
+9.4.1,Stromwandlung / Stromwandlung,256726.09392385077,1107646.315348871,,,,,,,LOW,no value+label match
+9.4.2,Stromwandlung / Stromwandlung,0.0,0.0,284,"- ZIEL-Ansatz: Energieholz für Gebäudewärme (Kamine, Öfen, Kessel) erscheinen fü",W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+9.4.3,Stromwandlung / Stromwandlung,256726.09392385077,1107646.315348871,,,,,,,LOW,no value+label match
+9.4.3.1,Stromwandlung / Stromwandlung,5.5,9.2,,,,,,,LOW,no value+label match
+9.4.3.2,Stromspeicherung / Stromwandlung,14119.935165811794,101903.46101209613,,,,,,,LOW,no value+label match
+9.4.3.3,Stromwandlung / Stromwandlung,242606.15875803898,1005742.8543367749,,,,,,,LOW,no value+label match
+10,Erneuerbare Quellen / Endenergie,,,,,,,,,LOW,no value+label match
+10.1,Erneuerbare Quellen / Endenergie,391499.46025213203,1863869.0257823425,,,,,,,LOW,no value+label match
+10.2,Erneuerbare Quellen / Endenergie,242606.15875803898,1005742.8543367749,,,,,,,LOW,no value+label match
+10.2.1,Erneuerbare Quellen / Endenergie,461869.2220968377,1005742.8543367754,,,,,,,LOW,no value+label match
+10.2.2,Erneuerbare Quellen / Endenergie,52.52702435044979,99.99999999999996,,,,,,,LOW,no value+label match
+10.3,Erneuerbare Quellen / Endenergie,172995.4884722678,312753.29999999993,,,,,,,LOW,no value+label match
+10.3.1,Erneuerbare Quellen / Endenergie,172995.4884722678,312753.29999999993,,,,,,,LOW,no value+label match
+10.4,Erneuerbare Quellen / Endenergie,105664.95064129012,672112.3905601414,,,,,,,LOW,no value+label match
+10.4.1,Erneuerbare Quellen / Endenergie,88453.6052475208,0.0,,,,,,,LOW,no value+label match
+10.4.1.1,Erneuerbare Quellen / Endenergie,0.0,0.0,662,- STATUS-Ansatz: Die Einfuhr von Strom aus erneuerbaren Quellen von außerhalb De,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+10.4.1.2,Erneuerbare Quellen / Endenergie,0.0,0.0,662,- STATUS-Ansatz: Die Einfuhr von Strom aus erneuerbaren Quellen von außerhalb De,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+10.4.1.3,Erneuerbare Quellen / Endenergie,88453.6052475208,0.0,,,,,,,LOW,no value+label match
+10.4.2,Erneuerbare Quellen / Endenergie,0.0,534161.9572712373,,,,,,,LOW,no value+label match
+10.4.3,Erneuerbare Quellen / Endenergie,17211.345393769323,137950.43328890414,,,,,,,LOW,no value+label match
+10.5,Erneuerbare Quellen / Endenergie,63273.416894164184,490263.8743195712,,,,,,,LOW,no value+label match
+10.5.1,Erneuerbare Quellen / Endenergie,25653.094246572244,132746.51333457025,,,,,,,LOW,no value+label match
+10.5.1.1,Erneuerbare Quellen / Endenergie,0.0,17154.151106885245,,,,,,,LOW,no value+label match
+10.5.1.2,Erneuerbare Quellen / Endenergie,0.0,0.0,662,- STATUS-Ansatz: Die Einfuhr von Strom aus erneuerbaren Quellen von außerhalb De,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+10.5.1.3,Erneuerbare Quellen / Endenergie,0.0,0.0,662,- STATUS-Ansatz: Die Einfuhr von Strom aus erneuerbaren Quellen von außerhalb De,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+10.5.1.4,Erneuerbare Quellen / Endenergie,25653.094246572244,115592.362227685,,,,,,,LOW,no value+label match
+10.5.2,Erneuerbare Quellen / Endenergie,0.0,0.0,662,- STATUS-Ansatz: Die Einfuhr von Strom aus erneuerbaren Quellen von außerhalb De,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+10.5.3,Erneuerbare Quellen / Endenergie,37620.32264759194,357517.36098500097,,,,,,,LOW,no value+label match
+10.6,Erneuerbare Quellen / Endenergie,49565.604244409915,388739.4609026299,,,,,,,LOW,no value+label match
+10.6.1,Erneuerbare Quellen / Endenergie,34786.602,191217.70083976,,,,,,,LOW,no value+label match
+10.6.1.1,Erneuerbare Quellen / Endenergie,0.0,0.0,662,- STATUS-Ansatz: Die Einfuhr von Strom aus erneuerbaren Quellen von außerhalb De,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+10.6.1.2,Erneuerbare Quellen / Endenergie,1085.7420000000002,91585.30083975999,,,,,,,LOW,no value+label match
+10.6.1.3,Erneuerbare Quellen / Endenergie,33700.86,99632.4,,,,,,,LOW,no value+label match
+10.6.2,Erneuerbare Quellen / Endenergie,14779.00224440992,197521.76006286987,,,,,,,LOW,no value+label match
+10.7,Erneuerbare Quellen / Endenergie,148893.30149409303,323964.21417433023,,,,,,,LOW,no value+label match
+10.7.1,Erneuerbare Quellen / Endenergie,0.0,0.0,662,- STATUS-Ansatz: Die Einfuhr von Strom aus erneuerbaren Quellen von außerhalb De,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+10.7.2,Erneuerbare Quellen / Endenergie,1085.7420000000002,108739.45194664523,,,,,,,LOW,no value+label match
+10.7.3,Erneuerbare Quellen / Endenergie,33700.86,99632.4,,,,,,,LOW,no value+label match
+10.7.4,Erneuerbare Quellen / Endenergie,114106.69949409305,115592.362227685,,,,,,,LOW,no value+label match
+10.8,Erneuerbare Quellen / Endenergie,0.0,76544.15,,,,,,,LOW,no value+label match
+10.9,Erneuerbare Quellen / Endenergie,,,,,,,,,LOW,no value+label match
+10.9.1,Erneuerbare Quellen / Endenergie,261372.34543048003,244929.87182768498,,,,,,,LOW,no value+label match
+10.9.1.1,Erneuerbare Quellen / Endenergie,92325.0,110596.9096,,,,,,,LOW,no value+label match
+10.9.1.2,Erneuerbare Quellen / Endenergie,33928.020000000004,4302.6,,,,,,,LOW,no value+label match
+10.9.1.3,Erneuerbare Quellen / Endenergie,135119.32543048,130030.362227685,,,,,,,LOW,no value+label match
+7.1.4, / EE,73937.11493026103,10760.133796534526,,,,,,,LOW,no value+label match
+11, / fossil,70.0,70.0,69,Siedlung (Gebäude- & Freifläche),U,70.0,U,70.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+11.1, / fossil,80.0,90.0,,,,,,,LOW,no value+label match
+11.2, / fossil,80.0,100.0,,,,,,,LOW,no value+label match
+11.3, / fossil,160.0,190.0,,,,,,,LOW,no value+label match
+11.4, / fossil,160.0,,,,,,,,LOW,no value+label match
+12, / Renewable,160.0,,,,,,,,LOW,no value+label match

@@ -1,0 +1,21 @@
+our_code,our_label,status_ours,ziel_ours,excel_row,excel_label,status_col,status_excel,ziel_col,ziel_excel,confidence,notes
+LU_0,Bodenfläche gesamt,35759529.0,35759529.0,54,"Bodenfläche Deutschland 31.12.2012 gemäß GENESIS [9.224], Tabelle 449-01-5:   35",W,35716856.0,W,35716856.0,MED-VALUE-ONLY,both-match; label_overlap=0.06
+LU_1,Siedlung (Gebäude- & Freifläche),3380079.0,3645799.0,,,,,,,LOW,no value+label match
+LU_1.1,Solare Dachflächen,34243.0,199396.038908,,,,,,,LOW,no value+label match
+LU_2,Landwirtschaftsfläche (LF),18020717.0,17754997.0,,,,,,,LOW,no value+label match
+LU_2.1,Solare Freiflächen,19628.0,684640.8016282017,,,,,,,LOW,no value+label match
+LU_2.2,Ackerland,11681400.0,10826000.0,,,,,,,LOW,no value+label match
+LU_2.2.1,Getreide-Anbaufl. (Stroh),6076200.0,5631255.0,,,,,,,LOW,no value+label match
+LU_2.2.2,Energiepfl. (Biogas),1410000.0,1307000.0,,,,,,,LOW,no value+label match
+LU_2.2.3,Energiepfl. (Pflanzenöl),665000.0,303000.0,,,,,,,LOW,no value+label match
+LU_2.2.4,Energiepfl. (Ethanol),216200.0,0.0,,,,,,,LOW,no value+label match
+LU_2.2.5,Energiepfl. (Kurzumtr.),11200.0,11200.0,267,"- STATUS-Ansatz:  Gemäß einer Studie des Von Thünen-Instituts [9.109], S. 17, wa",W,11200.0,W,11200.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+LU_2.2.6,(ohne energet. Relevanz),3302800.0,3573545.0,,,,,,,LOW,no value+label match
+LU_2.3,Dauergrünland,4704200.0,4371150.0,,,,,,,LOW,no value+label match
+LU_2.4,(sonstige Nutzung),1615489.0,1883157.0,,,,,,,LOW,no value+label match
+LU_3,Waldfläche,11538455.0,11538455.0,97,- STATUS-Ansatz: 11.538.455 ha Waldfläche 2022 in Deutschland gemäß Bundeswaldin,W,11538455.0,W,11538455.0,MED-VALUE-ONLY,both-match; label_overlap=0.03
+LU_3.1,Forstfl. (u.a.Energieholz),9866633.0,9373000.0,,,,,,,LOW,no value+label match
+LU_3.2,(ohne forstwirtsch.Nutzung),1671822.0,2165455.0,,,,,,,LOW,no value+label match
+LU_4,(sonstige Flächen),2820278.0,2820278.0,193,2.808.547 ha Erntefläche resultiert aus der bei 2 %  Windparkfläche gemäß Studie,W,2808546.8400557786,W,2808546.8400557786,MED-VALUE-ONLY,both-match; label_overlap=0.00
+LU_5,Windenergie Flächenpotenzial,2089000.0,1671200.0,,,,,,,LOW,no value+label match
+LU_6,Windparkfläche,172556.0,715288.6652322228,,,,,,,LOW,no value+label match

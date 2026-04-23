@@ -1,0 +1,152 @@
+our_code,our_label,status_ours,ziel_ours,excel_row,excel_label,status_col,status_excel,ziel_col,ziel_excel,confidence,notes
+1,"Kraft, Licht, Information, Kommunikation, Kälte (KLIK)",329214.0,312753.30000000005,,,,,,,LOW,no value+label match
+1.0,"Bedarfsniveau (statisch), 100% Strom",329214.0,329214.0,,,,,,,LOW,no value+label match
+1.1,davon Haushalte,18.64,18.6,703,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für das (fiktive) künftige Bedarfs,W,18.60082304526749,W,18.60082304526749,MED-VALUE-ONLY,both-match; label_overlap=0.05
+1.1.1,Endenergie Haushalte,61365.4896,61233.804000000004,574,#REF!,AN,61111.1111111111,AN,61111.1111111111,MED-VALUE-ONLY,both-match; label_overlap=0.00
+1.1.2,Zieleinfluss Endanwendungs-Effizienz,100.0,95.0,,,,,,,LOW,no value+label match
+1.1.3,Endenergie nach Effizienz,61365.4896,58172.11380000001,,,,,,,LOW,no value+label match
+1.2,davon Handel/Dienstleistungen,34.7,34.7,713,- STATUS-Ansatz: Endenergieverbrauch der elektrischen Geräte im Sektor Handel/Di,W,34.65768799102133,W,34.65768799102133,MED-VALUE-ONLY,both-match; label_overlap=0.10
+1.2.1,Endenergie Handel/Dienstl.,114237.258,114237.258,206,- STATUS-Ansatz: Die durchschnittliche Vollbetriebsstundenzahl der deutschen Ons,AG,114364.0,AG,114364.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+1.2.2,Zieleinfluss Handels-/Dienstl.-Vol./Pers.,100.0,100.0,720,"- ZIEL-Ansatz: Es wird angenommen, dass die wirtschaftliche Entwicklung im Hande",W,100.0,W,100.0,MED-VALUE-ONLY,both-match; label_overlap=0.05
+1.2.3,Nach Vol./Pers. Anpassung,114237.258,114237.258,206,- STATUS-Ansatz: Die durchschnittliche Vollbetriebsstundenzahl der deutschen Ons,AG,114364.0,AG,114364.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+1.2.4,Zieleinfluss Prozess-Effizienz,100.0,95.0,,,,,,,LOW,no value+label match
+1.2.5,Endenergie nach Prozess-Effizienz,114237.258,108525.3951,,,,,,,LOW,no value+label match
+1.3,davon Industrie + Gewerbeanteil GHD,46.7,46.7,729,- STATUS-Ansatz: Endenergieverbrauch der elektrischen Geräte im Sektor Industrie,W,46.741488963711184,W,46.741488963711184,MED-VALUE-ONLY,both-match; label_overlap=0.10
+1.3.1,Endenergie Industrie,153742.938,153742.938,,,,,,,LOW,no value+label match
+1.3.2,Zieleinfluss Materialdurchsatz/Pers.,100.0,100.0,56,- ZIEL-Ansatz: 84.669.326 Energieverbraucher sollen von der Fläche Niedersachsen,AN,100.0,AN,100.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+1.3.3,Nach Materialdurchsatz Anpassung,153742.938,153742.938,,,,,,,LOW,no value+label match
+1.3.4,Zieleinfluss Prozess-Effizienz,100.0,95.0,,,,,,,LOW,no value+label match
+1.3.5,Endenergie nach Prozess-Effizienz,153742.938,146055.7911,,,,,,,LOW,no value+label match
+1.4,Endverbrauch Strom für KLIK gesamt,329345.68559999997,312753.30000000005,,,,,,,LOW,no value+label match
+2.0,Bedarfsniveau (statisch),798867.0,798867.0,,,,,,,LOW,no value+label match
+2.1,davon Haushalte,71.64,71.64,749,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für das (fiktive) künftige Bedarfs,W,71.64093767867352,W,71.64093767867352,MED-VALUE-ONLY,both-match; label_overlap=0.05
+2.1.0,=,572308.3188,572308.3188,,,,,,,LOW,no value+label match
+2.1.1,Wohnfläche pro Person,44.7,44.7,754,- ZIEL-Ansatz: Abweichend vom Ansatz der BMU-Leitstudie als ein Beispiel für die,W,44.67669791064594,W,44.67669791064594,MED-VALUE-ONLY,both-match; label_overlap=0.11
+2.1.2,Zieleinfluss Wohnflächen-Entwicklung,100.0,100.0,971,- ZIEL-Ansatz: Die weitere Entwicklung des Luftverkehrs (größtenteils Personenve,W,100.0,W,100.0,MED-VALUE-ONLY,both-match; label_overlap=0.05
+2.1.9,=,572308.3188,572308.3188,,,,,,,LOW,no value+label match
+2.2,dav.Gewerbe/Handel/Dienstl. + Industr.,28.4,28.4,757,- STATUS-Ansatz: Gemäß Arbeitsgemeinschaft Energiebilanzen [9.14] für das Jahr 2,W,28.35906232132647,W,28.35906232132647,MED-VALUE-ONLY,both-match; label_overlap=0.00
+2.2.0,=,226878.22799999997,226878.22799999997,,,,,,,LOW,no value+label match
+2.2.1,Zieleinfluss Erwerbstätigkeit,100.0,100.0,762,- STATUS-Ansatz: Repräsentiert den Status des spezifischen Bedarfs an Gebäudewär,W,100.0,W,100.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+2.2.9,=,226878.22799999997,226878.22799999997,,,,,,,LOW,no value+label match
+2.3,Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.),799186.5468,799186.5468,,,,,,,LOW,no value+label match
+2.4,davon Raumwärme,85.9,85.9,817,- STATUS-Ansatz: 86 % Schätzwert resultierend aus einem Endenergieverbrauch von ,W,86.0,W,86.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+2.4.0,=,686501.2437012,686501.2437012,,,,,,,LOW,no value+label match
+2.4.1,Spez.Raumwärmebed.Status/Saniert,136.0,80.0,,,,,,,LOW,no value+label match
+2.4.2,= Veränderung zum Status,100.0,-41.17647058823529,,,,,,,LOW,no value+label match
+2.4.3,Gebäude - Sanierungs-/Ersatzrate,1.5,1.5,130,- STATUS-Ansatz: Solare Freiflächenanlagen dienen nahezu vollständig der Stromge,AN,1.5,AN,1.5,MED-VALUE-ONLY,both-match; label_overlap=0.00
+2.4.4,Sanierungszeitraum: 22 Jahre,2023.0,2045.0,,,,,,,LOW,no value+label match
+2.4.5,= Gebäudeanteil mit Ziel-Wärmeschutz,0.0,33.0,,,,,,,LOW,no value+label match
+2.4.6,= Result.spez.Raumwärmebed. ges.,136.0,117.51999999999998,,,,,,,LOW,no value+label match
+2.4.7,= Raumwärmebedarf Veränderung,0.0,-13.588235294117647,,,,,,,LOW,no value+label match
+2.4.9,= Bedarfsniveau (Sanierung/Ersatz),686501.2437012,593217.8394100369,,,,,,,LOW,no value+label match
+2.5,davon Warmwasser,14.1,14.1,790,- STATUS-Ansatz: Gemäß Arbeitsgemeinschaft Energiebilanzen [9.14] für das Jahr 2,W,14.070887605208974,W,14.070887605208974,MED-VALUE-ONLY,both-match; label_overlap=0.00
+2.5.0,=,112685.3030988,112685.3030988,,,,,,,LOW,no value+label match
+2.5.1,Zieleinfluss Anwendungs-/Prozess-Effizienz,100.0,70.0,,,,,,,LOW,no value+label match
+2.5.2,=,112685.3030988,78879.71216915999,,,,,,,LOW,no value+label match
+2.5.3,= Res. Anteil Warmwasser an Gebäudew.,14.099999999999998,11.736348686856534,,,,,,,LOW,no value+label match
+2.6,Bedarfsniveau (Sanierung/ Anwendungseff.),799186.5468,672097.5515791969,,,,,,,LOW,no value+label match
+2.7,davon Brennstoffe,79.2,0.0,,,,,,,LOW,no value+label match
+2.7.0,= Endenergieverbrauch,632955.7450656,0.0,,,,,,,LOW,no value+label match
+2.7.1,> Nutzungsgrad Endanwendung,86.0,88.0,85,Getreide-Anbaufl. (Stroh),U,86.0,W,88.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+2.7.2,> Wandlungsverluste Endanwendung,11.088000000000001,0.0,,,,,,,LOW,no value+label match
+2.7.3,= Einsparung gegenüber Status (relativ),0.0,11.088000000000001,,,,,,,LOW,no value+label match
+2.7.4,= Einsparung gegenüber Status (absolut),0.0,0.0,606,"- STATUS-Ansatz: Nicht relevant, siehe [601].",W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.17
+2.8,davon Wärme (30-100°C/verlustarm nutzbar),16.7,79.47464129801271,,,,,,,LOW,no value+label match
+2.8.0,= Endenergieverbrauch,133464.15331559998,534147.1182902928,,,,,,,LOW,no value+label match
+2.9,davon Strom (verlustarm nutzb.),4.099999999999994,20.525358701987287,,,,,,,LOW,no value+label match
+2.9.0,= Endenergieverbrauch,32766.648418799956,137950.4332889042,,,,,,,LOW,no value+label match
+2.9.1,davon für Wärmepumpen,30.8484403739032,100.0,,,,,,,LOW,no value+label match
+2.9.2,=,10108.0,137950.4332889042,,,,,,,LOW,no value+label match
+2.10,Endenergieverbrauch GW gesamt,799186.5467999999,672097.5515791969,,,,,,,LOW,no value+label match
+3.0,Bedarfsniveau (statisch),555395.0,555395.0,,,,,,,LOW,no value+label match
+3.1,davon Haushalte,8.7164,8.7164,826,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für das (fiktive) künftige Bedarfs,W,8.716463774967497,W,8.716463774967497,MED-VALUE-ONLY,both-match; label_overlap=0.05
+3.1.0,=,48410.44978,48410.44978,,,,,,,LOW,no value+label match
+3.1.1,Zieleinfluss Endanwendungs-Effizienz,100.0,95.0,,,,,,,LOW,no value+label match
+3.1.2,=,48410.44978,45989.927291,,,,,,,LOW,no value+label match
+3.2,dav.Industrie + Gewerbeant.GHD,91.2835,91.2835,834,"- STATUS-Ansatz: 91,3 % Industrie plus 0,0 % Handel-/Dienstleistungs-Gewerbe vom",W,91.2835362250325,W,91.2835362250325,MED-VALUE-ONLY,both-match; label_overlap=0.04
+3.2.0,=,506983.994825,506983.994825,,,,,,,LOW,no value+label match
+3.2.1,Zieleinfluss Materialdurchsatz/Pers.,100.0,100.0,56,- ZIEL-Ansatz: 84.669.326 Energieverbraucher sollen von der Fläche Niedersachsen,AN,100.0,AN,100.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+3.2.2,Zieleinfluss Prozess-Effizienz,100.0,89.00004,,,,,,,LOW,no value+label match
+3.2.3,=,506983.994825,451215.958187848,,,,,,,LOW,no value+label match
+3.3,"Bedarfsniveau (Prod.-Vol., Proz.-Effiz.)",555394.444605,497205.885478848,,,,,,,LOW,no value+label match
+3.4,davon Brennstoffe,60.3,26.69623513695287,,,,,,,LOW,no value+label match
+3.4.0,= Endenergieverbrauch,334902.850096815,132735.25230220184,,,,,,,LOW,no value+label match
+3.4.1,> Nutzungsgrad Endanwendung,86.0,88.0,85,Getreide-Anbaufl. (Stroh),U,86.0,W,88.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+3.4.2,> Wandlungsverluste Endanwendung,8.442,3.203548216434344,,,,,,,LOW,no value+label match
+3.4.3,= Einsparung gegenüber Status (relativ),0.0,5.238451783565656,,,,,,,LOW,no value+label match
+3.4.4,= Einsparung gegenüber Status (absolut),0.0,6953.272191645067,,,,,,,LOW,no value+label match
+3.5,"davon Wärme (>100°C,verlustarm nutzbar)",25.9,0.0,,,,,,,LOW,no value+label match
+3.5.0,= Endenergieverbrauch,143847.161152695,0.0,,,,,,,LOW,no value+label match
+3.6,davon Strom (verlustarm nutzbar),12.895500000000004,71.90529545737054,,,,,,,LOW,no value+label match
+3.6.0,= Endenergieverbrauch,71620.89060403779,357517.3609850011,,,,,,,LOW,no value+label match
+3.7,Endenergieverbrauch PW gesamt,550370.9018535478,490252.6132872029,,,,,,,LOW,no value+label match
+3.2.1.5,=,506983.994825,506983.994825,,,,,,,LOW,no value+label match
+4.0,Mobile Anwendungen (MA),,,,,,,,,LOW,no value+label match
+4.1,"MA am Boden (Straße, Schiene, Schifffahrt, Maschinen)",100.0,100.0,56,- ZIEL-Ansatz: 84.669.326 Energieverbraucher sollen von der Fläche Niedersachsen,AN,100.0,AN,100.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.1.0,Bedarfsniveau (statisch),639193.0,639193.0,,,,,,,LOW,no value+label match
+4.1.1,davon Personenverkehr (PVk),67.4,67.4,877,- STATUS-Ansatz: Eigene Berechnungen nach Statistik des Verkehrsministeriums [87,W,67.41832181954476,W,67.41832181954476,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.1.1.1,Zieleinfluss Pers.-Verkehrsleist./Pers.,100.0,100.0,56,- ZIEL-Ansatz: 84.669.326 Energieverbraucher sollen von der Fläche Niedersachsen,AN,100.0,AN,100.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.1.1.2,Bedarfsniveau PVk (nach Entwicklung),430816.08200000005,430816.08200000005,,,,,,,LOW,no value+label match
+4.1.1.3,Nutzungsgrad Traktionsmix,27.075,62.6736,,,,,,,LOW,no value+label match
+4.1.1.5,Anteil Elektrotraktion an PvK-Leistung,8.6,86.0,,,,,,,LOW,no value+label match
+4.1.1.6,Anteil Elektrotraktion an Endverbr. PVk,3.0,69.1,,,,,,,LOW,no value+label match
+4.1.1.7,Nutzungsgrad Elektrotraktion (NG e),78.0,78.0,75,Landwirtschaftsfläche (LF),W,78.0,W,78.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.1.1.8,Anteil NE Elektrotrakt.an Endverbr. PVk,2.34,53.897999999999996,,,,,,,LOW,no value+label match
+4.1.1.9,Anteil NE Elektrotrakt.an NE ges.PVk,8.642659279778393,85.99793214367772,,,,,,,LOW,no value+label match
+4.1.1.10,Stromverbrauch PVk,12924.48246,128603.79306954842,,,,,,,LOW,no value+label match
+4.1.1.11,Anteil Verbrenn.Trakt.an Endverbr.PVk,97.0,30.900000000000006,,,,,,,LOW,no value+label match
+4.1.1.12,Nutzungsgrad Verbrenn.Traktion (NG k),25.5,28.4,,,,,,,LOW,no value+label match
+4.1.1.13,Anteil NE Verbrenn.Trakt.an Endverbr.PVk,24.735,8.775600000000003,,,,,,,LOW,no value+label match
+4.1.1.14,Anteil NE Verbrenn.Trakt.an NE ges.PVk,91.3573407202216,14.002067856322284,,,,,,,LOW,no value+label match
+4.1.1.15,Kohlenwasserstoff-Verbr.(gasf.) PVk,417891.59954,57508.78734947971,,,,,,,LOW,no value+label match
+4.1.1.16,Anteil FC-Trakt.an Endverbr.PVk,0.0,0.0,664,- ZIEL-Ansatz: Die Einfuhr von Strom aus erneuerbaren Quellen von außerhalb Deut,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+4.1.1.17,Nutzungsgrad FC-Traktion (NG FC),35.0,35.0,342,- ZIEL-Ansatz: 35 % el. gemäß des maximal für heutige Neuanlagen angegebenen Wir,W,35.0,W,35.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+4.1.1.18,Anteil NE FC-Trakt.an Endverbr.PVk,0.0,0.0,664,- ZIEL-Ansatz: Die Einfuhr von Strom aus erneuerbaren Quellen von außerhalb Deut,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+4.1.1.19,Anteil NE FC-Trakt.an NE ges.PVk,0.0,0.0,664,- ZIEL-Ansatz: Die Einfuhr von Strom aus erneuerbaren Quellen von außerhalb Deut,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+4.1.1.20,Wasserstoffverbrauch PVk,0.0,0.0,284,"- ZIEL-Ansatz: Energieholz für Gebäudewärme (Kamine, Öfen, Kessel) erscheinen fü",W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.1.2,davon Güterverkehr u. a. (GVk),32.599999999999994,32.599999999999994,,,,,,,LOW,no value+label match
+4.1.2.1,Zieleinfluss Güterverk.-Leistung/Pers.,100.0,100.0,56,- ZIEL-Ansatz: 84.669.326 Energieverbraucher sollen von der Fläche Niedersachsen,AN,100.0,AN,100.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.1.2.2,Bedarfsniveau GVk (nach Entwicklung),208376.91799999998,208376.91799999998,,,,,,,LOW,no value+label match
+4.1.2.3,Nutzungsgrad Traktionsmix,30.723,62.145100000000006,,,,,,,LOW,no value+label match
+4.1.2.5,Anteil Elektrotraktion an GVk-Leistung,18.6,84.0,,,,,,,LOW,no value+label match
+4.1.2.6,Anteil Elektrotraktion an Endverbr. GVk,7.3,66.9,,,,,,,LOW,no value+label match
+4.1.2.7,Nutzungsgrad Elektrotraktion (NG e),78.0,78.0,75,Landwirtschaftsfläche (LF),W,78.0,W,78.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.1.2.8,Anteil NE Elektrotrakt.an Endverbr. GVk,5.694,52.18200000000001,,,,,,,LOW,no value+label match
+4.1.2.9,Anteil NE Elektrotrakt.an NE ges.GVk,18.533346352895226,83.96800391342198,,,,,,,LOW,no value+label match
+4.1.2.10,Stromverbrauch GVk,15211.515014,68917.96699332153,,,,,,,LOW,no value+label match
+4.1.2.11,Anteil Verbrenn.-Trakt.an Endverbr.GVk,92.7,33.099999999999994,,,,,,,LOW,no value+label match
+4.1.2.12,Nutzungsgrad Verbrenn.-Traktion (NG k),27.0,30.1,,,,,,,LOW,no value+label match
+4.1.2.13,Anteil NE Verbrenn-Trakt.an Endverbr.GVk,25.029,9.963099999999999,,,,,,,LOW,no value+label match
+4.1.2.14,Anteil NE Verbrenn.Trakt.an NE ges.GVk,81.46665364710478,16.03199608657802,,,,,,,LOW,no value+label match
+4.1.2.15,Kohlenwasserstoff-Verbr.(gasf.) GVk,193165.40298599997,34098.42612076146,,,,,,,LOW,no value+label match
+4.1.2.16,Anteil FC-Trakt.an Endverbr.GVk,0.0,0.0,664,- ZIEL-Ansatz: Die Einfuhr von Strom aus erneuerbaren Quellen von außerhalb Deut,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+4.1.2.17,Nutzungsgrad FC-Traktion (NG FC),35.0,35.0,342,- ZIEL-Ansatz: 35 % el. gemäß des maximal für heutige Neuanlagen angegebenen Wir,W,35.0,W,35.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+4.1.2.18,Anteil NE FC-Trakt.an Endverbr.GVk,0.0,0.0,664,- ZIEL-Ansatz: Die Einfuhr von Strom aus erneuerbaren Quellen von außerhalb Deut,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+4.1.2.19,Anteil NE FC-Trakt.an NE ges.GVk,0.0,0.0,664,- ZIEL-Ansatz: Die Einfuhr von Strom aus erneuerbaren Quellen von außerhalb Deut,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.04
+4.1.2.20,Wasserstoffverbrauch GVk,0.0,0.0,284,"- ZIEL-Ansatz: Energieholz für Gebäudewärme (Kamine, Öfen, Kessel) erscheinen fü",W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+4.1.1.4.0,Nutzenergie (NE) gesamt PVk,116643.4542015,0.0,,,,,,,LOW,no value+label match
+4.1.1.4.1,Nutzenergie (NE) gesamt PVk,0.0,116643.4542015,,,,,,,LOW,no value+label match
+4.1.2.4.0,Nutzenergie (NE) gesamt GVk,64019.64051714,0.0,,,,,,,LOW,no value+label match
+4.1.2.4.1,Nutzenergie (NE) gesamt GVk,0.0,64019.64051714,,,,,,,LOW,no value+label match
+4.1.1.15.1,Alternativ zur Verbrennungsmotoren: Brennstoffzellen (FC) -Traktion: (Passiv),,,,,,,,,LOW,no value+label match
+4.1.2.15.1,Alternativ zur Kraftstofftraktion: Brennstoffzellen (FC) -Traktion: (Passiv),,,,,,,,,LOW,no value+label match
+5.0,Bedarfsniveau (statisch),114520.0,114520.0,206,- STATUS-Ansatz: Die durchschnittliche Vollbetriebsstundenzahl der deutschen Ons,AG,114364.0,AG,114364.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+5.1,Zieleinfluss Luftverk.-Leistung/Person,100.0,100.0,839,- STATUS-Ansatz: Repräsentiert den Status des spezifischen Prozesswärmeverbrauch,W,100.0,W,100.0,MED-VALUE-ONLY,both-match; label_overlap=0.05
+5.2,Bedarfsniv. Luftverk. (nach Entwicklung),114520.0,114520.0,206,- STATUS-Ansatz: Die durchschnittliche Vollbetriebsstundenzahl der deutschen Ons,AG,114364.0,AG,114364.0,MED-VALUE-ONLY,both-match; label_overlap=0.00
+5.2.1,Zieleinfluss Luftverkehrs-Effizienz,100.0,87.0,,,,,,,LOW,no value+label match
+5.2.2,Kraftstoffverbrauch (flüssig) Luftverkehr,114520.0,99632.4,,,,,,,LOW,no value+label match
+6.0,Endenergieverbrauch MA gesamt,753713.0,388761.3735331111,,,,,,,LOW,no value+label match
+6.1,davon Kraftstoffe,725577.002526,191239.61347024117,,,,,,,LOW,no value+label match
+6.1.1,davon Wasserstoff (FC-Traktion),0.0,0.0,596,- STATUS-Ansatz: Die elektrolytische Erzeugung von Wasserstoff aus Wind- und Sol,W,0.0,W,0.0,MED-VALUE-ONLY,both-match; label_overlap=0.05
+6.1.2,davon Kohlenwassserst.(gasförmig),611057.002526,91607.21347024117,,,,,,,LOW,no value+label match
+6.1.3,"dav.Kohlenwasserst. (flüssig, für Luftverk.)",114520.0,99632.4,,,,,,,LOW,no value+label match
+6.2,davon Strom,28135.997474,197521.76006286996,,,,,,,LOW,no value+label match
+7,Strom-Endverbrauch insgesamt,461869.2220968377,1005742.8543367754,,,,,,,LOW,no value+label match
+8,Endenergieverbrauch insgesamt,2432616.134253548,1863864.838399511,,,,,,,LOW,no value+label match
+9,Grundstoff-Synthetisierung,,,,,,,,,LOW,no value+label match
+9.1,Bedarfsniveau Grundstoffe (statisch),2337.0,2337.0,585,- STATUS-Ansatz: Der Bedarf an Kohlenwasserstoffen als Grundstoff für die Chemie,W,2336.626000262364,W,2336.626000262364,MED-VALUE-ONLY,both-match; label_overlap=0.00
+9.1.1,* Zieleinfluss Kunststofferzeugung/Pers.,100.0,53.0,,,,,,,LOW,no value+label match
+9.1.2,= Bedarf an Grundstoffen,197841.0,104855.0,,,,,,,LOW,no value+label match
+9.1.3,* Anteil aus H2 synthetisierter Grundstoffe,0.0,73.0,,,,,,,LOW,no value+label match
+9.1.4,= Bedarf an synthetischen Grundstoffen,0.0,76544.15,,,,,,,LOW,no value+label match
+10,fossil,50.0,60.0,,,,,,,LOW,no value+label match

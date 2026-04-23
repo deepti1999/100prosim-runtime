@@ -1,0 +1,21 @@
+our_code,our_label,status_ours,ziel_ours,status_excel_row,status_col,status_scale,status_excel_label,ziel_excel_row,ziel_col,ziel_scale,ziel_excel_label,confidence
+LU_0,Bodenfläche gesamt,35759529.0,35759529.0,54,W,1,Bodenfläche Deutschland 31.12.2012 gemäß GENESIS [,54,W,1,Bodenfläche Deutschland 31.12.2012 gemäß GENESIS [,HIGH
+LU_1,Siedlung (Gebäude- & Freifläche),3380079.0,3645799.0,,,,,,,,,LOW
+LU_1.1,Solare Dachflächen,34243.0,199396.038908,121,W,1,- STATUS-Ansatz: Die solare Absorberfläche auf Däc,127,W,1,Im Datenteil der Agora-Studie [9.19] sind 36 Milli,HIGH
+LU_2,Landwirtschaftsfläche (LF),18020717.0,17754997.0,78,W,1,- ZIEL-Ansatz: Der Flächenverbrauch für Siedlungsz,78,W,1,- ZIEL-Ansatz: Der Flächenverbrauch für Siedlungsz,HIGH
+LU_2.1,Solare Freiflächen,19628.0,684640.8016282017,130,W,1,- STATUS-Ansatz: Solare Freiflächenanlagen dienen ,,,,,MED
+LU_2.2,Ackerland,11681400.0,10826000.0,81,W,1,"- STATUS-Ansatz: Ackerland gemäß DESTATIS [9.227],",,,,,MED
+LU_2.2.1,Getreide-Anbaufl. (Stroh),6076200.0,5631255.0,,,,,,,,,LOW
+LU_2.2.2,Energiepfl. (Biogas),1410000.0,1307000.0,378,W,1,"Gemäß FNR [9.109], S. 17,46, lag die Anbaufläche n",,,,,MED
+LU_2.2.3,Energiepfl. (Pflanzenöl),665000.0,303000.0,,,,,462,AG,0.0001,24.973 GWh  Verbrauch an Biodiesel (24.942 GWh ) i,MED
+LU_2.2.4,Energiepfl. (Ethanol),216200.0,0.0,,,,,,,,,LOW
+LU_2.2.5,Energiepfl. (Kurzumtr.),11200.0,11200.0,,,,,,,,,LOW
+LU_2.2.6,(ohne energet. Relevanz),3302800.0,3573545.0,,,,,,,,,LOW
+LU_2.3,Dauergrünland,4704200.0,4371150.0,,,,,,,,,LOW
+LU_2.4,(sonstige Nutzung),1615489.0,1883157.0,,,,,,,,,LOW
+LU_3,Waldfläche,11538455.0,11538455.0,97,W,1,- STATUS-Ansatz: 11.538.455 ha Waldfläche 2022 in ,97,W,1,- STATUS-Ansatz: 11.538.455 ha Waldfläche 2022 in ,HIGH
+LU_3.1,Forstfl. (u.a.Energieholz),9866633.0,9373000.0,,,,,162,W,0.0001,- STATUS-Ansatz: Aus dem auf PV-Module bezogenen E,MED
+LU_3.2,(ohne forstwirtsch.Nutzung),1671822.0,2165455.0,179,W,1,- ZIEL-Ansatz: Die Potenzialermittlung für die zur,212,W,0.001,2.078 Vollbetriebsstunden können in Deutschland im,HIGH
+LU_4,(sonstige Flächen),2820278.0,2820278.0,,,,,,,,,LOW
+LU_5,Windenergie Flächenpotenzial,2089000.0,1671200.0,197,W,0.0001,Spezifischer Flächenbedarf Onshore-Windenergie,173,U,0.0001,Windenergie Flächenpotenzial,HIGH
+LU_6,Windparkfläche,172556.0,715288.6652322228,189,W,1,- STATUS-Ansatz: 172.556 ha Windparkfläche wurden ,192,W,1,- ZIEL-Ansatz: 715.191 ha Windparkfläche resultier,HIGH

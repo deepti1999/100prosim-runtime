@@ -1,0 +1,27 @@
+our_code,our_label,status_ours,ziel_ours,status_excel_row,status_col,status_scale,status_excel_label,ziel_excel_row,ziel_col,ziel_scale,ziel_excel_label,confidence
+2.0,Bedarfsniveau (statisch),798.867,798.867,,,,,,,,,LOW
+2.1,davon Haushalte,71.6,71.6,749,W,1,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für ,749,W,1,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für ,HIGH
+2.1.1,Wohnfläche pro Person,44.7,44.7,754,W,1,- ZIEL-Ansatz: Abweichend vom Ansatz der BMU-Leits,754,W,1,- ZIEL-Ansatz: Abweichend vom Ansatz der BMU-Leits,HIGH
+2.1.2,Zieleinfluss Wohnflächen-Entwicklung,100.0,100.0,971,W,1,- ZIEL-Ansatz: Die weitere Entwicklung des Luftver,971,W,1,- ZIEL-Ansatz: Die weitere Entwicklung des Luftver,HIGH
+2.2,"davon Gewerbe, Handel, Dienstl. + Industr.",28.4,28.4,,,,,,,,,LOW
+2.2.1,Zieleinfluss Erwerbstätigkeit,100.0,100.0,762,W,1,- STATUS-Ansatz: Repräsentiert den Status des spez,762,W,1,- STATUS-Ansatz: Repräsentiert den Status des spez,HIGH
+2.3,Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.),798.867,798.867,,,,,,,,,LOW
+2.4,davon Raumwärme,85.9,85.9,817,W,1,- STATUS-Ansatz: 86 % Schätzwert resultierend aus ,817,W,1,- STATUS-Ansatz: 86 % Schätzwert resultierend aus ,HIGH
+2.4.1,Spez. Raumwärmebed. Status/Saniert,136.0,75.0,773,W,1,- STATUS-Ansatz: Gemäß DESTATIS [9.230] wird für D,351,W,1,- STATUS-Ansatz: Da keine geeigneten Belege verfüg,HIGH
+2.4.2,Veränderung zum Status,100.0,-44.9,969,W,1,- STATUS-Ansatz: Repräsentiert den Status der Luft,,,,,MED
+2.4.3,Gebäude - Sanierungs-/Ersatzrate,1.5,,,,,,,,,,LOW
+2.4.4,Sanierungszeitraum,2023.0,2045.0,,,,,,,,,LOW
+2.4.5,Gebäudeanteil mit Ziel-Wärmeschutz,0.0,33.0,,,,,306,W,1,- ZIEL-Ansatz: Mit 33 % wird dem Vorschlag des IFE,MED
+2.4.6,Result. spez. Raumwärmebed. ges.,136.0,115.9,,,,,,,,,LOW
+2.5,davon Warmwasser,14.1,14.1,,,,,,,,,LOW
+2.5.1,Zieleinfluss Anwendungs-/Prozess-Effizienz,100.0,70.0,,,,,749,W,1,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für ,MED
+2.5.2,Res. Anteil Warmwasser an Gebäudew.,14.1,11.9,,,,,524,W,10000,- ZIEL-Ansatz: Gewählt entsprechend dem Bedarf an ,MED
+2.6,"Bedarfsniveau (Sanierung, Anwendungseff.)",798.867,663.539,,,,,,,,,LOW
+2.7,davon Brennstoffe,79.2,0.0,,,,,,,,,LOW
+2.7.1,Nutzungsgrad Endanwendung,86.0,88.0,858,W,1,- STATUS-Ansatz: 86 % durchschnittlicher Nutzungsg,858,W,1,- STATUS-Ansatz: 86 % durchschnittlicher Nutzungsg,HIGH
+2.7.2,Wandlungsverluste Endanwendung,11.1,0.0,,,,,,,,,LOW
+2.7.3,Einsparung gegenüber Status (relativ),0.0,11.1,,,,,270,W,1000,"- ZIEL-Ansatz: Kein weiterer Ausbau, Beibehaltung ",MED
+2.8,"davon Wärme (30–100°C, verlustarm nutzbar)",16.7,79.5,,,,,642,W,1,Wasserstoff-Rückverstromungs-Wirkungsgrade gemäß L,MED
+2.9,davon Strom (verlustarm nutzbar),4.1,20.5,,,,,,,,,LOW
+2.9.1,davon für Wärmepumpen,30.7,100.0,273,W,1,"- STATUS-Ansatz: 29,9 MWh/ha/a [274], wobei dieser",764,W,1,- ZIEL-Ansatz: Abweichend von der BMU-Leitstudie [,HIGH
+2.10,Endenergieverbrauch GW gesamt,798.867,663.539,761,W,1,Zieleinfluss Erwerbstätigkeit auf GW,634,W,1,Stromspeicherung gesamt - Nutzungsgrad,HIGH
