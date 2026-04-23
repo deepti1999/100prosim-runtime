@@ -78,6 +78,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # §2.3 Phase B (T65): exposes active_regions +
+                # active_region_code so the base.html nav dropdown
+                # renders without per-view plumbing.
+                'simulator.context_processors.region_context',
             ],
         },
     },

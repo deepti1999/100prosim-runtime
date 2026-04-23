@@ -75,6 +75,30 @@
                 <ul class="navbar-nav me-auto"></ul>
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
+                    {# §2.3 Phase B (T65): Region switcher dropdown. First #}
+                    {# ship lists DE only; plumbing is ready for adding #}
+                    {# Bundesländer rows via Region.objects.create(...). #}
+                    {% if active_regions %}
+                    <li class="nav-item dropdown" data-region-switcher>
+                        <a class="nav-link dropdown-toggle" href="#" id="regionDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            <i class="fas fa-globe me-1"></i>{{ active_region_code }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            {% for region in active_regions %}
+                            <li>
+                                <form method="post" action="{% url 'simulator:set_active_region' %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="region_code" value="{{ region.code }}">
+                                    <button type="submit" class="dropdown-item{% if region.code == active_region_code %} active{% endif %}">
+                                        {{ region.display_name }} <small class="text-muted">({{ region.code }})</small>
+                                    </button>
+                                </form>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% endif %}
                     <!-- Baseline Backup Menu -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="baselineDropdown" role="button"

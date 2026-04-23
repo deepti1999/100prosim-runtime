@@ -49,6 +49,7 @@ from .views_recalc import (
     update_verbrauch_bulk,
 )
 from .views import gebaeudewaerme_view, update_user_percent_by_code
+from .views_region import set_active_region
 from .page_historie import historie_view
 from .page_modifikationsdetails import modifikationsdetails_view
 from .views_ws import (
@@ -94,6 +95,10 @@ urlpatterns = [
     path('annual-electricity/', annual_electricity_view, name='annual_electricity'),
     path('smard/', smard_solar_wind, name='smard_solar_wind'),
     path('bilanz/', bilanz_view, name='bilanz'),
+    # §2.3 Phase B (T65): region switcher endpoint — POST region_code,
+    # session updated, user redirected back. Validates against
+    # Region.objects.filter(active=True).
+    path('api/region/set/', set_active_region, name='set_active_region'),
     path('api/balance-energy/', balance_energy, name='balance_energy'),
     path('api/balance-energy-lu6/', balance_energy_lu6, name='balance_energy_lu6'),
     path('api/ws/balance/', balance_ws_storage, name='balance_ws_storage'),
