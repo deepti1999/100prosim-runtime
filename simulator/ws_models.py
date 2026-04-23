@@ -4,6 +4,22 @@ import re
 
 from simulator.owner_scope import OwnerScopedManager
 
+
+def _ws_default_region_pk():
+    """Lazy default for WSData.region — avoids circular import with models.py.
+
+    Returns DE.pk at row-create time. None during the brief window before
+    migration 0052 has run on a fresh DB; the AddField step in the WSData
+    region migration keeps the column nullable until after the backfill.
+    """
+    from simulator.models import Region
+
+    try:
+        return Region.objects.get(code="DE").pk
+    except Region.DoesNotExist:
+        return None
+
+
 class WSData(models.Model):
     """
     Minimal WS input table.
@@ -32,6 +48,17 @@ class WSData(models.Model):
         db_index=True,
     )
 
+    # Phase C (T66) — WSData is now per-(owner, region) workspace state.
+    # Without this FK, a BB user sees DE timeseries derived from DE
+    # parameters. PROTECT mirrors the LandUse/Renewable/Verbrauch
+    # convention from Phase B step 2.
+    region = models.ForeignKey(
+        "simulator.Region",
+        on_delete=models.PROTECT,
+        default=_ws_default_region_pk,
+        related_name="+",
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -44,16 +71,17 @@ class WSData(models.Model):
         verbose_name_plural = "WS Data Entries"
         indexes = [
             models.Index(fields=["owner", "tag_im_jahr"]),
+            models.Index(fields=["region", "tag_im_jahr"]),
         ]
         constraints = [
             models.UniqueConstraint(
-                fields=["owner", "tag_im_jahr"],
-                name="wsdata_owner_day_uniq",
+                fields=["owner", "region", "tag_im_jahr"],
+                name="wsdata_owner_region_day_uniq",
             ),
             models.UniqueConstraint(
-                fields=["tag_im_jahr"],
+                fields=["region", "tag_im_jahr"],
                 condition=models.Q(owner__isnull=True),
-                name="wsdata_global_day_uniq",
+                name="wsdata_global_region_day_uniq",
             ),
         ]
 

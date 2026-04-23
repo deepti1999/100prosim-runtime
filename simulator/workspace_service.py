@@ -119,32 +119,14 @@ def ensure_user_workspace_data(user, region_code="DE"):
         if not VerbrauchData.all_objects.filter(owner=user, region=region).exists():
             _clone_simple_model(VerbrauchData, user, region)
 
-        # WSData is the 365-day timeseries — derived from parameters,
-        # not region-scoped at the row level for Phase B (DE-only). It
-        # stays per-user only; revisit if per-region WSData becomes a
-        # stakeholder ask.
-        if not WSData.all_objects.filter(owner=user).exists():
-            _clone_simple_model_no_region(WSData, user)
+        # Phase C (T66): WSData is now per-(owner, region) — same shape
+        # as the parameter models. Switching active region surfaces a
+        # different 365-day overlay; first-use clones the active region's
+        # base WSData rows.
+        if not WSData.all_objects.filter(owner=user, region=region).exists():
+            _clone_simple_model(WSData, user, region)
 
 
-def _clone_simple_model_no_region(model, user, exclude_fields=None):
-    """Phase-A-style clone for models that have no region FK (e.g. WSData)."""
-    exclude = set(exclude_fields or [])
-    fields = [
-        f.name
-        for f in model._meta.concrete_fields
-        if f.name not in {"id", "owner"} and f.name not in exclude
-    ]
-
-    source_rows = list(model.all_objects.filter(owner__isnull=True).order_by("id"))
-    if not source_rows:
-        return 0
-
-    clones = []
-    for row in source_rows:
-        data = {name: getattr(row, name) for name in fields}
-        data["owner"] = user
-        clones.append(model(**data))
-
-    model.all_objects.bulk_create(clones, batch_size=1000)
-    return len(clones)
+# Phase C (T66): _clone_simple_model_no_region removed — every model
+# the workspace clones now carries a region FK. Region-aware
+# _clone_simple_model above handles all of them uniformly.
