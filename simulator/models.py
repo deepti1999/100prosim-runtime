@@ -6,6 +6,16 @@ import uuid
 import os
 from simulator.owner_scope import OwnerScopedManager
 
+# Phase A (§2.3) provenance origin classification.
+# d_xlsx  = directly mapped to a D.xlsx parameter row (sourced from 9.Quellen + 1. comments)
+# derived = computed from a d_xlsx parent row via an explicit allocation formula
+# internal = no D.xlsx counterpart; UI-only / category header / deeper-split row
+PROVENANCE_ORIGIN_CHOICES = [
+    ("d_xlsx", "D.xlsx (Datenmodell)"),
+    ("derived", "Derived from d_xlsx parent"),
+    ("internal", "Internal (no Datenmodell counterpart)"),
+]
+
 # Thread-local storage to prevent infinite cascade loops
 _cascade_context = threading.local()
 
@@ -454,6 +464,11 @@ class LandUse(models.Model):
     # Meta information
     quelle = models.CharField(max_length=100, null=True, blank=True)  # Quelle (reference)
 
+    # Phase A §2.3 provenance (D1: additive, leaves quelle untouched).
+    source_url = models.URLField(null=True, blank=True, max_length=500)
+    notes_assumption = models.TextField(null=True, blank=True)
+    origin = models.CharField(max_length=16, choices=PROVENANCE_ORIGIN_CHOICES, default="internal")
+
     objects = OwnerScopedManager()
     all_objects = models.Manager()
 
@@ -685,9 +700,14 @@ class RenewableData(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # Phase A §2.3 provenance (D1: additive, leaves source/notes untouched).
+    source_url = models.URLField(null=True, blank=True, max_length=500)
+    notes_assumption = models.TextField(null=True, blank=True)
+    origin = models.CharField(max_length=16, choices=PROVENANCE_ORIGIN_CHOICES, default="internal")
+
     objects = OwnerScopedManager()
     all_objects = models.Manager()
-    
+
     class Meta:
         ordering = ['category', 'subcategory', 'code', 'name']
         indexes = [
@@ -1024,9 +1044,14 @@ class VerbrauchData(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # Phase A §2.3 provenance (D1: additive).
+    source_url = models.URLField(null=True, blank=True, max_length=500)
+    notes_assumption = models.TextField(null=True, blank=True)
+    origin = models.CharField(max_length=16, choices=PROVENANCE_ORIGIN_CHOICES, default="internal")
+
     objects = OwnerScopedManager()
     all_objects = models.Manager()
-    
+
     class Meta:
         ordering = ['code']
         indexes = [
@@ -1424,11 +1449,16 @@ class GebaeudewaermeData(models.Model):
     
     # User interaction (for future functionality)
     user_percent = models.FloatField(null=True, blank=True)  # User-defined percentage
-    
+
     # Metadata
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
+    # Phase A §2.3 provenance (D1: additive).
+    source_url = models.URLField(null=True, blank=True, max_length=500)
+    notes_assumption = models.TextField(null=True, blank=True)
+    origin = models.CharField(max_length=16, choices=PROVENANCE_ORIGIN_CHOICES, default="internal")
+
     class Meta:
         ordering = ['code']
         indexes = [
