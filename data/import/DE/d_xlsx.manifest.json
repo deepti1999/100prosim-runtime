@@ -1,6 +1,6 @@
 {
   "import_tool_version": "1.0.0",
-  "import_date": "2026-04-23T19:00:23.009277+00:00",
+  "import_date": "2026-04-23T20:35:05.256938+00:00",
   "files": [
     {
       "path": "D.xlsx",
@@ -10,42 +10,42 @@
         "9.Quellen": "sha256:d2d53a9020430749e882dbdbbb36ddc55bc211e62ffe94ced154ce9c9c0eac1a"
       },
       "region_code": "DE",
-      "rows_imported": 1,
-      "rows_matched_d_xlsx": 1,
-      "rows_matched_derived": 0,
-      "rows_unmatched_internal": 0,
-      "rows_changed": 1,
+      "rows_imported": 420,
+      "rows_matched_d_xlsx": 178,
+      "rows_matched_derived": 87,
+      "rows_unmatched_internal": 155,
+      "rows_changed": 0,
       "per_model": [
         {
           "model": "LandUse",
-          "total": 1,
-          "d_xlsx": 1,
-          "derived": 0,
+          "total": 20,
+          "d_xlsx": 15,
+          "derived": 5,
           "internal": 0,
-          "changed": 1
+          "changed": 0
         },
         {
           "model": "RenewableData",
-          "total": 0,
-          "d_xlsx": 0,
-          "derived": 0,
-          "internal": 0,
+          "total": 223,
+          "d_xlsx": 70,
+          "derived": 34,
+          "internal": 119,
           "changed": 0
         },
         {
           "model": "VerbrauchData",
-          "total": 0,
-          "d_xlsx": 0,
-          "derived": 0,
-          "internal": 0,
+          "total": 151,
+          "d_xlsx": 78,
+          "derived": 45,
+          "internal": 28,
           "changed": 0
         },
         {
           "model": "GebaeudewaermeData",
-          "total": 0,
-          "d_xlsx": 0,
-          "derived": 0,
-          "internal": 0,
+          "total": 26,
+          "d_xlsx": 15,
+          "derived": 3,
+          "internal": 8,
           "changed": 0
         }
       ]

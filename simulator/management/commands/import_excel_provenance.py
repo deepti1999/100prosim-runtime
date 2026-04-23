@@ -139,7 +139,16 @@ class Command(BaseCommand):
     )
 
     def add_arguments(self, parser):
-        parser.add_argument("xlsx_path", help="Path to D.xlsx (gitignored).")
+        parser.add_argument(
+            "xlsx_path",
+            nargs="?",
+            default=None,
+            help=(
+                "Path to D.xlsx (gitignored). When omitted, defaults to "
+                "data/import/<region>/D.xlsx so per-region Excel files "
+                "live under their own subdir."
+            ),
+        )
         parser.add_argument(
             "--apply",
             action="store_true",
@@ -148,7 +157,11 @@ class Command(BaseCommand):
         parser.add_argument(
             "--region",
             default="DE",
-            help="Region code recorded in the manifest (Phase A is DE-only).",
+            help=(
+                "Region code (must exist + be active in Region table). "
+                "Phase B (T65): manifest, orphan CSV, and base-row filter "
+                "are scoped to this region."
+            ),
         )
 
     # ------------------------------------------------------------------
@@ -156,9 +169,35 @@ class Command(BaseCommand):
     # ------------------------------------------------------------------
 
     def handle(self, *args, **options):
-        xlsx_path = options["xlsx_path"]
+        region_code = options["region"]
+        xlsx_path = options["xlsx_path"] or f"data/import/{region_code}/D.xlsx"
         apply_changes = options["apply"]
-        region = options["region"]
+
+        # Phase B (T65): validate region against DB before any FS work.
+        from simulator.models import Region
+
+        try:
+            region_obj = Region.objects.get(code=region_code)
+        except Region.DoesNotExist:
+            raise CommandError(
+                f"Region '{region_code}' not found in DB. Create it first via "
+                f"Region.objects.create(code='{region_code}', "
+                f"display_name='...', active=True), or run "
+                f"`manage.py shell` to add it."
+            )
+        if not region_obj.active:
+            raise CommandError(
+                f"Region '{region_code}' is inactive (active=False). "
+                f"Activate it before importing."
+            )
+
+        # Default xlsx path now references region_code directly so the
+        # error message is region-specific.
+        if not xlsx_path or not isinstance(xlsx_path, str):
+            raise CommandError(
+                f"Could not resolve xlsx_path for region '{region_code}' "
+                f"(checked default: data/import/{region_code}/D.xlsx)"
+            )
 
         self._validate_file(xlsx_path)
 
@@ -193,6 +232,7 @@ class Command(BaseCommand):
             vm = value_maps.get(plan.model.__name__, {})
             d = self._compute_diff(
                 plan, d1_label_index, entries_by_row, row_to_parent_p, vm, sources,
+                region_obj,
             )
             diffs.append(d)
 
@@ -223,15 +263,15 @@ class Command(BaseCommand):
                 for d, plan in zip(diffs, MODEL_PLANS):
                     self._apply_diff(plan.model, d)
                 # Propagate the 3 provenance columns to user-scoped workspace rows
-                # by matching code. SR-005: VALUE columns remain user-owned (we only
-                # write source_url + notes_assumption + origin).
-                propagated = self._propagate_to_workspace_rows()
+                # of the SAME region only (Phase B: no cross-region leakage).
+                # SR-005 still holds: VALUE columns remain user-owned.
+                propagated = self._propagate_to_workspace_rows(region_obj)
                 if propagated:
                     self.stdout.write(
                         self.style.SUCCESS(f"Propagated provenance to {propagated} user-workspace rows")
                     )
-            self._write_manifest(xlsx_path, region, diffs)
-            self._write_orphan_csv(diffs)
+            self._write_manifest(xlsx_path, region_code, diffs)
+            self._write_orphan_csv(region_code, diffs)
             self.stdout.write(self.style.SUCCESS("APPLIED."))
         else:
             self.stdout.write(self.style.WARNING("dry-run only — pass --apply to commit"))
@@ -390,15 +430,20 @@ class Command(BaseCommand):
         row_to_parent_p: dict,
         value_map: dict,
         sources: dict,
+        region_obj,
     ) -> dict:
         model = plan.model
         # SR-005: ONLY base rows (owner=NULL); never touch user workspace.
+        # Phase B (T65): scope to the requested region too.
+        has_region = any(f.name == "region" for f in model._meta.get_fields())
         if hasattr(model, "all_objects"):
             qs = model.all_objects.all()
             if any(f.name == "owner" for f in model._meta.get_fields()):
                 qs = model.all_objects.filter(owner__isnull=True)
         else:
             qs = model.objects.all()
+        if has_region:
+            qs = qs.filter(region=region_obj)
 
         rows = list(qs)
 
@@ -510,11 +555,16 @@ class Command(BaseCommand):
 
         return diff
 
-    def _propagate_to_workspace_rows(self) -> int:
+    def _propagate_to_workspace_rows(self, region_obj) -> int:
         """For each base row with non-default provenance, copy the 3 provenance
-        columns onto every user-workspace row sharing the same code. Value
-        columns are NOT touched (SR-005 hold). Uses QuerySet.update() to bypass
-        signals — provenance writes never affect calculations."""
+        columns onto every user-workspace row sharing the same code AND
+        the same region. Value columns are NOT touched (SR-005 hold). Uses
+        QuerySet.update() to bypass signals — provenance writes never affect
+        calculations.
+
+        Phase B (T65): per-region scope so a user's BB workspace doesn't get
+        DE provenance bleeding into it.
+        """
         total = 0
         for plan in MODEL_PLANS:
             model = plan.model
@@ -522,7 +572,10 @@ class Command(BaseCommand):
                 continue
             if not any(f.name == "owner" for f in model._meta.get_fields()):
                 continue
-            base_rows = model.all_objects.filter(owner__isnull=True).exclude(
+            base_rows = model.all_objects.filter(
+                owner__isnull=True,
+                region=region_obj,
+            ).exclude(
                 origin="internal", source_url__isnull=True, notes_assumption__isnull=True,
             )
             for base in base_rows:
@@ -531,6 +584,7 @@ class Command(BaseCommand):
                     continue
                 affected = model.all_objects.filter(
                     owner__isnull=False,
+                    region=region_obj,
                     code=code,
                 ).update(
                     source_url=base.source_url,
@@ -560,7 +614,9 @@ class Command(BaseCommand):
     # ------------------------------------------------------------------
 
     def _write_manifest(self, xlsx_path: str, region: str, diffs: list[dict]) -> None:
-        out_dir = Path("data/import")
+        # Phase B (T65): per-region subdir so adding Bundesländer doesn't
+        # collide on a single file.
+        out_dir = Path(f"data/import/{region}")
         out_dir.mkdir(parents=True, exist_ok=True)
 
         with open(xlsx_path, "rb") as f:
@@ -614,8 +670,8 @@ class Command(BaseCommand):
         path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
         self.stdout.write(self.style.SUCCESS(f"Wrote manifest: {path}"))
 
-    def _write_orphan_csv(self, diffs: list[dict]) -> None:
-        out_dir = Path("data/import")
+    def _write_orphan_csv(self, region: str, diffs: list[dict]) -> None:
+        out_dir = Path(f"data/import/{region}")
         out_dir.mkdir(parents=True, exist_ok=True)
         path = out_dir / "orphan_classification.csv"
         with open(path, "w", encoding="utf-8", newline="") as f:

@@ -33,3 +33,9 @@ Thumbs.db
 # 100prosim Excel reference bundle (Pascal's local copy for T54 flow-diagram
 # audit; contains his/stakeholders' full working files, not for distribution).
 docs/100prosim_d_*/
+
+# Phase B (T65): per-region Datenmodell Excel files. Manifests + orphan
+# CSVs in data/import/<region>/ ARE committed; the .xlsx/.xlsm sources
+# stay local because they belong to the stakeholder bundle.
+data/import/**/*.xlsx
+data/import/**/*.xlsm

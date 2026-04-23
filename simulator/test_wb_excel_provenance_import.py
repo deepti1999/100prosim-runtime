@@ -212,7 +212,8 @@ class TestImportArtifacts(TestCase):
         )
 
     def test_writes_manifest_after_apply(self):
-        manifest_path = Path("data/import/d_xlsx.manifest.json")
+        # Phase B (T65): manifest is per-region; default region=DE.
+        manifest_path = Path("data/import/DE/d_xlsx.manifest.json")
         if manifest_path.exists():
             manifest_path.unlink()
         call_command("import_excel_provenance", D_XLSX, "--apply", stdout=StringIO(), stderr=StringIO())
@@ -226,7 +227,8 @@ class TestImportArtifacts(TestCase):
         self.assertEqual(f0["region_code"], "DE")
 
     def test_writes_orphan_csv_after_apply(self):
-        orphan_path = Path("data/import/orphan_classification.csv")
+        # Phase B (T65): orphan CSV is per-region; default region=DE.
+        orphan_path = Path("data/import/DE/orphan_classification.csv")
         if orphan_path.exists():
             orphan_path.unlink()
         call_command("import_excel_provenance", D_XLSX, "--apply", stdout=StringIO(), stderr=StringIO())
