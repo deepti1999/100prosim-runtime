@@ -261,12 +261,16 @@ class TestImportPreservesUserWorkspace(TestCase):
             status_ha=99999.0,
         )
 
-    def test_user_workspace_rows_not_touched(self):
+    def test_user_workspace_value_untouched_but_provenance_propagated(self):
+        """SR-005: user's VALUE override stays. But the 3 provenance columns
+        propagate from the matching base row by code (provenance describes the
+        underlying parameter, not the user's edit)."""
         call_command("import_excel_provenance", D_XLSX, "--apply", stdout=StringIO(), stderr=StringIO())
         self.user_row.refresh_from_db()
-        # Value untouched
+        self.base.refresh_from_db()
+        # Value untouched (the hard SR-005 invariant)
         self.assertEqual(self.user_row.status_ha, 99999.0)
-        # Provenance untouched (still default)
-        self.assertIsNone(self.user_row.source_url)
-        self.assertIsNone(self.user_row.notes_assumption)
-        self.assertEqual(self.user_row.origin, "internal")
+        # Provenance copied from base (since both share code='LU_0')
+        self.assertEqual(self.user_row.origin, self.base.origin)
+        self.assertEqual(self.user_row.notes_assumption, self.base.notes_assumption)
+        self.assertEqual(self.user_row.source_url, self.base.source_url)

@@ -222,6 +222,14 @@ class Command(BaseCommand):
             with transaction.atomic():
                 for d, plan in zip(diffs, MODEL_PLANS):
                     self._apply_diff(plan.model, d)
+                # Propagate the 3 provenance columns to user-scoped workspace rows
+                # by matching code. SR-005: VALUE columns remain user-owned (we only
+                # write source_url + notes_assumption + origin).
+                propagated = self._propagate_to_workspace_rows()
+                if propagated:
+                    self.stdout.write(
+                        self.style.SUCCESS(f"Propagated provenance to {propagated} user-workspace rows")
+                    )
             self._write_manifest(xlsx_path, region, diffs)
             self._write_orphan_csv(diffs)
             self.stdout.write(self.style.SUCCESS("APPLIED."))
@@ -501,6 +509,36 @@ class Command(BaseCommand):
                 )
 
         return diff
+
+    def _propagate_to_workspace_rows(self) -> int:
+        """For each base row with non-default provenance, copy the 3 provenance
+        columns onto every user-workspace row sharing the same code. Value
+        columns are NOT touched (SR-005 hold). Uses QuerySet.update() to bypass
+        signals — provenance writes never affect calculations."""
+        total = 0
+        for plan in MODEL_PLANS:
+            model = plan.model
+            if not hasattr(model, "all_objects"):
+                continue
+            if not any(f.name == "owner" for f in model._meta.get_fields()):
+                continue
+            base_rows = model.all_objects.filter(owner__isnull=True).exclude(
+                origin="internal", source_url__isnull=True, notes_assumption__isnull=True,
+            )
+            for base in base_rows:
+                code = getattr(base, plan.code_field, None)
+                if not code:
+                    continue
+                affected = model.all_objects.filter(
+                    owner__isnull=False,
+                    code=code,
+                ).update(
+                    source_url=base.source_url,
+                    notes_assumption=base.notes_assumption,
+                    origin=base.origin,
+                )
+                total += affected
+        return total
 
     def _apply_diff(self, model, diff: dict) -> None:
         """Write only the 3 provenance columns via QuerySet.update() —

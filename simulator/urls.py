@@ -48,7 +48,7 @@ from .views_recalc import (
     update_user_percent,
     update_verbrauch_bulk,
 )
-from .views import update_user_percent_by_code
+from .views import gebaeudewaerme_view, update_user_percent_by_code
 from .page_historie import historie_view
 from .page_modifikationsdetails import modifikationsdetails_view
 from .views_ws import (
@@ -85,6 +85,10 @@ urlpatterns = [
     path('landuse/<int:pk>/', landuse_detail, name='landuse_detail'),
     path('renewable/', renewable_list, name='renewable_list'),
     path('verbrauch/', verbrauch_view, name='verbrauch'),
+    # §2.3 Phase A (T64): expose the existing GebaeudewaermeData view that was
+    # previously dead code so the provenance popover ships on all 4 parameter
+    # pages per Pascal's deliverable spec. The view itself is unchanged.
+    path('gebaeudewarme/', gebaeudewaerme_view, name='gebaeudewaerme'),
     path('ws/', ws_view, name='ws'),  # NEW: WS 365 Days
     path('cockpit/', cockpit_view, name='cockpit'),
     path('annual-electricity/', annual_electricity_view, name='annual_electricity'),
