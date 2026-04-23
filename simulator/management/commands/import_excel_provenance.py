@@ -58,18 +58,68 @@ SOURCE_REF_RE = re.compile(r"\[(9\.\d+(?:\.\d+)?)\]")
 
 
 class _ModelPlan:
-    def __init__(self, model, label_field: str, code_field: str):
+    def __init__(
+        self,
+        model,
+        label_field: str,
+        code_field: str,
+        parent_resolver: str = "code_hierarchy",
+    ):
+        """parent_resolver: how to walk up the hierarchy.
+        - 'code_hierarchy': split code on '.' and trim (e.g. '2.1.1' → '2.1' → '2.0' → '2').
+        - 'parent_code_field': read self.parent_code (RenewableData).
+        - 'parent_fk': follow self.parent.code (LandUse).
+        """
         self.model = model
         self.label_field = label_field
         self.code_field = code_field
+        self.parent_resolver = parent_resolver
 
 
 MODEL_PLANS = [
-    _ModelPlan(LandUse, label_field="name", code_field="code"),
-    _ModelPlan(RenewableData, label_field="name", code_field="code"),
-    _ModelPlan(VerbrauchData, label_field="category", code_field="code"),
-    _ModelPlan(GebaeudewaermeData, label_field="category", code_field="code"),
+    _ModelPlan(LandUse, label_field="name", code_field="code", parent_resolver="parent_fk"),
+    _ModelPlan(RenewableData, label_field="name", code_field="code", parent_resolver="parent_code_field"),
+    _ModelPlan(VerbrauchData, label_field="category", code_field="code", parent_resolver="code_hierarchy"),
+    _ModelPlan(GebaeudewaermeData, label_field="category", code_field="code", parent_resolver="code_hierarchy"),
 ]
+
+
+def _code_hierarchy_parent(code: str) -> Optional[str]:
+    if not code or "." not in code:
+        return None
+    parts = code.split(".")
+    if len(parts) <= 1:
+        return None
+    return ".".join(parts[:-1])
+
+
+def _parent_code(row, plan: "_ModelPlan") -> Optional[str]:
+    """Return the code of the row's parent, or None.
+
+    Always falls back to code_hierarchy parsing when the explicit
+    parent reference is missing — many RenewableData rows have NULL
+    parent_code but their dotted code clearly implies a parent.
+    """
+    if plan.parent_resolver == "parent_fk":
+        parent = getattr(row, "parent", None)
+        if parent is not None:
+            v = getattr(parent, "code", None)
+            if v:
+                return v
+        # Fallback to code-hierarchy parse
+        return _code_hierarchy_parent(getattr(row, "code", "") or "")
+
+    if plan.parent_resolver == "parent_code_field":
+        v = getattr(row, "parent_code", None)
+        if v:
+            return v
+        # Fallback: many RenewableData rows have NULL parent_code; use code structure.
+        return _code_hierarchy_parent(getattr(row, "code", "") or "")
+
+    if plan.parent_resolver == "code_hierarchy":
+        return _code_hierarchy_parent(getattr(row, "code", "") or "")
+
+    return None
 
 
 def _normalize_label(s: Optional[str]) -> str:
@@ -127,24 +177,45 @@ class Command(BaseCommand):
         sources = self._extract_sources(wb["9.Quellen"])
         self.stdout.write(self.style.SUCCESS(f"Extracted {len(sources)} source URLs from 9.Quellen"))
 
-        d1_index = self._build_d1_index(wb["1."])
-        self.stdout.write(self.style.SUCCESS(f"Indexed {len(d1_index)} parameter rows in D.xlsx '1.'"))
+        d1_label_index, entries_by_row, row_to_parent_p = self._build_d1_index(wb["1."])
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Indexed {len(entries_by_row)} parameter rows in D.xlsx '1.' "
+                f"({len(d1_label_index)} unique labels)."
+            )
+        )
+
+        # Load value-based audit mapping (final_map_*.csv) as a second-pass index.
+        value_maps = self._load_value_maps()
 
         diffs = []
         for plan in MODEL_PLANS:
-            d = self._compute_diff(plan, d1_index, sources)
+            vm = value_maps.get(plan.model.__name__, {})
+            d = self._compute_diff(
+                plan, d1_label_index, entries_by_row, row_to_parent_p, vm, sources,
+            )
             diffs.append(d)
 
         # Summary
         total_changed = sum(d["changed"] for d in diffs)
+        total_matched = sum(d["matched"] for d in diffs)
+        total_derived = sum(d["derived"] for d in diffs)
+        total_unmatched = sum(d["unmatched"] for d in diffs)
+        total_rows = sum(d["total"] for d in diffs)
         for d in diffs:
             self.stdout.write(
                 f"  {d['model_name']:24s}  total={d['total']:4d}  "
-                f"matched={d['matched']:4d}  unmatched={d['unmatched']:4d}  "
-                f"changed={d['changed']:4d}"
+                f"d_xlsx={d['matched']:4d}  derived={d['derived']:4d}  "
+                f"internal={d['unmatched']:4d}  changed={d['changed']:4d}"
             )
+        coverage = (total_matched + total_derived) / total_rows * 100 if total_rows else 0
         self.stdout.write(
-            self.style.SUCCESS(f"Total: {total_changed} changed across {len(diffs)} models")
+            self.style.SUCCESS(
+                f"Total: {total_changed} changed across {len(diffs)} models. "
+                f"Provenance coverage: {total_matched + total_derived}/{total_rows} ({coverage:.1f}%) "
+                f"[{total_matched} d_xlsx + {total_derived} derived]; "
+                f"{total_unmatched} internal."
+            )
         )
 
         if apply_changes:
@@ -202,15 +273,14 @@ class Command(BaseCommand):
                 sources[ref_code] = url
         return sources
 
-    def _build_d1_index(self, ws) -> dict[str, dict]:
-        """Build {normalized_label: {row, label, assumption_text, value_w}} from D.xlsx '1.'.
+    def _build_d1_index(self, ws):
+        """Build three indexes over D.xlsx '1.':
+        - label_index: {normalized_label: entry_dict} keyed on parameter (p-type) labels
+        - entries_by_row: {p_row_num: entry_dict}
+        - row_to_parent_p: {any_row_num: p_row_num} — for any row, find its containing parameter
 
-        For each parameter (type='p') row, gather adjacent assumption rows
-        (type in 'e','s','z','h') until the next 'p' row, and concat their
-        col-E text as the assumption_text.
+        Each entry_dict = {row, label, assumption_text, value_w}.
         """
-        index: dict[str, dict] = {}
-        # First pass: collect all (row, type, label, w_value) tuples
         rows: list[tuple[int, Optional[str], Optional[str], object]] = []
         for r in range(1, ws.max_row + 1):
             t = ws.cell(row=r, column=TYPE_COL).value
@@ -220,11 +290,13 @@ class Command(BaseCommand):
                 continue
             rows.append((r, t, label, w))
 
-        # Second pass: for each parameter row, gather assumption rows beneath
+        label_index: dict[str, dict] = {}
+        entries_by_row: dict[int, dict] = {}
+        row_to_parent_p: dict[int, int] = {}
+
+        # Walk: for each p-row, gather assumption rows beneath; index everything
         for i, (r, t, label, w) in enumerate(rows):
-            if t != PARAMETER_TYPE:
-                continue
-            if not isinstance(label, str) or not label.strip():
+            if t != PARAMETER_TYPE or not isinstance(label, str) or not label.strip():
                 continue
             assumption_parts: list[str] = []
             for j in range(i + 1, len(rows)):
@@ -235,28 +307,86 @@ class Command(BaseCommand):
                     assumption_parts.append(lj.strip())
             assumption_text = "\n\n".join(assumption_parts) if assumption_parts else None
 
+            entry = {
+                "row": r,
+                "label": label.strip(),
+                "assumption_text": assumption_text,
+                "value_w": w,
+            }
+            entries_by_row[r] = entry
             norm = _normalize_label(label)
-            # If label collision, keep the first seen (prefer earlier definition)
-            if norm and norm not in index:
-                index[norm] = {
-                    "row": r,
-                    "label": label.strip(),
-                    "assumption_text": assumption_text,
-                    "value_w": w,
-                }
+            if norm and norm not in label_index:
+                label_index[norm] = entry
 
-        return index
+        # Build row_to_parent_p: walk all rows; for each, the containing p-row is the
+        # last p-row at or before its index.
+        current_p = None
+        for r, t, label, w in rows:
+            if t == PARAMETER_TYPE and r in entries_by_row:
+                current_p = r
+            if current_p is not None:
+                row_to_parent_p[r] = current_p
+
+        return label_index, entries_by_row, row_to_parent_p
+
+    def _load_value_maps(self) -> dict[str, dict]:
+        """Load scripts/audit_out/final_map_<model>.csv into:
+            {ModelClassName: {our_code: {status_row, ziel_row}}}
+        These CSVs ship with the §2.3 audit (commit 58a1b90 Step C area) and provide
+        a value-based DB→D.xlsx 1. row mapping that complements label matching."""
+        out: dict[str, dict] = {}
+        plan_to_csv = {
+            "LandUse": "scripts/audit_out/final_map_landuse.csv",
+            "RenewableData": "scripts/audit_out/final_map_renewabledata.csv",
+            "VerbrauchData": "scripts/audit_out/final_map_verbrauchdata.csv",
+            "GebaeudewaermeData": "scripts/audit_out/final_map_gebaeudewaermedata.csv",
+        }
+        for model_name, csv_path in plan_to_csv.items():
+            mapping: dict[str, dict] = {}
+            if not os.path.isfile(csv_path):
+                out[model_name] = mapping
+                continue
+            try:
+                with open(csv_path, encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    for row in reader:
+                        code = (row.get("our_code") or "").strip()
+                        if not code:
+                            continue
+
+                        def _to_int(v):
+                            try:
+                                return int(v) if v else None
+                            except ValueError:
+                                return None
+
+                        mapping[code] = {
+                            "status_row": _to_int(row.get("status_excel_row")),
+                            "ziel_row": _to_int(row.get("ziel_excel_row")),
+                            "confidence": (row.get("confidence") or "").strip(),
+                        }
+            except Exception as e:
+                self.stdout.write(self.style.WARNING(f"Failed to load {csv_path}: {e}"))
+            out[model_name] = mapping
+        return out
 
     # ------------------------------------------------------------------
     # diff + apply
     # ------------------------------------------------------------------
 
-    def _compute_diff(self, plan: _ModelPlan, d1_index: dict, sources: dict) -> dict:
+    def _compute_diff(
+        self,
+        plan: _ModelPlan,
+        d1_label_index: dict,
+        entries_by_row: dict,
+        row_to_parent_p: dict,
+        value_map: dict,
+        sources: dict,
+    ) -> dict:
         model = plan.model
         # SR-005: ONLY base rows (owner=NULL); never touch user workspace.
         if hasattr(model, "all_objects"):
             qs = model.all_objects.all()
-            # Filter for owner=NULL where the model has owner field
             if any(f.name == "owner" for f in model._meta.get_fields()):
                 qs = model.all_objects.filter(owner__isnull=True)
         else:
@@ -264,42 +394,97 @@ class Command(BaseCommand):
 
         rows = list(qs)
 
+        # Build a code → row dict for parent lookup
+        rows_by_code: dict = {}
+        for row in rows:
+            code = getattr(row, plan.code_field, None)
+            if code:
+                rows_by_code[code] = row
+
         diff = {
             "model_name": model.__name__,
             "total": len(rows),
-            "matched": 0,
-            "unmatched": 0,
+            "matched": 0,        # direct d_xlsx matches
+            "derived": 0,        # parent-inherited
+            "unmatched": 0,      # truly orphan
             "changed": 0,
             "updates": [],
             "orphans": [],
         }
 
+        # Pre-compute direct + value-map matches per row (so we can inherit from them).
+        # Direct = label match into d1_label_index.
+        # Value-map = final_map_*.csv lookup → status_row or ziel_row → containing p-row.
+        direct_matches: dict = {}  # code -> entry
         for row in rows:
+            code = getattr(row, plan.code_field, None) or ""
+            if not code:
+                continue
             label = getattr(row, plan.label_field, None) or ""
-            norm = _normalize_label(label)
-            entry = d1_index.get(norm)
+            entry = d1_label_index.get(_normalize_label(label))
+            if entry:
+                direct_matches[code] = entry
+                continue
+            # Value-map fallback
+            vm_entry = value_map.get(code) or {}
+            for d_row in (vm_entry.get("status_row"), vm_entry.get("ziel_row")):
+                if d_row and d_row in row_to_parent_p:
+                    p_row = row_to_parent_p[d_row]
+                    if p_row in entries_by_row:
+                        direct_matches[code] = entries_by_row[p_row]
+                        break
+
+        for row in rows:
+            code = getattr(row, plan.code_field, None) or ""
+            label = getattr(row, plan.label_field, None) or ""
+            entry = direct_matches.get(code)
 
             new_source_url: Optional[str] = None
             new_notes_assumption: Optional[str] = None
             new_origin = "internal"
-            orphan_reason: Optional[str] = None
 
             if entry:
+                # Direct match in D.xlsx 1.
                 new_origin = "d_xlsx"
                 new_notes_assumption = entry["assumption_text"]
                 if new_notes_assumption:
-                    refs = SOURCE_REF_RE.findall(new_notes_assumption)
-                    for ref in refs:
+                    for ref in SOURCE_REF_RE.findall(new_notes_assumption):
                         if ref in sources:
                             new_source_url = sources[ref]
                             break
                 diff["matched"] += 1
             else:
-                diff["unmatched"] += 1
-                orphan_reason = "no D.xlsx 1. parameter row matches normalized label"
-                diff["orphans"].append(
-                    (getattr(row, plan.code_field, ""), label, orphan_reason)
-                )
+                # Walk up the hierarchy looking for a matched ancestor.
+                ancestor_entry = None
+                cursor_row = row
+                hops = 0
+                while hops < 6:  # bounded in case of cycles
+                    p_code = _parent_code(cursor_row, plan)
+                    if not p_code or p_code not in rows_by_code:
+                        break
+                    p_row = rows_by_code[p_code]
+                    p_match = direct_matches.get(getattr(p_row, plan.code_field, None))
+                    if p_match:
+                        ancestor_entry = p_match
+                        break
+                    cursor_row = p_row
+                    hops += 1
+
+                if ancestor_entry:
+                    new_origin = "derived"
+                    # Inherit source_url from the ancestor's first reference; do NOT copy
+                    # ancestor's notes_assumption (that's not OUR row's assumption).
+                    a_text = ancestor_entry.get("assumption_text") or ""
+                    for ref in SOURCE_REF_RE.findall(a_text):
+                        if ref in sources:
+                            new_source_url = sources[ref]
+                            break
+                    diff["derived"] += 1
+                else:
+                    diff["unmatched"] += 1
+                    diff["orphans"].append(
+                        (code, label, "no D.xlsx 1. parameter row or ancestor matches"),
+                    )
 
             current = (row.source_url, row.notes_assumption, row.origin)
             new = (new_source_url, new_notes_assumption, new_origin)
@@ -308,7 +493,7 @@ class Command(BaseCommand):
                 diff["updates"].append(
                     {
                         "pk": row.pk,
-                        "code": getattr(row, plan.code_field, ""),
+                        "code": code,
                         "source_url": new_source_url,
                         "notes_assumption": new_notes_assumption,
                         "origin": new_origin,
@@ -368,15 +553,17 @@ class Command(BaseCommand):
                     "sheet_hashes": {k: f"sha256:{v}" for k, v in sheet_hashes.items()},
                     "region_code": region,
                     "rows_imported": sum(d["total"] for d in diffs),
-                    "rows_matched": sum(d["matched"] for d in diffs),
-                    "rows_unmatched": sum(d["unmatched"] for d in diffs),
+                    "rows_matched_d_xlsx": sum(d["matched"] for d in diffs),
+                    "rows_matched_derived": sum(d["derived"] for d in diffs),
+                    "rows_unmatched_internal": sum(d["unmatched"] for d in diffs),
                     "rows_changed": sum(d["changed"] for d in diffs),
                     "per_model": [
                         {
                             "model": d["model_name"],
                             "total": d["total"],
-                            "matched": d["matched"],
-                            "unmatched": d["unmatched"],
+                            "d_xlsx": d["matched"],
+                            "derived": d["derived"],
+                            "internal": d["unmatched"],
                             "changed": d["changed"],
                         }
                         for d in diffs

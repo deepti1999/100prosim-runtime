@@ -1,0 +1,156 @@
+model,code,label,origin,rationale
+RenewableData,5.4,Biogasaufkommen insgesamt,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,5.4.1,davon Einsatz für Prozesswärme,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,5.4.1.1,Biogas für Prozesswärme,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,5,,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,6.2,Bioethanol,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,6,Biogene Brennstoffe (flüssig),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7.1.4,Biogene Kraftstoffe (Wärme),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10,Endenergieangebot aus erneuerbaren Quellen gesamt,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.1,Endenergie aus Erneuerbaren Q. gesamt,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.2,Strom,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.2.1,Stromverbrauch insgesamt,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.2.2,Anteil Erneuerb. an Stromverbrauch,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.3,Kraft/Licht/Inform.Komm.Tech./Kälte,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.3.1,davon Strom,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.4,Gebäudewärme,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.4.1,davon Brennstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.4.1.1,davon Kohlenwasserstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.4.1.2,davon Kohlenwasserstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.4.1.3,davon Kohlenwasserstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.4.2,davon Wärme,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.4.3,davon Strom,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.5,Prozesswärme,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.5.1,davon Brennstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.5.1.1,davon Kohlenwasserstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.5.1.2,davon Wasserstoff,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.5.1.3,davon Kohlenwasserstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.5.1.4,davon Kohlenwasserstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.5.2,davon Wärme,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.5.3,davon Strom,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.6,Mobile Anwendungen,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.8,Grundstoff Methan,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.9,Primärenergie-Einsatz Biobrennstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.9.1,Brennstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.9.1.1,davon Kohlenwasserstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,10.9.1.3,davon Kohlenwasserstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,11,fossil fuel,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,11.1,fossil wood,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,11.2,fossil plastic,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,11.3,total fossil,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,11.4,fossil 5,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,12,Naina,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.,Biogene Brennstoffe (fest),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.4,Biogener Anteil der Abfälle (fest),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.1,Energieholz,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.1.1,Aus Forstwirtschaft,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.1.1.1,Nutzbare Forstfläche,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,3.,Laufwasser,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,3.1,Bodenfläche Nds.,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,3.1.1,Nutzanteil am techn. Potenzial,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,3.1.1.1,Energieertrag (techn. Potenzial),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,3.1.1.2,Bruttostromerzeugung,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,2.1,Onshore-Windstrom,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.2,Stroh aus Getreideanbau,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.2.1,Getreide-Anbaufläche,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.2.1.1,Energet. genutzter Teil am Strohanfall,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.2.1.1.1,Energieertrag,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.2.1.1.2,Strohbrennstoff-Aufkommen,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.2.1.1.2.1,davon für Gebäudewärme,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.2.1.1.2.2,davon für Prozesswärme,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.2.1.1.2.3,davon für Verstromung,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,4.2.1.1.2.4,davon für Wärmenetze GW,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,1,Solarenergie,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9,Stromwandlung / Stromspeicherung,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.3,Langzeitspeicherung Strom stofflich (saisonaler Ausgleich > 1 Tag),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.3.1.1,Nutzungsgrad Stromspeicherung,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.3.3,Erforderliche Speicherkapazität,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.4.3.2,inkl. Kurzzeitspeicher,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.1,Bruttostromerzeugung aus Erneuerbaren Energien gesamt (inkl. Abregelung),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.1.1,aus Windenergie,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.1.2,aus Solarenergie (Photovoltaik),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.1.3,aus Wasserkraft + Tiefengeothermie,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.1.4,aus Biobrennstoffen,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2,Bruttostromerzeugung Erneuerbar (inkl. Abregelung),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1,"Wasser-Elektrolyse (H₂ für Brennstoff, Kraftstoff- und Grundstoff-Synthese)",internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.1,Wasserstoff als Brennstoff für PW,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.1.1,Wasserstoff (komprim.) f. FC-Traktion,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.1.1.1,Nutzungsgrad tankfähiger Wasserstoff,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.1.2,Wasserstoff für MA mit FC-Traktion,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.2,Kraftstoff (gasförm. Methan) für MA aus H₂,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.2.1,Nutzungsgrad Methansynthese,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.2.2,Wasserstoff für Kraftstoffsynthese,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.3,Kraftstoffe (flüssig) für MA aus H₂,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.3.1,Nutzungsgrad Kraftstofferzeugung,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.3.2,Wasserstoff für Kraftstoffsynthese,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.4,Synth. Methan als Grundstoff,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.4.1,Nutzungsgrad Methansynthese,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.4.2,Wasserstoff für Grundstoffsynthese,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.5,Wasserstofferzeugung,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.5.1,Nutzungsgrad Wasserelektrolyse,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.5.2,Stromeinsatz Wasserstofferzeugung,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.5.2.1,davon in der Zielregion,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.2.1.5.2.2,davon extern für Importwasserstoff,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.3.1,Stromaufnahme (Überschussphasen),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.3.1.2,Stromabgabe (Mangelphasen),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.3.2,Nutzungsgrad KWK-Abwärme effektiv,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.3.2.1,Gebäudewärme (Endenergie),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.3.4,Abregelung von Wind-/Solarstrom,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.4,Stromangebot aus Erneuerbaren Energien (EE),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.4.1,Stromangebot aus eigenen Erneuerb. E.,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.4.2,Stromeinfuhr (Erneuerb.) aus dem Ausland,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.4.3,Stromangebot aus Erneuerbaren E. (gesamt),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,9.4.3.3,Stromangebot Erneuerb. (Endenergie),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,8,Tiefengeothermie,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,8.1,Netzanschlussleistung (elektrisch),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,8.1.1,Stromerzeugung – Vollbetriebsstunden,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,8.1.2,Bruttostromerzeugung,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7,Umgebungswärme (Wärmepumpe),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7.1,Wärmepumpen-Antriebsstromaufnahme,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7.1.2,WP-Luft – Antriebsstromaufnahme,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7.1.2.1,WP-Luft – Jahresarbeitszahl,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7.1.2.2,Nutzwärme (inkl. Antriebsstrom),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7.1.2.3,davon Wärmgewinn aus der Luft,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7.1.3,davon Anlagen mit Erdreich-/Wasserkopplung,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7.1.4.2,Nutzwärme (inkl. Antriebsstrom),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7.1.4.3,davon Wärmgewinn Erdreich/Grundwasser,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7.1.4.3.1,Wärmeertrag Erdreich/Grundwasser,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7.1.4.3.2,Beanspruchte Entzugsfläche,internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7.1.4.3.3,Gebäude- & Freifläche (Siedlung),internal,no D.xlsx 1. parameter row or ancestor matches
+RenewableData,7.1.4.3.4,Anteil beanspruchter Siedlungsfläche,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,1,"Kraft, Licht, Information, Kommunikation, Kälte (KLIK)",internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,10,fossil,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.0,Bedarfsniveau (statisch),internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.2,dav.Gewerbe/Handel/Dienstl. + Industr.,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.2.0,=,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.2.9,=,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.3,Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.),internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.5,davon Warmwasser,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.5.0,=,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.5.2,=,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.7,davon Brennstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.7.0,= Endenergieverbrauch,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.7.2,> Wandlungsverluste Endanwendung,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.7.4,= Einsparung gegenüber Status (absolut),internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.9,davon Strom (verlustarm nutzb.),internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.9.0,= Endenergieverbrauch,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,2.9.2,=,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,3.0,Bedarfsniveau (statisch),internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,3.3,"Bedarfsniveau (Prod.-Vol., Proz.-Effiz.)",internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,4.0,Mobile Anwendungen (MA),internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,4.1.1.4.0,Nutzenergie (NE) gesamt PVk,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,4.1.1.4.1,Nutzenergie (NE) gesamt PVk,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,5.0,Bedarfsniveau (statisch),internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,6.1,davon Kraftstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,6.1.1,davon Wasserstoff (FC-Traktion),internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,9,Grundstoff-Synthetisierung,internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,9.1,Bedarfsniveau Grundstoffe (statisch),internal,no D.xlsx 1. parameter row or ancestor matches
+VerbrauchData,9.1.1,* Zieleinfluss Kunststofferzeugung/Pers.,internal,no D.xlsx 1. parameter row or ancestor matches
+GebaeudewaermeData,2.0,Bedarfsniveau (statisch),internal,no D.xlsx 1. parameter row or ancestor matches
+GebaeudewaermeData,2.2,"davon Gewerbe, Handel, Dienstl. + Industr.",internal,no D.xlsx 1. parameter row or ancestor matches
+GebaeudewaermeData,2.3,Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.),internal,no D.xlsx 1. parameter row or ancestor matches
+GebaeudewaermeData,2.5,davon Warmwasser,internal,no D.xlsx 1. parameter row or ancestor matches
+GebaeudewaermeData,2.6,"Bedarfsniveau (Sanierung, Anwendungseff.)",internal,no D.xlsx 1. parameter row or ancestor matches
+GebaeudewaermeData,2.7,davon Brennstoffe,internal,no D.xlsx 1. parameter row or ancestor matches
+GebaeudewaermeData,2.7.2,Wandlungsverluste Endanwendung,internal,no D.xlsx 1. parameter row or ancestor matches
+GebaeudewaermeData,2.9,davon Strom (verlustarm nutzbar),internal,no D.xlsx 1. parameter row or ancestor matches
