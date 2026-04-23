@@ -378,20 +378,24 @@ Pascal explicitly signs off before Phase B opens a PR. No phase starts while the
 
 ---
 
-## 9. Decision points for Pascal (8 actually-blocking, replaces v1's 10)
+## 9. Decision points (D1–D8) — LOCKED 2026-04-23 by Pascal
 
-The v1 audit's 10 decision points were mostly artefacts of the wrong (value-import) framing. Real blockers, lifted from `260403_Section_2.3_decision.md` §6:
+Status: **APPROVED.** Pascal: *"Approve D1–D8 as recommended, D4 = click popover. Open Phase A."*
 
-| # | Question | Recommended call | Why |
+These are the binding answers. Phase A implementation uses these without further re-litigation. To override later, edit this section + bump the migration / refactor accordingly.
+
+| # | Question | LOCKED answer | Why |
 |---|---|---|---|
-| **D1** | **Provenance schema** — extend existing `source` / `quelle` / `notes` columns OR add new `source_url` + `notes_assumption` + `origin` columns? | **Add new columns; leave existing alone.** | `source` / `quelle` already have content (LandUse `quelle="D.1.<n>"`); reusing them invites misinterpretation. Additive is cheaper to revert. |
-| **D2** | **Region model** — first-class table OR settings constant? | **First-class table.** | 20-LOC migration; avoids future rewrite when ErnES sends BB.xlsx. |
-| **D3** | **Import command behaviour** when D.xlsx is missing or malformed? | **Fail loud, no silent fallback.** | Mitigates RISK-06. |
-| **D4** | **Source-URL UI surface** — tooltip on hover, info-icon click, side panel, detail page? | **Info icon (i) per row, click-to-popover.** | Cheap to render, doesn't crowd UI, accessible, easy V4/V5 testing. |
-| **D5** | **D.xlsx file pinning** — commit a hash manifest? | **Yes** — `data/import/d_xlsx.manifest.json` with `{file_hash, sheet_hashes, import_date, import_tool_version}`; .xlsx stays gitignored. | Audit trail; supports re-sync conversations with stakeholder. |
-| **D6** | **For LOW-confidence DB rows (5 NONE + 25 LABEL_ONLY)** — classify as `origin='internal'` OR ask stakeholder to add to D.xlsx? | **`origin='internal'`.** | Pragmatic; mostly category headers and deeper splits ours-only. Promote later if stakeholder asks. |
-| **D7** | **Phase-A scope** — schema + provenance + tooltip in one phase, OR split tooltip into a follow-up? | **All three in one phase.** | Tightly coupled; ~3 days; one V5 Heroku cycle instead of two. |
-| **D8** | **Region first-class — Phase A or Phase B?** | **Phase B.** | Phase A focuses on visible provenance for the existing single-region data. Region + Bundesländer-ready import ships in Phase B; doesn't block the user-visible improvement. |
+| **D1** | Provenance schema — extend existing `source` / `quelle` / `notes` OR add new columns? | **Add new** `source_url` + `notes_assumption` + `origin`. Existing `quelle` / `source` / `notes` retain their current semantics. | Existing columns have incompatible content (`LandUse.quelle="D.1.<n>"` is a paragraph code, not a URL). Mixing semantics on the same column would corrupt audit history. |
+| **D2** | Region model — first-class table OR settings constant? | **First-class table** `(code, display_name, active, datenmodell_excel_hash)`. Phase A still ships single-region (Germany implicit); the table lands in Phase B. | SR-004 + SR-012 require multi-region semantics; ~20-LOC migration cost; avoids rewrite when ErnES sends `BB.xlsx`. |
+| **D3** | Import command behaviour on missing / malformed Excel? | **Fail loud, no silent fallback.** Refuse to write if file missing, hash-mismatch, or sheet schema unrecognised. | RISK-06 mitigation + CLAUDE.md "investigate root causes, don't bypass safety checks". |
+| **D4** | Source-URL UI surface? | **Info-icon (`i`) per row, click → popover** showing `source_url` (link) + `notes_assumption` (text). | Pascal's choice. Click is keyboard- + screen-reader-friendly; reliably Playwright-testable; works on touch devices. |
+| **D5** | Commit a D.xlsx hash manifest? | **Yes** — `data/import/d_xlsx.manifest.json` with `{import_tool_version, import_date, files: [{path, file_hash, sheet_hashes, region_code, rows_*}]}`. The .xlsx itself stays gitignored. | Audit trail; idempotency baseline; "what changed since last import" answer without reaching for the file. |
+| **D6** | LOW-confidence DB rows (5 NONE + 25 LABEL_ONLY)? | **`origin='internal'`** with one-line per-row rationale comment in `data/import/orphan_classification.csv`. | Mostly category headers + deeper splits ours-only; pragmatic; promote later if stakeholder asks. |
+| **D7** | Phase-A scope — schema + import + tooltip in one phase, OR split tooltip out? | **All three in one phase** (~3 days, single V5 Heroku cycle). | Tightly coupled — schema without import is dead, import without UI is invisible; saves V5 cycle (~$0.10). |
+| **D8** | Region first-class — Phase A or Phase B? | **Phase B.** Phase A keeps single-region (Germany implicit; no `Region` model yet). Region + import + Bundesländer UI ships together in Phase B. | Smaller blast radius for Phase A (provenance-only is essentially zero-risk); Region migration wants its own V5 cycle and golden review. |
+
+Companion: `260403_Section_2.3_recommendations.md` (Step G, commit `f04598d`) — original per-decision rationale before approval.
 
 ---
 
