@@ -493,27 +493,35 @@ commit so we could roll back if a pass made things worse.
 7. **Excel "stretching" interpretation**: "stretch the arrow" really means make the horizontal segment between two circles long enough for the value box + label to fit ABOVE the line with breathing room. Default short arrows force value boxes onto the line.
 8. **Reverting is OK**: pass 14 was rejected by Pascal in the same session, immediate `git checkout 9e6a19a` restored pass 13 cleanly. Don't pile up bad commits trying to "fix forward" — revert and try a different approach.
 
-### Still outstanding — now tracked as D1–D4c in REMAINING.md §3
+### Still outstanding — tracked as D1–D4c in REMAINING.md §3, **re-audited 2026-04-23**
 
-The 4 backend-blocked items that were "pending Schmidt-Kanefendt's
-formulas" at the end of pass 22 have since been **audited against
-the Excel source files (2026-04-23)**. All four values exist in
-the 100prosim Excel workbooks; the §2.3 Excel-import switch
-unblocks them automatically.
+The 4 backend-blocked items were initially thought to require
+reading WS.xlsm cells. **That was wrong.** Corrected audit
+(2026-04-23): most values are computable from **our own backend**
+without any Excel import. Only the two installed-power red
+annotations need a config source.
 
-| Pass-2 letter | New code in REMAINING.md | Excel location |
-|---|---|---|
-| d (percent shares) | **D3** | `WS.xlsm` sheet `1.Jahresbilanz_Strom` cell `E21` (PV = 0.6227) etc. |
-| f (Tagesladungen) | **D1** (sources) + **D2** (flows) | `WS.xlsm` sheet `Zeitreihen Kalkulation` daily series, normalised by source |
-| k (261 GW elekt. and 194 GW) | **D4a** + **D4b** | `WS.xlsm` `1.Jahresbilanz_Strom` row 30 area |
-| n2 (Abgleichdifferenz 160) | **D4c** | `WS.xlsm` scenario-balance residual cell |
+| Code | What | Where it should come from | Effort |
+|---|---|---|---|
+| **D1** | Source Tagesladungen (`397`/`186`/`5`/`1`) | Our backend: `annual / peak_daily` using existing `daily_data` from `get_ws_365_data()` | ~2 hours |
+| **D2** | Flow Tagesladungen (`509`/`313`/`365`/`62`/`87`×3/`51`/`80`/`134`) | Same, applied to each flow-segment annual aggregate | ~2 hours |
+| **D3** | Percent shares (`62,2`/`29,2`/`0,8`/`0,2`) | Our backend — ratio of values we have, just need correct denominator (not plain sum) | ~1 hour + denominator confirmation |
+| **D4a** | `194 GW` (Pmax Elektrolyse Stromspeicher) | Config constant OR D.xlsx `I_Basisdaten` row (installed-power = region parameter) | ~30 min with §2.3, ~1 hour standalone |
+| **D4b** | `261 GW (elekt.)` (Rückverstromung peak) | Same as D4a | same |
+| **D4c** | `Abgleichdifferenz 160` | Our backend: expose WS365 solver residual as a new field on `get_ws_365_data()` | ~1 hour |
 
-See **`docs/stakeholder/DATA_MODEL_AUDIT.md`** for the full Excel-
-audit, including sheet inventory, the 86 source hyperlinks in
-`9.Quellen`, the 747 parameter-assumption comments on sheet `1.`,
-and the proposed import approach. Bottom line: §2.3 and T54 D1–D4c
-are the same work — ~5 days for the importer + model migrations +
-UI tooltips + region selector.
+See **`docs/stakeholder/HARDCODED_VALUES_TRACE.md`** for line-by-line
+mapping of every hardcoded literal in the template → its intended
+source + effort. Bottom line: **D1, D2, D3, D4c are NOT blocked on
+§2.3** — they're just backend-exposure work, ~5 hours total. Only
+D4a/D4b benefit from bundling with §2.3 (installed-power values
+are region parameters).
+
+See **`docs/stakeholder/DATA_MODEL_AUDIT.md`** (revised) for the
+§2.3 audit: D.xlsx has 86 source hyperlinks + 747 assumption
+comments, and the §2.3 work is ~4 days for importer + Source model
++ UI tooltips + region selector. That work is **orthogonal** to the
+D1–D4c diagram values.
 
 ## Verification done in Phase 5-C
 

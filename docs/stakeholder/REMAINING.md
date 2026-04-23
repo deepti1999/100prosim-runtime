@@ -128,20 +128,35 @@ the literal strings `"397"`, `"509"`, `"62,2%"`, `"194 GW"`, `"261 GW"`,
 `"160"` to find the hardcoded `<text>` elements. Each is right next to
 its dynamic counterpart for easy swap-out once the formula is known.
 
-**Where these live in the Excel source** (per 2026-04-23 data-model
-audit, `docs/stakeholder/DATA_MODEL_AUDIT.md`):
+**Where these should come from** (per 2026-04-23 re-audit,
+`docs/stakeholder/HARDCODED_VALUES_TRACE.md`):
 
-- D1 source Tagesladungen → `WS.xlsm` sheet `Zeitreihen Kalkulation`
-  (daily series, normalised per source)
-- D2 flow Tagesladungen → same sheet, applied to each flow segment
-- D3 percent shares → `WS.xlsm` sheet `1.Jahresbilanz_Strom` cell
-  `E21` for PV = 0.6227 (equivalents for other sources)
-- D4a/b (194 GW / 261 GW) → `WS.xlsm` `1.Jahresbilanz_Strom` row 30
-- D4c (Abgleichdifferenz 160) → `WS.xlsm` scenario-balance residual
+- **D1 source Tagesladungen** → our backend: `annual / peak_daily`
+  using existing `daily_data` from `get_ws_365_data()`. ~2 hours.
+- **D2 flow Tagesladungen** → same logic, applied to each flow
+  segment's annual aggregate. ~2 hours.
+- **D3 percent shares** → our backend: ratio of values already in
+  `compute_ws_diagram_reference`. Naive `pv/(pv+wind+hydro+bio)`
+  matches PV (62.2%) but not Wind (gives 36.6% ≠ 29.2%) —
+  denominator likely `m_total`, ~15 min to confirm. ~1 hour.
+- **D4a / D4b (194 GW / 261 GW)** → installed-power region config.
+  Either a small new `RegionConfig` model with 2 fields (standalone,
+  ~1 hour) OR read from D.xlsx `I_Basisdaten` as part of §2.3
+  (~30 min if bundled).
+- **D4c Abgleichdifferenz** → expose WS365 solver residual as a new
+  return key on `get_ws_365_data()`. ~1 hour.
 
-§2.3 (below) and D1–D4c are effectively the same work: the Excel
-import that satisfies §2.3 also unblocks the hardcoded diagram
-values automatically. See `DATA_MODEL_AUDIT.md` for full details.
+**Important correction to earlier notes:** D1/D2/D3/D4c are **NOT**
+blocked on §2.3 Excel import. They are backend-exposure work
+(compute from values we already have, or surface an internal
+solver result). Only D4a/D4b overlap with §2.3. Total effort to
+close all six: ~6 hours standalone, or ~5 hours if D4a/D4b ride
+on §2.3.
+
+§2.3 (below) remains a separate architectural change about
+**parameter data + sources + assumptions + region swap**, not
+about the diagram annotations. See `DATA_MODEL_AUDIT.md` for
+§2.3 scope and `HARDCODED_VALUES_TRACE.md` for the D1–D4c detail.
 
 **Effort once unblocked:**
 - D1 + D2: ~30 min if it's one formula. Add `tages_*` keys to the
