@@ -1,0 +1,21 @@
+our_code,our_label,match_score,excel_row,excel_label,status,notes
+LU_0,Bodenfläche gesamt,1.00,64,Bodenfläche gesamt,MATCHED,"overlap: bodenfläche,gesamt"
+LU_1,Siedlung (Gebäude- & Freifläche),1.00,69,Siedlung (Gebäude- & Freifläche),MATCHED,"overlap: freifläche,gebäude,siedlung"
+LU_1.1,Solare Dachflächen,0.25,120,Solare Absorberfläche auf Dächern,WEAK,overlap: solare
+LU_2,Landwirtschaftsfläche (LF),1.00,75,Landwirtschaftsfläche (LF),MATCHED,"overlap: landwirtschaftsfläche,lf"
+LU_2.1,Solare Freiflächen,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: freiflächen
+LU_2.2,Ackerland,1.00,80,Ackerland,MATCHED,overlap: ackerland
+LU_2.2.1,Getreide-Anbaufl. (Stroh),1.00,85,Getreide-Anbaufl. (Stroh),MATCHED,"overlap: anbaufl,getreide,stroh"
+LU_2.2.2,Energiepfl. (Biogas),0.50,363,Biogas,PARTIAL,overlap: biogas
+LU_2.2.3,Energiepfl. (Pflanzenöl),0.33,443,Biodiesel (inkl. Pflanzenöl),PARTIAL,overlap: pflanzenöl
+LU_2.2.4,Energiepfl. (Ethanol),0,,,NO_MATCH,
+LU_2.2.5,Energiepfl. (Kurzumtr.),0,,,NO_MATCH,
+LU_2.2.6,(ohne energet. Relevanz),0.33,229,Wasserkraft (ohne Pumpspeicher),PARTIAL,overlap: ohne
+LU_2.3,Dauergrünland,1.00,90,Dauergrünland,MATCHED,overlap: dauergrünland
+LU_2.4,(sonstige Nutzung),0.33,301,"Stroh, energetische Nutzung",PARTIAL,overlap: nutzung
+LU_3,Waldfläche,1.00,96,Waldfläche,MATCHED,overlap: waldfläche
+LU_3.1,Forstfl. (u.a.Energieholz),0.25,243,Energieholz (Forst),WEAK,overlap: energieholz
+LU_3.2,(ohne forstwirtsch.Nutzung),0.33,229,Wasserkraft (ohne Pumpspeicher),PARTIAL,overlap: ohne
+LU_4,(sonstige Flächen),0.07,72,- ZIEL-Ansatz: Da der Flächenverbrauch für Siedlungszwecke vor allem zu Lasten d,WEAK,overlap: flächen
+LU_5,Windenergie Flächenpotenzial,1.00,173,Windenergie Flächenpotenzial,MATCHED,"overlap: flächenpotenzial,windenergie"
+LU_6,Windparkfläche,1.00,188,Windparkfläche,MATCHED,overlap: windparkfläche

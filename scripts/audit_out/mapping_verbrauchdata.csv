@@ -1,0 +1,152 @@
+our_code,our_label,match_score,excel_row,excel_label,status,notes
+1,"Kraft, Licht, Information, Kommunikation, Kälte (KLIK)",0.57,698,"Kraft, Licht, Inform./Komm., Kälte-Endenergieverbr. (KLIK)",PARTIAL,"overlap: klik,kraft,kälte,licht"
+1.0,"Bedarfsniveau (statisch), 100% Strom",0.25,236,Strom - Energieertrag,WEAK,overlap: strom
+1.1,davon Haushalte,0.25,700,Anteil Haushalte an KLIK,WEAK,overlap: haushalte
+1.1.1,Endenergie Haushalte,0.25,700,Anteil Haushalte an KLIK,WEAK,overlap: haushalte
+1.1.2,Zieleinfluss Endanwendungs-Effizienz,0.40,794,Zieleinfluss Verwend.-/Proz.Effizienz Warmwasser,PARTIAL,"overlap: effizienz,zieleinfluss"
+1.1.3,Endenergie nach Effizienz,0.25,37,Energieverbraucher (nach Verursacher-Prinzip),WEAK,overlap: nach
+1.2,davon Handel/Dienstleistungen,0.40,712,Anteil Handel/Dienstleistungen an KLIK,PARTIAL,"overlap: dienstleistungen,handel"
+1.2.1,Endenergie Handel/Dienstl.,0.20,712,Anteil Handel/Dienstleistungen an KLIK,WEAK,overlap: handel
+1.2.2,Zieleinfluss Handels-/Dienstl.-Vol./Pers.,0.43,717,Zieleinfl.Handels-/Dienstleist.-Vol./Pers.auf KLIK,PARTIAL,"overlap: handels,pers,vol"
+1.2.3,Nach Vol./Pers. Anpassung,0.29,717,Zieleinfl.Handels-/Dienstleist.-Vol./Pers.auf KLIK,WEAK,"overlap: pers,vol"
+1.2.4,Zieleinfluss Prozess-Effizienz,0.50,722,Zieleinfluss Prozess-Effizienz Dienstleist. auf KLIK,PARTIAL,"overlap: effizienz,prozess,zieleinfluss"
+1.2.5,Endenergie nach Prozess-Effizienz,0.33,722,Zieleinfluss Prozess-Effizienz Dienstleist. auf KLIK,PARTIAL,"overlap: effizienz,prozess"
+1.3,davon Industrie + Gewerbeanteil GHD,0.40,756,Anteil GHD + Industrie an GW,PARTIAL,"overlap: ghd,industrie"
+1.3.1,Endenergie Industrie,0.20,756,Anteil GHD + Industrie an GW,WEAK,overlap: industrie
+1.3.2,Zieleinfluss Materialdurchsatz/Pers.,0.40,733,Zieleinfl.Materialdurchsatz/Pers.auf KLIK,PARTIAL,"overlap: materialdurchsatz,pers"
+1.3.3,Nach Materialdurchsatz Anpassung,0.25,37,Energieverbraucher (nach Verursacher-Prinzip),WEAK,overlap: nach
+1.3.4,Zieleinfluss Prozess-Effizienz,0.50,722,Zieleinfluss Prozess-Effizienz Dienstleist. auf KLIK,PARTIAL,"overlap: effizienz,prozess,zieleinfluss"
+1.3.5,Endenergie nach Prozess-Effizienz,0.33,722,Zieleinfluss Prozess-Effizienz Dienstleist. auf KLIK,PARTIAL,"overlap: effizienz,prozess"
+1.4,Endverbrauch Strom für KLIK gesamt,0.20,64,Bodenfläche gesamt,WEAK,overlap: gesamt
+2.0,Bedarfsniveau (statisch),0.08,731,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für das (fiktive) künftige Bedarfs,WEAK,overlap: bedarfsniveau
+2.1,davon Haushalte,0.25,700,Anteil Haushalte an KLIK,WEAK,overlap: haushalte
+2.1.0,=,0,,,NO_MATCH,
+2.1.1,Wohnfläche pro Person,1.00,751,Wohnfläche pro Person,MATCHED,"overlap: person,pro,wohnfläche"
+2.1.2,Zieleinfluss Wohnflächen-Entwicklung,0.67,882,Zieleinfluss Entwicklung PVk,MATCHED,"overlap: entwicklung,zieleinfluss"
+2.1.9,=,0,,,NO_MATCH,
+2.2,dav.Gewerbe/Handel/Dienstl. + Industr.,0.20,712,Anteil Handel/Dienstleistungen an KLIK,WEAK,overlap: handel
+2.2.0,=,0,,,NO_MATCH,
+2.2.1,Zieleinfluss Erwerbstätigkeit,0.50,761,Zieleinfluss Erwerbstätigkeit auf GW,PARTIAL,"overlap: erwerbstätigkeit,zieleinfluss"
+2.2.9,=,0,,,NO_MATCH,
+2.3,Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.),0.25,751,Wohnfläche pro Person,WEAK,overlap: wohnfläche
+2.4,davon Raumwärme,0.25,767,Anteil Raumwärme an GW,WEAK,overlap: raumwärme
+2.4.0,=,0,,,NO_MATCH,
+2.4.1,Spez.Raumwärmebed.Status/Saniert,0.25,420,- STATUS-Ansatz: Gemäß [421]:,WEAK,overlap: status
+2.4.2,= Veränderung zum Status,0.25,420,- STATUS-Ansatz: Gemäß [421]:,WEAK,overlap: status
+2.4.3,Gebäude - Sanierungs-/Ersatzrate,1.00,781,Gebäude-Sanierungs-/Ersatzrate,MATCHED,"overlap: ersatzrate,gebäude,sanierungs"
+2.4.4,Sanierungszeitraum: 22 Jahre,0.07,686,"UBA Treibhausgasneutrales Deutschland 2050 [9.251], S. 37: Geht im Szeario davon",WEAK,overlap: jahre
+2.4.5,= Gebäudeanteil mit Ziel-Wärmeschutz,0.20,527,Wärmep. - Anteil Anlagen mit Luftkopplung,WEAK,overlap: mit
+2.4.6,= Result.spez.Raumwärmebed. ges.,0.25,772,Spez. Raumwärmeverbrauch,WEAK,overlap: spez
+2.4.7,= Raumwärmebedarf Veränderung,0.06,234,- ZIEL-Ansatz: Von einer Veränderung des heutigen Nutzungsumfangs der Wasserkraf,WEAK,overlap: veränderung
+2.4.9,= Bedarfsniveau (Sanierung/Ersatz),0.08,731,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für das (fiktive) künftige Bedarfs,WEAK,overlap: bedarfsniveau
+2.5,davon Warmwasser,0.25,789,Anteil Warmwasser an GW,WEAK,overlap: warmwasser
+2.5.0,=,0,,,NO_MATCH,
+2.5.1,Zieleinfluss Anwendungs-/Prozess-Effizienz,0.50,722,Zieleinfluss Prozess-Effizienz Dienstleist. auf KLIK,PARTIAL,"overlap: effizienz,prozess,zieleinfluss"
+2.5.2,=,0,,,NO_MATCH,
+2.5.3,= Res. Anteil Warmwasser an Gebäudew.,0.60,789,Anteil Warmwasser an GW,MATCHED,"overlap: an,anteil,warmwasser"
+2.6,Bedarfsniveau (Sanierung/ Anwendungseff.),0.08,731,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für das (fiktive) künftige Bedarfs,WEAK,overlap: bedarfsniveau
+2.7,davon Brennstoffe,0.25,335,Verstromung biogene Brennstoffe (fest),WEAK,overlap: brennstoffe
+2.7.0,= Endenergieverbrauch,0.33,744,Gebäudewärme-Endenergieverbrauch (GW),PARTIAL,overlap: endenergieverbrauch
+2.7.1,> Nutzungsgrad Endanwendung,0.50,407,Biogasverstromung - Nutzungsgrad,PARTIAL,overlap: nutzungsgrad
+2.7.2,> Wandlungsverluste Endanwendung,0,,,NO_MATCH,
+2.7.3,= Einsparung gegenüber Status (relativ),0.25,420,- STATUS-Ansatz: Gemäß [421]:,WEAK,overlap: status
+2.7.4,= Einsparung gegenüber Status (absolut),0.25,420,- STATUS-Ansatz: Gemäß [421]:,WEAK,overlap: status
+2.8,davon Wärme (30-100°C/verlustarm nutzbar),0.14,360,Wärme aus  Abfallstoffen (fest),WEAK,overlap: wärme
+2.8.0,= Endenergieverbrauch,0.33,744,Gebäudewärme-Endenergieverbrauch (GW),PARTIAL,overlap: endenergieverbrauch
+2.9,davon Strom (verlustarm nutzb.),0.25,236,Strom - Energieertrag,WEAK,overlap: strom
+2.9.0,= Endenergieverbrauch,0.33,744,Gebäudewärme-Endenergieverbrauch (GW),PARTIAL,overlap: endenergieverbrauch
+2.9.1,davon für Wärmepumpen,0.33,286,Energieholzanteil für Prozesswärme,PARTIAL,overlap: für
+2.9.2,=,0,,,NO_MATCH,
+2.10,Endenergieverbrauch GW gesamt,0.67,744,Gebäudewärme-Endenergieverbrauch (GW),MATCHED,"overlap: endenergieverbrauch,gw"
+3.0,Bedarfsniveau (statisch),0.08,731,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für das (fiktive) künftige Bedarfs,WEAK,overlap: bedarfsniveau
+3.1,davon Haushalte,0.25,700,Anteil Haushalte an KLIK,WEAK,overlap: haushalte
+3.1.0,=,0,,,NO_MATCH,
+3.1.1,Zieleinfluss Endanwendungs-Effizienz,0.40,794,Zieleinfluss Verwend.-/Proz.Effizienz Warmwasser,PARTIAL,"overlap: effizienz,zieleinfluss"
+3.1.2,=,0,,,NO_MATCH,
+3.2,dav.Industrie + Gewerbeant.GHD,0.40,756,Anteil GHD + Industrie an GW,PARTIAL,"overlap: ghd,industrie"
+3.2.0,=,0,,,NO_MATCH,
+3.2.1,Zieleinfluss Materialdurchsatz/Pers.,0.40,733,Zieleinfl.Materialdurchsatz/Pers.auf KLIK,PARTIAL,"overlap: materialdurchsatz,pers"
+3.2.2,Zieleinfluss Prozess-Effizienz,0.50,722,Zieleinfluss Prozess-Effizienz Dienstleist. auf KLIK,PARTIAL,"overlap: effizienz,prozess,zieleinfluss"
+3.2.3,=,0,,,NO_MATCH,
+3.3,"Bedarfsniveau (Prod.-Vol., Proz.-Effiz.)",0.29,738,Zieleinfluss Prozess-Effiz.prod.Gewerbe auf KLIK,WEAK,"overlap: effiz,prod"
+3.4,davon Brennstoffe,0.25,335,Verstromung biogene Brennstoffe (fest),WEAK,overlap: brennstoffe
+3.4.0,= Endenergieverbrauch,0.33,744,Gebäudewärme-Endenergieverbrauch (GW),PARTIAL,overlap: endenergieverbrauch
+3.4.1,> Nutzungsgrad Endanwendung,0.50,407,Biogasverstromung - Nutzungsgrad,PARTIAL,overlap: nutzungsgrad
+3.4.2,> Wandlungsverluste Endanwendung,0,,,NO_MATCH,
+3.4.3,= Einsparung gegenüber Status (relativ),0.25,420,- STATUS-Ansatz: Gemäß [421]:,WEAK,overlap: status
+3.4.4,= Einsparung gegenüber Status (absolut),0.25,420,- STATUS-Ansatz: Gemäß [421]:,WEAK,overlap: status
+3.5,"davon Wärme (>100°C,verlustarm nutzbar)",0.17,360,Wärme aus  Abfallstoffen (fest),WEAK,overlap: wärme
+3.5.0,= Endenergieverbrauch,0.33,744,Gebäudewärme-Endenergieverbrauch (GW),PARTIAL,overlap: endenergieverbrauch
+3.6,davon Strom (verlustarm nutzbar),0.25,236,Strom - Energieertrag,WEAK,overlap: strom
+3.6.0,= Endenergieverbrauch,0.33,744,Gebäudewärme-Endenergieverbrauch (GW),PARTIAL,overlap: endenergieverbrauch
+3.7,Endenergieverbrauch PW gesamt,0.67,821,Prozesswärme-Endenergieverbrauch (PW),MATCHED,"overlap: endenergieverbrauch,pw"
+3.2.1.5,=,0,,,NO_MATCH,
+4.0,Mobile Anwendungen (MA),1.00,872,Mobile Anwendungen (MA),MATCHED,"overlap: anwendungen,ma,mobile"
+4.1,"MA am Boden (Straße, Schiene, Schifffahrt, Maschinen)",0.43,874,MA am Boden,PARTIAL,"overlap: am,boden,ma"
+4.1.0,Bedarfsniveau (statisch),0.08,731,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für das (fiktive) künftige Bedarfs,WEAK,overlap: bedarfsniveau
+4.1.1,davon Personenverkehr (PVk),0.33,882,Zieleinfluss Entwicklung PVk,PARTIAL,overlap: pvk
+4.1.1.1,Zieleinfluss Pers.-Verkehrsleist./Pers.,0.33,882,Zieleinfluss Entwicklung PVk,PARTIAL,overlap: zieleinfluss
+4.1.1.2,Bedarfsniveau PVk (nach Entwicklung),0.50,882,Zieleinfluss Entwicklung PVk,PARTIAL,"overlap: entwicklung,pvk"
+4.1.1.3,Nutzungsgrad Traktionsmix,0.50,407,Biogasverstromung - Nutzungsgrad,PARTIAL,overlap: nutzungsgrad
+4.1.1.5,Anteil Elektrotraktion an PvK-Leistung,0.83,888,Vorgabe: Anteil Elektrotraktion an PVk-Leistung,MATCHED,"overlap: an,anteil,elektrotraktion,leistung,pvk"
+4.1.1.6,Anteil Elektrotraktion an Endverbr. PVk,0.67,888,Vorgabe: Anteil Elektrotraktion an PVk-Leistung,MATCHED,"overlap: an,anteil,elektrotraktion,pvk"
+4.1.1.7,Nutzungsgrad Elektrotraktion (NG e),0.50,906,Nutzungsgrad Elektrotraktion PVk,PARTIAL,"overlap: elektrotraktion,nutzungsgrad"
+4.1.1.8,Anteil NE Elektrotrakt.an Endverbr. PVk,0.50,888,Vorgabe: Anteil Elektrotraktion an PVk-Leistung,PARTIAL,"overlap: an,anteil,pvk"
+4.1.1.9,Anteil NE Elektrotrakt.an NE ges.PVk,0.50,888,Vorgabe: Anteil Elektrotraktion an PVk-Leistung,PARTIAL,"overlap: an,anteil,pvk"
+4.1.1.10,Stromverbrauch PVk,0.33,519,Wärmepumpen - Stromverbrauch jährlich,PARTIAL,overlap: stromverbrauch
+4.1.1.11,Anteil Verbrenn.Trakt.an Endverbr.PVk,0.50,888,Vorgabe: Anteil Elektrotraktion an PVk-Leistung,PARTIAL,"overlap: an,anteil,pvk"
+4.1.1.12,Nutzungsgrad Verbrenn.Traktion (NG k),0.40,924,Nutzungsgrad Brennstoffzellen-Traktion (FC),PARTIAL,"overlap: nutzungsgrad,traktion"
+4.1.1.13,Anteil NE Verbrenn.Trakt.an Endverbr.PVk,0.43,888,Vorgabe: Anteil Elektrotraktion an PVk-Leistung,PARTIAL,"overlap: an,anteil,pvk"
+4.1.1.14,Anteil NE Verbrenn.Trakt.an NE ges.PVk,0.43,888,Vorgabe: Anteil Elektrotraktion an PVk-Leistung,PARTIAL,"overlap: an,anteil,pvk"
+4.1.1.15,Kohlenwasserstoff-Verbr.(gasf.) PVk,0.25,882,Zieleinfluss Entwicklung PVk,WEAK,overlap: pvk
+4.1.1.16,Anteil FC-Trakt.an Endverbr.PVk,0.50,888,Vorgabe: Anteil Elektrotraktion an PVk-Leistung,PARTIAL,"overlap: an,anteil,pvk"
+4.1.1.17,Nutzungsgrad FC-Traktion (NG FC),0.75,924,Nutzungsgrad Brennstoffzellen-Traktion (FC),MATCHED,"overlap: fc,nutzungsgrad,traktion"
+4.1.1.18,Anteil NE FC-Trakt.an Endverbr.PVk,0.43,888,Vorgabe: Anteil Elektrotraktion an PVk-Leistung,PARTIAL,"overlap: an,anteil,pvk"
+4.1.1.19,Anteil NE FC-Trakt.an NE ges.PVk,0.43,888,Vorgabe: Anteil Elektrotraktion an PVk-Leistung,PARTIAL,"overlap: an,anteil,pvk"
+4.1.1.20,Wasserstoffverbrauch PVk,0.33,882,Zieleinfluss Entwicklung PVk,PARTIAL,overlap: pvk
+4.1.2,davon Güterverkehr u. a. (GVk),0.40,930,Zieleinfluss Entwicklung Güterverkehr (GVk),PARTIAL,"overlap: gvk,güterverkehr"
+4.1.2.1,Zieleinfluss Güterverk.-Leistung/Pers.,0.25,761,Zieleinfluss Erwerbstätigkeit auf GW,WEAK,overlap: zieleinfluss
+4.1.2.2,Bedarfsniveau GVk (nach Entwicklung),0.50,930,Zieleinfluss Entwicklung Güterverkehr (GVk),PARTIAL,"overlap: entwicklung,gvk"
+4.1.2.3,Nutzungsgrad Traktionsmix,0.50,407,Biogasverstromung - Nutzungsgrad,PARTIAL,overlap: nutzungsgrad
+4.1.2.5,Anteil Elektrotraktion an GVk-Leistung,0.83,936,Vorgabe: Anteil Elektrotraktion an GVk-Leistung,MATCHED,"overlap: an,anteil,elektrotraktion,gvk,leistung"
+4.1.2.6,Anteil Elektrotraktion an Endverbr. GVk,0.67,936,Vorgabe: Anteil Elektrotraktion an GVk-Leistung,MATCHED,"overlap: an,anteil,elektrotraktion,gvk"
+4.1.2.7,Nutzungsgrad Elektrotraktion (NG e),0.50,906,Nutzungsgrad Elektrotraktion PVk,PARTIAL,"overlap: elektrotraktion,nutzungsgrad"
+4.1.2.8,Anteil NE Elektrotrakt.an Endverbr. GVk,0.50,936,Vorgabe: Anteil Elektrotraktion an GVk-Leistung,PARTIAL,"overlap: an,anteil,gvk"
+4.1.2.9,Anteil NE Elektrotrakt.an NE ges.GVk,0.50,936,Vorgabe: Anteil Elektrotraktion an GVk-Leistung,PARTIAL,"overlap: an,anteil,gvk"
+4.1.2.10,Stromverbrauch GVk,0.33,519,Wärmepumpen - Stromverbrauch jährlich,PARTIAL,overlap: stromverbrauch
+4.1.2.11,Anteil Verbrenn.-Trakt.an Endverbr.GVk,0.50,936,Vorgabe: Anteil Elektrotraktion an GVk-Leistung,PARTIAL,"overlap: an,anteil,gvk"
+4.1.2.12,Nutzungsgrad Verbrenn.-Traktion (NG k),0.40,924,Nutzungsgrad Brennstoffzellen-Traktion (FC),PARTIAL,"overlap: nutzungsgrad,traktion"
+4.1.2.13,Anteil NE Verbrenn-Trakt.an Endverbr.GVk,0.43,936,Vorgabe: Anteil Elektrotraktion an GVk-Leistung,PARTIAL,"overlap: an,anteil,gvk"
+4.1.2.14,Anteil NE Verbrenn.Trakt.an NE ges.GVk,0.43,936,Vorgabe: Anteil Elektrotraktion an GVk-Leistung,PARTIAL,"overlap: an,anteil,gvk"
+4.1.2.15,Kohlenwasserstoff-Verbr.(gasf.) GVk,0.25,930,Zieleinfluss Entwicklung Güterverkehr (GVk),WEAK,overlap: gvk
+4.1.2.16,Anteil FC-Trakt.an Endverbr.GVk,0.50,936,Vorgabe: Anteil Elektrotraktion an GVk-Leistung,PARTIAL,"overlap: an,anteil,gvk"
+4.1.2.17,Nutzungsgrad FC-Traktion (NG FC),0.75,924,Nutzungsgrad Brennstoffzellen-Traktion (FC),MATCHED,"overlap: fc,nutzungsgrad,traktion"
+4.1.2.18,Anteil NE FC-Trakt.an Endverbr.GVk,0.43,936,Vorgabe: Anteil Elektrotraktion an GVk-Leistung,PARTIAL,"overlap: an,anteil,gvk"
+4.1.2.19,Anteil NE FC-Trakt.an NE ges.GVk,0.43,936,Vorgabe: Anteil Elektrotraktion an GVk-Leistung,PARTIAL,"overlap: an,anteil,gvk"
+4.1.2.20,Wasserstoffverbrauch GVk,0.33,954,Nutzungsgrad Elektrotraktion GVk,PARTIAL,overlap: gvk
+4.1.1.4.0,Nutzenergie (NE) gesamt PVk,0.25,64,Bodenfläche gesamt,WEAK,overlap: gesamt
+4.1.1.4.1,Nutzenergie (NE) gesamt PVk,0.25,64,Bodenfläche gesamt,WEAK,overlap: gesamt
+4.1.2.4.0,Nutzenergie (NE) gesamt GVk,0.25,64,Bodenfläche gesamt,WEAK,overlap: gesamt
+4.1.2.4.1,Nutzenergie (NE) gesamt GVk,0.25,64,Bodenfläche gesamt,WEAK,overlap: gesamt
+4.1.1.15.1,Alternativ zur Verbrennungsmotoren: Brennstoffzellen (FC) -Traktion: (Passiv),0.43,924,Nutzungsgrad Brennstoffzellen-Traktion (FC),PARTIAL,"overlap: brennstoffzellen,fc,traktion"
+4.1.2.15.1,Alternativ zur Kraftstofftraktion: Brennstoffzellen (FC) -Traktion: (Passiv),0.43,924,Nutzungsgrad Brennstoffzellen-Traktion (FC),PARTIAL,"overlap: brennstoffzellen,fc,traktion"
+5.0,Bedarfsniveau (statisch),0.08,731,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für das (fiktive) künftige Bedarfs,WEAK,overlap: bedarfsniveau
+5.1,Zieleinfluss Luftverk.-Leistung/Person,0.25,751,Wohnfläche pro Person,WEAK,overlap: person
+5.2,Bedarfsniv. Luftverk. (nach Entwicklung),0.25,37,Energieverbraucher (nach Verursacher-Prinzip),WEAK,overlap: nach
+5.2.1,Zieleinfluss Luftverkehrs-Effizienz,0.67,968,Zieleinfluss Luftverkehrs-Entwicklung,MATCHED,"overlap: luftverkehrs,zieleinfluss"
+5.2.2,Kraftstoffverbrauch (flüssig) Luftverkehr,0.33,966,MA Luftverkehr,PARTIAL,overlap: luftverkehr
+6.0,Endenergieverbrauch MA gesamt,0.33,64,Bodenfläche gesamt,PARTIAL,overlap: gesamt
+6.1,davon Kraftstoffe,0.07,890,Die gesamte Personenverkehrsleistung in Deutschland 2023  (ohne Luftverkehr) lag,WEAK,overlap: davon
+6.1.1,davon Wasserstoff (FC-Traktion),0.50,924,Nutzungsgrad Brennstoffzellen-Traktion (FC),PARTIAL,"overlap: fc,traktion"
+6.1.2,davon Kohlenwassserst.(gasförmig),0.07,890,Die gesamte Personenverkehrsleistung in Deutschland 2023  (ohne Luftverkehr) lag,WEAK,overlap: davon
+6.1.3,"dav.Kohlenwasserst. (flüssig, für Luftverk.)",0.33,600,Kraftstoff (flüssig) aus Wasserstoff für MA,PARTIAL,"overlap: flüssig,für"
+6.2,davon Strom,0.50,236,Strom - Energieertrag,PARTIAL,overlap: strom
+7,Strom-Endverbrauch insgesamt,0.33,236,Strom - Energieertrag,PARTIAL,overlap: strom
+8,Endenergieverbrauch insgesamt,0.33,744,Gebäudewärme-Endenergieverbrauch (GW),PARTIAL,overlap: endenergieverbrauch
+9,Grundstoff-Synthetisierung,0.06,585,- STATUS-Ansatz: Der Bedarf an Kohlenwasserstoffen als Grundstoff für die Chemie,WEAK,overlap: grundstoff
+9.1,Bedarfsniveau Grundstoffe (statisch),0.25,584,Grundstoffe für die Chemieindustrie,WEAK,overlap: grundstoffe
+9.1.1,* Zieleinfluss Kunststofferzeugung/Pers.,0.33,882,Zieleinfluss Entwicklung PVk,PARTIAL,overlap: zieleinfluss
+9.1.2,= Bedarf an Grundstoffen,0.25,103,Anteil an deutscher Waldfläche,WEAK,overlap: an
+9.1.3,* Anteil aus H2 synthetisierter Grundstoffe,0.80,981,Anteil aus Wasserstoff synthetisierter Grundstoffe,MATCHED,"overlap: anteil,aus,grundstoffe,synthetisierter"
+9.1.4,= Bedarf an synthetischen Grundstoffen,0.25,103,Anteil an deutscher Waldfläche,WEAK,overlap: an
+10,fossil,0,,,NO_MATCH,

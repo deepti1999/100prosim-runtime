@@ -1,0 +1,27 @@
+our_code,our_label,match_score,excel_row,excel_label,status,notes
+2.0,Bedarfsniveau (statisch),0.08,731,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für das (fiktive) künftige Bedarfs,WEAK,overlap: bedarfsniveau
+2.1,davon Haushalte,0.25,700,Anteil Haushalte an KLIK,WEAK,overlap: haushalte
+2.1.1,Wohnfläche pro Person,1.00,751,Wohnfläche pro Person,MATCHED,"overlap: person,pro,wohnfläche"
+2.1.2,Zieleinfluss Wohnflächen-Entwicklung,0.67,882,Zieleinfluss Entwicklung PVk,MATCHED,"overlap: entwicklung,zieleinfluss"
+2.2,"davon Gewerbe, Handel, Dienstl. + Industr.",0.20,712,Anteil Handel/Dienstleistungen an KLIK,WEAK,overlap: handel
+2.2.1,Zieleinfluss Erwerbstätigkeit,0.50,761,Zieleinfluss Erwerbstätigkeit auf GW,PARTIAL,"overlap: erwerbstätigkeit,zieleinfluss"
+2.3,Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.),0.25,751,Wohnfläche pro Person,WEAK,overlap: wohnfläche
+2.4,davon Raumwärme,0.25,767,Anteil Raumwärme an GW,WEAK,overlap: raumwärme
+2.4.1,Spez. Raumwärmebed. Status/Saniert,0.25,420,- STATUS-Ansatz: Gemäß [421]:,WEAK,overlap: status
+2.4.2,Veränderung zum Status,0.25,420,- STATUS-Ansatz: Gemäß [421]:,WEAK,overlap: status
+2.4.3,Gebäude - Sanierungs-/Ersatzrate,1.00,781,Gebäude-Sanierungs-/Ersatzrate,MATCHED,"overlap: ersatzrate,gebäude,sanierungs"
+2.4.4,Sanierungszeitraum,0,,,NO_MATCH,
+2.4.5,Gebäudeanteil mit Ziel-Wärmeschutz,0.20,527,Wärmep. - Anteil Anlagen mit Luftkopplung,WEAK,overlap: mit
+2.4.6,Result. spez. Raumwärmebed. ges.,0.25,772,Spez. Raumwärmeverbrauch,WEAK,overlap: spez
+2.5,davon Warmwasser,0.25,789,Anteil Warmwasser an GW,WEAK,overlap: warmwasser
+2.5.1,Zieleinfluss Anwendungs-/Prozess-Effizienz,0.50,722,Zieleinfluss Prozess-Effizienz Dienstleist. auf KLIK,PARTIAL,"overlap: effizienz,prozess,zieleinfluss"
+2.5.2,Res. Anteil Warmwasser an Gebäudew.,0.60,789,Anteil Warmwasser an GW,MATCHED,"overlap: an,anteil,warmwasser"
+2.6,"Bedarfsniveau (Sanierung, Anwendungseff.)",0.08,731,- ZIEL-Ansatz: Dient als Berechnungsgrundlage für das (fiktive) künftige Bedarfs,WEAK,overlap: bedarfsniveau
+2.7,davon Brennstoffe,0.25,335,Verstromung biogene Brennstoffe (fest),WEAK,overlap: brennstoffe
+2.7.1,Nutzungsgrad Endanwendung,0.50,407,Biogasverstromung - Nutzungsgrad,PARTIAL,overlap: nutzungsgrad
+2.7.2,Wandlungsverluste Endanwendung,0,,,NO_MATCH,
+2.7.3,Einsparung gegenüber Status (relativ),0.25,420,- STATUS-Ansatz: Gemäß [421]:,WEAK,overlap: status
+2.8,"davon Wärme (30–100°C, verlustarm nutzbar)",0.14,360,Wärme aus  Abfallstoffen (fest),WEAK,overlap: wärme
+2.9,davon Strom (verlustarm nutzbar),0.25,236,Strom - Energieertrag,WEAK,overlap: strom
+2.9.1,davon für Wärmepumpen,0.33,286,Energieholzanteil für Prozesswärme,PARTIAL,overlap: für
+2.10,Endenergieverbrauch GW gesamt,0.67,744,Gebäudewärme-Endenergieverbrauch (GW),MATCHED,"overlap: endenergieverbrauch,gw"

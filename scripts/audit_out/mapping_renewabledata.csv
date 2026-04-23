@@ -1,0 +1,302 @@
+our_code,our_label,match_score,excel_row,excel_label,status,notes
+1, / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.1,Dachflächen / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.1.1,Solarthermie / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.1.1.1,Dachflächen / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.1.1.1.1, / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.1.1.1.2, / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.1.2,Solarstrom / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.1.2.1,Dachflächen / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.1.2.1.1, / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.1.2.1.2, / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.1.2.1.2.1, / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.1.2.1.2.2, / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.2,Freiflächen / Solar,0.67,129,Solar genutzte Freiflächen,MATCHED,"overlap: freiflächen,solar"
+1.2.1,Solarstrom / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.2.1.1, / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.2.1.2, / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.2.1.2.1, / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+1.2.1.2.2, / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+2.1,Onshore / Solar,0.50,171,Windenergie Onshore,PARTIAL,overlap: onshore
+2.1.1,Onshore / Solar,0.50,171,Windenergie Onshore,PARTIAL,overlap: onshore
+2.1.1.1,Onshore / Solar,0.50,171,Windenergie Onshore,PARTIAL,overlap: onshore
+2.1.1.2,Onshore / Solar,0.50,171,Windenergie Onshore,PARTIAL,overlap: onshore
+2.1.1.2.1,Onshore / Solar,0.50,171,Windenergie Onshore,PARTIAL,overlap: onshore
+2.1.1.2.2,Onshore / Solar,0.50,171,Windenergie Onshore,PARTIAL,overlap: onshore
+2.1.1.2.3,Onshore / Solar,0.50,171,Windenergie Onshore,PARTIAL,overlap: onshore
+2.2,Offshore / Solar,0.50,214,Windenergie Offshore,PARTIAL,overlap: offshore
+2.2.1.1,Offshore / Solar,0.50,214,Windenergie Offshore,PARTIAL,overlap: offshore
+2.2.1.2,Offshore / Solar,0.50,214,Windenergie Offshore,PARTIAL,overlap: offshore
+2.2.1.2.1,Offshore / Solar,0.50,214,Windenergie Offshore,PARTIAL,overlap: offshore
+2.2.1.2.2,Offshore / Solar,0.50,214,Windenergie Offshore,PARTIAL,overlap: offshore
+2.2.1.2.3,Offshore / Solar,0.50,214,Windenergie Offshore,PARTIAL,overlap: offshore
+2.2.1,Offshore / Solar,0.50,214,Windenergie Offshore,PARTIAL,overlap: offshore
+3.,Laufwasser / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+3.1,Laufwasser / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+3.1.1,Laufwasser / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+3.1.1.1,Laufwasser / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+3.1.1.2,Laufwasser / Solar,0.33,129,Solar genutzte Freiflächen,PARTIAL,overlap: solar
+4.,Biogene Brennstoffe / Solar,0.50,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+4.1,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.1,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.1.1,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.1.1.1,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.1.1.1.1,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.1.1.1.2,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.2,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.2.1,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.2.1.1,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.2.1.2,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.3,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.3.1,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.3.2,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.3.3,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.1.3.4,Energieholz / Solar,0.50,243,Energieholz (Forst),PARTIAL,overlap: energieholz
+4.2,Stroh / Solar,0.33,85,Getreide-Anbaufl. (Stroh),PARTIAL,overlap: stroh
+4.2.1,Stroh / Solar,0.33,85,Getreide-Anbaufl. (Stroh),PARTIAL,overlap: stroh
+4.2.1.1,Stroh / Solar,0.33,85,Getreide-Anbaufl. (Stroh),PARTIAL,overlap: stroh
+4.2.1.1.1,Stroh / Solar,0.33,85,Getreide-Anbaufl. (Stroh),PARTIAL,overlap: stroh
+4.2.1.1.2,Stroh / Solar,0.33,85,Getreide-Anbaufl. (Stroh),PARTIAL,overlap: stroh
+4.2.1.1.2.1,Stroh / Solar,0.33,85,Getreide-Anbaufl. (Stroh),PARTIAL,overlap: stroh
+4.2.1.1.2.2,Stroh / Solar,0.33,85,Getreide-Anbaufl. (Stroh),PARTIAL,overlap: stroh
+4.2.1.1.2.3,Stroh / Solar,0.33,85,Getreide-Anbaufl. (Stroh),PARTIAL,overlap: stroh
+4.2.1.1.2.4,Stroh / Solar,0.33,85,Getreide-Anbaufl. (Stroh),PARTIAL,overlap: stroh
+4.3,NAWARO gesamt / Solar,0.33,64,Bodenfläche gesamt,PARTIAL,overlap: gesamt
+4.3.1,NAWARO gesamt / Solar,0.33,64,Bodenfläche gesamt,PARTIAL,overlap: gesamt
+4.3.2,NAWARO gesamt / Solar,0.33,64,Bodenfläche gesamt,PARTIAL,overlap: gesamt
+4.3.3,NAWARO gesamt / Solar,0.33,64,Bodenfläche gesamt,PARTIAL,overlap: gesamt
+4.3.3.1,NAWARO gesamt / Solar,0.33,64,Bodenfläche gesamt,PARTIAL,overlap: gesamt
+4.3.3.2,NAWARO gesamt / Solar,0.33,64,Bodenfläche gesamt,PARTIAL,overlap: gesamt
+4.3.3.3,NAWARO gesamt / Solar,0.33,64,Bodenfläche gesamt,PARTIAL,overlap: gesamt
+4.3.3.4,NAWARO gesamt / Solar,0.33,64,Bodenfläche gesamt,PARTIAL,overlap: gesamt
+4.3.4,NAWARO gesamt / Solar,0.33,64,Bodenfläche gesamt,PARTIAL,overlap: gesamt
+4.3.4.1,NAWARO gesamt / Solar,0.33,64,Bodenfläche gesamt,PARTIAL,overlap: gesamt
+4.3.4.2,NAWARO gesamt / Solar,0.33,64,Bodenfläche gesamt,PARTIAL,overlap: gesamt
+4.4,Biogener Anteil Abfälle / Solar,0.25,103,Anteil an deutscher Waldfläche,WEAK,overlap: anteil
+4.4.1,Biogener Anteil Abfälle / Solar,0.25,103,Anteil an deutscher Waldfläche,WEAK,overlap: anteil
+4.4.2,Biogener Anteil Abfälle / Solar,0.25,103,Anteil an deutscher Waldfläche,WEAK,overlap: anteil
+5, / Biogas,1.00,363,Biogas,MATCHED,overlap: biogas
+5.1,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.1.1,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.1.2,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.2,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.3,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4.1,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4.1.1,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4.2,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4.2.1,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4.2.2,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4.2.3,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4.2.4,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4.3,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4.3.1,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4.3.2,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4.4,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4.4.1,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+5.4.4.2,Main / Biogas,0.50,363,Biogas,PARTIAL,overlap: biogas
+6,Main / Biogene Brennstoffe (flüssig),0.50,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.1,Biodiesel / Biogene Brennstoffe (flüssig),0.50,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.1.1,Biodiesel Anbau / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.1.1.1,Biodiesel Details / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.1.1.2,Biodiesel Details / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.1.2,Biodiesel Anbau / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.1.3,Biodiesel Anbau / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.1.3.1,Biodiesel Details / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.1.3.1.1,Biodiesel Details / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.1.3.2,Biodiesel Details / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.1.3.2.1,Biodiesel Details / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.1.3.2.2,Biodiesel Details / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.1.3.2.3,Biodiesel Details / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.1.3.2.4,Biodiesel Details / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.2,Bioethanol / Biogene Brennstoffe (flüssig),0.50,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.2.1,Bioethanol Anbau / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.2.1.1,Bioethanol Details / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.2.1.2,Bioethanol Details / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.2.2,Bioethanol Anbau / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+6.2.3,Bioethanol Anbau / Biogene Brennstoffe (flüssig),0.40,335,Verstromung biogene Brennstoffe (fest),PARTIAL,"overlap: biogene,brennstoffe"
+7.1,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7.1.1,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7.1.2,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7.1.2.1,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7.1.2.2,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7.1.2.3,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7.1.3,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7.1.4.1,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7.1.4.2,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7.1.4.3,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7.1.4.3.1,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7.1.4.3.2,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7.1.4.3.3,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7.1.4.3.4,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+7,Wärmepumpe / Umgebungswärme,1.00,517,Umgebungswärme (Wärmepumpe),MATCHED,"overlap: umgebungswärme,wärmepumpe"
+8,Geothermie / Tiefengeothermie,0.50,551,Tiefen-Geothermie,PARTIAL,overlap: geothermie
+8.1,Geothermie / Tiefengeothermie,0.50,551,Tiefen-Geothermie,PARTIAL,overlap: geothermie
+8.1.1,Geothermie / Tiefengeothermie,0.50,551,Tiefen-Geothermie,PARTIAL,overlap: geothermie
+8.1.2,Geothermie / Tiefengeothermie,0.50,551,Tiefen-Geothermie,PARTIAL,overlap: geothermie
+8.2,Geothermie / Tiefengeothermie,0.50,551,Tiefen-Geothermie,PARTIAL,overlap: geothermie
+9,Stromspeicherung / Stromwandlung,0.33,634,Stromspeicherung gesamt - Nutzungsgrad,PARTIAL,overlap: stromspeicherung
+9.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.1.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.1.2,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.1.3,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.1.4,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.1.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.1.1.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.1.2,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.2,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.2.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.2.2,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.3,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.3.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.3.2,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.4,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.4.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.4.2,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.5,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.5.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.5.2,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.5.2.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.2.1.5.2.2,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.3,Stromspeicherung / Stromwandlung,0.33,634,Stromspeicherung gesamt - Nutzungsgrad,PARTIAL,overlap: stromspeicherung
+9.3.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.3.1.1,Stromspeicherung / Stromwandlung,0.33,634,Stromspeicherung gesamt - Nutzungsgrad,PARTIAL,overlap: stromspeicherung
+9.3.1.2,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.3.2,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.3.2.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.3.3,Stromspeicherung / Stromwandlung,0.33,634,Stromspeicherung gesamt - Nutzungsgrad,PARTIAL,overlap: stromspeicherung
+9.3.4,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.4,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.4.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.4.2,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.4.3,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.4.3.1,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+9.4.3.2,Stromspeicherung / Stromwandlung,0.33,634,Stromspeicherung gesamt - Nutzungsgrad,PARTIAL,overlap: stromspeicherung
+9.4.3.3,Stromwandlung / Stromwandlung,0,,,NO_MATCH,
+10,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.1,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.2,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.2.1,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.2.2,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.3,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.3.1,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.4,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.4.1,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.4.1.1,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.4.1.2,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.4.1.3,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.4.2,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.4.3,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.5,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.5.1,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.5.1.1,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.5.1.2,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.5.1.3,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.5.1.4,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.5.2,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.5.3,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.6,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.6.1,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.6.1.1,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.6.1.2,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.6.1.3,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.6.2,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.7,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.7.1,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.7.2,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.7.3,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.7.4,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.8,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.9,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.9.1,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.9.1.1,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.9.1.2,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+10.9.1.3,Erneuerbare Quellen / Endenergie,0.09,24,"100prosim  -   
+100-Prozent-Erneuerbare-Enerigen-Simulationssystem 
+von Hans-Hei",WEAK,overlap: erneuerbare
+7.1.4, / EE,0.07,787,- ZIEL-Ansatz: Wertung der bis zum 100%EE-Zieljahr 2045 [27] erreichten Wärmesch,WEAK,overlap: ee
+11, / fossil,0,,,NO_MATCH,
+11.1, / fossil,0,,,NO_MATCH,
+11.2, / fossil,0,,,NO_MATCH,
+11.3, / fossil,0,,,NO_MATCH,
+11.4, / fossil,0,,,NO_MATCH,
+12, / Renewable,0,,,NO_MATCH,
