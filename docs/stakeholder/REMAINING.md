@@ -1,6 +1,6 @@
 # What's remaining — single source of truth
 
-**Last updated:** 2026-04-23 (after T54 visual pass 4 = 14 incremental commits `797f0d3`→`f4d1a6a`, V5-verified at pass 22 on Heroku)
+**Last updated:** 2026-04-23 (after T54 Track 1 landed, commit `7c02458`, V5-verified on Heroku — 4 of 6 hardcoded diagram values now backend-computed)
 **Source material:** `260403_Portierung_Bestandsaufnahme.pdf` (stakeholder PDF, 12 pages) + `IMPLEMENTATION_PLAN.md` (our 63-target decomposition)
 
 ---
@@ -115,45 +115,25 @@ Excel-reference values**. They cannot be made dynamic from existing
 backend output; each needs either a formula confirmation from
 Schmidt-Kanefendt or a new field added to the WS365 service.
 
-| # | Label in diagram | Current hardcoded value | What's blocking dynamic binding |
+| # | Label in diagram | Status | Details |
 |---|---|---|---|
-| **D1** | Tagesladungen italic blue numbers under each source value | `397` (PV), `186` (Wind), `5` (Hydro), `1` (Bio) | Per-source normalisation formula unknown. Tried `value / (storage_capacity / 80)` — fits PV (1,201,630 / 3,021.6 ≈ 397.7) but not Wind (706,237 / 3,021.6 ≈ 233.7 ≠ 186). Need Schmidt-Kanefendt's formula. |
-| **D2** | Tagesladungen italic blue numbers on every flow segment | `509` on M→Q, `313` on Q→S, `365` on S→Stromnetz, `62` on Abregelung, `134` on Q→Ely-ES, `87` on each gas branch (×3), `51` on Rückv→S, `80` on Speicherkapazität | Same formula gap as D1; values vary per scenario but no obvious denominator from current outputs. |
-| **D3** | Percent shares under each source value | `62,2%` (PV), `29,2%` (Wind), `0,8%` (Hydro), `0,2%` (Bio) | Denominator unclear. `pv / (pv + wind + hydro + bio)` gives PV = 62.2% ✓ but Wind = 36.6% ✗ (not 29.2%). Need the exact Excel formula or working-copy cell reference. |
-| **D4a** | `194 GW` red annotation under 405.027 box (Pmax of Elektrolyse Stromspeicher) | Static text | Installed-power peak figure. Not computed by backend. Likely a config constant once stakeholder confirms the exact number; currently 194 in Excel, may differ for other regions. |
-| **D4b** | `261 GW (elekt.)` red annotation beside Rückverstromung | Static text | Same as D4a — installed-power peak, not in backend. |
-| **D4c** | `Abgleichdifferenz 160` (with small `0` to right and `80` Tages below) at bottom-right | Static text | Scenario-solver residual diagnostic. Not exposed by `get_ws_365_data()` today. Would need a new field on the WS365 service output. |
+| **D1** | Tagesladungen italic blue numbers under each source value | ✅ Shipped `7c02458` | Now `annual × TLproEingabeEinheit`, `TLproEingabeEinheit = 365 / final_stromnetz`. Wind and Hydro use AE-adjusted numerator (value × `(1 - ely_branch/m_total)`). |
+| **D2** | Tagesladungen italic blue numbers on every flow segment | ✅ Shipped `7c02458` | Same factor applied to each flow segment's annual value. |
+| **D3** | Percent shares under each source value | ✅ Shipped `7c02458` | Denominator = `pv + wind + hydro + bio` (four sources summed). Numerators asymmetric — PV/Bio raw, Wind/Hydro AE-adjusted. Matches Excel cell formulas E14/E21/E27/E33 exactly. |
+| **D4a** | `194 GW` red annotation under 405.027 box (Pmax Ely-ES) | ⏸ Pending §2.3 | Installed-power region constant — belongs in D.xlsx `I_Basisdaten` or a small `RegionConfig` model. Ships with Track 2. |
+| **D4b** | `261 GW (elekt.)` red annotation beside Rückverstromung | ⏸ Pending §2.3 | Same as D4a. |
+| **D4c** | `Abgleichdifferenz 160` at bottom-right | ✅ Shipped `7c02458` | Now `gas_storage - t_value` (net gas-tank drift). Matches Excel Q44 formula `=L36-Q36`. |
 
-**Where these currently live in the template:** in
-`simulator/templates/simulator/annual_electricity.html`, search for
-the literal strings `"397"`, `"509"`, `"62,2%"`, `"194 GW"`, `"261 GW"`,
-`"160"` to find the hardcoded `<text>` elements. Each is right next to
-its dynamic counterpart for easy swap-out once the formula is known.
+**Where D4a/D4b live in the template** (only ones left hardcoded):
+`simulator/templates/simulator/annual_electricity.html` — search for
+`"194 GW"` and `"261 GW"` to find the remaining `<text class="txt-red">`
+elements. They'll become dynamic once §2.3 adds region-config fields.
 
-**Where these should come from** (per 2026-04-23 re-audit,
-`docs/stakeholder/HARDCODED_VALUES_TRACE.md`):
-
-- **D1 source Tagesladungen** → our backend: `annual / peak_daily`
-  using existing `daily_data` from `get_ws_365_data()`. ~2 hours.
-- **D2 flow Tagesladungen** → same logic, applied to each flow
-  segment's annual aggregate. ~2 hours.
-- **D3 percent shares** → our backend: ratio of values already in
-  `compute_ws_diagram_reference`. Naive `pv/(pv+wind+hydro+bio)`
-  matches PV (62.2%) but not Wind (gives 36.6% ≠ 29.2%) —
-  denominator likely `m_total`, ~15 min to confirm. ~1 hour.
-- **D4a / D4b (194 GW / 261 GW)** → installed-power region config.
-  Either a small new `RegionConfig` model with 2 fields (standalone,
-  ~1 hour) OR read from D.xlsx `I_Basisdaten` as part of §2.3
-  (~30 min if bundled).
-- **D4c Abgleichdifferenz** → expose WS365 solver residual as a new
-  return key on `get_ws_365_data()`. ~1 hour.
-
-**Important correction to earlier notes:** D1/D2/D3/D4c are **NOT**
-blocked on §2.3 Excel import. They are backend-exposure work
-(compute from values we already have, or surface an internal
-solver result). Only D4a/D4b overlap with §2.3. Total effort to
-close all six: ~6 hours standalone, or ~5 hours if D4a/D4b ride
-on §2.3.
+**Known non-blocking discrepancy** documented in
+`HARDCODED_VALUES_TRACE.md` §6: the Gasspeicher Direktverbr Tages
+shows `83` (mathematically correct per formula) rather than `87`
+(Excel diagram's visual value). Excel cell H37 has no formula —
+its "87" is a visual copy. Our 83 is the formula output.
 
 §2.3 (below) remains a separate architectural change about
 **parameter data + sources + assumptions + region swap**, not
