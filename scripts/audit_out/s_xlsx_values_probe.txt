@@ -1,0 +1,455 @@
+Loading docs\100prosim_d_250517_250517.1817m\_S.xlsx (data_only=True)...
+
+--- _S sheet: 1. Flächen  (36 x 73) ---
+  HEAD:   1=100prosim (… | 4=WS: Neuer A… | 9=I | 12=L | 16=Druck Endfa… | 20=Durck Modif…
+  row   5  L(5): Flächenart / Energetische Nutzung      col4=         5
+  row   6  L(8): Hierarchiestufe (HS)                   col4=         6
+  row   8  L(5): Bodenfläche gesamt                     col4=         8 col9=3.57595e+07 col12=3.57595e+07 col29=        16
+  row   9  L(6): Siedlung (Gebäude- & Freifläche)       col4=         9 col9=3.38008e+06 col10=   9.45225 col12=3.6458e+06 col13=   10.1953 col15=   1.07861
+  row  10  L(8): Solare Dachflächen                     col4=        10 col9=   34242.7 col10=   1.01307 col12=    199398 col13=   5.46926 col15=   5.82309
+  row  12  L(6): Landwirtschaftsfläche (LF)             col4=        12 col9=1.80207e+07 col10=   50.3942 col12=1.7755e+07 col13=   49.6511 col15=  0.985255
+  row  13  L(8): Solare Freiflächen                     col4=        13 col9=   19627.7 col10=  0.108917 col12=    887750 col13=         5 col15=   45.2296
+  row  14  L(7): Ackerland                              col4=        14 col9=1.16814e+07 col10=   64.8221 col12=1.0826e+07 col13=   60.9744 col15=  0.926772
+  row  15  L(8): Getreide-Anbaufl. (Stroh)              col4=        15 col9=6.0762e+06 col10=    52.016 col12=5.63125e+06 col13=    52.016 col15=  0.926772
+  row  16  L(8): Energiepfl. (Biogas)                   col4=        16 col9=  1.41e+06 col10=   12.0705 col12= 1.307e+06 col13=   12.0728 col15=   0.92695
+  row  17  L(8): Energiepfl. (Pflanzenöl)               col4=        17 col9=    665000 col10=   5.69281 col12=    303000 col13=   2.79882 col15=  0.455639
+  row  18  L(8): Energiepfl. (Ethanol)                  col4=        18 col9=    216200 col10=   1.85081 col12=         0 col13=         0 col15=         0
+  row  19  L(8): Energiepfl. (Kurzumtr.)                col4=        19 col9=     11200 col10= 0.0958789 col12=     11200 col13=  0.103455 col15=         1
+  row  20  L(8): (ohne energet. Relevanz)               col4=        20 col9=3.3028e+06 col10=    28.274 col12=3.57355e+06 col13=   33.0089 col15=   1.08197
+  row  22  L(7): Dauergrünland                          col4=        22 col9=4.7042e+06 col10=   26.1044 col12=4.37115e+06 col13=   24.6193 col15=  0.929202
+  row  23  L(8): Grasschnitt (Biogas)                   col4=        23 col28=        22
+  row  25  L(7): (sonstige Nutzung)                     col4=        25 col9=1.61549e+06 col10=   8.96462 col12=1.6701e+06 col13=   9.40635 col15=    1.0338
+  row  27  L(6): Waldfläche                             col4=        27 col9=1.15385e+07 col10=   32.2668 col12=1.15385e+07 col13=   32.2668 col15=         1
+  row  28  L(8): Forstfl. (u.a.Energieholz)             col4=        28 col9=9.86663e+06 col10=   85.5109 col12= 9.373e+06 col13=   81.2327 col15=  0.949969
+  row  29  L(8): (ohne forstwirtsch.Nutzung)            col4=        29 col9=1.67182e+06 col10=   14.4891 col12=2.16546e+06 col13=   18.7673 col15=   1.29527
+  row  31  L(6): (sonstige Flächen)                     col4=        31 col9=2.82028e+06 col10=   7.88679 col12=2.82028e+06 col13=   7.88679 col15=         1
+  row  33  L(6): Windenergie Flächenpotenzial           col4=        33 col9= 2.089e+06 col10=    5.8418 col12=1.6712e+06 col13=   4.67344 col15=       0.8
+  row  34  L(8): Windparkfläche*                        col4=        34 col9=    172556 col10=  0.482545 col12=    715289 col13=   2.00028 col15=   4.14526
+  row  35  L(8): Belegung (Potenzialflächen) *          col4=        35 col12=    182122 col13=  0.509296 col28=         8 col29=        37
+
+--- _S sheet: 2. Erneuerbare  (293 x 92) ---
+  HEAD:   1=100prosim (… | 4=WS: Neuer A… | 11=K | 12=L | 13=M | 14=Druck 1 > | 16=2 | 17=Ziel/Status…
+  row   5  L(5): Solarenergie                           col4=         5
+  row   6  L(6): Solare Dachflächen                     col4=         6 col12=   34242.7 col13=    199398
+  row   7  L(7): Solarthermie                           col4=         7
+  row   8  L(7): *                                      col4=         8 col12=   6.36194 col13=       1.1
+  row   9  L(8): *                                      col4=         9 col12=   3878.36 col13=      5250
+  row  10  L(9): Gebäudewärme                           col4=        10 col12=      8449 col13=   11515.3 col17=   67.1236 col18=   66.0332
+  row  12  L(7): Solarstrom                             col4=        12
+  row  13  L(6): *                                      col4=        13 col12=   93.6381 col13=      98.9
+  row  14  L(8): *                                      col4=        14 col12=   1382.84 col13=      1853
+  row  15  L(9): Bruttostromerzeugung                   col4=        15 col12=   44339.5 col13=    365421 col17=   257.275 col18=   214.892
+  row  16  L(9): /                                      col4=        16 col12=     926.5 col13=     926.5
+  row  17  L(10): Installierte Leistung                  col4=        17 col12=     47857 col13=    394410
+  row  19  L(6): Solar genutzte Freiflächen             col4=        19 col12=   19627.7 col13=    887750
+  row  20  L(7): Solarstrom                             col4=        20
+  row  21  L(7): *                                      col4=        21 col12=   921.891 col13=   1235.33
+  row  22  L(8): Bruttostromerzeugung                   col4=        22 col12=   18094.5 col13=1.09667e+06 col17=   257.275 col18=   214.892
+  row  23  L(8): /                                      col4=        23 col12=     926.5 col13=     926.5
+  row  24  L(9): Installierte Leistung                  col4=        24 col12=     19530 col13=1.18367e+06
+  row  26  L(5): Windenergie                            col4=        26
+  row  27  L(6): Onshore-Windstrom                      col4=        27
+  row  28  L(7): Windparkfläche                         col4=        28 col12=    172556 col13=    715289
+  row  29  L(7): *                                      col4=        29 col12=       2.9 col13=       3.8
+  row  30  L(8): Installierte Leistung                  col4=        30 col12=     59502 col13=    188234
+  row  31  L(8): *                                      col4=        31 col12=   1874.42 col13=      2550
+  row  32  L(9): Bruttostromerzeugung                   col4=        32 col12=    111532 col13=    479997 col17=   257.275 col18=   214.892
+  row  33  L(9): Energieertrag                          col4=        33 col12=   646.352 col13=   671.053
+  row  34  L(6): Offshore-Windstrom                     col4=        34
+  row  35  L(7): Install. Offshore-Leistung Deutsch…    col4=        35 col12=      8337 col13=     70000
+  row  36  L(7): *                                      col4=        36 col12=      2823 col13=      3232
+  row  37  L(8): Bruttostromerzeugung Deutschland       col4=        37 col12=   23535.4 col13=    226240
+  row  38  L(8): /                                      col4=        38 col12=8.46693e+07 col13=8.46693e+07
+  row  39  L(8): *                                      col4=        39 col12=8.46693e+07 col13=8.46693e+07
+  row  40  L(9): Bruttostromerz.Anteil Deutschland …    col4=        40 col12=   23535.4 col13=    226240 col17=   257.275 col18=   214.892
+  row  42  L(5): Laufwasser                             col4=        42
+  row  43  L(6): Bodenfläche Nds.                       col4=        43 col12=3.57595e+07 col13=3.57595e+07
+  row  44  L(6): *                                      col4=        44 col12=    79.019 col13=    79.019
+  row  45  L(7): *                                      col4=        45 col12=  0.690417 col13=  0.690417
+  row  46  L(8): Bruttostromerzeugung                   col4=        46 col12=     19509 col13=     19509 col17=   257.275 col18=   214.892
+  row  48  L(5): Biogene Brennstoffe (fest)             col4=        48
+  row  49  L(6): Energieholz                            col4=        49
+  row  50  L(7): Aus Forstwirtschaft                    col4=        50
+  row  51  L(8): Nutzbare Forstfläche                   col4=        51 col12=9.86663e+06 col13= 9.373e+06
+  row  52  L(8): *                                      col4=        52 col12=    53.629 col13=   33.2411
+  row  53  L(9): *                                      col4=        53 col12=      22.7 col13=      22.7
+  row  54  L(10): Energieholzaufkommen                   col4=        54 col12=    120114 col13=   70726.1
+  row  56  L(7): Aus Ackerbau (KUP, Miscanthus usw.)    col4=        56
+  row  57  L(8): Anbaufläche                            col4=        57 col12=     11200 col13=     11200
+  row  58  L(8): *                                      col4=        58 col12=   29.8773 col13=   51.3889
+  row  59  L(9): Energieholzaufkommen                   col4=        59 col12=   334.625 col13=   575.556
+  row  61  L(7): Energieholzaufkommen gesamt            col4=        61 col12=    120449 col13=   71301.6
+  row  62  L(7): *                                      col4=        62 col12=   73.2712 col13=         0 col16=         0 col18=         0
+  row  63  L(7): *                                      col4=        63 col12=   21.3345 col13=       100
+  row  64  L(7): *                                      col4=        64 col12=   5.39427 col13=         0
+  row  65  L(7): *                                      col4=        65 col12=         0 col13=         0
+  row  67  L(6): Stroh aus Getreideanbau                col4=        67
+  row  68  L(7): Getreide-Anbaufläche                   col4=        68 col12=6.0762e+06 col13=5.63125e+06
+  row  69  L(7): *                                      col4=        69 col12=  0.168437 col13=        33
+  row  70  L(8): *                                      col4=        70 col12=   23.8333 col13=   23.8333
+  row  71  L(9): Strohbrennstoff-Aufkommen              col4=        71 col12=   243.924 col13=   44289.8
+  row  72  L(9): *                                      col4=        72 col12=         0 col13=         0
+  row  73  L(9): *                                      col4=        73 col12=         0 col13=       100
+  row  74  L(9): *                                      col4=        74 col12=       100 col13=         0
+  row  75  L(9): *                                      col4=        75 col12=         0 col13=         0
+  row  77  L(6): Brennstoffaufk.(fest) NAWARO gesamt    col4=        77 col12=    120693 col13=    115591
+  row  79  L(7): davon Einsatz für Gebäudewärme         col4=        79 col12=   88254.5 col13=         0 col17=         0 col18=         0
+
+--- _S sheet: 3. Bedarfsniveau  (53 x 98) ---
+  HEAD:   1=100prosim (… | 4=WS: Neuer A… | 12=L | 13=M | 15=Druck 1 > | 16=0
+  row   5  L(5): Energieverbraucher                     col4=         5
+  row   6  L(7): Einwohnerzahl                          col4=         6 col12=8.46693e+07 col13=8.46693e+07 col14=       100 col27=        13
+  row   7  L(7): Energieverbraucher gemäß Solidarpr…    col4=         7 col12=8.46693e+07 col13=8.46693e+07 col14=       100 col27=        15
+  row   9  L(6): Verbrauchsmaßstab gemäß:               col4=         9 col27=        11
+  row  10  L(7): danach Anzahl Energieverbraucher       col4=        10 col12=8.46693e+07 col13=8.46693e+07 col14=       100
+  row  11  L(8): Demografische Entwicklung              col4=        11 col13=         0
+  row  13  L(5): Verbrauchsmaßstab gemäß Verursache…    col4=        13
+  row  14  L(6): Endenergie alle Anwendungen            col4=        14 col12=2.43719e+06 col13=2.43719e+06 col26=        21
+  row  15  L(7): Kraft/Licht/IKT/Kälte                  col4=        15 col12=    329214 col13=    329214 col14=       100 col26=        21
+  row  16  L(8): davon Strom                            col4=        16 col12=    329214 col13=    329214 col14=       100 col26=        11
+  row  17  L(7): Gebäudewärme (Raumw., Warmwass.)       col4=        17 col12=    798867 col13=    798867 col14=       100 col26=        21
+  row  18  L(8): davon Strom                            col4=        18 col12=     32877 col13=     32877 col14=   4.11545 col26=        11
+  row  19  L(8): davon Brennstoffe (gasförmig)          col4=        19 col12=    346430 col13=    346430 col14=   43.3652 col26=        13
+  row  20  L(8): davon Brennstoffe (flüssig)            col4=        20 col12=    136478 col13=    136478 col14=    17.084 col26=        15
+  row  21  L(8): davon Brennstoffe (fest)               col4=        21 col12=    149501 col13=    149501 col14=   18.7142 col26=        17
+  row  22  L(9): Brennstoffe gesamt                     col4=        22 col12=    632410 col13=    632410 col14=   79.1633
+  row  23  L(8): davon Wärme (Fernw., Nahw., lokale…    col4=        23 col12=    133580 col13=    133580 col14=   16.7212 col26=        19
+  row  24  L(7): Prozesswärme                           col4=        24 col12=    555395 col13=    555395 col14=       100 col26=        21
+  row  25  L(8): davon Strom                            col4=        25 col12=   76888.8 col13=   76888.8 col14=    13.844 col26=        11
+  row  26  L(8): davon Brennstoffe (gasförmig)          col4=        26 col12=    192514 col13=    192514 col14=   34.6625 col26=        13
+  row  27  L(8): davon Brennstoffe (flüssig)            col4=        27 col12=   24796.6 col13=   24796.6 col14=   4.46468 col26=        15
+  row  28  L(8): davon Brennstoffe (fest)               col4=        28 col12=    117624 col13=    117624 col14=   21.1785 col26=        17
+  row  29  L(9): Brennstoffe gesamt                     col4=        29 col12=    334934 col13=    334934 col14=   60.3056
+  row  30  L(8): davon Wärme (Fernw., Nahw., lokale…    col4=        30 col12=    143572 col13=    143572 col14=   25.8504 col26=        19
+  row  31  L(7): Mobile Anwendungen                     col4=        31 col12=    753713 col13=    753713 col14=       100 col26=        21
+  row  32  L(8): am Boden (Straße, Schiene, Wasser)     col4=        32 col12=    639193 col13=    639193 col14=   84.8059
+  row  33  L(9): davon Strom                            col4=        33 col12=     15300 col13=     15300 col14=   2.02995 col26=        12
+  row  34  L(9): davon Brennstoffe (gasförmig)          col4=        34 col12=   9195.67 col13=   9195.67 col14=   1.22005 col26=        14
+  row  35  L(9): davon Brennstoffe (flüssig)            col4=        35 col12=    614697 col13=    614697 col14=   81.5559 col26=        16
+  row  36  L(10): Brennstoffe gesamt                     col4=        36 col12=    623893 col13=    623893 col14=   82.7759
+  row  37  L(8): in der Luft                            col4=        37 col12=    114520 col13=    114520 col14=   15.1941
+  row  38  L(9): davon Brennstoffe (flüssig)            col4=        38 col12=    114520 col13=    114520 col14=   15.1941 col26=        16
+  row  40  L(7): Strom gesamt                           col4=        40 col12=    454280 col13=    454280 col14=   60.2723 col16=    454280 col26=        11
+
+--- _S sheet: 4. Verbrauch  (213 x 84) ---
+  HEAD:   1=100prosim (… | 4=WS: Neuer A… | 5=E | 6=F | 7=G | 8=H | 9=I | 10=J | 11=K | 12=L | 13=M | 14=Druck 1 > | 16=5 | 18=Ziel/Status…
+  row   5  L(5): Wirtschaftliche Entwicklung (Brutt…    col4=         5
+  row   6  L(6): Betrachteter Zeitraum: 22 Jahre        col4=         6 col12=      2023 col13=      2045
+  row   7  L(6): *                                      col4=         7 col12=         0
+  row   8  L(7): Bruttoinlandsprodukt BIP/Kopf          col4=         8 col12=     49525 col13=     49525
+  row   9  L(8): Entwicklung BIP/Kopf gesamt            col4=         9 col12=       100 col13=       100
+  row  10  L(7): *                                      col4=        10 col12=      69.7 col13=      69.7
+  row  11  L(8): BIP/Kopf Anteil Dienstleistungsber…    col4=        11 col12=   34518.9 col13=   34518.9
+  row  12  L(9): Entwickl.BIP/Kopf Dienstleistungsb…    col4=        12 col12=       100 col13=       100
+  row  14  L(7): *                                      col4=        14 col12=      30.3 col13=      30.3
+  row  15  L(8): BIP/Kopf Anteil Produzierende Bere…    col4=        15 col12=   15006.1 col13=   15006.1
+  row  16  L(9): Entw.BIP/Kopf Produzierende Ber.       col4=        16 col12=       100 col13=       100
+  row  18  L(5): Endenergieverbrauch insgesamt          col4=        18 col12=2.43719e+06 col13=1.85529e+06 col18=   84.6054 col19=   76.1243
+  row  19  L(6): Energieproduktivität pro Person        col4=        19 col12=   20.3205 col13=   26.6939 col16=   1.31364
+  row  21  L(5): Kraft, Licht, Informat./Kommunikat…    col4=        21 col18=   113.737 col19=        95
+  row  22  L(6): Bedarfsniveau (statisch), 100% Str…    col4=        22 col12=    329214 col13=    329214 col30=        15
+  row  23  L(6): *                                      col4=        23 col12=   18.6008 col13=   18.6008
+  row  24  L(11): GWh/a                                  col4=        24 col12=   61236.5 col13=   61236.5
+  row  25  L(7): *                                      col4=        25 col12=       100 col13=        95
+  row  26  L(11): GWh/a                                  col4=        26 col12=   61236.5 col13=   58174.7
+  row  28  L(6): *                                      col4=        28 col12=   34.6577 col13=   34.6577
+  row  29  L(11): GWh/a                                  col4=        29 col12=    114098 col13=    114098
+  row  30  L(7): *                                      col4=        30 col12=       100 col13=       100
+  row  31  L(11): GWh/a                                  col4=        31 col12=    114098 col13=    114098
+  row  32  L(8): *                                      col4=        32 col12=       100 col13=        95
+  row  33  L(11): GWh/a                                  col4=        33 col12=    114098 col13=    108393
+  row  35  L(6): *                                      col4=        35 col12=   46.7415 col13=   46.7415
+  row  36  L(11): GWh/a                                  col4=        36 col12=    153880 col13=    153880
+  row  37  L(7): *                                      col4=        37 col12=       100 col13=       100 col18=       100 col19=         1 col20=       100
+  row  38  L(11): GWh/a                                  col4=        38 col12=    153880 col13=    153880
+  row  39  L(8): *                                      col4=        39 col12=       100 col13=        95
+  row  40  L(11): GWh/a                                  col4=        40 col12=    153880 col13=    146186
+  row  42  L(6): Endverbrauch Strom für KLIK gesamt     col4=        42 col12=    329214 col13=    312753 col18=   113.737 col19=        95
+  row  44  L(5): Gebäudewärme (GW)                      col4=        44 col18=   87.5085 col19=     83.06
+  row  45  L(6): Bedarfsniveau (statisch)               col4=        45 col12=    798867 col13=    798867 col30=        17
+  row  46  L(6): *                                      col4=        46 col12=   71.6409 col13=   71.6409
+  row  47  L(11): GWh/a                                  col4=        47 col12=    572316 col13=    572316
+  row  48  L(6): *                                      col4=        48 col12=   44.6767 col13=   44.6767
+  row  49  L(7): *                                      col4=        49 col12=       100 col13=       100
+  row  50  L(5): +                                      col4=        50 col12=    572316 col13=    572316
+  row  52  L(6): *                                      col4=        52 col12=   28.3591 col13=   28.3591
+  row  53  L(11): GWh/a                                  col4=        53 col12=    226551 col13=    226551
+  row  54  L(7): *                                      col4=        54 col12=       100 col13=       100
+  row  55  L(5): +                                      col4=        55 col12=    226551 col13=    226551
+  row  57  L(6): Bedarfsniveau (Wohnfläche/Wirtscha…    col4=        57 col12=    798867 col13=    798867
+  row  58  L(6): *                                      col4=        58 col12=   85.9291 col13=   85.9291
+  row  59  L(11): GWh/a                                  col4=        59 col12=    686460 col13=    686460
+  row  60  L(8): Spez.Raumwärmebed.Status/Saniert       col4=        60 col12=       136 col13=        75
+  row  61  L(9): Veränderung zum Status                 col4=        61 col12=       100 col13=  -44.8529
+  row  63  L(9): Gebäude - Sanierungs-/Ersatzrate       col4=        63 col12=       1.5
+  row  64  L(9): Sanierungszeitraum: 22 Jahre           col4=        64 col13=      2045
+  row  65  L(8): *                                      col4=        65 col12=         0 col13=        33
+  row  66  L(10): Result.spez.Raumwärmebed. ges.         col4=        66 col12=       136 col13=    115.87
+  row  67  L(7): *                                      col4=        67 col12=         0 col13=  -14.8015
+  row  68  L(5): +                                      col4=        68 col12=    686460 col13=    584853
+  row  70  L(6): *                                      col4=        70 col12=   14.0709 col13=   14.0709
+  row  71  L(11): GWh/a                                  col4=        71 col12=    112408 col13=    112408
+  row  72  L(7): *                                      col4=        72 col12=       100 col13=        70
+  row  73  L(5): +                                      col4=        73 col12=    112408 col13=   78685.4
+  row  74  L(9): Res. Anteil Warmwasser an Gebäudew.    col4=        74 col12=   14.0709 col13=   11.8584
+  row  75  L(6): Bedarfsniveau (Sanierung, Anwendun…    col4=        75 col12=    798867 col13=    663539
+  row  76  L(6): *                                      col4=        76 col12=   79.1633 col13=         0
+  row  77  L(8): Endenergieverbrauch                    col4=        77 col12=    632410 col13=         0 col18=         0 col19=         0
+  row  78  L(7): >                                      col4=        78 col12=        86 col13=        88
+  row  79  L(8): >                                      col4=        79 col12=   11.0829 col13=         0
+  row  80  L(9): Einsparung gegenüber Status (relat…    col4=        80 col12=         0 col13=   11.0829
+
+--- _S sheet: 5. Bilanz  (71 x 87) ---
+  HEAD:   1=100prosim (…
+  row   5  L(6): Status-Bilanz Endenergie:   Erneue…    col4=         5
+  row   6  L(7): Angaben in GWh                         col4=         6
+  row   7  L(8): Kraft/Licht/
+IKT/Kälte                 col4=         7
+  row   9  L(6): Endenergieträger                       col4=         9 col8=    329214 col11=     32877 col14=   76888.8 col17=     15300 col20=    454280
+  row  10  L(7): erneuerbar                             col4=        10 col9=    171004 col12=   17077.3 col15=   39938.4 col18=   14622.7 col21=    242642
+  row  11  L(7): fossil/atomar                          col4=        11 col10=    158210 col13=   15799.7 col16=   36950.5 col19=   677.341 col22=    211638
+  row  12  L(7): Verbr.Brennst.gasf.                    col4=        12 col11=    346430 col14=    192514 col17=   9195.67 col20=    548139
+  row  13  L(7): erneuerbar                             col4=        13 col12=         0 col15=         0 col18=   1131.58 col21=   1131.58
+  row  14  L(7): fossil                                 col4=        14 col13=    346430 col16=    192514 col19=   8064.09 col22=    547008
+  row  15  L(7): Verbr.Brennst.flüssig                  col4=        15 col11=    136478 col14=   24796.6 col17=    729217 col20=    890492
+  row  16  L(7): erneuerbar                             col4=        16 col12=         0 col15=         0 col18=   34768.7 col21=   34768.7
+  row  17  L(7): fossil                                 col4=        17 col13=    136478 col16=   24796.6 col19=    694448 col22=    855723
+  row  18  L(7): Verbr.Brennst.fest                     col4=        18 col11=    149501 col14=    117624 col20=    267125
+  row  19  L(7): erneuerbar                             col4=        19 col12=   88254.5 col15=   25697.2 col21=    113952
+  row  20  L(7): fossil                                 col4=        20 col13=   61246.9 col16=   91926.9 col22=    153174
+  row  21  L(7): Verbrauch Wärme                        col4=        21 col11=    133580 col14=    143572 col20=    277152
+  row  22  L(7): erneuerbar                             col4=        22 col12=   32782.8 col21=   32782.8
+  row  23  L(7): Abwärme                                col4=        23 col12=   34175.3 col13=   48977.1 col16=    143572 col21=   34175.3 col22=    192549
+  row  24  L(7): fossil                                 col4=        24 col13=   17645.3 col22=   17645.3 col27=      99.4
+  row  25  L(7): Verbrauch gesamt                       col4=        25 col8=    329214 col11=    798867 col14=    555395 col17=    753713 col20=2.43719e+06
+  row  26  L(7): erneuerbar                             col4=        26 col9=    171004 col12=    172290 col15=   65635.5 col18=     50523 col21=    459452
+  row  27  L(7): fossil                                 col4=        27 col10=    158210 col13=    626577 col16=    489759 col19=    703190 col22=1.97774e+06
+  row  28  L(6): Fossil/atomar ist der Teil des ver…    col4=        28
+  row  29  L(6): Fossil/atomar  =  Verbrauch  -  er…    col4=        29
+  row  30  L(6): Fossile Wärme aufgeteilt gemäß Deu…    col4=        30
+  row  32  L(6): Endenergie: Fossiler Brennstoffmix     col4=        32
+  row  33  L(7): Anteil an jew. Brennstoffsumme in %    col4=        33
+  row  35  L(7): Brennstoffe gasförmig                  col4=        35 col12=   63.6638 col13=       100 col15=   62.2544 col16=       100 col18=   1.14789
+  row  36  L(7): Brennstoffe flüssig                    col4=        36 col12=   25.0808 col13=         0 col15=   8.01863 col16=         0 col18=   98.8521
+  row  37  L(7): Brennstoffe fest                       col4=        37 col12=   11.2554 col13=         0 col15=    29.727 col16=         0 col18=         0
+  row  38  L(6): Gelbe Felder: Zielansatz für den B…    col4=        38
+  row  40  L(6): Endenergie: Fossile Wärme              col4=        40
+  row  41  L(7): Anteil an jew. Wärmesumme in %         col4=        41
+  row  43  L(7): Abwärme                                col4=        43 col12=   73.5145 col13=   73.5145 col15=       100 col16=       100
+  row  44  L(7): Fernheizwerk                           col4=        44 col12=   26.4855 col13=   26.4855
+  row  45  L(6): Gelbes Felder: Zielansatz für den …    col4=        45
+  row  47  L(6): Ziel-Bilanz Endenergie:   Erneuerb…    col4=        47
+  row  48  L(7): Angaben in GWh                         col4=        48
+  row  49  L(8): Kraft/Licht/
+IKT/Kälte                 col4=        49
+  row  51  L(6): Endenergieträger                       col4=        51 col8=    312753 col11=    136021 col14=    357504 col17=    197549 col20=1.00383e+06
+  row  52  L(7): erneuerbar*                            col4=        52 col9=    374438 col12=    162848 col15=    428014 col18=    236512 col21=1.20181e+06
+  row  53  L(7): fossil/atomar                          col4=        53 col10=         0 col13=         0 col16=         0 col19=         0 col22=         0
+  row  54  L(7): Verbr.Brennst.ges.                     col4=        54 col11=         0 col14=    132747 col17=    191199 col20=    323947
+  row  55  L(7): erneuerbar*                            col4=        55 col12=         0 col15=    132753 col18=    191199 col21=    323952
+  row  56  L(7): fossil                                 col4=        56 col13=         0 col16=         0 col19=2.91038e-11 col22=2.91038e-11
+  row  57  L(7): davon gasf.                            col4=        57 col13=         0 col16=         0 col19=3.34081e-13 col22=3.34081e-13
+  row  58  L(7): davon flüss.                           col4=        58 col13=         0 col16=         0 col19=2.87697e-11 col22=2.87697e-11
+  row  59  L(7): davon fest                             col4=        59 col13=         0 col16=         0 col22=         0
+  row  60  L(7): Verbrauch Wärme                        col4=        60 col11=    527518 col14=         0 col20=    527518
+  row  61  L(7): erneuerbar*                            col4=        61 col12=    503734 col15=         0 col21=    503734
+  row  62  L(7): Abwärme*                               col4=        62 col12=     32495 col13=         0 col16=         0 col21=     32495 col22=         0
+  row  63  L(7): fossil                                 col4=        63 col13=         0 col22=         0 col26=  -8606.45
+  row  64  L(7): Verbrauch gesamt                       col4=        64 col8=    312753 col11=    663539 col14=    490251 col17=    388749 col20=1.85529e+06
+  row  65  L(7): erneuerbar*                            col4=        65 col9=    374438 col12=    699077 col15=    560767 col18=    427711 col21=2.06199e+06
+  row  66  L(7): fossil                                 col4=        66 col10=         0 col13=         0 col16=         0 col19=2.91038e-11 col22=2.91038e-11
+  row  67  L(7): erneuerbar+Abw.+fossil                 col4=        67 col9=    374438 col12=    699077 col15=    560767 col18=    427711 col21=2.06199e+06
+  row  68  L(6): *) Deckungsanteile erneuerbar und …    col4=        68
+
+--- _S sheet: 6. Fossile  (93 x 75) ---
+  HEAD:   1=100prosim (… | 8=H | 9=I | 10=J | 11=K | 12=L | 13=M | 14=N | 15=O | 16=P
+  row   5  L(6): Strom fossil/atomar                    col4=         5
+  row   6  L(8): Strom-Endverbrauch                     col4=         6
+  row   7  L(8): > Bruttostromverbr.                    col4=         7
+  row   8  L(7): Endverbrauch                           col4=         8 col11=    211638 col12=         0
+  row   9  L(7): +                                      col4=         9 col9=   5.51214 col10=   5.51214 col11=   11665.8 col12=         0
+  row  10  L(7): +                                      col4=        10 col9=         0 col10=         0 col11=         0 col12=         0
+  row  11  L(8): Bruttostromverbrauch                   col4=        11 col11=    223304 col12=         0
+  row  13  L(8): Bruttostromverbr.                      col4=        13
+  row  14  L(8): > Primärenergie-V.                     col4=        14
+  row  15  L(9): Status                                 col4=        15
+  row  16  L(7): Bruttostromverbrauch                   col4=        16 col9=         0 col10=       100 col11=    223304 col12=         0
+  row  24  L(6): Brennstoffe fossil gasförmig           col4=        24
+  row  25  L(8): Endverbrauch                           col4=        25
+  row  26  L(8): > Primärenergie-V.                     col4=        26
+  row  27  L(9): Status                                 col4=        27
+  row  28  L(7): Endverbrauch                           col4=        28 col11=    547008 col12=3.34081e-13
+  row  29  L(7): +                                      col4=        29 col9=         0 col10=         0 col11=         0 col12=         0
+  row  30  L(7): +                                      col4=        30 col9=         0 col10=         0 col11=         0 col12=         0
+  row  31  L(8): Naturgase-Verbrauch                    col4=        31 col11=    547008 col12=3.34081e-13 col13=       100 col14=       100 col15=    547008
+  row  33  L(6): Brennstoffe fossil flüssig             col4=        33
+  row  34  L(8): Endverbrauch                           col4=        34
+  row  35  L(8): > Primärenergie-V.                     col4=        35
+  row  36  L(9): Status                                 col4=        36
+  row  37  L(7): Endverbrauch                           col4=        37 col11=    855723 col12=2.87697e-11
+  row  38  L(8): Leit./Fackelverluste                   col4=        38 col9=         0 col10=         0 col11=         0 col12=         0
+  row  39  L(8): Verbr.Umwandl.ber.                     col4=        39 col9=         0 col10=         0 col11=         0 col12=         0
+  row  40  L(8): Erdöl-Verbrauch                        col4=        40 col11=    855723 col12=2.87697e-11 col13=         0 col14=         0
+  row  42  L(6): Brennstoffe fossil fest                col4=        42
+  row  43  L(9): (%)                                    col4=        43
+  row  44  L(7): Gebäudewärme                           col4=        44
+  row  45  L(8): Endverbrauch                           col4=        45 col9=       100 col10=       100 col11=   61246.9 col12=         0
+  row  46  L(8): davon Steinkohle                       col4=        46 col9=         0 col10=         0 col11=         0 col12=         0
+  row  47  L(8): davon Braunkohle                       col4=        47 col9=         0 col10=         0 col11=         0 col12=         0
+  row  48  L(7): Prozesswärme                           col4=        48
+  row  49  L(8): Endverbrauch                           col4=        49 col9=       100 col10=       100 col11=   91926.9 col12=         0
+  row  50  L(8): davon Steinkohle                       col4=        50 col9=         0 col10=         0 col11=         0 col12=         0
+  row  51  L(8): davon Braunkohle                       col4=        51 col9=         0 col10=         0 col11=         0 col12=         0
+  row  53  L(8): Endverbrauch                           col4=        53
+  row  54  L(8): > Primärenergie-V.                     col4=        54
+  row  55  L(9): Status                                 col4=        55
+  row  56  L(7): Endverbr.Steinkohle                    col4=        56 col11=         0 col12=         0
+  row  57  L(8): Verbr.Umwandl.b.                       col4=        57 col9=         0 col10=         0 col11=         0 col12=         0
+  row  58  L(8): Steinkohle-Verbrauch                   col4=        58 col11=         0 col12=         0 col13=         0 col14=         0
+  row  59  L(7): Endverbr.Braunkohle                    col4=        59 col11=         0 col12=         0
+  row  60  L(8): Verbr.Umwandl.b.                       col4=        60 col9=         0 col10=         0 col11=         0 col12=         0
+  row  61  L(8): Braunkohle-Verbrauch                   col4=        61 col11=         0 col12=         0 col13=         0 col14=         0
+  row  63  L(6): Wärme fossil                           col4=        63
+  row  64  L(8): Wärmeendverbr.                         col4=        64
+  row  65  L(8): >Bruttowärmeverbr.                     col4=        65
+  row  66  L(7): Endverbrauch                           col4=        66 col11=   17645.3 col12=         0
+  row  67  L(7): +                                      col4=        67 col9=   11.5845 col10=   11.5845 col11=   2044.12 col12=         0
+  row  68  L(7): +                                      col4=        68 col9=         0 col10=         0 col11=         0 col12=         0
+  row  69  L(8): Bruttowärmeverbrauch                   col4=        69 col11=   19689.4 col12=         0
+  row  71  L(8): Bruttowärmeverbr.                      col4=        71
+  row  72  L(8): > Primärenergie-V.                     col4=        72
+  row  73  L(9): Status                                 col4=        73
+  row  74  L(7): Bruttowärmeverbrauch                   col4=        74 col11=   19689.4 col12=         0
+
+--- _S sheet: 7. Verbrauch Status  (101 x 96) ---
+  HEAD:   1=100prosim (…
+  row   5  L(6): Anzahl Energieverbraucher:             col4=         5 col12=8.46693e+07
+  row   7  L(6): Endenergieverbrauch Zielregion Sta…    col4=         7
+  row   8  L(7): Endenergie in GWh                      col4=         8
+  row   9  L(8): Kraft/Licht/
+IKT/Kälte                 col4=         9
+  row  10  L(11): Raumw.                                 col4=        10
+  row  11  L(6): Endenergie-Träger                      col4=        11 col8=    329214 col11=     32877 col14=   76888.8 col17=     15300 col20=    454280
+  row  13  L(7): Brennst.gasförm.                       col4=        13 col8=         0 col11=    346430 col14=    192514 col17=   9195.67 col20=    548139
+  row  15  L(7): Brennst.flüssig                        col4=        15 col8=         0 col11=    136478 col14=   24796.6 col17=    729217 col20=    890492
+  row  17  L(7): Brennst.fest                           col4=        17 col8=         0 col11=    149501 col14=    117624 col17=         0 col20=    267125
+  row  19  L(7): Wärme                                  col4=        19 col8=         0 col11=    133580 col14=    143572 col17=         0 col20=    277152
+  row  21  L(7): insgesamt                              col4=        21 col8=    329214 col11=    798867 col14=    555395 col17=    753713 col20=2.43719e+06
+  row  23  L(6): Wärme-Endverbrauch Zielregion Stat…    col4=        23
+  row  24  L(7): Endenergie in GWh                      col4=        24
+  row  25  L(11): fossil                                 col4=        25
+  row  26  L(7): Wärme                                  col4=        26 col11=    133580 col14=    143572
+  row  27  L(7): Fernheizwerke    fossil                col4=        27 col12=   12299.8 col15=   7209.29
+  row  28  L(7): erneuerbar                             col4=        28 col13=   4022.84 col16=   2357.91
+  row  29  L(7): Fern-HeizKRAFTwerke                    col4=        29 col12=   58930.5 col13=   25353.3 col15=   98966.7 col16=     13351
+  row  30  L(7): Nahwärme Abw./erneuerb.                col4=        30 col12=         0 col13=   32974.1 col15=   21686.6 col16=         0
+  row  32  L(6): Primärenergieverbrauch Zielregion …    col4=        32 col20=2.95143e+06
+  row  34  L(6): Übernommen aus:                        col4=        34
+  row  35  L(5): BS.3.29                                col4=        35
+  row  37  L(5): BS.2.4                                 col4=        37
+  row  38  L(5): BS.2.5                                 col4=        38
+  row  39  L(5): BS.2.6                                 col4=        39
+  row  40  L(5): BS.2.7                                 col4=        40
+  row  41  L(5): BS.2.8                                 col4=        41 col8=   3888.23 col11=   388.299 col14=   908.107 col17=   180.703 col20=   5365.34
+  row  42  L(5): BS.2.9                                 col4=        42 col12=   189.886 col13=   198.413 col18=   180.703 col19=         0
+  row  43  L(5): BS.2.10                                col4=        43 col8=         0 col11=   4091.57 col14=   2273.71 col17=   108.607 col20=   6473.88
+  row  44  L(5): BS.2.11                                col4=        44 col12=   3386.79 col13=   704.775 col18=   108.607 col19=         0
+  row  45  L(5): BS.2.12                                col4=        45 col8=         0 col11=    1611.9 col14=   292.864 col17=   8612.53 col20=   10517.3
+  row  46  L(5): BS.2.13                                col4=        46 col12=   1392.17 col13=    219.73 col18=   7259.98 col19=   1352.55
+  row  47  L(5): BS.2.14                                col4=        47 col8=         0 col11=   1765.71 col14=   1389.22 col17=         0 col20=   3154.93
+  row  48  L(5): BS.2.15                                col4=        48 col12=   1708.75 col13=   56.9584 col18=         0 col19=         0
+  row  49  L(5): BS.2.16                                col4=        49 col8=         0 col11=   1577.67 col14=   1695.67 col17=         0 col20=   3273.35
+  row  50  L(5): BS.2.17                                col4=        50 col12=   1429.94 col13=   147.733 col18=         0 col19=         0
+  row  51  L(5): BS.2.18                                col4=        51 col8=   3888.23 col11=   9435.14 col14=   6559.57 col17=   8901.84 col20=   28784.8
+  row  52  L(5): BS.2.19                                col4=        52
+  row  53  L(5): BS.2.20                                col4=        53 col7=       3.6
+  row  54  L(5): BS.2.21                                col4=        54 col7=     1e+09
+  row  55  L(5): BS.2.22                                col4=        55 col7=  8.47e+07
+  row  56  L(5): BS.2.23                                col4=        56
+  row  57  L(5): BS.2.24                                col4=        57
+  row  58  L(5): BS.2.25                                col4=        58
+  row  59  L(5): BS.2.26                                col4=        59 col14=         0
+  row  60  L(5): BS.2.27                                col4=        60 col11=   1577.67 col14=   1695.67
+  row  61  L(5): BS.2.28                                col4=        61 col12=   145.269 col15=   85.1464
+  row  62  L(5): BS.2.29                                col4=        62 col13=   47.5124 col16=   27.8485
+  row  63  L(5): BS.2.30                                col4=        63 col12=   696.008 col13=   299.439 col15=   1168.86 col16=   157.684
+  row  64  L(5): BS.2.31                                col4=        64 col13=   389.445 col15=   256.133 col16=         0
+  row  65  L(5): BS.2.32                                col4=        65
+  row  66  L(5): BS.2.34                                col4=        66
+  row  67  L(5): BS.2.35                                col4=        67
+  row  68  L(5): BS.2.36                                col4=        68 col11=       100 col14=       100 col17=         0
+  row  69  L(5): BS.2.37                                col4=        69 col11=        85 col14=        90 col17=         0
+  row  70  L(5): BS.2.38                                col4=        70 col11=        80 col14=        85 col17=         0
+  row  71  L(5): BS.2.39                                col4=        71 col11=        75 col14=        80 col17=         0
+  row  72  L(5): BS.2.40                                col4=        72 col11=       100 col14=       100 col17=         0
+  row  79  L(6): Endenergieverbrauch Zielregion Sta…    col4=        79
+  row  80  L(7): Endenergie in GWh                      col4=        80
+
+--- _S sheet: 8. Kennzahlen  (128 x 96) ---
+  HEAD:   1=100prosim (…
+  row   5  L(6): Übernommen aus:                        col4=         5
+  row   6  L(5): BS.3.2                                 col4=         6
+  row   8  L(5): BS.3.4                                 col4=         8
+  row   9  L(5): BS.3.5                                 col4=         9
+  row  10  L(5): BS.3.6                                 col4=        10
+  row  11  L(5): BS.3.7                                 col4=        11 col6=         0 col10=         0
+  row  12  L(5): BS.3.8                                 col4=        12 col6=         0 col10=         0 col11=         0
+  row  13  L(5): BS.3.9                                 col4=        13 col6=         0 col10=         0 col11=         0
+  row  14  L(5): BS.3.10                                col4=        14 col6=         0 col10=         0 col11=         0
+  row  15  L(5): BS.3.11                                col4=        15 col6=         0 col10=         0 col11=         0
+  row  16  L(5): BS.3.12                                col4=        16 col6=         0 col10=         0 col11=         0
+  row  17  L(5): BS.3.13                                col4=        17 col6=         0 col10=         0 col11=         0
+  row  19  L(5): BS.3.15                                col4=        19
+  row  20  L(5): BS.3.16                                col4=        20
+  row  21  L(5): BS.3.17                                col4=        21
+  row  22  L(5): BS.3.18                                col4=        22 col10=   5.51214
+  row  23  L(5): BS.3.19                                col4=        23 col9=         0 col10=         0
+  row  25  L(5): BS.3.21                                col4=        25
+  row  26  L(5): BS.3.22                                col4=        26
+  row  27  L(5): BS.3.23                                col4=        27
+  row  28  L(5): BS.3.24                                col4=        28 col9=         0 col10=         0
+  row  29  L(5): BS.3.25                                col4=        29 col9=         0 col10=         0
+  row  30  L(5): BS.3.26                                col4=        30 col9=         0 col10=         0
+  row  31  L(5): BS.3.27                                col4=        31 col9=         0 col10=         0
+  row  34  L(5): BS.3.30                                col4=        34
+  row  35  L(5): BS.3.31                                col4=        35
+  row  36  L(5): BS.3.32                                col4=        36
+  row  37  L(5): BS.3.33                                col4=        37 col9=         0 col10=         0
+  row  38  L(5): BS.3.34                                col4=        38 col9=         0 col10=         0
+  row  39  L(5): BS.3.35                                col4=        39 col9=         0 col10=         0
+  row  40  L(5): BS.3.36                                col4=        40 col9=         0 col10=         0
+  row  42  L(5): BS.3.38                                col4=        42
+  row  43  L(5): BS.3.39                                col4=        43
+  row  44  L(5): BS.3.40                                col4=        44
+  row  45  L(5): BS.3.41                                col4=        45 col10=         0 col11=         0
+  row  46  L(5): BS.3.42                                col4=        46 col10=         0 col11=         0
+  row  48  L(5): BS.3.44                                col4=        48 col10=         0 col11=         0
+  row  49  L(5): BS.3.45                                col4=        49 col10=         0 col11=         0
+  row  50  L(5): BS.3.46                                col4=        50 col10=         0 col11=         0
+  row  51  L(5): BS.3.47                                col4=        51 col9=         0 col10=         0 col11=         0
+  row  52  L(5): BS.3.48                                col4=        52 col9=         0 col10=         0 col11=         0
+  row  54  L(5): BS.3.50                                col4=        54
+  row  55  L(5): BS.3.51                                col4=        55
+  row  56  L(5): BS.3.52                                col4=        56
+  row  57  L(5): BS.3.53                                col4=        57 col6=         0 col10=         0
+  row  58  L(5): BS.3.54                                col4=        58 col6=         0 col10=         0
+  row  59  L(5): BS.3.55                                col4=        59 col6=         0 col10=         0
+  row  60  L(5): BS.3.56                                col4=        60 col6=         0 col10=         0
+  row  61  L(5): BS.3.57                                col4=        61 col6=         0 col10=         0
+  row  62  L(5): BS.3.58                                col4=        62 col6=         0 col10=         0
+  row  64  L(5): BS.3.60                                col4=        64
+  row  65  L(5): BS.3.61                                col4=        65 col9=         0 col10=   11.5845
+  row  66  L(5): BS.3.62                                col4=        66 col9=         0 col10=         0
+  row  67  L(5): BS.3.63                                col4=        67 col9=         0 col10=         0
+  row  69  L(5): BS.3.65                                col4=        69
+  row  70  L(5): BS.3.66                                col4=        70
+  row  71  L(5): BS.3.67                                col4=        71
+  row  72  L(5): BS.3.68                                col4=        72 col10=         0 col11=         0
+  row  73  L(5): BS.3.69                                col4=        73 col10=         0 col11=         0
+  row  74  L(5): BS.3.70                                col4=        74 col10=         0 col11=         0
+  row  75  L(5): BS.3.71                                col4=        75 col10=         0 col11=         0
+  row  76  L(5): BS.3.72                                col4=        76 col10=         0 col11=         0
+  row  77  L(5): BS.3.73                                col4=        77
+  row  78  L(5): BS.3.74                                col4=        78
+  row  79  L(5): BS.3.75                                col4=        79
+  row  80  L(5): BS.3.76                                col4=        80 col8=         0 col10=         0
