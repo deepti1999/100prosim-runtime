@@ -16,6 +16,36 @@ PROVENANCE_ORIGIN_CHOICES = [
     ("internal", "Internal (no Datenmodell counterpart)"),
 ]
 
+
+class Region(models.Model):
+    """
+    Phase B (T65, SR-004) — first-class region for Datenmodell scoping.
+
+    Each parameter row (LandUse / RenewableData / VerbrauchData /
+    GebaeudewaermeData) is FK'd to a Region. Default seeded row is
+    DE (Deutschland). Per-Bundesland rows arrive via
+    `manage.py import_excel_provenance --region=<code>`.
+
+    installed_pmax_ely_gw / installed_pmax_rv_gw replace the literal
+    "194 GW" / "261 GW" annotations on the Jahresstrom diagram
+    (T54 D4a / D4b) so they become region-scoped instead of frozen
+    Python literals — sourced from D.xlsx I_Basisdaten.
+    """
+
+    code = models.CharField(max_length=16, unique=True)
+    display_name = models.CharField(max_length=100)
+    active = models.BooleanField(default=True)
+    datenmodell_excel_hash = models.CharField(max_length=64, blank=True, default="")
+    installed_pmax_ely_gw = models.FloatField(default=0.0)
+    installed_pmax_rv_gw = models.FloatField(default=0.0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["code"]
+
+    def __str__(self):
+        return f"{self.code} – {self.display_name}"
+
 # Thread-local storage to prevent infinite cascade loops
 _cascade_context = threading.local()
 
