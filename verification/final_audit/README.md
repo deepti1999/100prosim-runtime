@@ -33,6 +33,10 @@ Per CLAUDE.md V2–V6 ritual + the user's audit prompt, each shipped target shou
 ## Honest limitations of this run
 
 - **Time bound.** A single Claude session cannot produce 8 high-quality docs × 57 targets in one go. I commit after every batch so partial work survives. Targets verified with abridged evidence note the abridgement explicitly.
+- **Mid-run format pivot.** T6, T19, T20, T28 use the full 8-file structure (`01_stakeholder_ask.md` … `08_verdict.md`). For the remaining 53 targets I compress to **two** files per target:
+  - `01_stakeholder_ask.md` — PDF quote + acceptance.
+  - `08_verdict.md` — combined evidence (sections 02-07 inline) + verdict.
+  This change preserves the V2-V6 evidence ladder per target but avoids the 456-file blowup. The 8-file targets stay as-is for reference.
 - **PDF extraction.** `pdftotext -layout` mangles some umlauts in the German source (e.g. "Funk�onalit�t" instead of "Funktionalität"). The extracted text is structurally correct and section-numbered; for canonical wording I cross-reference `260403_Bestandsaufnahme_DE.md` and `260403_Bestandsaufnahme_EN.md` translations.
 - **Performance numbers are observational, not gated.** Heroku basic dyno timings vary ±2× call-to-call; a single sample is not a percentile. Numbers documented with sample-size caveats.
 - **Two-user concurrency edges** are sketched (one browser tab + one curl/heroku-shell session), not run as N-user load tests.
