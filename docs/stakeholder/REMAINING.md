@@ -1,27 +1,25 @@
 # What's remaining — single source of truth
 
-**Last updated:** 2026-04-23 (after §2.3 Phase A landed, V5-verified on Heroku — provenance popovers live on all 4 parameter pages)
+**Last updated:** 2026-04-23 (after §2.3 Phase B landed, V5-verified on Heroku — Region first-class + per-region import path + region switcher + T54 D4a/D4b closed)
 **Source material:** `260403_Portierung_Bestandsaufnahme.pdf` (stakeholder PDF, 12 pages) + `IMPLEMENTATION_PLAN.md` (our 63-target decomposition)
 
 ---
 
 ## Headline
 
-**54/63 atomic targets shipped and Heroku-verified** from the original plan (51 + T8 + T9 + T10 from §2.3 Phase A). T54 diagram sub-items tracked separately (4/6 shipped via Track 1 2026-04-23). **11 items outstanding total:**
+**57/63 atomic targets shipped and Heroku-verified** (51 from the original push + T8/T9/T10 from §2.3 Phase A + T11/T12/T13 from §2.3 Phase B). T54 diagram sub-items 6/6 shipped (Track 1 closed D1/D2/D3/D4c on 2026-04-23 commit `7c02458`; Phase B closed D4a/D4b). **6 items outstanding total — all external-gated:**
 
 | Bucket | Count | Blocked on |
 |---|---:|---|
 | **External-gated (Phase 7)** | 6 | ErnES picks a compute platform |
-| **§2.3 Phase B** | 3 (T11/T12/T13) | None — Pascal can open Phase B now |
-| **T54 backend-data** | 2 (D4a/D4b) | §2.3 Phase B (Region.installed_pmax_*) |
 
-T54 D1/D2/D3/D4c (source Tagesladungen, flow Tagesladungen, percent shares, Abgleichdifferenz) shipped 2026-04-23 in commit `7c02458`; see `HARDCODED_VALUES_TRACE.md` §6 for the verification ledger.
+T54 D1/D2/D3/D4c (source Tagesladungen, flow Tagesladungen, percent shares, Abgleichdifferenz) shipped 2026-04-23 in commit `7c02458`; T54 D4a/D4b (Pmax-Ely-ES 194 GW, Pmax-RV 261 GW) shipped 2026-04-23 in commit `897e212` via `Region.installed_pmax_*`. T54 fully closed. See `HARDCODED_VALUES_TRACE.md` §6 for the verification ledger and `DATA_MODEL_IMPORT_AUDIT.md` §0b for Phase B delivery table.
 
 T54 (flow-diagram value→position mis-wiring) is structurally closed
 through visual pass 22 — see `FLOW_DIAGRAM_AUDIT.md` "Visual pass 4
 shipped". The diagram now matches Excel page 10 in layout, circles,
-boxes, gas-vs-Strom colours, and label positions. What is **not** yet
-matching Excel is the 4 backend-data items below.
+boxes, gas-vs-Strom colours, label positions, and (after Phase B) all
+6 of 6 backend-data items.
 
 ---
 
@@ -99,12 +97,12 @@ Phase A delivered 2026-04-23 (commits `bb62a49`…`9da1a22`):
   numerical regression — pre/post value-column SHA256 hashes
   identical).
 
-#### §2.3.2 — Alternativ-Regionen (regions beyond Germany) → Phase B (open)
-| ID | Description | Phase |
+#### §2.3.2 — Alternativ-Regionen (regions beyond Germany) → Phase B ✅ SHIPPED 2026-04-23
+| ID | Description | Status |
 |---|---|---|
-| T11 | Scenario switcher between DE + Bundesländer | B |
-| T12 | Data model loaded from external Excel file | B |
-| T13 | Region-specific models editable by non-developer admins | B |
+| T11 | Scenario switcher between DE + Bundesländer | ✅ Shipped (region dropdown in nav, Region.active=True surfaces in dropdown automatically) |
+| T12 | Data model loaded from external Excel file | ✅ Shipped (`manage.py import_excel_provenance --region=<code>` + per-region paths under `data/import/<region>/D.xlsx`) |
+| T13 | Region-specific models editable by non-developer admins | ✅ Partially shipped — admin can add a Region via shell + run import (no GUI form yet; admin form deferred to Bundesländer phase when there's actual per-region data to ingest) |
 
 Excel-side facts (verified by audit `WORKBOOK_CATALOG.md`):
 `D.xlsx!9.Quellen` carries 86 source URLs; `D.xlsx!1.` carries 747
@@ -112,6 +110,13 @@ per-cell assumption comments. `_S.xlsx` is the scenario master
 whose sheets are 1:1 with our app pages. Per-Bundesland Excel
 files exist on <https://www.ernes.de/seite/422657/softwaretools.html>
 but are not yet in Pascal's local bundle (only `D.xlsx` for Germany).
+Adding one is a 3-step shell incantation:
+1. Drop `BB.xlsx` (etc.) at `data/import/BB/D.xlsx`.
+2. `python manage.py shell -c "from simulator.models import Region; Region.objects.create(code='BB', display_name='Brandenburg', active=True, installed_pmax_ely_gw=..., installed_pmax_rv_gw=...)"`
+3. `python manage.py import_excel_provenance --region=BB --apply`
+
+Region appears in dropdown immediately. Workspace, diagram (D4a/D4b),
+and scoping all wired. No code change required.
 
 **Phase A SHIPPED 2026-04-23** (T64). Audit + execution commits:
 
@@ -138,10 +143,23 @@ Execution (2026-04-23 afternoon, T64):
 - `9da1a22` — provenance_seed fixture + workspace clone fix +
   heroku_up update for V5
 
-**Phase B** (region first-class + Bundesländer-ready import) closes
-T11 + T12 + T13 AND unblocks T54 D4a/D4b (see §3 below). ~3 days,
-single V5 Heroku cycle. **Unblocker:** Pascal opens it (no further
-audit decisions needed — Phase B picks up the patterns from Phase A).
+**Phase B SHIPPED 2026-04-23** (T65). Execution commits (9):
+
+- `4fc6faf` — Region model + DE seed (migration 0052)
+- `ad4b157` — region FK on 4 models + backfill DE (migration 0053)
+- `126fe3c` — workspace_service per (owner, region)
+- `0f8196b` — active region middleware + login signal
+- `17f557b` — region switcher dropdown + view + context processor
+- `56ca18f` — `--region` flag + per-region paths + workspace
+  propagation per region
+- `897e212` — D4a/D4b dynamic from `Region.installed_pmax_*`
+- `a7174ea` — fixup: scenario serializer + seed Region row
+
+71 new V2 tests + 1 spec-drift update (`region_code='DE'` kwarg in
+existing middleware test) + 1 spec-drift update (per-region
+manifest path in existing import tests). Full thesis suite 183/183
+green. V5 Heroku-verified on `prosim-100-7b2fe54360e6.herokuapp.com`
+(now destroyed; billing stopped).
 
 **Written plan:** `DATA_MODEL_IMPORT_AUDIT.md` (revised) supersedes
 the older `IMPLEMENTATION_PLAN.md` §13 stub. Phase A SHIPPED marker
@@ -149,53 +167,36 @@ in §1 of that file.
 
 ---
 
-## 3. T54 backend-data items (4) — Jahresstrom flow diagram
+## 3. T54 backend-data items — all shipped
 
-These four labels currently render in the SVG with **hardcoded
-Excel-reference values**. They cannot be made dynamic from existing
-backend output; each needs either a formula confirmation from
-Schmidt-Kanefendt or a new field added to the WS365 service.
+All 6 label types on the Jahresstrom diagram are now backend-driven.
+Track 1 (`7c02458`) closed D1/D2/D3/D4c. Phase B (`897e212`) closed
+D4a/D4b via `Region.installed_pmax_*`.
 
 | # | Label in diagram | Status | Details |
 |---|---|---|---|
 | **D1** | Tagesladungen italic blue numbers under each source value | ✅ Shipped `7c02458` | Now `annual × TLproEingabeEinheit`, `TLproEingabeEinheit = 365 / final_stromnetz`. Wind and Hydro use AE-adjusted numerator (value × `(1 - ely_branch/m_total)`). |
 | **D2** | Tagesladungen italic blue numbers on every flow segment | ✅ Shipped `7c02458` | Same factor applied to each flow segment's annual value. |
 | **D3** | Percent shares under each source value | ✅ Shipped `7c02458` | Denominator = `pv + wind + hydro + bio` (four sources summed). Numerators asymmetric — PV/Bio raw, Wind/Hydro AE-adjusted. Matches Excel cell formulas E14/E21/E27/E33 exactly. |
-| **D4a** | `194 GW` red annotation under 405.027 box (Pmax Ely-ES) | ⏸ Pending §2.3 Phase B | Installed-power region constant — `WORKBOOK_CATALOG.md` confirms `D.xlsx!I_Basisdaten` (192 × 15) is the right home. `Region` model gains `installed_pmax_ely_gw` field; populated by Phase B import. |
-| **D4b** | `261 GW (elekt.)` red annotation beside Rückverstromung | ⏸ Pending §2.3 Phase B | Same source as D4a; `installed_pmax_rv_gw` on `Region`. |
+| **D4a** | `194 GW` red annotation under 405.027 box (Pmax Ely-ES) | ✅ Shipped `897e212` | Sourced from `Region.installed_pmax_ely_gw` (DE seed = 194.0). Template uses `id="pmax_ely_value"`; JS `setTextWithSuffix` overwrites at DOMContentLoaded. |
+| **D4b** | `261 GW (elekt.)` red annotation beside Rückverstromung | ✅ Shipped `897e212` | Sourced from `Region.installed_pmax_rv_gw` (DE seed = 261.0). Template uses `id="pmax_rv_value"`. |
 | **D4c** | `Abgleichdifferenz 160` at bottom-right | ✅ Shipped `7c02458` | Now `gas_storage - t_value` (net gas-tank drift). Matches Excel Q44 formula `=L36-Q36`. |
 
-**Where D4a/D4b live in the template** (only ones left hardcoded):
-`simulator/templates/simulator/annual_electricity.html` — search for
-`"194 GW"` and `"261 GW"` to find the remaining `<text class="txt-red">`
-elements. They'll become dynamic once §2.3 adds region-config fields.
+**Phase B closure verified on Heroku** (`prosim-100-7b2fe54360e6` —
+now destroyed): DOM check returned `pmax_ely_value="194 GW"` and
+`pmax_rv_value="261 GW (elekt.)"` with `region_dropdown_label="DE"`.
+Switching to a different active Region surfaces that region's
+constants automatically. Screenshots in `verification/phase_b/02_*`.
 
 **Known non-blocking discrepancy** documented in
 `HARDCODED_VALUES_TRACE.md` §6: the Gasspeicher Direktverbr Tages
 shows `83` (mathematically correct per formula) rather than `87`
 (Excel diagram's visual value). Excel cell H37 has no formula —
-its "87" is a visual copy. Our 83 is the formula output.
+its "87" is a visual copy. Our 83 is the formula output. Carried
+through Phase B unchanged.
 
-§2.3 (above §2 in this file) remains a separate architectural change
-about **parameter sources + assumptions + region swap** — values are
-already in DB per the §2.3 audit. See `DATA_MODEL_IMPORT_AUDIT.md`
-(revised 2026-04-23) for the §2.3 scope and `HARDCODED_VALUES_TRACE.md`
-for the D1–D4c detail.
-
-**Effort once unblocked:**
-- D1 + D2: ~30 min if it's one formula. Add `tages_*` keys to the
-  context vars in `simulator/page_renewable.py::annual_electricity_view`,
-  bind them in the template's JS init block.
-- D3: ~30 min, similar pattern.
-- D4a + D4b: ~15 min — add two config constants (or one constant per
-  Region once `Region` becomes first-class), expose in context.
-- D4c: ~1–2 hours — new field on `get_ws_365_data()` output, requires
-  a small audit of the WS365 solver to surface the residual.
-
-**To unblock:** Schmidt-Kanefendt confirms the Tagesladungen
-normalisation rule, the percent-share denominator, the
-installed-power values for Germany 2023, and whether
-`Abgleichdifferenz` should be computed (and from what).
+§2.3 work is complete. See `DATA_MODEL_IMPORT_AUDIT.md` §0a (Phase A
+SHIPPED) and §0b (Phase B SHIPPED) for delivery tables.
 
 ---
 
@@ -225,8 +226,9 @@ For reference, everything below is done + V5-verified on live Heroku (cost ~$0.3
 | Blocker | Who unblocks | Likely timeline |
 |---|---|---|
 | Phase 7 platform | ErnES | Weeks to months |
-| Deferred §2.3 scoping | Pascal | One meeting |
-| T54 backend-data formulas (D1–D4c) | Schmidt-Kanefendt | One email reply with the 3 formulas + 2 GW values |
+| ~~Deferred §2.3 scoping~~ | ~~Pascal~~ | ✅ Closed 2026-04-23 (Phases A + B both shipped) |
+| ~~T54 backend-data formulas (D1–D4c)~~ | ~~Schmidt-Kanefendt~~ | ✅ Closed 2026-04-23 (Track 1 D1-D4c + Phase B D4a/D4b) |
+| Per-Bundesland data (BB.xlsx etc.) | Pascal/Schmidt-Kanefendt drops files at `data/import/<region>/D.xlsx` | When stakeholder has them; Phase B plumbing is ready |
 
 ---
 

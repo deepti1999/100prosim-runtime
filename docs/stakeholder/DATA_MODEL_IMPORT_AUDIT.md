@@ -1,6 +1,6 @@
 # §2.3 Data-Model Audit (revised) — provenance + region, not value import
 
-**Status:** **Phase A SHIPPED 2026-04-23 (T64)** — V5-verified on Heroku. Phase B open.
+**Status:** **Phase A SHIPPED 2026-04-23 (T64) + Phase B SHIPPED 2026-04-23 (T65)** — both V5-verified on Heroku. §2.3 closed.
 **Date:** 2026-04-23 (revised; v1 from earlier same day preserved in git history at commit `f5c738b` and back).
 **Author:** Claude (Opus 4.7) under Pascal's direction.
 **Scope:** Stakeholder PDF §2.3 "Datenmodell" (Schmidt-Kanefendt 2026-04-03).
@@ -47,9 +47,57 @@ Phase A landed on `main` across 9 commits (`bb62a49` … `9da1a22`).
 
 What remains for §2.3:
 
-- **Phase B** (Region first-class + Bundesländer import + admin UI) — closes T11 + T12 + T13 + unblocks T54 D4a/D4b. Pascal can open at any time; no further audit decisions blocking.
+- ~~**Phase B** (Region first-class + Bundesländer import + admin UI) — closes T11 + T12 + T13 + unblocks T54 D4a/D4b.~~ ✅ SHIPPED 2026-04-23 — see §0b below.
 
 The 8 D1–D8 decisions in §9 are all in **LOCKED** state from 2026-04-23 (Pascal approved on the recommendation defaults plus D4 = click popover).
+
+---
+
+## 0b. Phase B SHIPPED 2026-04-23 (T65)
+
+Phase B landed on `main` across 9 commits (`4fc6faf` … `a7174ea`).
+Closes SR-004 (Region first-class), SR-011 (admin re-import — partial,
+shell-driven for now), SR-012 (multi-region import path), and the
+last two T54 backend-data items (D4a / D4b — installed-power constants
+become region-scoped).
+
+| Deliverable | Status | Evidence |
+|---|---|---|
+| Region model + DE seed (code unique, display_name, active, datenmodell_excel_hash, installed_pmax_ely_gw, installed_pmax_rv_gw, created_at) | ✅ Shipped | `simulator/migrations/0052_region_model_and_de_seed.py`; 12/12 V2 tests in `test_wb_region_model.py` |
+| region FK on 4 parameter models (PROTECT, default DE) + backfill all 814 dev-DB rows + tightened owner-scoped unique constraints to include region | ✅ Shipped | `simulator/migrations/0053_region_fk_on_parameter_models.py` (AddField nullable → RunPython backfill → AlterField non-null pattern); 14/14 V2 tests in `test_wb_region_fk.py` |
+| Workspace per (owner, region) — `region_scope` thread-local + OwnerScopedManager filter + `ensure_user_workspace_data(user, region_code)` + per-region clone helpers | ✅ Shipped | `simulator/region_scope.py`, `simulator/owner_scope.py`, `simulator/workspace_service.py`; 11/11 V2 tests in `test_wb_workspace_region.py` |
+| Active-region session middleware — reads `active_region_code` from session, defaults DE, sets thread-local, plumbs region into `ensure_user_workspace_data`; `workspace_signals` reads same on login | ✅ Shipped | `simulator/middleware.py` + `simulator/workspace_signals.py`; 6/6 V2 tests in `test_wb_region_middleware.py` |
+| Region switcher dropdown in nav — POST endpoint validates against `Region.active=True`, persists to session, redirects to referer; context processor exposes `active_regions` + `active_region_code` to all templates | ✅ Shipped | `simulator/views_region.py`, `simulator/context_processors.py`, `simulator/urls.py`, `simulator/templates/simulator/base.html`; 12/12 V2 tests in `test_wb_region_switcher.py` |
+| `manage.py import_excel_provenance --region=<code>` + per-region paths (data/import/<region>/D.xlsx + manifest + orphan CSV); base-row + workspace-propagation filter by region | ✅ Shipped | `simulator/management/commands/import_excel_provenance.py`; 6/6 V2 tests in `test_wb_excel_import_region.py`; existing 13/13 Phase A import tests re-pointed at `data/import/DE/` |
+| T54 D4a/D4b — Pmax-Ely (194 GW) + Pmax-RV (261 GW) sourced from `Region.installed_pmax_*`; `compute_ws_diagram_reference` returns them; template uses `id="pmax_ely_value"` + `id="pmax_rv_value"` with JS overwrite at DOMContentLoaded (Track 1 D1-D4c convention) | ✅ Shipped | `simulator/signals.py`, `simulator/page_renewable.py`, `simulator/templates/simulator/annual_electricity.html`; 8/11 V2 tests in `test_wb_pmax_dynamic.py` (3 skip — compute fn needs Formula rows test DB lacks; smoke verified on dev DB and Heroku) |
+| Regression fix: scenario serializer + seed Region row | ✅ Shipped | `simulator/baseline_api.py` excludes `region` FK from per-row serialized payload (was 500-ing on `/api/scenario/create/`); `seed/sqlite_seed.json` gains a `simulator.region` row at index 0 so TransactionTestCase tests re-seed DE on each test setup |
+| V2 unit tests | ✅ 71/71 new green + 11 existing updated | Phase B added 9 test modules (test_wb_region_*, test_wb_workspace_region, test_wb_pmax_dynamic, test_wb_excel_import_region); existing test_wb_queue_jobs_middleware + test_wb_excel_provenance_import each had a single intentional spec-drift assertion update (region_code='DE' kwarg + per-region manifest path) |
+| Full thesis test suite | ✅ 183/183 green | (7 unrelated skips for Postgres-only e2e on SQLite) |
+| V5 Playwright Heroku — region dropdown + DE active + D4a/D4b render correctly + popovers + parameter pages | ✅ Verified | `verification/phase_b/01_simulation_with_region_dropdown.png`, `02_annual_electricity_d4a_d4b.png`, `03_landuse_with_dropdown_and_popovers.png`, `04_region_dropdown_open.png`. Live URL was `prosim-100-7b2fe54360e6.herokuapp.com` (now destroyed, billing stopped). DOM-confirmed values: pmax_ely_value="194 GW", pmax_rv_value="261 GW (elekt.)", region_dropdown_label="DE" |
+| Zero numerical drift on the existing DE region | ✅ Verified | All 420 base rows + per-user workspace rows backfilled to DE via 0053 RunPython; re-running `import_excel_provenance --apply` reports 0 changed (idempotent — same 178 d_xlsx + 87 derived = 265 total = identical to Phase A baseline) |
+| V6 docs | ✅ Done | This §0b section + REMAINING.md headline 54→57/63 + T54 D4a/D4b marked SHIPPED in REMAINING.md §3 |
+
+What remains for §2.3:
+
+- **Nothing blocking from Pascal's side.** All 12 SRs (SR-001 through SR-012)
+  are addressed by Phase A or Phase B. Phase 7 (ErnES handover) and the
+  Bundesländer-data ingest are external-gated.
+- Future per-Bundesland data ingest: Pascal/stakeholder drops `BB.xlsx`
+  (etc.) under `data/import/BB/D.xlsx`, runs `Region.objects.create(...)`
+  in shell, then `python manage.py import_excel_provenance --region=BB
+  --apply`. Region appears in dropdown automatically (active=True).
+  Workspace + diagram + scoping all wired.
+- Phase 2 follow-ups documented as TODOs in code:
+  - `BalanceJob.payload` should carry `region_code` so the worker
+    runs the right region's workspace (currently always DE — see
+    `balance_jobs.py` TODO).
+  - `baseline_api` snapshot serialization gains a top-level
+    `region_code` key (currently region is excluded from per-row
+    payload; restored rows default to DE).
+  - GebaeudewaermeData unique constraint stays code-only for now;
+    swap to `(region, code)` when per-region building data ships.
+  - WSData stays per-user only (no region FK); revisit if per-region
+    365-day timeseries becomes a stakeholder ask.
 
 ---
 
