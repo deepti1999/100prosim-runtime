@@ -128,6 +128,21 @@ the literal strings `"397"`, `"509"`, `"62,2%"`, `"194 GW"`, `"261 GW"`,
 `"160"` to find the hardcoded `<text>` elements. Each is right next to
 its dynamic counterpart for easy swap-out once the formula is known.
 
+**Where these live in the Excel source** (per 2026-04-23 data-model
+audit, `docs/stakeholder/DATA_MODEL_AUDIT.md`):
+
+- D1 source Tagesladungen → `WS.xlsm` sheet `Zeitreihen Kalkulation`
+  (daily series, normalised per source)
+- D2 flow Tagesladungen → same sheet, applied to each flow segment
+- D3 percent shares → `WS.xlsm` sheet `1.Jahresbilanz_Strom` cell
+  `E21` for PV = 0.6227 (equivalents for other sources)
+- D4a/b (194 GW / 261 GW) → `WS.xlsm` `1.Jahresbilanz_Strom` row 30
+- D4c (Abgleichdifferenz 160) → `WS.xlsm` scenario-balance residual
+
+§2.3 (below) and D1–D4c are effectively the same work: the Excel
+import that satisfies §2.3 also unblocks the hardcoded diagram
+values automatically. See `DATA_MODEL_AUDIT.md` for full details.
+
 **Effort once unblocked:**
 - D1 + D2: ~30 min if it's one formula. Add `tages_*` keys to the
   context vars in `simulator/page_renewable.py::annual_electricity_view`,

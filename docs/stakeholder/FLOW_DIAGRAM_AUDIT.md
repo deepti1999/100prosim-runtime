@@ -493,15 +493,27 @@ commit so we could roll back if a pass made things worse.
 7. **Excel "stretching" interpretation**: "stretch the arrow" really means make the horizontal segment between two circles long enough for the value box + label to fit ABOVE the line with breathing room. Default short arrows force value boxes onto the line.
 8. **Reverting is OK**: pass 14 was rejected by Pascal in the same session, immediate `git checkout 9e6a19a` restored pass 13 cleanly. Don't pile up bad commits trying to "fix forward" — revert and try a different approach.
 
-### Still outstanding — same backend-dependent gaps as pass 2
+### Still outstanding — now tracked as D1–D4c in REMAINING.md §3
 
-The 4 backend-blocked items (d, f, k, n2 — percent shares,
-Tagesladungen, 261 GW elekt., Abgleichdifferenz 160) are unchanged
-by passes 9–22; the values 397/186/5/1, 62.2%/29.2%/0.8%/0.2%,
-194 GW, 261 GW, 509/313/365/62/87/51/80/134, and Abgleichdifferenz
-160/80 remain hardcoded Excel reference values pending Schmidt-
-Kanefendt's formulas. See the pass-2 "Still outstanding" section
-for details.
+The 4 backend-blocked items that were "pending Schmidt-Kanefendt's
+formulas" at the end of pass 22 have since been **audited against
+the Excel source files (2026-04-23)**. All four values exist in
+the 100prosim Excel workbooks; the §2.3 Excel-import switch
+unblocks them automatically.
+
+| Pass-2 letter | New code in REMAINING.md | Excel location |
+|---|---|---|
+| d (percent shares) | **D3** | `WS.xlsm` sheet `1.Jahresbilanz_Strom` cell `E21` (PV = 0.6227) etc. |
+| f (Tagesladungen) | **D1** (sources) + **D2** (flows) | `WS.xlsm` sheet `Zeitreihen Kalkulation` daily series, normalised by source |
+| k (261 GW elekt. and 194 GW) | **D4a** + **D4b** | `WS.xlsm` `1.Jahresbilanz_Strom` row 30 area |
+| n2 (Abgleichdifferenz 160) | **D4c** | `WS.xlsm` scenario-balance residual cell |
+
+See **`docs/stakeholder/DATA_MODEL_AUDIT.md`** for the full Excel-
+audit, including sheet inventory, the 86 source hyperlinks in
+`9.Quellen`, the 747 parameter-assumption comments on sheet `1.`,
+and the proposed import approach. Bottom line: §2.3 and T54 D1–D4c
+are the same work — ~5 days for the importer + model migrations +
+UI tooltips + region selector.
 
 ## Verification done in Phase 5-C
 
