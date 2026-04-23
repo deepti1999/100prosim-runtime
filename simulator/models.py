@@ -46,6 +46,21 @@ class Region(models.Model):
     def __str__(self):
         return f"{self.code} – {self.display_name}"
 
+
+def get_default_region_pk():
+    """Default callable for the region FK on parameter models.
+
+    Returns the PK of the DE Region row (seeded by migration 0052).
+    Module-level so Django's migration serializer can reference it.
+    Returns None during the brief window before 0052 has run on a
+    fresh DB; the AddField step in 0053 keeps the column nullable
+    until after the backfill RunPython, so None is acceptable then.
+    """
+    try:
+        return Region.objects.get(code="DE").pk
+    except Region.DoesNotExist:
+        return None
+
 # Thread-local storage to prevent infinite cascade loops
 _cascade_context = threading.local()
 
@@ -499,6 +514,16 @@ class LandUse(models.Model):
     notes_assumption = models.TextField(null=True, blank=True)
     origin = models.CharField(max_length=16, choices=PROVENANCE_ORIGIN_CHOICES, default="internal")
 
+    # Phase B §2.3 region FK — default DE so existing single-region
+    # workflow is preserved; switching active region surfaces a
+    # different overlay via OwnerScopedManager.
+    region = models.ForeignKey(
+        Region,
+        on_delete=models.PROTECT,
+        default=get_default_region_pk,
+        related_name="+",
+    )
+
     objects = OwnerScopedManager()
     all_objects = models.Manager()
 
@@ -506,16 +531,17 @@ class LandUse(models.Model):
         ordering = ['code']
         indexes = [
             models.Index(fields=['owner', 'code']),
+            models.Index(fields=['region', 'code']),
         ]
         constraints = [
             models.UniqueConstraint(
-                fields=['owner', 'code'],
-                name='landuse_owner_code_uniq',
+                fields=['owner', 'region', 'code'],
+                name='landuse_owner_region_code_uniq',
             ),
             models.UniqueConstraint(
-                fields=['code'],
+                fields=['region', 'code'],
                 condition=models.Q(owner__isnull=True),
-                name='landuse_global_code_uniq',
+                name='landuse_global_region_code_uniq',
             ),
         ]
 
@@ -735,6 +761,14 @@ class RenewableData(models.Model):
     notes_assumption = models.TextField(null=True, blank=True)
     origin = models.CharField(max_length=16, choices=PROVENANCE_ORIGIN_CHOICES, default="internal")
 
+    # Phase B §2.3 region FK.
+    region = models.ForeignKey(
+        Region,
+        on_delete=models.PROTECT,
+        default=get_default_region_pk,
+        related_name="+",
+    )
+
     objects = OwnerScopedManager()
     all_objects = models.Manager()
 
@@ -745,17 +779,18 @@ class RenewableData(models.Model):
             models.Index(fields=['category', 'subcategory']),
             models.Index(fields=['owner', 'category']),
             models.Index(fields=['owner', 'code']),
+            models.Index(fields=['region', 'code']),
         ]
         constraints = [
             models.UniqueConstraint(
-                fields=['owner', 'code'],
+                fields=['owner', 'region', 'code'],
                 condition=models.Q(code__isnull=False) & ~models.Q(code=''),
-                name='renewable_owner_code_uniq',
+                name='renewable_owner_region_code_uniq',
             ),
             models.UniqueConstraint(
-                fields=['code'],
+                fields=['region', 'code'],
                 condition=models.Q(owner__isnull=True, code__isnull=False) & ~models.Q(code=''),
-                name='renewable_global_code_uniq',
+                name='renewable_global_region_code_uniq',
             ),
         ]
     
@@ -1079,6 +1114,14 @@ class VerbrauchData(models.Model):
     notes_assumption = models.TextField(null=True, blank=True)
     origin = models.CharField(max_length=16, choices=PROVENANCE_ORIGIN_CHOICES, default="internal")
 
+    # Phase B §2.3 region FK.
+    region = models.ForeignKey(
+        Region,
+        on_delete=models.PROTECT,
+        default=get_default_region_pk,
+        related_name="+",
+    )
+
     objects = OwnerScopedManager()
     all_objects = models.Manager()
 
@@ -1086,16 +1129,17 @@ class VerbrauchData(models.Model):
         ordering = ['code']
         indexes = [
             models.Index(fields=['owner', 'code']),
+            models.Index(fields=['region', 'code']),
         ]
         constraints = [
             models.UniqueConstraint(
-                fields=['owner', 'code'],
-                name='verbrauch_owner_code_uniq',
+                fields=['owner', 'region', 'code'],
+                name='verbrauch_owner_region_code_uniq',
             ),
             models.UniqueConstraint(
-                fields=['code'],
+                fields=['region', 'code'],
                 condition=models.Q(owner__isnull=True),
-                name='verbrauch_global_code_uniq',
+                name='verbrauch_global_region_code_uniq',
             ),
         ]
     
@@ -1489,10 +1533,21 @@ class GebaeudewaermeData(models.Model):
     notes_assumption = models.TextField(null=True, blank=True)
     origin = models.CharField(max_length=16, choices=PROVENANCE_ORIGIN_CHOICES, default="internal")
 
+    # Phase B §2.3 region FK. NOTE: code stays globally unique for now
+    # (existing unique=True on the field). When per-Bundesland building
+    # data ships, swap to a UniqueConstraint(['region','code']).
+    region = models.ForeignKey(
+        Region,
+        on_delete=models.PROTECT,
+        default=get_default_region_pk,
+        related_name="+",
+    )
+
     class Meta:
         ordering = ['code']
         indexes = [
             models.Index(fields=['code']),
+            models.Index(fields=['region', 'code']),
         ]
     
     def __str__(self):
