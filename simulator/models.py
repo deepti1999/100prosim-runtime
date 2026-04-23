@@ -1506,8 +1506,11 @@ class GebaeudewaermeData(models.Model):
     Based on Gebaudewarme_fixed_values.csv structure
     Handles building heating categories and subcategories with hierarchical codes
     """
-    # Hierarchical identification
-    code = models.CharField(max_length=20, unique=True)  # e.g. "2.0", "2.1", "2.1.1", etc.
+    # Hierarchical identification.
+    # Phase C (T66): code is no longer globally unique — per-Bundesland
+    # building data can repeat the same code (e.g. "2.1") in a different
+    # region. Uniqueness now lives in the (region, code) constraint below.
+    code = models.CharField(max_length=20)  # e.g. "2.0", "2.1", "2.1.1", etc.
     category = models.CharField(max_length=200)  # Building heat category description
     
     # Data values
@@ -1533,9 +1536,9 @@ class GebaeudewaermeData(models.Model):
     notes_assumption = models.TextField(null=True, blank=True)
     origin = models.CharField(max_length=16, choices=PROVENANCE_ORIGIN_CHOICES, default="internal")
 
-    # Phase B §2.3 region FK. NOTE: code stays globally unique for now
-    # (existing unique=True on the field). When per-Bundesland building
-    # data ships, swap to a UniqueConstraint(['region','code']).
+    # Phase B §2.3 region FK; Phase C (T66) tightens uniqueness to
+    # (region, code) so per-Bundesland building data with the same code
+    # can coexist.
     region = models.ForeignKey(
         Region,
         on_delete=models.PROTECT,
@@ -1548,6 +1551,12 @@ class GebaeudewaermeData(models.Model):
         indexes = [
             models.Index(fields=['code']),
             models.Index(fields=['region', 'code']),
+        ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=['region', 'code'],
+                name='gebaeudewaerme_region_code_uniq',
+            ),
         ]
     
     def __str__(self):
