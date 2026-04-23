@@ -34,6 +34,11 @@ def run_balance_job(job: BalanceJob) -> Dict[str, Any]:
     """Execute one queued balance job and return JSON-safe result payload."""
     user = job.created_by
     if user and not user.is_staff:
+        # Phase B (T65): defaults to DE workspace. When per-Bundesland
+        # data ships, BalanceJob.payload should carry "region_code"
+        # so the worker can run the user's currently-selected region
+        # workspace instead of always-DE; wrap the dispatcher below
+        # with `region_scope(payload_region)` accordingly.
         ensure_user_workspace_data(user)
 
     # Invalidate ALL process-local caches at entry. Workers process many

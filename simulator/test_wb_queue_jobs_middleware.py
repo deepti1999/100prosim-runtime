@@ -243,7 +243,9 @@ class WBOwnerScopeMiddlewareTests(SimpleTestCase):
                     response = middleware(request)
 
         self.assertEqual(response, "ok")
-        ensure_workspace.assert_called_once_with(request.user)
+        # Phase B (T65): middleware now passes the active region (default
+        # DE when request.session is missing) to ensure_user_workspace_data.
+        ensure_workspace.assert_called_once_with(request.user, region_code="DE")
         set_owner.assert_called_once_with(request.user)
         self.assertEqual(reset_owner.call_count, 2)
 
