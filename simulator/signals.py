@@ -60,8 +60,30 @@ def compute_ws_diagram_reference(use_ws_overrides: bool = True):
     """
     Annual electricity reference values based on Renewable formulas + WS 365 outputs.
     No WSData 366/367 usage.
+
+    Phase B (T65): also reads installed_pmax_ely_gw + installed_pmax_rv_gw
+    from the active Region (default DE: 194 / 261 GW). These replace the
+    Track-1-leftover hardcoded annotations (194 GW, 261 GW) on the
+    Jahresstrom diagram (T54 D4a, D4b).
     """
     del use_ws_overrides  # kept only for backward-compatible signature
+
+    # Phase B (T65): fetch the active Region's installed-power constants.
+    from simulator.region_scope import get_current_region_code
+
+    region_code = get_current_region_code() or "DE"
+    pmax_ely_gw = 194.0
+    pmax_rv_gw = 261.0
+    try:
+        from simulator.models import Region
+
+        region = Region.objects.get(code=region_code)
+        pmax_ely_gw = float(region.installed_pmax_ely_gw or 0.0) or pmax_ely_gw
+        pmax_rv_gw = float(region.installed_pmax_rv_gw or 0.0) or pmax_rv_gw
+    except Exception:
+        # If Region lookup fails (test DB without 0052 applied, etc.) keep
+        # the DE defaults so the diagram still renders the right numbers.
+        pass
 
     def renewable_value(code: str) -> float:
         row = RenewableData.objects.get(code=code)
@@ -217,6 +239,10 @@ def compute_ws_diagram_reference(use_ws_overrides: bool = True):
         # T54 D4c — Abgleichdifferenz
         "abgleichdifferenz": abgleichdifferenz,
         "abgleichdifferenz_tages": abgleichdifferenz_tages,
+        # T54 D4a / D4b — installed-power region constants
+        # (Phase B SR-004: sourced from Region.installed_pmax_*).
+        "pmax_ely_gw": pmax_ely_gw,
+        "pmax_rv_gw": pmax_rv_gw,
     }
 
 def recalculate_ws_data(stromverbr_override=None, use_diagram_reference=True):

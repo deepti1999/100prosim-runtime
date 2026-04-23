@@ -289,7 +289,8 @@
                 <rect x="880" y="440" width="90" height="22" class="value-box"/>
                 <text x="925" y="456" text-anchor="middle" class="txt-box-val" id="n_output_branch_value">0</text>
                 <text x="925" y="478" text-anchor="middle" class="txt-tages" id="flow_n_output_branch_tages">134</text>
-                <text x="925" y="494" text-anchor="middle" class="txt-red">194 GW</text>
+                {# T54 D4a (Phase B): Pmax-Ely-ES from Region.installed_pmax_ely_gw #}
+                <text x="925" y="494" text-anchor="middle" class="txt-red" id="pmax_ely_value">194 GW</text>
                 <text x="980" y="456" class="txt-key">P/Eta</text>
 
                 <!-- ============================================================
@@ -325,7 +326,8 @@
                 <text x="1180" y="595" text-anchor="middle" class="txt-src-sub">(Mangelausgl.)</text>
 
                 <!-- 261 GW red above Rückv badge, badge holds Eta RS stack. -->
-                <text x="1275" y="540" class="txt-red">261 GW (elekt.)</text>
+                {# T54 D4b (Phase B): Pmax-RV from Region.installed_pmax_rv_gw #}
+                <text x="1275" y="540" class="txt-red" id="pmax_rv_value">261 GW (elekt.)</text>
                 <rect x="1268" y="565" width="60" height="46" rx="3" class="metric-bg"/>
                 <text x="1298" y="582" text-anchor="middle" class="txt-red" id="eta_rs_value">59%</text>
                 <text x="1298" y="600" text-anchor="middle" class="txt-src-label" style="font-size:11px">Eta RS</text>
@@ -531,7 +533,9 @@
             bio_pct: {{ bio_pct|default:0.2|unlocalize }},
             // T54 D4c Abgleichdifferenz
             abgleichdifferenz: {{ abgleichdifferenz|default:160|unlocalize }},
-            abgleichdifferenz_tages: {{ abgleichdifferenz_tages|default:0|unlocalize }}
+            abgleichdifferenz_tages: {{ abgleichdifferenz_tages|default:0|unlocalize }},
+            pmax_ely_gw: {{ pmax_ely_gw|default:194|unlocalize }},
+            pmax_rv_gw: {{ pmax_rv_gw|default:261|unlocalize }}
         };
 
         function formatNumber(v) {
@@ -628,6 +632,9 @@
         // T54 D4c — Abgleichdifferenz (integer GWh, integer Tagesladungen)
         setText('abgleichdifferenz_value', vals.abgleichdifferenz);
         setText('abgleichdifferenz_tages', vals.abgleichdifferenz_tages);
+        // T54 D4a / D4b — installed-power region constants (Phase B SR-004).
+        setTextWithSuffix('pmax_ely_value', vals.pmax_ely_gw, 'GW');
+        setTextWithSuffix('pmax_rv_value', vals.pmax_rv_gw, 'GW (elekt.)');
 
         const exportCsvBtn = document.getElementById('exportCsvBtn');
         if (exportCsvBtn) {

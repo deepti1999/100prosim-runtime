@@ -193,6 +193,10 @@ def annual_electricity_view(request):
         # T54 D4c — Abgleichdifferenz
         'abgleichdifferenz': round(diagram.get('abgleichdifferenz', 160), 0),
         'abgleichdifferenz_tages': round(diagram.get('abgleichdifferenz_tages', 0), 0),
+        # T54 D4a / D4b — installed-power region constants (Phase B SR-004).
+        # Sourced from Region.installed_pmax_* via compute_ws_diagram_reference.
+        'pmax_ely_gw': round(diagram.get('pmax_ely_gw', 194), 0),
+        'pmax_rv_gw': round(diagram.get('pmax_rv_gw', 261), 0),
         'n_value': round(n_value, 2),
         'q_abregelung': round(diagram['q_abregelung'], 2),
         'n_input_branch': round(n_input_branch, 2),
