@@ -48,7 +48,11 @@ def _serialize_model_rows(model, owner, exclude_fields=None):
     field_names = [
         f.name
         for f in model._meta.concrete_fields
-        if f.name not in {"id", "owner", "created_at", "updated_at"} and f.name not in exclude
+        # Phase B (T65): skip `region` here — the FK serializes to a Region
+        # object which isn't JSON-serializable. On restore, the model's
+        # default callable assigns DE; per-region snapshots arrive with
+        # the Bundesländer phase via a top-level region_code key instead.
+        if f.name not in {"id", "owner", "region", "created_at", "updated_at"} and f.name not in exclude
     ]
     rows = model.all_objects.filter(**_scope_filter(owner)).order_by("id")
     serialized = []
@@ -84,7 +88,9 @@ def _restore_model_rows(model, owner, rows):
 
     allowed_fields = {
         f.name for f in model._meta.concrete_fields
-        if f.name not in {"id", "owner", "created_at", "updated_at"}
+        # Phase B (T65): match the serialize-side exclusion of `region`;
+        # restored rows get DE via the model's default callable.
+        if f.name not in {"id", "owner", "region", "created_at", "updated_at"}
     }
     to_create = []
     for row in rows:
