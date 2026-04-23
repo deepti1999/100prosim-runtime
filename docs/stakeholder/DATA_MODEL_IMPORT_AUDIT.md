@@ -1,107 +1,132 @@
-# §2.3 Data-Model Import — Deep Audit
+# §2.3 Data-Model Audit (revised) — provenance + region, not value import
 
 **Status:** Audit only. No code changes proposed yet.
-**Date:** 2026-04-23
-**Author:** Claude (Opus 4.7) under Pascal's direction
-**Scope:** Stakeholder PDF §2.3 "Datenmodell — Datenerfassung und Quellen" (Schmidt-Kanefendt 2026-04-03)
-**Purpose:** Before touching any code, break §2.3 into atomic stakeholder requirements, audit our current architecture against each one, map the gap to Germany's `D.xlsx` data source, measure regression blast radius on the 63 already-shipped targets, and lay out a verification plan that keeps every shipped target green.
+**Date:** 2026-04-23 (revised; v1 from earlier same day preserved in git history at commit `f5c738b` and back).
+**Author:** Claude (Opus 4.7) under Pascal's direction.
+**Scope:** Stakeholder PDF §2.3 "Datenmodell" (Schmidt-Kanefendt 2026-04-03).
+**Purpose:** Re-frame the §2.3 work after the v1 audit got the framing wrong (treated §2.3 as value import; it is a **provenance + region + admin-edit** ask). Decompose §2.3 into atomic stakeholder requirements aligned with the literal text, audit current architecture against each, plan implementation phases that are independently shippable, and end with the decision points that are actually blocking.
 
 ---
 
-## 0. Reading guide
+## 0. What changed since v1
 
-This document is intentionally long because §2.3 touches every parameter in the app, every page that displays a parameter, and every test that asserts on a parameter. The sections are:
+The v1 audit (preserved in git: `git show f5c738b -- docs/stakeholder/DATA_MODEL_IMPORT_AUDIT.md`) framed §2.3 as: "the 420 parameters are hardcoded in seed; we need to import them from D.xlsx, every value editable per-scenario but traceable back to D.xlsx row + URL + comment". Pascal pushed back on three counts:
 
-1. **Executive summary** — one-page recommendation
-2. **§2.3 decomposed** — atomic stakeholder requirements SR-001 … SR-010
-3. **Architecture audit** — what we have today (models, seed, consumers, tests)
-4. **D.xlsx structure** — what the PDF actually points us at
-5. **Mapping analysis** — how cleanly our rows map to D.xlsx rows (spoiler: not cleanly)
-6. **Impact on the 63 shipped targets** — per-phase risk
-7. **Risk register** — enumerated + mitigations
-8. **Verification / validation plan** — V2–V6 per phase
-9. **Decision points** — what Pascal has to decide before coding starts
+1. There are **multiple workbooks** (D.xlsx, _S.xlsx, WS.xlsm, AH.xlsm, C.xlsx, MH.xlsx, `_100prosim.xlsm`, plus dev trace logs); v1 only looked at D.
+2. The **math is already ported** into our `calculation_engine/` + `simulator/ws365_*` (~3 200 LOC) + 760-row `Formula` table.
+3. The **values are already in the DB** (with provenance partially populated); §2.3 is asking us to **add the missing provenance + region + admin-update layer**, not re-import what's already there.
 
-Sections 2, 5, 6, 7 are load-bearing for the final approach. Sections 3 and 4 are reference.
+Steps A / B / C of this audit (committed `d2a4c28` / `55cf302` / `58a1b90`) verified Pascal's reading:
+
+- **Step A** (`260403_Section_2.3_literal.md`): the literal PDF text bundles 11 distinct asks (L1–L11). The proposal is "Schnittstelle" (interface) — the implementation mechanism is left open.
+- **Step B** (`WORKBOOK_CATALOG.md`): of 9 workbooks in the bundle, only **D.xlsx and _S.xlsx are first-class data substrate**. WS.xlsm is the calculation workbook (already ported). AH / C / MH / launcher / trace logs are out of scope.
+- **Step C** (`scripts/audit_s_xlsx_mapping.py` + `scripts/audit_out/s_xlsx_map_*.csv`): mapping our 420 DB rows against `_S.xlsx` (whose sheets are 1:1 with our app pages) yields **78 % HIGH-confidence + 14 % MED + 6 % LABEL_ONLY + 1 % NONE**. The values exist in the DB and align with the stakeholder's view file.
+
+The v1 audit's headline ("Algorithmic mapping from our DB → D.xlsx is NOT clean enough to automate, 35–75 % match") was a side-effect of mapping against the wrong file. Mapping against _S.xlsx (the right file) gives 92.8 % at MED-or-better with no hand curation.
+
+This document fully supersedes v1. The decision record sits in `260403_Section_2.3_decision.md` (Step D); this file is the implementation-facing audit.
 
 ---
 
 ## 1. Executive summary
 
-**Stakeholder ask (§2.3):** the 420 parameters that feed the simulator today are hardcoded in `seed/sqlite_seed.json` with no visible provenance. The stakeholder wants the D.xlsx (Germany data model, 17 sheets, 675 parameter rows, 86 source hyperlinks, 747 assumption comments) to be the **authoritative source** — every parameter editable per-scenario but traceable back to its D.xlsx row, source URL, and assumption comment.
+**Stakeholder ask (§2.3):** make every parameter's source URL and assumption note visible to users + admins; support per-region data models; let admins update the base scenario from an updated Excel file without a code change. (Literal asks L1–L11; see `260403_Section_2.3_literal.md`.)
 
-**Current state:** our 4 parameter-bearing models (`LandUse`, `RenewableData`, `VerbrauchData`, `GebaeudewaermeData`) carry `source` / `quelle` / `notes` columns, but 346 of 420 rows (82%) have no source metadata. The seed fixture is the de-facto ground truth; D.xlsx is not consumed anywhere.
+**Current state:** the 420 parameters across LandUse / RenewableData / VerbrauchData / GebaeudewaermeData are fully populated, with values matching `_S.xlsx` (the scenario master) at 78 % HIGH and 92.8 % MED-or-better. **Provenance is the gap** — 0 / 420 rows have an assumption note, source URL coverage is partial (LandUse `quelle` codes only), and there is no `Region` model or admin parameter-update UI.
 
-**Algorithmic mapping from our DB → D.xlsx sheet `1.` is NOT clean enough to automate:**
+**Recommendation:** split §2.3 into a **2-phase incremental ship** (Phase A: provenance + tooltip + admin import for DE; Phase B: region first-class + Bundesländer-ready import). Each phase independently shippable, V2–V6 verifiable, and additive — does not touch the 51 shipped targets' numerical behaviour because Phase A is provenance-only and Phase B touches new (per-region) rows only.
 
-| Model               | Rows | Match ≥0.6 | Partial 0.3–0.6 | No match |
-|---------------------|-----:|-----------:|----------------:|---------:|
-| LandUse             |   20 |        75% |              5% |      20% |
-| RenewableData       |  301 |        62% |             19% |      19% |
-| VerbrauchData       |  151 |        54% |             22% |      24% |
-| GebaeudewaermeData  |   26 |        35% |             23% |      42% |
-
-(Full CSVs in `scripts/audit_out/mapping_*.csv`; extractor is `scripts/audit_import_mapping.py`.)
-
-**Recommendation:** split §2.3 into a **4-phase incremental import** — schema + provenance first, hand-curated golden mapping second, per-scenario overrides third, UI provenance surfacing last. Each phase is independently shippable, independently verifiable, and none of them touch the 50+ shipped targets' behaviour unless we deliberately change a seed value. Details in §9.
-
-**Hard rule this audit enforces:** no cell / code / label rename (CLAUDE.md §"Stakeholder requirements" #1). Every `LU_*`, `9.3.*`, Verbrauch code, WS365 field name, and `Formula.name` stays frozen. Import only adds provenance metadata and values; it does not rename anything.
+**Hard rule this audit enforces:** no cell / code / label rename (CLAUDE.md "Stakeholder requirements" #1). Every `LU_*`, `9.3.*`, Verbrauch code, sector name, WS365 field name, and `Formula.name` stays frozen. Import only adds provenance metadata + region tagging; it does not rename anything. (Maps to SR-007 below.)
 
 ---
 
-## 2. §2.3 decomposed into atomic stakeholder requirements
+## 2. §2.3 decomposed into atomic stakeholder requirements (revised)
 
-The PDF §2.3 reads as one paragraph, but it bundles ≥10 distinct asks. Treating it as one requirement is how schema decisions go wrong. Decomposition:
+Each SR maps to one or more of the 11 literal asks in `260403_Section_2.3_literal.md` (L1–L11). The numbering is preserved from v1 but several requirements have been re-defined to match what §2.3 actually says.
 
-### SR-001 — D.xlsx is the authoritative parameter source
-> Every simulator parameter MUST correspond to a row in `D.xlsx` (Germany data model). A parameter with no D.xlsx row is an orphan and is either a calculated output, a UI-only field, or a policy/scenario assumption that needs to be promoted into D.xlsx.
+### SR-001 — §2.3 is a provenance + region + admin-edit ask, not a value import (revised)
+> §2.3 asks for an interface (Schnittstelle) that makes Excel data-model files usable in lieu of the integrated data model. Implementation mechanism is left open by the PDF (no requirement for live binding). The substantive asks are: source visibility, assumption visibility, region modularity, admin update capability — not bulk value re-import.
 
-**Acceptance:** a `scripts/verify_parameter_origin.py` can emit a per-row report {our_code, dxlsx_sheet, dxlsx_row, match_type} with zero `ORPHAN` rows (or a reviewed exception list).
+**Maps to:** L1, L2.
 
-### SR-002 — Each parameter carries its data source
-> Each parameter row MUST carry the source URL / citation from D.xlsx column(s) in `9.Quellen` (86 hyperlinks today).
+**Acceptance:** the implementation work is scoped per SR-002 … SR-012; SR-001 is the framing constraint.
 
-**Acceptance:** `LandUse.source`, `RenewableData.quelle`, `VerbrauchData.source`, `GebaeudewaermeData.source` are non-null for ≥95% of rows with a D.xlsx source, and the remaining <5% are listed in a known-exception file.
+### SR-002 — Each parameter carries its data source URL (was SR-002, refined)
+> Each parameter row MUST carry the source URL from `D.xlsx!9.Quellen` (86 hyperlinks today) when one exists for that row.
 
-### SR-003 — Each parameter carries its assumption note
-> The 747 per-cell comments in D.xlsx sheet `1.` (the methodology / author's reasoning) MUST be preserved alongside each parameter.
+**Maps to:** L3.
 
-**Acceptance:** a new `notes_assumption` or extend-existing `notes` column populated for ≥90% of rows that have a D.xlsx comment.
+**Acceptance:** new column `source_url` (string, nullable) on the 4 parameter models; populated by the import command for every row whose label is matched in D.xlsx and whose source-cell carries a hyperlink. Coverage target: ≥ 80 % of HIGH-confidence rows.
 
-### SR-004 — Numeric values round-trip against D.xlsx
-> The current value of every parameter MUST match the corresponding D.xlsx cell within a stated tolerance (e.g. ±0.1% for floats, exact for integers/codes).
+### SR-003 — Each parameter carries its assumption note (was SR-003, refined)
+> Each parameter row MUST carry the assumption text from the corresponding `D.xlsx!1.` cell comment (747 comments today).
 
-**Acceptance:** `scripts/verify_dxlsx_roundtrip.py` emits zero drift rows above tolerance, or a reviewed intentional-deviation list.
+**Maps to:** L4.
 
-### SR-005 — Per-scenario overrides preserved
-> The existing per-user / per-scenario override behaviour MUST NOT break. If the user changes `LU_2.1` in their workspace, their override still wins over the imported default; D.xlsx supplies the seed, not the per-user override.
+**Acceptance:** new column `notes_assumption` (text, nullable) on the 4 parameter models; populated by the import command for every row whose label is matched and whose D.xlsx counterpart has a `hsk: |` comment. Coverage target: ≥ 80 % of HIGH-confidence rows.
 
-**Acceptance:** existing `workspace_service.ensure_user_workspace_data()` behaviour unchanged; regression scenarios A / C / D pass unchanged; `compare.py` exit 0.
+### SR-004 — Region is a first-class concept (NEW)
+> The data model MUST support multiple regions (Germany + Bundesländer) via a `Region` model. The active region is selectable; per-region rows are isolated; default region is `DE` so existing single-region behaviour is preserved.
 
-### SR-006 — Import is repeatable (idempotent)
-> Re-running the import against an updated D.xlsx MUST be idempotent — running it twice produces the same DB state as running it once. Unchanged rows are not touched; changed rows produce a readable diff.
+**Maps to:** L7, L9, L10, L11.
 
-**Acceptance:** `python manage.py import_d_xlsx` on an unchanged file emits "0 changed"; on a changed file emits a per-row diff + prompts for confirmation before committing.
+**Acceptance:** `Region` model with `(code, display_name, active, datenmodell_excel_hash)`. The 4 parameter models gain a region FK. Default fixture seeds one row `DE`. UI gets a region switcher (Phase B).
 
-### SR-007 — Import does not rename cells/codes/labels
-> Codes (`LU_0`, `9.3.1`, …), sector names, WS365 field names, `Formula` rows stay frozen. The import ADDS provenance and MAY update numeric values; it MUST NOT rename anything.
+### SR-005 — Per-user / per-scenario overrides are preserved (unchanged)
+> The existing per-user workspace override behaviour MUST NOT break. If a user changed `LU_2.1` in their workspace, their override still wins over the imported default; the import supplies the base, not the overlay.
 
-**Acceptance:** `grep -n "^def import_d_xlsx" scripts/`  never renames a code. Code-rename linter test `test_wb_code_freeze.py` stays green.
+**Maps to:** constraint (no literal ask; CLAUDE.md invariant).
 
-### SR-008 — Import does not break the 63 shipped targets
-> All 63 targets from the stakeholder plan (50 shipped + Heroku-verified, 13 open) stay green. Golden regression scenarios A / C / D pass. All `test_bb_*` / `test_wb_*` / `test_e2e_*` modules pass.
+**Acceptance:** `workspace_service.ensure_user_workspace_data()` behaviour unchanged; regression scenarios A / C / D pass with `compare.py` exit 0.
 
-**Acceptance:** full thesis test suite green pre-import and post-import on the same seed; A/C/D goldens unchanged unless intentionally re-captured with Pascal sign-off.
+### SR-006 — Import is idempotent and diff-on-rerun (was SR-006, refined)
+> Re-running the import against an unchanged file MUST be a no-op. Running it against a changed file MUST emit a per-row diff before any write, gated behind `--apply`.
 
-### SR-009 — Provenance is visible in the UI
-> A user viewing a parameter on `/landuse/`, `/renewable/`, `/verbrauch/`, `/gebaeudewarme/` MUST be able to see its source URL and assumption comment (tooltip, expandable row, or side panel — UX TBD).
+**Maps to:** L6 (admin update workflow).
 
-**Acceptance:** a Playwright test hovers a parameter row and asserts the tooltip contains the source URL.
+**Acceptance:** `python manage.py import_excel_provenance D.xlsx` on an unchanged file emits "0 changed"; on a changed file emits diff + requires explicit `--apply`. Test: `test_wb_excel_import_idempotent`.
 
-### SR-010 — Orphan parameters are exposed, not hidden
-> Parameters we have that D.xlsx doesn't (UI-only fields, derived outputs, scenario-policy assumptions) MUST be flagged as `origin='internal'` with a documented rationale, not silently treated as D.xlsx rows.
+### SR-007 — Import never renames any cell / code / label (unchanged — hard rule)
+> All codes (`LU_*`, `9.3.*`, sector names, WS365 field names, `Formula` rows) stay frozen. The import ADDS provenance / region metadata; it MUST NOT rename anything.
 
-**Acceptance:** parameter-origin report has three categories: `d_xlsx`, `internal`, `orphan`; the `orphan` count is 0 or reviewed.
+**Maps to:** CLAUDE.md "Stakeholder requirements" #1; not a literal §2.3 ask but a hard project invariant.
+
+**Acceptance:** `test_wb_code_freeze.py` (new) asserts no rename happens on import; the import command rejects any operation that would touch a `code` field.
+
+### SR-008 — Import does not break the 51 shipped targets (unchanged — hard rule)
+> All 51 shipped + Heroku-verified targets stay green. Golden regression scenarios A / C / D pass. All `test_bb_*` / `test_wb_*` / `test_e2e_*` modules pass.
+
+**Maps to:** CLAUDE.md "Per-item verification" rule; not a literal §2.3 ask.
+
+**Acceptance:** full thesis test suite green pre-import and post-import on the same seed. A / C / D goldens unchanged unless intentionally re-captured with Pascal sign-off.
+
+### SR-009 — Provenance is visible in the UI (unchanged)
+> A user viewing a parameter on `/landuse/`, `/renewable/`, `/verbrauch/`, `/gebaeudewarme/` MUST be able to see its source URL and assumption note from the row.
+
+**Maps to:** L5 (epistemic engagement) + L8 (admin can update without code).
+
+**Acceptance:** Playwright test hovers / clicks an info-icon on a row and asserts the popover contains the source URL and assumption text.
+
+### SR-010 — Orphan parameters exposed via `origin` enum (unchanged)
+> Parameters we have that D.xlsx does not (UI-only fields, derived outputs, scenario-policy assumptions, deeper-hierarchy splits) MUST be flagged as `origin='internal'` with a documented rationale, not silently treated as missing.
+
+**Maps to:** Step C evidence (5 NONE + 25 LABEL_ONLY rows total are unmatched at value level).
+
+**Acceptance:** `origin` enum on each parameter model with values `{ d_xlsx, derived, internal }`; orphan-classification report shipped with the import command; `origin='orphan'` count = 0 in production.
+
+### SR-011 — Admin can update the base scenario without code changes (NEW)
+> An admin (Django staff user) MUST be able to update the base scenario by uploading an updated `D.xlsx` (or per-region equivalent), reviewing the diff, and applying it — without a code change or redeploy.
+
+**Maps to:** L6, L8.
+
+**Acceptance:** admin form at `/admin/data-import/` accepts an `.xlsx` upload, runs `manage.py import_excel_*` in a guarded mode, presents the diff in the browser, lets the admin click "Apply" or "Cancel". Test: `test_e2e_ui_admin_data_import` (new).
+
+### SR-012 — Multi-region import accepts per-region `.xlsx` files (NEW)
+> The import command MUST accept either D.xlsx (Germany) or any per-region equivalent that follows the D.xlsx shape (e.g. `BB.xlsx`, `NW.xlsx`). Per-region rows are isolated by FK to the `Region` model; switching the active region in the UI changes the read scope.
+
+**Maps to:** L9, L10, L11.
+
+**Acceptance:** `manage.py import_excel_datenmodell <region_code> <file.xlsx>` populates per-region rows; UI region switcher shows all regions where `Region.active=True`. Test: `test_bb_region_switcher`.
 
 ---
 
@@ -109,38 +134,41 @@ The PDF §2.3 reads as one paragraph, but it bundles ≥10 distinct asks. Treati
 
 ### 3.1 Parameter-bearing models
 
-| Model                | Table                   | Rows | Key cols                                        | Source cols                |
-|----------------------|-------------------------|-----:|-------------------------------------------------|----------------------------|
-| `LandUse`            | `simulator_landuse`     |   20 | `code`, `name`, `status_ha`, `target_ha`        | `source`, `notes`          |
-| `RenewableData`      | `simulator_renewabledata` | 223 | `code`, `category`, `subcategory`, `status_value`, `target_value`, `unit` | `quelle`, `description` |
-| `VerbrauchData`      | `simulator_verbrauchdata` | 151 | `code`, `category`, `status`, `ziel`, `unit`   | `source`, `notes`          |
-| `GebaeudewaermeData` | `simulator_gebaeudewaermedata` |  26 | `code`, `category`, `status`, `ziel`, `unit` | `source`, `notes`          |
-| **Total**            |                         |  **420** |                                             |                            |
+(Unchanged from v1; numbers re-counted directly from `seed/sqlite_seed.json`.)
 
-Additional structural models that are NOT parameter carriers but WILL be touched: `Formula` (760 rows, formula text — already frozen), `WSData` (365-day time series — derived), `Scenario` / workspace overlay models (per-user state — unchanged).
+| Model                | Table                         | Rows | Key cols                                            | Source cols today          |
+|----------------------|-------------------------------|-----:|-----------------------------------------------------|----------------------------|
+| `LandUse`            | `simulator_landuse`           |   20 | `code`, `name`, `status_ha`, `target_ha`            | `quelle` (D-codes)         |
+| `RenewableData`      | `simulator_renewabledata`     |  223 | `code`, `category`, `subcategory`, `status_value`, `target_value`, `unit` | `source` (CSV filename), `description` |
+| `VerbrauchData`      | `simulator_verbrauchdata`     |  151 | `code`, `category`, `status`, `ziel`, `unit`        | (none — `notes` empty)     |
+| `GebaeudewaermeData` | `simulator_gebaeudewaermedata`|   26 | `code`, `category`, `status`, `ziel`, `unit`        | (none — `notes` empty)     |
+| **Total**            |                               |  **420** |                                                 |                            |
 
-### 3.2 Seed state
+Additional structural models that will be touched: `Formula` (760 rows — frozen text), `WSData` (365-day time series — derived). Per-user workspace overlay models — out of scope per SR-005. New: `Region` (Phase B, SR-004).
 
-- `seed/sqlite_seed.json` — 62,829 lines, 3,995 rows across 13 models.
-- Of the 420 parameter rows, provenance today:
-  - `source` / `quelle` non-null: **74 / 420 (18%)**
-  - `notes` non-null: **0 / 420 (0%)**
-  - `description` non-null: **103 / 420 (25%)**
-- Conclusion: the DB schema supports provenance but the seed has not been populated; this is what §2.3 is pushing us to fix.
+### 3.2 Seed state — what provenance is actually present
 
-### 3.3 Parameter consumers
+Re-counted from `seed/sqlite_seed.json` (sample by Python script, 2026-04-23):
 
-`simulator/*.py` files that import or query parameter models: **28 files** (identified via grep for `LandUse|RenewableData|VerbrauchData|GebaeudewaermeData`). The heaviest consumers:
+- `source` / `quelle` non-null: **74 / 420 (≈ 18 %)** — mostly LandUse `quelle="D.1.<n>"` (a D-style code, not a row number); RenewableData `source="solar_energy.csv"` etc.; the value content is a placeholder, not a hyperlink.
+- `notes` non-null: **0 / 420 (0 %)** — no assumption text anywhere.
+- `description` non-null: **103 / 420 (≈ 25 %)** — present on RenewableData; contains category narrative, not source citations.
+
+Conclusion: the schema partially supports provenance (existing columns present) but the seed has not been populated with the actual D.xlsx content. **This is precisely what §2.3 asks us to fix** (SR-002, SR-003).
+
+### 3.3 Parameter consumers (unchanged from v1)
+
+`simulator/*.py` files that import or query parameter models: **28 files** (grep-counted). Heaviest consumers:
 
 - `recalc_service.py`, `workspace_service.py` — persistence orchestration
 - `page_landuse.py`, `page_renewable.py`, `views_pages.py` — rendering
 - `balance_jobs.py`, `ws_365_service.py` — WS balance flow
 - `goal_seek.py`, `percentage_rebalancer.py` — numerical solvers
-- 15 test modules (`test_bb_*`, `test_wb_*`, `test_e2e_*`, `test_ws365_formulas`)
+- 15 test modules
 
-Any schema change on the 4 models forces a review across all 28 files. A non-breaking additive column (e.g. `notes_assumption`) touches zero of them at read time — that's the safe corridor.
+A non-breaking additive column (e.g. `source_url`, `notes_assumption`, `origin`, region FK with default) touches **zero of these at read time** — the safe corridor.
 
-### 3.4 Cache & signal surface (from CLAUDE.md)
+### 3.4 Cache & signal surface (unchanged from v1)
 
 Four process-local caches invalidated at `BalanceJob` entry today:
 
@@ -148,326 +176,270 @@ Four process-local caches invalidated at `BalanceJob` entry today:
 - `_AUTO_TOKENS_CACHE`, `_LOOKUPS_CACHE` (in `formula_service.py`)
 - `_WS365_COMPUTE_CACHE` (in `ws365_orchestrator.py`)
 
-Import must run **outside** a request/worker process (management command), so cache coherency isn't an issue. But: if the import writes rows while `ensure_user_workspace_data()` can fire for any existing user, we need a global lock or we run the import with the site in maintenance mode. Noted as RISK-04 below.
+The import is a management command — runs outside a request / worker process. Cache coherency is not an issue at import time. RISK-04 still applies if an import races with `ensure_user_workspace_data()` for a live user; mitigation is a maintenance-mode flag.
 
-### 3.5 Test surface
+### 3.5 Test surface (unchanged)
 
-- 15 of 19 `simulator/test_*.py` modules query at least one parameter model.
-- Golden regression scenarios A / C / D all probe parameter values downstream.
-- `test_ws365_formulas.py` pins 760 formula outputs — unaffected by value changes unless we intentionally change an input value.
+15 of 19 `simulator/test_*.py` modules query at least one parameter model. Goldens A / C / D probe parameter values downstream. `test_ws365_formulas.py` pins 760 formula outputs — unaffected by provenance changes.
 
 ---
 
-## 4. D.xlsx structure deep-map
+## 4. Workbook substrate (replaces v1 §4 single-file deep-map)
 
-File: `docs/100prosim_d_*/D.xlsx` (gitignored; Germany data model; canonical).
+Detailed coverage in `WORKBOOK_CATALOG.md`. The §2.3-relevant facts:
 
-| Sheet ref         | Content                                          | Parameter-row count (non-empty col E, non-stub) |
-|-------------------|--------------------------------------------------|------------------------------------------------:|
-| `1.`              | Main parameters (all 4 domains mixed by section) |                                       **~675** |
-| `2.` … `8.`       | Sector breakdowns                                 |                                       varies |
-| `9.Quellen`       | Source hyperlinks                                 |                        **86 hyperlinks** |
-| (per-cell)        | Author comments (methodology / assumptions)       |                            **747 comments** |
-| **Sheet total**   |                                                  |                                            17 |
+### 4.1 D.xlsx — primary substrate
 
-Key column conventions on sheet `1.`:
+- 17 sheets, 2.93 MB, file header `D. 250517.1733 hsk`.
+- Sheet `1.` (2 133 × 157) — the **monolithic per-parameter dump**, carries all 747 cell comments (assumption text). Source URL hyperlinks count = 0 here.
+- Sheet `9.Quellen` (264 × 33) — **86 hyperlinks** to AGEB, BMUV, BMEL, Ariadne, DLR, BfEE, etc. This is the canonical sources list.
+- Sheet `O_` (211 × 16) — output mirror; the machine-readable extract that _S.xlsx and other workbooks consume via external link `[4]O_!*`.
+- Sheet `I_Region` (199 × 19) — region-specific definitions (already structured for region split).
+- Sheet `I_Basisdaten` (192 × 15) — installed capacities, areas, base data per region. **D4a (194 GW) and D4b (261 GW)** from the Jahresstrom diagram likely live here.
 
-- Col E — German label
-- Col U (21) — primary scenario value
-- Cols V / W / AG / AN — alternate scenarios / variants
-- Source hyperlinks live on `9.Quellen` and are referenced from `1.` via comments / formula refs
+### 4.2 _S.xlsx — scenario master, sheets 1:1 with our app pages
 
-The PDF assumes the reader is familiar with this layout; our mapping scripts treat col E as the matching key.
+- 17 sheets, 0.50 MB, file header `_S. 250517.1803 hsk`.
+- Sheet names match our app pages exactly: `1. Flächen`, `2. Erneuerbare`, `3. Bedarfsniveau`, `4. Verbrauch`, `5. Bilanz`, `6. Fossile`, `7. Verbrauch Status`, `8. Kennzahlen`.
+- Per-sheet column convention (verified):
+  - col E = parameter label (German text)
+  - col L (or col I in `1. Flächen`) = STATUS value
+  - col M (or col L in `1. Flächen`) = ZIEL value
+- Cells are mostly INDIRECT formulas resolving via the internal `I_` sheet to D.xlsx `O_` (the `[4]O_!*` external link).
+- External link map decoded: `[1]=C.xlsx`, `[2]=WS.xlsm`, `[3]=BS.xlsx (NOT in bundle)`, `[4]=D.xlsx`.
+- **§2.3 status: this is the operational view substrate.** Step C maps our DB rows to _S sheets at 78 % HIGH confidence; Phase A label-matching against D.xlsx for source/assumption pull uses _S as the disambiguating index.
 
-### 4.1 What D.xlsx gives us
+### 4.3 BS.xlsx — Bedarfsstatus (referenced but missing from bundle)
 
-- Hard numeric values for ~675 parameters
-- 86 URL-shaped source citations
-- 747 per-cell author comments (the "why this number" notes)
-- Multi-variant scenarios that overlap with but are not identical to our scenarios A / C / D
+- _S.xlsx sheet `7. Verbrauch Status` and `8. Kennzahlen` reference `[3]BS.xlsx` heavily (302 + 366 external-ref formulas).
+- BS.xlsx is not in Pascal's local copy. For Phase A this means: rows derived from BS-only refs cannot be value-validated against the substrate. They will be classified `origin='internal'` if their _S row has no D.xlsx-derived backup, or `origin='derived'` if a parent D.xlsx row exists.
+- Implication: the Phase A import command should not fail loud on a BS-derived row missing from D; it should classify and continue.
 
-### 4.2 What D.xlsx does NOT give us
+### 4.4 What stays out of scope
 
-- Our `code` scheme (`LU_*`, `9.3.*`, etc.) — these are ours, not Schmidt-Kanefendt's. The import must translate, not replace.
-- Per-user overrides — that's our workspace layer; D.xlsx is single-variant per column.
-- Formulas at the simulator level — the `Formula` table is ours; D.xlsx is a values document.
+- `WS.xlsm` — calculation workbook, already ported to `calculation_engine/`. Useful only as a formula-reference oracle (as Track 1 used it). Not imported.
+- `AH.xlsm` — Auswertungs-Historie, not Datenmodell. Out.
+- `C.xlsx`, `MH.xlsx`, `_100prosim.xlsm` — config / stub / launcher. Out.
+- `trace2.xlsx`, `tracelog.xlsx` — developer artefacts. Out.
 
----
-
-## 5. Mapping analysis (what "75% findable" actually means)
-
-Source of the numbers: `scripts/audit_import_mapping.py` (committed with this audit). It reads the seed rows, normalises German labels, and matches against D.xlsx sheet `1.` col E by shared-word overlap.
-
-### 5.1 Coverage
-
-| Model              | Rows | Matched (≥0.6) | Partial (0.3–0.6) | Unmatched / No-label |
-|--------------------|-----:|---------------:|------------------:|---------------------:|
-| LandUse            |   20 |             15 |                 1 |                    4 |
-| RenewableData      |  301 |            187 |                56 |                   58 |
-| VerbrauchData      |  151 |             81 |                33 |                   37 |
-| GebaeudewaermeData |   26 |              9 |                 6 |                   11 |
-
-CSV details: `scripts/audit_out/mapping_*.csv` (502 rows total, 4 files).
-
-### 5.2 Why algorithmic mapping is not enough
-
-- **Gebäudewärme (35%):** codes like `GW_N.1.2` carry short category labels ("Erdgas Bestand", "Wärmepumpe Neubau") that overlap too weakly with D.xlsx's fuller sentences ("Endenergiebedarf Wärmepumpen im Bestand 2045"). The label overlap is genuine semantic match but the word-intersection score drops below threshold.
-- **RenewableData (62%):** `9.3.*` sub-subcategories can share wording with multiple D.xlsx rows — e.g. "PV Dachanlage" matches 3 distinct rows (residential / commercial / mixed). Automated pick of the highest-overlap is **wrong** in ~1 in 5 cases; human disambiguation required.
-- **VerbrauchData (54%):** category names repeat across sectors ("Industrie / Raumwärme" vs "Haushalt / Raumwärme") and D.xlsx sometimes lumps them on one row, sometimes splits. One-to-many and many-to-one cases dominate the unmatched bucket.
-- **LandUse (75%):** cleanest; labels are unique enough ("Siedlungsfläche", "Landwirtschaftliche Nutzfläche") that word-overlap works. Still 4 unmatched — 2 are UI-only (`LU_0` aggregate), 2 need hand review.
-
-### 5.3 Conclusion
-
-**Do not automate the import from algorithmic matching.** The right artefact is a **hand-curated golden mapping CSV** (`data_model_mapping.csv`) that Pascal or the stakeholder reviews once, then the import reads that CSV deterministically. Treat the algorithmic audit as scaffolding for the human review, not as the import source.
+(See `WORKBOOK_CATALOG.md` for per-file detail.)
 
 ---
 
-## 6. Impact analysis on the 63 shipped targets
+## 5. Mapping evidence (replaces v1 §5)
 
-### 6.1 Per-phase risk matrix
+Source: `scripts/audit_s_xlsx_mapping.py` + `scripts/audit_out/s_xlsx_map_*.csv` + `s_xlsx_map_summary.json` (Step C, committed `58a1b90`).
 
-Targets grouped by PDF phase (see `IMPLEMENTATION_PLAN.md`):
+### 5.1 Coverage per model — DB rows mapped to _S.xlsx
 
-| Phase           | Targets | Parameter sensitivity           | Risk if we change a value      |
-|-----------------|--------:|---------------------------------|--------------------------------|
-| Phase 1 (UI)    |     T1–T12 | Low — UI shell only           | Cosmetic only                  |
-| Phase 2 (domain)|  T13–T24 | **High** — reads LandUse / Renewable | Scenario C drift likely |
-| Phase 3 (balance)| T25–T36 | **High** — WS365 reads all 4 models | Scenario C / D drift likely |
-| Phase 4 (Bilanz)| T37–T44 | **High** — depends on Verbrauch + Gebäudewärme | Scenario D drift likely |
-| Phase 5 (flow)  |  T45–T53 | Medium — flow diagram reads Bilanz | Jahresstrom diagram values move |
-| Phase 6 (infra) |  T55–T63 | Low — deployment / perf         | Unlikely to drift numerics     |
-| T54 D1–D4c      |       4 | **High** — D3 % / D4c Abgleichdiff depend on parameter values | Jahresstrom flow diagram numbers move |
+| Model              | Rows | HIGH (label + status + ziel) | MED (one of) | LABEL_ONLY | NONE |
+|--------------------|-----:|-----------------------------:|-------------:|-----------:|-----:|
+| LandUse            |   20 |                  18 (90 %)  |       2      |       0    |   0 |
+| RenewableData      |  223 |                 157 (70 %)  |      40      |      21    |   5 |
+| VerbrauchData      |  151 |                 129 (85 %)  |      18      |       4    |   0 |
+| GebaeudewaermeData |   26 |                  25 (96 %)  |       1      |       0    |   0 |
+| **Total**          |  **420** |             **329 (78.3 %)** |     **61**  |    **25**  |  **5** |
 
-### 6.2 Specific targets at risk
+Comparison vs v1 audit's D.xlsx-only mapping:
 
-- **T25 (auto-cascade):** changing any parameter triggers cascade across formulas — if the numerical value of a status/ziel changes, Bilanz row outputs move. **Scenario C fingerprint will drift.**
-- **T37 (Gebäudewärme Bilanz):** directly reads `GebaeudewaermeData.ziel`. Any D.xlsx re-synced value changes the Bilanz row.
-- **T41 (Verbrauch Bilanz):** same pattern with `VerbrauchData`.
-- **T49 / T50 (Jahresstrom diagram):** shipped Track 1 yesterday wiring D1–D4c from computed WS reference. Changing input parameters changes those outputs. Diagram screenshots in golden set will need re-capture if values shift.
+| Bucket     | v1 (D.xlsx only) | this audit (_S.xlsx) |
+|------------|-----------------:|---------------------:|
+| HIGH       |             19 % |               78.3 % |
+| MED        |             22 % |               14.5 % |
+| (effective coverage) |    41 %    |               92.8 % |
 
-### 6.3 What stays safe
+The 4× improvement in HIGH coverage comes entirely from picking the right substrate (Step B catalog identified _S as app-page-shaped; v1 missed it).
 
-- **Phase 1 (T1–T12):** text / CSS / template-only changes — untouched.
-- **Phase 6 (T55–T63):** deployment / config — untouched unless we add a new management command which is additive.
-- **`Formula` table rows (all 760):** import is values-only; formulas stay put.
-- **All 15 `test_ws365_formulas` parity cases:** values of the 760 formula outputs are derived from inputs. If we don't change inputs (Phase A of the import — schema only — no value changes), all 760 stay green.
+### 5.2 What the LABEL_ONLY + NONE buckets are
 
-### 6.4 Safe corridor
+- **21 RenewableData LABEL_ONLY:** mostly category headers (`Solarenergie`, `Solarthermie`, `Solarstrom`, `Onshore-Windstrom`, `Laufwasser`, `Energieholz`, etc.) — rows that exist in our DB as parents in the hierarchy but carry no numeric value (their value is the sum of children).
+- **4 VerbrauchData LABEL_ONLY:** `Mobile Anwendungen (MA)`, `Grundstoff-Synthetisierung`, plus 2 `Alternativ zur Verbrennungsmotoren` rows. Aggregation rows.
+- **5 RenewableData NONE:** deeper-hierarchy rows (`10.4.3 davon Strom`, `10.5 Prozesswärme`, `10.6.2 davon Strom`, `7.1.4 Biogene Kraftstoffe (Wärme)`, `5 (empty label)`) where _S.xlsx has a different scenario value or doesn't split that deep.
 
-**Phase A of the import (schema + provenance only, no value changes) touches zero of the 63 targets' numeric outputs.** That's the first shippable slice with essentially zero risk. Phases B, C, D introduce value changes and need per-phase golden review.
+**Implication for SR-010 origin classification:** all 30 unmatched rows fit naturally into `origin='internal'` (category headers and deeper splits ours-only). Pascal/stakeholder do not need to extend D.xlsx; the import tool just records why we don't have a counterpart.
+
+### 5.3 Provenance chain (D substrate → _S view → DB row)
+
+Verified on Step C:
+
+```
+D.xlsx O_  (output mirror)
+   ↑ external ref [4]O_!<col><row>
+_S.xlsx I_ (internal substrate sheet)
+   ↑ INDIRECT($AC$1 & AE$1 & $AC<row>)  where $AC$1='I_!', AE$1='L', $AC<row>=row index
+_S.xlsx <app-page> (e.g. '2. Erneuerbare')
+   ↑ "=AE<row>" or "=AK<row>" helper column
+DB row (matched by label + value, status + ziel)
+```
+
+For source URL + assumption note, the chain is shorter:
+
+```
+D.xlsx 9.Quellen (86 hyperlinks)
+   ↑ key by '9.<n>' code referenced in D.xlsx 1. cell comments
+D.xlsx 1.  (per-parameter dump, 747 'hsk: |' comments)
+   ↑ row label match against our DB labels (Step C s_xlsx_map evidence)
+DB row
+```
+
+The Phase A import command walks the second chain to populate `source_url` + `notes_assumption`.
 
 ---
 
-## 7. Risk register
+## 6. Impact on the 51 shipped targets
 
-| ID      | Risk                                                                             | Severity | Likelihood | Mitigation                                                                                                     |
-|---------|----------------------------------------------------------------------------------|---------:|-----------:|----------------------------------------------------------------------------------------------------------------|
-| RISK-01 | Importing a D.xlsx numeric value silently drifts a scenario golden               |     High |       High | Phase A (schema/provenance only) first; Phase B value sync gated on per-model golden re-capture with Pascal sign-off |
-| RISK-02 | Ambiguous one-to-many label mappings auto-picked wrong                           |     High |       High | No auto-pick; hand-curated `data_model_mapping.csv` reviewed by Pascal before first import                     |
-| RISK-03 | A code / cell / label gets renamed during import (violates CLAUDE.md contract)   | Critical |        Low | Import tool rejects any operation that would change `code`; linter test `test_wb_code_freeze.py` to cover     |
-| RISK-04 | Import runs while `ensure_user_workspace_data()` is firing for live users        |   Medium |     Medium | Import requires maintenance-mode flag or runs on a cloned DB; never on live Heroku mid-session                 |
-| RISK-05 | Per-user overrides silently overwritten by base row re-import                    | Critical |        Low | Import touches only owner=NULL base rows; user workspace tables (`owner=<user>`) are out of scope               |
-| RISK-06 | D.xlsx column layout changes between stakeholder revisions                       |   Medium |     Medium | Import script asserts column headers match a pinned manifest; fails loud if Schmidt-Kanefendt reshapes the file |
-| RISK-07 | Orphan parameters (we have them, D.xlsx doesn't) mis-classified as "missing"      |      Low |        Low | SR-010 — explicit `origin='internal'` column with rationale; orphan report reviewed manually                   |
-| RISK-08 | Idempotency broken — second import run produces a diff                           |   Medium |     Medium | Content-hash each row; skip unchanged; unit test `test_wb_dxlsx_import_idempotent`                               |
-| RISK-09 | Jahresstrom diagram (Track 1 D1–D4c) numbers move after Phase B                  |   Medium |     Medium | Re-run Playwright scenario against Heroku after each phase; screenshot diff reviewed                           |
-| RISK-10 | Provenance column names collide with stakeholder-frozen `source` / `quelle`       |      Low |     Medium | Extend existing columns where possible; only add new columns for clearly new data (e.g. `notes_assumption`)    |
+(v1 numbers were 50/63 + 1 added since; current count is 51/63 + 12 outstanding per `REMAINING.md`.)
+
+### 6.1 Per-phase risk matrix (revised)
+
+| Phase           | Targets | Parameter sensitivity        | Risk if Phase A or B runs |
+|-----------------|--------:|------------------------------|---------------------------|
+| Phase 1 (UI)    |   T1–T12 | Low — UI shell only         | Cosmetic only             |
+| Phase 2 (l10n)  |  T13–T36 | Low — translation/format    | Cosmetic                  |
+| Phase 3 (menu)  |  T37–T42 | Low                         | Cosmetic                  |
+| Phase 4 (cockpit)| T14–T28 | **Medium** — reads parameters; provenance is purely additive so behaviour unchanged | **Phase A: zero risk.** Phase B (region) doesn't touch existing DE rows. |
+| Phase 5 (charts)| T43–T60 | **Medium** — same           | Same as Phase 4           |
+| Phase 6 (history+detail)| T48–T63 | Low                | Same                      |
+| T54 D1–D4c      |       4 | **Medium** — D3 % / D4c uses D-derived values | **Phase A: zero risk** (provenance only). **Phase B: zero risk for DE.** D4a/D4b (pending) get unblocked when `Region.installed_pmax_*` lands. |
+
+### 6.2 Specific targets at risk after Phase A or Phase B
+
+- **T25 auto-cascade:** Phase A doesn't change values, so cascade outputs don't move. Scenario C fingerprint stable.
+- **T37 Gebäudewärme Bilanz / T41 Verbrauch Bilanz:** same as T25 — Phase A is provenance-only.
+- **T49 / T50 Jahresstrom diagram (Track 1):** same — values held constant by Phase A.
+- **D4a / D4b (currently hardcoded 194 GW / 261 GW):** unblocked when Phase B Region model adds installed-power fields. This is a positive impact (closes 2 of the 12 outstanding T54 sub-items).
+
+### 6.3 Safe corridor
+
+**Phase A is essentially zero-risk for the 51 shipped targets** because it adds metadata columns and populates them; no value column changes. **Phase B is low-risk for DE** because new region rows ship with the new region; existing DE rows stay put (the import command refuses to overwrite an existing region row unless `--apply` is passed AND the diff is reviewed).
 
 ---
 
-## 8. Verification / validation plan (V2–V6 per phase)
+## 7. Risk register (10 risks, revised severities)
 
-Applying CLAUDE.md's V2–V6 ritual to each import phase.
+The 10 v1 risks are preserved; severities re-evaluated against the corrected (provenance + region) framing.
 
-### Phase A — Schema + provenance extend (NO value changes)
+| ID      | Risk                                                                             | v1 sev | Revised sev | Mitigation |
+|---------|----------------------------------------------------------------------------------|------:|--------:|------------|
+| RISK-01 | An import operation drifts a scenario golden                                     |  H/H  |   **L/L**   | Phase A is provenance-only; Phase B touches new-region rows only. DE re-sync (B4 in decision doc) is opt-in admin operation gated on `--apply` + diff review. |
+| RISK-02 | Ambiguous one-to-many label mappings auto-picked wrong                           |  H/H  |   **M/M**   | Step C s_xlsx_map shows 78 % HIGH; only the 22 % MED-or-below need hand review (~30 min for Pascal); LOW classified as `origin='internal'` automatically. |
+| RISK-03 | A code / cell / label gets renamed during import (violates CLAUDE.md contract)   | C/L  |   **C/L**   | Linter test `test_wb_code_freeze`; import command rejects any operation that would touch a `code` field. SR-007 enforces. |
+| RISK-04 | Import collides with `ensure_user_workspace_data()` for a live user               |  M/M  |   **M/M**   | Maintenance-mode flag (`MAINTENANCE_MODE=1` env) blocks per-user workspace fires while the import runs; documented runbook for staging vs live. |
+| RISK-05 | Per-user overrides silently overwritten by base row re-import                    |  C/L  |   **C/L**   | SR-005: import touches only `owner=NULL` base rows; per-user workspace tables (`owner=<user>`) are read-only to the import. Test `test_bb_user_override_preserved`. |
+| RISK-06 | D.xlsx column layout changes between stakeholder revisions                       |  M/M  |   **M/M**   | Pinned manifest at `data/import/d_xlsx.manifest.json` records column layout fingerprint; import asserts header match; fails loud on drift. |
+| RISK-07 | Orphan parameters mis-classified                                                 |  L/L  |   **L/L**   | SR-010 explicit `origin` enum (`d_xlsx` / `derived` / `internal`); orphan-classification report shipped with import; review report once per import. |
+| RISK-08 | Idempotency broken — second import run produces a diff                           |  M/M  |   **M/M**   | Content-hash per row; skip unchanged; test `test_wb_excel_import_idempotent`. SR-006 enforces. |
+| RISK-09 | Track-1 Jahresstrom values move after import                                     |  M/M  |   **L/L**   | Phase A provenance-only — no movement. Phase B for DE only touches new-region rows. D4a / D4b will move (positive: they become correct), goldens re-captured deliberately at that moment. |
+| RISK-10 | Provenance column names collide with stakeholder-frozen `source` / `quelle`       |  L/M  |   **L/L**   | New columns are `source_url`, `notes_assumption`, `origin` — all clearly additive; existing `source` / `quelle` / `notes` keep their semantics. SR-007 protects names. |
 
-- **V2 tests:** `test_wb_parameter_models_schema` (new) asserts `source`, `notes_assumption`, `origin` columns exist and are nullable; `test_wb_code_freeze` asserts no code was renamed.
-- **V3 API smoke:** `/landuse/`, `/renewable/`, `/verbrauch/`, `/gebaeudewarme/` return 200 and same JSON shape (additive-only fields accepted).
-- **V4 Playwright localhost:** scenarios A / C / D all exit 0 against unchanged goldens.
-- **V5 Playwright Heroku:** spin up, navigate each parameter page, screenshot, eyeball tooltip shows source when hovered (if UI slice included in Phase A).
-- **V6 docs:** `DATA_MODEL_IMPORT_AUDIT.md` updated with Phase A SHIPPED marker; `REMAINING.md` §3 updated.
+**Net:** the highest-impact risk (RISK-01) drops from H/H to L/L because the corrected framing avoids bulk value re-import. RISK-09 drops similarly. Other risks essentially unchanged.
 
-### Phase B — Hand-curated mapping CSV + idempotent import command
+---
 
-- **V2 tests:** `test_wb_dxlsx_import_idempotent` (re-import = no-op); `test_wb_dxlsx_import_no_rename` (no code changes); `test_wb_dxlsx_orphan_report` (orphan classification correct).
-- **V3 API smoke:** import command runs against a test-DB copy and emits "0 changed" on the second run.
-- **V4 Playwright localhost:** scenarios A / C / D may drift IF values changed — run `categorize_A_diff.py` output, Pascal reviews, goldens re-captured with sign-off IF intentional.
-- **V5 Playwright Heroku:** full parameter-page walk + Bilanz + Jahresstrom diagram visual check; screenshot diff vs pre-Phase-B baseline.
-- **V6 docs:** per-model mapping CSV checked in; per-phase change log in this audit.
+## 8. Verification / validation plan (V2–V6 per phase, revised)
 
-### Phase C — Per-scenario override wiring (SR-005)
+CLAUDE.md V2–V6 ritual applied to each phase. The three-phase v1 plan
+(A schema-only, B value sync, C overrides, D UI provenance) collapses to
+**two phases** in the corrected framing; v1's Phase D (UI provenance) is
+folded into Phase A; v1's Phase B (value sync) is replaced by the import
+command (idempotent, opt-in). Phase C from v1 (override wiring) is now
+satisfied by SR-005 — no new code needed.
 
-- **V2 tests:** `test_bb_scenario_override` (user override wins over D.xlsx default); existing workspace tests unchanged.
-- **V3 API smoke:** save a user edit, reload, verify user value stays.
-- **V4 Playwright localhost:** scenario D (write / read-back) passes unchanged.
-- **V5 Playwright Heroku:** testsim user saves an override on live Heroku; reloads; value persists across a worker recycle.
-- **V6 docs:** override-contract documented in `CLAUDE.md` "Known invariants" section.
+### Phase A — Provenance + tooltip + DE admin import
 
-### Phase D — UI provenance surfacing (SR-009)
+- **V2 tests:**
+  - `test_wb_parameter_models_schema` — asserts `source_url`, `notes_assumption`, `origin` columns exist + nullable.
+  - `test_wb_excel_import_idempotent` — second run = no-op.
+  - `test_wb_excel_import_no_rename` — refuses any code-field change.
+  - `test_wb_origin_classification` — every row gets a non-null `origin` value.
+  - `test_bb_provenance_in_api` — `/landuse/`, `/renewable/`, `/verbrauch/`, `/gebaeudewarme/` JSON includes `source_url` + `notes_assumption` when present.
+  - `test_bb_user_override_preserved` — provenance import doesn't touch a user's workspace row.
+- **V3 API smoke:** all 4 parameter pages return 200; JSON shape gains 3 nullable fields; existing fields untouched.
+- **V4 Playwright localhost:** scenarios A / C / D pass unchanged. New `E-provenance-tooltip` scenario asserts info-icon click + popover content on each parameter page.
+- **V5 Playwright Heroku:** `bash scripts/heroku_up.sh` → run E-provenance-tooltip + A/C/D → screenshot tooltip → `heroku_down.sh`. Cost ~$0.10.
+- **V6 docs:** this audit gets a "Phase A SHIPPED" marker; `REMAINING.md` §2 rewritten; per-phase change log appended.
 
-- **V2 tests:** template snapshot test includes `data-source-url` attribute on parameter rows.
-- **V3 API smoke:** HTML response includes the attribute.
-- **V4 Playwright localhost:** new scenario `E-provenance-tooltip` asserts tooltip text on hover.
-- **V5 Playwright Heroku:** same scenario against live URL.
-- **V6 docs:** screenshot evidence in `VISUAL_VERIFICATION_2026-04-<date>.md`.
+### Phase B — Region first-class + Bundesländer-ready import + D4a/D4b unblocked
+
+- **V2 tests:**
+  - `test_wb_region_model_schema` — `Region` table + parameter FK present.
+  - `test_bb_region_isolation` — DE rows and a sample BB region row don't bleed into each other.
+  - `test_bb_region_switcher_persistence` — region selection persists across reloads.
+  - `test_bb_d4a_d4b_dynamic` — installed-power fields read from `Region`, not hardcoded.
+  - `test_e2e_ui_admin_data_import` — admin upload form accepts a sample .xlsx, presents diff, applies on confirm.
+- **V3 API smoke:** `/admin/data-import/` returns 200 for staff; non-staff get 403.
+- **V4 Playwright localhost:** A / C / D scenarios pass for DE; new scenario `F-region-switch` validates the region switcher.
+- **V5 Playwright Heroku:** spin up, do the region switch + D4a/D4b dynamic check + admin import + tear down.
+- **V6 docs:** this audit gets "Phase B SHIPPED"; `REMAINING.md` §3 (T54 D4a/D4b) closes; `HARDCODED_VALUES_TRACE.md` §6 D4a/D4b row marked SHIPPED.
 
 ### Gate between phases
 
-Pascal explicitly signs off before advancing. No phase starts while the previous one has red tests or ungraded golden drift.
+Pascal explicitly signs off before Phase B opens a PR. No phase starts while the previous one has red tests or ungraded golden drift. V5 Heroku batched per phase (one cycle each, ~$0.20 total).
 
 ---
 
-## 9. Decision points for Pascal
+## 9. Decision points for Pascal (8 actually-blocking, replaces v1's 10)
 
-Concrete choices that have to be made before Phase A opens a PR.
+The v1 audit's 10 decision points were mostly artefacts of the wrong (value-import) framing. Real blockers, lifted from `260403_Section_2.3_decision.md` §6:
 
-1. **Column naming for assumption notes.** Extend existing `notes` column (currently empty, 0/420) vs add a new `notes_assumption` column? Extending is less churn; adding is more explicit. **Recommendation:** extend existing `notes`, add a separate `origin` enum column.
-
-2. **Mapping CSV location.** `data_model_mapping.csv` at repo root, under `data/`, or under `docs/stakeholder/`? **Recommendation:** `data/mapping/d_xlsx_to_db.csv` so the import script has a stable path and it's not confused with docs.
-
-3. **D.xlsx snapshot versioning.** D.xlsx is gitignored today. We need a hash / version pin so we know what import ran against what file. **Recommendation:** commit `data/mapping/d_xlsx.manifest.json` with `{file_hash, sheet_hashes, import_date}`; keep the binary gitignored.
-
-4. **Phase A scope — UI or not?** Phase A can be purely schema (no UI) or can include the SR-009 tooltip. **Recommendation:** Phase A = schema only, Phase D = tooltip. Cleaner to separate.
-
-5. **Value sync policy.** When D.xlsx value ≠ our seed, does D.xlsx win (auto-overwrite on import) or do we emit a diff for review? **Recommendation:** diff-and-review for first 3 imports, auto-overwrite after pattern stabilises.
-
-6. **Orphan handling.** Parameters we have that D.xlsx doesn't (policy assumptions, UI-only rows) — classify as `origin='internal'` and leave them, or push them into D.xlsx via a new sheet? **Recommendation:** classify as `origin='internal'` for now; stakeholder decision on whether to promote them.
-
-7. **Heroku import cadence.** Import runs once at release, or every deploy, or on-demand? **Recommendation:** on-demand management command (`manage.py import_d_xlsx`) — no implicit run at deploy.
-
-8. **Commit boundaries.** One commit per phase, or per-model within a phase? **Recommendation:** one commit per phase (A, B, C, D) — cleaner revert surface. Scripts + mapping CSV can go in same commit as the phase that introduces them.
-
-9. **Test baseline refresh.** Run `regression/capture_A.py` + `capture_C.py` + `capture_D.py` before Phase A opens so we have a clean pre-audit fingerprint. **Recommendation:** yes, unconditionally.
-
-10. **T54 D1–D4c interaction.** Track 1 just shipped yesterday. Phase A is additive so should be neutral; Phase B value-sync could move D3 / D4c outputs. **Recommendation:** Phase B for RenewableData runs AFTER re-capturing Track 1 Jahresstrom golden.
+| # | Question | Recommended call | Why |
+|---|---|---|---|
+| **D1** | **Provenance schema** — extend existing `source` / `quelle` / `notes` columns OR add new `source_url` + `notes_assumption` + `origin` columns? | **Add new columns; leave existing alone.** | `source` / `quelle` already have content (LandUse `quelle="D.1.<n>"`); reusing them invites misinterpretation. Additive is cheaper to revert. |
+| **D2** | **Region model** — first-class table OR settings constant? | **First-class table.** | 20-LOC migration; avoids future rewrite when ErnES sends BB.xlsx. |
+| **D3** | **Import command behaviour** when D.xlsx is missing or malformed? | **Fail loud, no silent fallback.** | Mitigates RISK-06. |
+| **D4** | **Source-URL UI surface** — tooltip on hover, info-icon click, side panel, detail page? | **Info icon (i) per row, click-to-popover.** | Cheap to render, doesn't crowd UI, accessible, easy V4/V5 testing. |
+| **D5** | **D.xlsx file pinning** — commit a hash manifest? | **Yes** — `data/import/d_xlsx.manifest.json` with `{file_hash, sheet_hashes, import_date, import_tool_version}`; .xlsx stays gitignored. | Audit trail; supports re-sync conversations with stakeholder. |
+| **D6** | **For LOW-confidence DB rows (5 NONE + 25 LABEL_ONLY)** — classify as `origin='internal'` OR ask stakeholder to add to D.xlsx? | **`origin='internal'`.** | Pragmatic; mostly category headers and deeper splits ours-only. Promote later if stakeholder asks. |
+| **D7** | **Phase-A scope** — schema + provenance + tooltip in one phase, OR split tooltip into a follow-up? | **All three in one phase.** | Tightly coupled; ~3 days; one V5 Heroku cycle instead of two. |
+| **D8** | **Region first-class — Phase A or Phase B?** | **Phase B.** | Phase A focuses on visible provenance for the existing single-region data. Region + Bundesländer-ready import ships in Phase B; doesn't block the user-visible improvement. |
 
 ---
 
-## 9a. Blocker resolutions (2026-04-23 addendum)
+## 10. Open questions for Schmidt-Kanefendt (3, trimmed from v1's 4)
 
-After Pascal's decisions in §9, three items were marked "still on Pascal" — Q1 (which D.xlsx scenario column is canonical), mapping-CSV review effort, and Heroku maintenance-mode window. Before handing back, Claude ran a second-pass value-based audit. Blockers 1 and 2 are now **resolved algorithmically**; blocker 3 is pending user confirmation.
+Not blocking the audit; worth raising before Phase B:
 
-### 9a.1 Q1 (canonical column) — RESOLVED: col W
+- **Q1:** Does the stakeholder have per-Bundesland Excel files in the same shape as D.xlsx? If yes, can he share a representative sample (e.g. BB.xlsx) to validate Phase B against?
+- **Q2:** Are the 747 `hsk: |` comments on `D.xlsx!1.` considered authoritative documentation we should surface as-is, or working notes that we should curate before exposing?
+- **Q3:** Is D.xlsx versioned / tagged on the stakeholder side (e.g. `D.250517.1733_hsk` in the file's `Stempel` sheet)? If yes, the import-tool manifest can record the version directly.
 
-Extractor: `scripts/audit_value_mapping.py` + `scripts/audit_final_mapping.py`.
-Method: for every DB row with non-zero `status` / `ziel`, search D.xlsx for any cell (row, col ∈ {U, V, W, AG, AN}) whose value × scale ≈ ours (5% tol, scale ∈ {1, 10⁻⁴, 10⁻³, 10³, 10⁴}), then tiebreak by label overlap.
-
-Column source tally across all 4 models:
-
-| Model              | Status from W | Status from other | Ziel from W | Ziel from other |
-|--------------------|--------------:|------------------:|------------:|----------------:|
-| LandUse            |          10/10 |                0 |         7/9 |     AG:1, U:1   |
-| RenewableData      |          41/59 |    AG:13, AN:5   |       23/32 |  AG:5, AN:3, U:1|
-| VerbrauchData      |          43/51 |    AN:4, AG:4    |       62/69 |   AN:5, AG:2    |
-| GebaeudewaermeData |          10/10 |                0 |       14/14 |                0|
-| **Total**          |       **~80%** |              ~20% |     **~85%** |            ~15% |
-
-**Decision:** **col W is canonical** for both status and ziel. Non-W matches are either label-overlap false-positives or reflect rows where D.xlsx used a variant column; the mapping CSV records the actual column chosen per row so edge cases are explicit.
-
-**Implication for headers:** D.xlsx row-1 header calls col U `Statusurspr.` (status original) and col W `Zielurspr. / Ansatzwert`. But the value-match evidence shows **both** status and ziel values live in col W — meaning D.xlsx uses **row-labelling** (e.g. rows prefixed "STATUS-Ansatz:" vs "ZIEL-Ansatz:") to separate status-rows from ziel-rows, NOT column separation. One column per row, label disambiguates.
-
-### 9a.2 Mapping CSV — AUTO-DRAFTED
-
-CSVs at `scripts/audit_out/final_map_<model>.csv` (4 files). Each row has columns:
-`our_code, our_label, status_ours, ziel_ours, status_excel_row, status_col, status_scale, status_excel_label, ziel_excel_row, ziel_col, ziel_scale, ziel_excel_label, confidence`.
-
-Overall distribution across 420 rows:
-
-| Confidence                    | Rows | %   | Meaning                                                |
-|-------------------------------|-----:|----:|--------------------------------------------------------|
-| HIGH (both status+ziel match) |   81 | 19% | direct 1-to-1 with D.xlsx row; high-reliability       |
-| MED (one of status/ziel match)|   92 | 22% | partial match; needs per-row scale or unit sanity check|
-| ZERO (no values in DB)        |   41 | 10% | placeholder / template rows; classify `origin='internal'` |
-| LOW (no match any scale)      |  206 | 49% | mostly sub-sub-categories deeper than D.xlsx granularity |
-
-Categorisation of the 206 LOW rows (`scripts/audit_low_categorize.py`):
-
-| Sub-category                                  | Rows |
-|------------------------------------------------|-----:|
-| POSSIBLE-GAP (deep hierarchy, likely derived) |  188 |
-| AGGREGATE (label says "gesamt"/"total")        |    8 |
-| LU SUB-LEVEL                                   |    4 |
-| UI-GROUP (top-level renewable cats 1./2./3.)   |    3 |
-| AGGREGATE (top-level code)                     |    2 |
-| COMPUTED (derived from another row)            |    1 |
-
-Sample POSSIBLE-GAP rows are all deep codes like `1.1.2.1.2.1` under `RenewableData` — D.xlsx doesn't split at that depth; our DB does because the UI needs finer buckets. These are **computed from coarser D.xlsx rows via allocation logic**, not orphans.
-
-### 9a.3 Refined origin taxonomy (supersedes SR-010 2-category model)
-
-Original SR-010 proposed `origin ∈ {d_xlsx, internal, orphan}`. The LOW analysis shows a third mandatory category:
-
-| Origin enum value | Definition                                                             | Estimated count |
-|-------------------|------------------------------------------------------------------------|----------------:|
-| `d_xlsx`          | 1-to-1 mapping to a D.xlsx cell; value sourced + provenance captured   |            ~173 |
-| `derived`         | Computed from a D.xlsx-origin parent row via an explicit allocation formula; value sourced indirectly but traceable to D.xlsx + formula | ~190 |
-| `internal`        | No D.xlsx counterpart; policy / UI-only / template row; value stays ours | ~57 |
-| `orphan`          | Unexpected case requiring manual review before import                  | 0 (goal) |
-
-**Schema change required:** add `origin_parent_code VARCHAR` + `origin_formula VARCHAR` for `derived` rows. This is additive, no rename, backwards-compatible with SR-007.
-
-### 9a.4 Blocker 2 effort reduction
-
-With the auto-drafted CSV + origin taxonomy, Pascal's review burden drops from "eyeball 502 rows" to:
-
-- **Confirm HIGH mappings** (81 rows, ~5 min spot-check — pick 10 random, verify)
-- **Confirm MED → HIGH or MED → derived** (92 rows, ~15 min)
-- **Classify LOW**: `derived` vs `internal` (206 rows, ~30 min — mostly rubber-stamp since POSSIBLE-GAP pattern is obvious)
-- **Handle ZERO**: set `origin='internal'` for placeholders (41 rows, ~5 min)
-
-**Total ~55 min of Pascal review instead of 1.5 hr**, with a typed + machine-validated CSV at the end.
-
-### 9a.5 Updated Phase B gate
-
-Phase B value-sync now proceeds as:
-
-1. Import script reads `data/mapping/d_xlsx_to_db.csv` (the reviewed CSV).
-2. For each HIGH/MED row: fetch D.xlsx col W × recorded scale → propose as the new DB value.
-3. For each `derived` row: re-run the allocation formula against the updated D.xlsx parent → propose.
-4. For each `internal` row: leave untouched.
-5. Emit per-row diff; `--apply` gate requires Pascal sign-off.
-
----
-
-## 10. Open questions for Schmidt-Kanefendt
-
-(Not blocking audit, but worth raising with the stakeholder before Phase B value sync.)
-
-- ~~Q1: For rows where D.xlsx has multiple scenario columns (U / V / W / AG / AN), which column is canonical for the current app scenario?~~ **RESOLVED — see §9a.1, col W.**
-- Q2: Are the 747 per-cell comments considered authoritative documentation, or working notes? (Affects whether we surface them as-is or curate.)
-- Q3: Is D.xlsx versioned / tagged on your side? (Affects RISK-06 mitigation.)
-- Q4: Should the 4 simulator models reorganise around D.xlsx sheet taxonomy (currently our model-split is by UI page, D.xlsx splits by sector)? (Affects a possible future Phase E refactor but out of scope for SR-001…SR-010.)
+(v1 Q1 — canonical column for status/ziel — was resolved by switching to _S.xlsx; D-column convention no longer needed.)
 
 ---
 
 ## 11. Artefacts attached to this audit
 
-Committed alongside this document:
+Committed alongside this document (or by Steps A / B / C / D):
 
-- `scripts/audit_import_mapping.py` — algorithmic label-match extractor (the tool that produced §5.1 numbers).
-- `scripts/audit_out/mapping_landuse.csv` — 20 rows.
-- `scripts/audit_out/mapping_renewabledata.csv` — 301 rows.
-- `scripts/audit_out/mapping_verbrauchdata.csv` — 151 rows.
-- `scripts/audit_out/mapping_gebaeudewaermedata.csv` — 26 rows.
+- `260403_Section_2.3_literal.md` — Step A literal paraphrase (commit `d2a4c28`).
+- `WORKBOOK_CATALOG.md` — Step B per-file catalog (commit `55cf302`).
+- `scripts/catalog_workbooks.py`, `scripts/probe_s_xlsx_formulas.py`, `scripts/probe_s_xlsx_values.py` — Step B extractors.
+- `scripts/audit_out/{workbook_catalog,s_xlsx_probe,s_xlsx_values_probe}.txt` — Step B raw outputs.
+- `scripts/audit_s_xlsx_mapping.py` — Step C mapping extractor (commit `58a1b90`).
+- `scripts/audit_out/s_xlsx_map_<model>.csv` (4 files) + `s_xlsx_map_summary.json` — Step C per-model mapping evidence.
+- `260403_Section_2.3_decision.md` — Step D binding decision record (commit `4c78f61`).
+- `DATA_MODEL_AUDIT.md` — companion doc; `HARDCODED_VALUES_TRACE.md` — separate trace for the Jahresstrom flow diagram annotations.
 
-Intentionally NOT produced by this audit (belongs to Phase A/B when approved):
+Intentionally **not** produced by this audit (belongs to Phase A / B when approved):
 
-- `data/mapping/d_xlsx_to_db.csv` — hand-curated golden mapping.
-- `data/mapping/d_xlsx.manifest.json` — source file hash.
-- `simulator/management/commands/import_d_xlsx.py` — import management command.
-- Schema migrations for `origin` / `notes_assumption` columns.
+- Schema migrations for `source_url`, `notes_assumption`, `origin`, `Region` FK.
+- `Region` model + admin editor.
+- `simulator/management/commands/import_excel_provenance.py` (Phase A).
+- `simulator/management/commands/import_excel_datenmodell.py` (Phase B).
+- `data/import/d_xlsx.manifest.json` (manifest pin).
+
+The previous v1 produced a `data/mapping/d_xlsx_to_db.csv` placeholder. With Step C's mapping CSVs in place, that file is no longer needed — the s_xlsx_map_*.csv files ARE the curated mapping (78 % HIGH automatic + the 92 rows MED that benefit from a quick Pascal eyeball).
 
 ---
 
-## 12. Summary: what this audit concludes
+## 12. What this audit concludes (revised summary)
 
-- §2.3 is 10 atomic stakeholder requirements, not one.
-- Our architecture supports ~60% of them with the existing schema; the missing ~40% is provenance population, not structural redesign.
-- Algorithmic mapping is 35–75% accurate — not enough to automate; hand-curation required once by Pascal/stakeholder, then deterministic.
-- The 63 shipped targets are safe as long as Phase A (schema/provenance) precedes Phase B (value sync), and Phase B re-captures goldens deliberately.
-- Cell / code / label freeze (CLAUDE.md rule #1) is preserved by design — import adds metadata, does not rename.
-- Risk register has 10 identified risks, 7 medium-or-above, all with named mitigations.
-- Four phases (A/B/C/D) each independently shippable with V2–V6 discipline.
-- Ten decision points remain for Pascal before Phase A opens a PR; four questions for Schmidt-Kanefendt before Phase B.
+- §2.3 is a **provenance + region + admin-edit** ask. Not a value import.
+- Our DB already holds the 420 parameter values; 78 % map at HIGH confidence to _S.xlsx, the stakeholder's scenario-master view file.
+- The gap is **source URLs** (86 on D.xlsx), **assumption notes** (747 on D.xlsx), **first-class Region**, and **admin re-import without code change**.
+- 12 atomic stakeholder requirements (SR-001 … SR-012); 10 risks (one drops H/H to L/L); 8 actually-blocking decisions for Pascal; 3 open questions for Schmidt-Kanefendt.
+- Two-phase implementation: **Phase A** (provenance + tooltip + DE admin import, ~3 days, V2–V6) and **Phase B** (region first-class + Bundesländer-ready import + D4a/D4b unblocked, ~3 days, V2–V6).
+- Cell / code / label freeze (CLAUDE.md rule #1) preserved by design — additive columns only.
+- 51 shipped targets stay green; T54 D4a/D4b unblocks as a positive side-effect of Phase B.
 
-**This audit makes no code changes and proposes none yet.** Next step is Pascal's decision on the 10 decision points in §9; coding starts in Phase A once those are resolved.
+**This audit makes no code changes and proposes none yet.** Next step is Pascal's decision on the 8 actually-blocking decisions in §9; coding starts in Phase A once those are resolved.
