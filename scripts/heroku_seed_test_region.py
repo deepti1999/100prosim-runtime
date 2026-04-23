@@ -7,16 +7,22 @@ Run on Heroku via:
 Throwaway: gets deleted after Heroku V5 verification along with the TEST
 region rows. Not used by the application or any test suite.
 """
-from django.db import transaction
+import os
+import django
 
-from simulator.models import (
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "landuse_project.settings")
+django.setup()
+
+from django.db import transaction  # noqa: E402
+
+from simulator.models import (  # noqa: E402
     GebaeudewaermeData,
     LandUse,
     Region,
     RenewableData,
     VerbrauchData,
 )
-from simulator.ws_models import WSData
+from simulator.ws_models import WSData  # noqa: E402
 
 
 SCALE = 1.05
@@ -173,8 +179,4 @@ def main():
 
 
 if __name__ == "__main__":
-    import django
-    import os
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "landuse_project.settings")
-    django.setup()
     main()
