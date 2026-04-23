@@ -1546,6 +1546,12 @@ class GebaeudewaermeData(models.Model):
         related_name="+",
     )
 
+    # Phase C (T66): use OwnerScopedManager so region thread-local
+    # filtering applies (manager handles "no owner field" case
+    # correctly — see simulator/owner_scope.py).
+    objects = OwnerScopedManager()
+    all_objects = models.Manager()
+
     class Meta:
         ordering = ['code']
         indexes = [

@@ -141,6 +141,78 @@ class CreateModeForEmptyRegionTests(TestCase):
             Path(synth).unlink(missing_ok=True)
 
 
+class FullCrossRegionIsolationSmokeTests(TestCase):
+    """End-to-end Phase C smoke: import TEST, switch context, verify
+    cross-region isolation across all 4 parameter models."""
+
+    def setUp(self):
+        _need_d(self)
+        self.de = Region.objects.get(code="DE")
+        self.test_region = Region.objects.create(
+            code="TEST", display_name="Phase C Smoke", active=True,
+            installed_pmax_ely_gw=200.0, installed_pmax_rv_gw=270.0,
+        )
+        # Seed minimal DE rows in each model so TEST has something to clone.
+        LandUse.all_objects.create(
+            code="LU_0", name="Bodenfläche gesamt",
+            status_ha=35759529.0, target_ha=35759529.0, region=self.de,
+        )
+        RenewableData.all_objects.create(
+            code="R_SMOKE", category="X", name="Smoke renewable",
+            unit="GWh/a", status_value=100.0, target_value=120.0, region=self.de,
+        )
+        VerbrauchData.all_objects.create(
+            code="V_SMOKE", category="Smoke verbrauch", unit="GWh/a",
+            status=200.0, ziel=180.0, region=self.de,
+        )
+        GebaeudewaermeData.objects.create(
+            code="G_SMOKE", category="Smoke gebaude", unit="GWh/a",
+            status=300.0, ziel=250.0, region=self.de,
+        )
+
+    def test_full_smoke_create_TEST_then_query_per_region(self):
+        from simulator.region_scope import region_scope
+
+        synth = _make_synthetic_xlsx_from_de(scale=1.05)
+        try:
+            call_command(
+                "import_excel_provenance",
+                synth,
+                "--apply",
+                "--region=TEST",
+                stdout=StringIO(),
+                stderr=StringIO(),
+            )
+        finally:
+            Path(synth).unlink(missing_ok=True)
+
+        # Each model should have a TEST row corresponding to the DE seed code.
+        with region_scope("TEST"):
+            self.assertEqual(LandUse.objects.filter(code="LU_0").count(), 1)
+            self.assertEqual(RenewableData.objects.filter(code="R_SMOKE").count(), 1)
+            self.assertEqual(VerbrauchData.objects.filter(code="V_SMOKE").count(), 1)
+            self.assertEqual(GebaeudewaermeData.objects.filter(code="G_SMOKE").count(), 1)
+
+        # DE still has its original rows, untouched.
+        with region_scope("DE"):
+            de_lu = LandUse.objects.get(code="LU_0")
+            de_r = RenewableData.objects.get(code="R_SMOKE")
+            de_v = VerbrauchData.objects.get(code="V_SMOKE")
+            de_g = GebaeudewaermeData.objects.get(code="G_SMOKE")
+        self.assertEqual(de_lu.status_ha, 35759529.0)
+        self.assertEqual(de_r.status_value, 100.0)
+        self.assertEqual(de_v.status, 200.0)
+        self.assertEqual(de_g.status, 300.0)
+
+        # Cross-region scoping: switching context returns disjoint row sets.
+        with region_scope("DE"):
+            de_landuse_count = LandUse.objects.filter(code="LU_0").count()
+        with region_scope("TEST"):
+            test_landuse_count = LandUse.objects.filter(code="LU_0").count()
+        self.assertEqual(de_landuse_count, 1)
+        self.assertEqual(test_landuse_count, 1)
+
+
 class UpdateModeStillWorksForExistingDETests(TestCase):
     """The UPDATE path (Phase A/B behaviour) is preserved for DE."""
 
