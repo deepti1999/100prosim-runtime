@@ -1,5 +1,11 @@
 # Claude Code / workflow artifacts
 verification/
+!verification/final_audit/
+verification/final_audit/screenshots/
+verification/final_audit/heroku_up.log
+verification/final_audit/heroku_down.log
+verification/final_audit/cross_cutting/test_suite_full.log
+verification/final_audit/cross_cutting/heroku_console_*.log
 .playwright-mcp/
 
 # Python
