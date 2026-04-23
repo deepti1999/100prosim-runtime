@@ -96,6 +96,8 @@
 
 ## Heroku spin-up state
 
-- App: see `heroku_up.log` (one provision at start of run, one teardown at end).
-- Hostname: filled in after spin-up completes.
-- testsim workspace reset: noted per dirty test.
+- App: `prosim-100` (provisioned 2026-04-24, see `heroku_up.log`).
+- Hostname: **`https://prosim-100-e738babd7226.herokuapp.com`**
+- Login: `testsim / TestSim!2026`
+- testsim workspace reset: noted per dirty test in target docs.
+- Tear down: `bash scripts/heroku_down.sh` at end of audit.
