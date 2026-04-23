@@ -229,16 +229,107 @@ work.
 
 ---
 
-## 4. Open questions (small)
+## 4. Formulas — all confirmed by reading WS.xlsm cells (2026-04-23)
 
-Only two, both answerable in <1 hour of investigation:
+Inspection of `WS.xlsm` sheet `1.Jahresbilanz_Strom` with openpyxl
+in formula-mode (`data_only=False`) gave us the exact formulas for
+D1, D2, D3, D4c. See `scripts/verify_d1_d4c_formulas.py` and
+`scripts/verify_d3_deep.py` for the probes.
 
-1. **What's the exact denominator for the percent shares (D3)?**
-   Our naive `pv / (pv+wind+hydro+bio)` gives PV correctly but
-   Wind wrong. Either a Schmidt-Kanefendt one-line answer, or 15
-   min of inspecting D.xlsx row 21 of sheet `I_Basisdaten` where
-   "Bruttostromerzeugung gesamt" likely lives.
-2. **For Tagesladungen (D1/D2), is the denominator "peak daily"
-   or "mean daily"?** Our inspection suggests peak (PV: 1.2M /
-   3026 ≈ 397). Worth confirming with one data-point check
-   against Schmidt-Kanefendt's Excel output.
+### D1 + D2 — Tagesladungen (unified formula)
+
+Excel uses one named constant `TLproEingabeEinheit` across all
+Tages values on the Jahresstrom sheet:
+
+```
+TL_factor = 365 / final_stromnetz   # total annual Stromnetz consumption
+Tagesladung(value) = value * TL_factor
+```
+
+Verified by back-calculation (current scenario has
+`final_stromnetz ≈ 1,107,646 GWh`):
+
+| Value | annual | × TL_factor | Excel shows |
+|---|---:|---:|---:|
+| PV           | 1,205,268 | 397.2 | 397 |
+| M→Q flow     | 1,545,080 | 509.0 | 509 |
+| Speicherkap. |   241,727 |  79.7 |  80 |
+| Final flow   | 1,107,646 | 365.0 | 365 |
+
+Note: Wind and Hydro Tages use the **AE-adjusted** value (see D3);
+PV and Bio use the raw value.
+
+### D3 — percent shares (asymmetric)
+
+From WS.xlsm formulas:
+- `E14 = E13/(H25+E13)` → Bio share
+- `E21 = E19/(H25+E13)` → PV share
+- `E27 = AE25/(H25+E13)` → Wind share
+- `E33 = AE31/(H25+E13)` → Hydro share
+
+Where:
+- `H25 = E19+E25+E31 = PV + Wind + Hydro` (sum of fluktuierend + konstant)
+- `E13 = Bio`
+- `AE18% = J25/H25 = 1 - ely_branch/m_total` (≈ 80.01% — "um Power-to-Gas verminderte EE")
+- `AE25 = E25 × AE18%` (Wind after P2G adjustment)
+- `AE31 = E31 × AE18%` (Hydro after P2G adjustment)
+
+In Python:
+
+```python
+m_total = pv + wind + hydro                        # H25
+four_source = m_total + bio                        # H25 + E13
+ely_factor = 1.0 - (ely_branch / m_total) if m_total else 0.0   # AE18%
+
+bio_pct   = bio                     / four_source
+pv_pct    = pv                      / four_source
+wind_pct  = wind  * ely_factor      / four_source
+hydro_pct = hydro * ely_factor      / four_source
+```
+
+Produces `0,23% / 62,27% / 29,20% / 0,81%` — matches Excel's
+`0,2% / 62,2% / 29,2% / 0,8%` exactly.
+
+### D4a / D4b — installed-power (194 GW / 261 GW)
+
+Located at `WS.xlsm` `1.Jahresbilanz_Strom` cells M30 and R30.
+These are scenario-level config constants, not computed from the
+WS365 solver. Belong in D.xlsx `I_Basisdaten` (installed
+capacities per region). For Track 1, either hardcode with a TODO
+comment or add a tiny `RegionConfig` model with 2 fields — both
+fine.
+
+### D4c — Abgleichdifferenz (gas-balance residual)
+
+Formula at `WS.xlsm` cell `Q44`:
+
+```
+Q44 = L36 - Q36   # gas_storage_in - gas_storage_out
+```
+
+In our terms:
+
+```python
+abgleichdifferenz = gas_storage - t_value
+```
+
+Verified: our scenario gives 263,268 - 263,107 = 161, Excel shows
+160 (rounding).
+
+---
+
+## 5. All four diagram metrics are implementable today
+
+With formulas now confirmed:
+
+| Item | Blocker | Status |
+|---|---|---|
+| D1 source Tagesladungen | None — formula confirmed | Ready to wire |
+| D2 flow Tagesladungen | None — same formula | Ready to wire |
+| D3 percent shares | None — formula confirmed | Ready to wire |
+| D4a/b installed-power | Where to store the constants (D.xlsx vs config) | Track 1: hardcode with TODO; Track 2: migrate to Region model |
+| D4c Abgleichdifferenz | None — formula confirmed | Ready to wire |
+
+Total effort to close D1/D2/D3/D4c as Track 1: ~3 hours (backend
+fields + template bindings + tests). D4a/D4b stays on Track 2
+(§2.3).
