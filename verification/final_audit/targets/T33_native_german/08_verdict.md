@@ -19,3 +19,25 @@
 These are 2-3 minor residues across 12 pages — not "translation incomplete", but a clean-up follow-up worth opening as a small ticket.
 
 **Verdict:** PASS-WITH-CAVEAT — overwhelming majority is native German; 2-3 small residues remain (Renewable empty state, login flash, Cockpit year). Open follow-up: sweep for English in dynamic flash/JS-injected text.
+
+## Caveat resolved 2026-04-24 (Fix 1) — CAVEAT → PASS
+
+All 3 documented residues + 2 additional siblings found during V5 sweep fixed in commits `e340cbc` + `8b06b12`:
+
+| Residue | File / Line | Fix |
+|---|---|---|
+| Cockpit "Ziel (2050)" | `cockpit.html:191` | "Ziel (2045)" (year + language) |
+| LandUse empty-state "No changes yet" | `landuse_list.html:2214` | "Noch keine Änderungen" |
+| Renewable empty-state full sentence | `renewable_list.html:517` | German equivalent |
+| Login flash "Welcome back" | `page_auth.py:33` | "Willkommen zurück" |
+| "Invalid username or password." | `page_auth.py:36,38` | "Ungültiger Benutzername oder Passwort." |
+| "Account created…" | `page_auth.py:50` | German equivalent |
+| "Please correct the errors below." | `page_auth.py:53` | German equivalent |
+| "You have been successfully logged out." | `page_auth.py:61` | "Sie wurden erfolgreich abgemeldet." |
+| LandUse pill "${count} changes loaded" | `landuse_list.html:2318` | "${count} Änderungen geladen" |
+| LandUse pill "No saved changes" | `landuse_list.html:2324` | "Keine gespeicherten Änderungen" |
+
+V2 — `simulator.test_bb_german_ui::GermanUIResiduesTests` 6/6 ✅
+V4 — localhost screenshots under `verification/final_audit/caveat_fixes/localhost/fix1_*.png`
+V5 — Heroku screenshots under `verification/final_audit/caveat_fixes/heroku/fix1_*.png` (app `prosim-100-a2eca0df3011`, now destroyed)
+V6 — this section + `index.md` updated

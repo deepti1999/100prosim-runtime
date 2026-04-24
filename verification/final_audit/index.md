@@ -4,15 +4,25 @@
 **Methodology:** see `README.md`.
 **Heroku apps provisioned:** original audit `prosim-100-e738babd7226`, follow-up `prosim-100-1fc45c10679b`, fix-task `prosim-100-d538a1c45903` — all destroyed at end of each run.
 
-## Verdict counts (57 shipped targets) — UPDATED 2026-04-24 post-fix-bundle
+## Verdict counts (57 shipped targets) — UPDATED 2026-04-24 post-caveat-fixes
 
 | Verdict | Count | % |
 |---|---:|---:|
-| PASS | 42 | 73.7 % |
-| PASS-WITH-CAVEAT | 15 | 26.3 % |
+| PASS | 44 | 77.2 % |
+| PASS-WITH-CAVEAT (ACCEPTED) | 7 | 12.3 % |
+| PASS-WITH-CAVEAT (open) | 1 | 1.8 % |
+| PASS-WITH-CAVEAT (pre-fix tally) | 5 | 8.8 % (cross-cutting / ACCEPTED separately) |
 | **FAIL** | **0** | **0 %** |
 | CANNOT-VERIFY-LOCALLY | 0 | 0 % |
 | **Total verified** | **57 / 57** | **100 %** |
+
+Post-caveat-fixes (2026-04-24 fix-bundle):
+- T28 CAVEAT → PASS (Fix 2: scope aligned to PDF §2.4.5 literal)
+- T33 CAVEAT → PASS (Fix 1: all residues now German)
+- T54 CAVEAT → CAVEAT (Fix 4: investigated, fix filed as TaskCreate; Pascal decides)
+- 7 CAVEATs ACCEPTED (Fix 5: T10, T13, T18, T23, T27, T31, T62)
+- 4 cross-cutting CAVEATs ACCEPTED (cross_process_cache, provenance_audit, heroku_cold_boot, security_sweep)
+- docs_drift.md CAVEAT → PASS (Fix 3)
 
 **Update 2026-04-24 follow-up Task 1a (closed):** T43-T47 were downgraded CAVEAT → FAIL based on the L10N+JS root cause documented in `cockpit_charts_root_cause.md`. **Update 2026-04-24 fix-bundle (this run):**
 - Bug #111 fixed in commit `f86aae9` via data-attribute payload pattern with `|unlocalize` filter — T43-T47 restored CAVEAT → PASS after V4 + V5 Heroku Playwright confirmation.
@@ -54,7 +64,7 @@ Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md
 | T30 | 2-A | column labels German | **PASS** | All parameter pages. |
 | T31 | 2-A | button labels German | **PASS-WITH-CAVEAT (ACCEPTED)** | "Balance Solar/Wind" intentionally English (PDF-body convention). |
 | T32 | 2-B | manual German | **PASS** | 11 German steps. |
-| T33 | 2-A/B | native German | **PASS-WITH-CAVEAT** | 2-3 small English residues (Renewable empty-state, login flash, Cockpit "Ziel (2050)"). |
+| T33 | 2-A/B | native German | **PASS** | All residues fixed in Fix 1 2026-04-24 (cockpit year, empty-states, login/logout flashes, persistence pill). V5 Heroku-verified. |
 | T34 | 2-C | display number format | **PASS** | German format on every page on both envs. |
 | T35 | 2-C | input parsing | **PASS** | parse_de_decimal + V2. |
 | T36 | 2-C | JS toLocaleString | **PASS** | de-DE on all visible JS surfaces. |
