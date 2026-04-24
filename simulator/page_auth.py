@@ -30,12 +30,12 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, f'Welcome back, {username}!')
+                messages.success(request, f'Willkommen zurück, {username}!')
                 return redirect('simulator:main_simulation')
             else:
-                messages.error(request, 'Invalid username or password.')
+                messages.error(request, 'Ungültiger Benutzername oder Passwort.')
         else:
-            messages.error(request, 'Invalid username or password.')
+            messages.error(request, 'Ungültiger Benutzername oder Passwort.')
     else:
         form = AuthenticationForm()
     return render(request, 'simulator/login.html', {'form': form})
@@ -47,10 +47,10 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}! You can now log in.')
+            messages.success(request, f'Konto für {username} erstellt! Sie können sich jetzt anmelden.')
             return redirect('simulator:login')
         else:
-            messages.error(request, 'Please correct the errors below.')
+            messages.error(request, 'Bitte korrigieren Sie die Fehler unten.')
     else:
         form = UserCreationForm()
     return render(request, 'simulator/register.html', {'form': form})
@@ -58,7 +58,7 @@ def register_view(request):
 def logout_view(request):
     """User logout view"""
     logout(request)
-    messages.success(request, 'You have been successfully logged out.')
+    messages.success(request, 'Sie wurden erfolgreich abgemeldet.')
     return redirect('simulator:landing_page')
 
 @login_required
