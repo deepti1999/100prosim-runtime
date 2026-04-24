@@ -1,0 +1,50 @@
+sheet,row,row_indent_col,full_name,status,ziel,unit,d_ref,ref_status,ref_ziel
+3. Bedarfsniveau,5,E,Energieverbraucher,,,,,3. Bedarfsniveau!L5,3. Bedarfsniveau!M5
+3. Bedarfsniveau,6,G,Energieverbraucher / Einwohnerzahl,84669326,84669326,,1.40,3. Bedarfsniveau!L6,3. Bedarfsniveau!M6
+3. Bedarfsniveau,7,G,Energieverbraucher / Energieverbraucher gemäß Solidarprinzip,84669326,84669326,,1.49,3. Bedarfsniveau!L7,3. Bedarfsniveau!M7
+3. Bedarfsniveau,8,,Energieverbraucher / Energieverbraucher gemäß Solidarprinzip,,,,,3. Bedarfsniveau!L8,3. Bedarfsniveau!M8
+3. Bedarfsniveau,9,F,Energieverbraucher / Verbrauchsmaßstab gemäß:,Verursacher-Prinzip,,,1.34,3. Bedarfsniveau!L9,3. Bedarfsniveau!M9
+3. Bedarfsniveau,10,G,Energieverbraucher / Verbrauchsmaßstab gemäß: / danach Anzahl Energieverbraucher,84669326,84669326,,,3. Bedarfsniveau!L10,3. Bedarfsniveau!M10
+3. Bedarfsniveau,11,H,Energieverbraucher / Verbrauchsmaßstab gemäß: / danach Anzahl Energieverbraucher / Demografische Entwicklung,,0,%,,3. Bedarfsniveau!L11,3. Bedarfsniveau!M11
+3. Bedarfsniveau,12,,Energieverbraucher / Verbrauchsmaßstab gemäß: / danach Anzahl Energieverbraucher / Demografische Entwicklung,,,,,3. Bedarfsniveau!L12,3. Bedarfsniveau!M12
+3. Bedarfsniveau,13,E,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie,,,,,3. Bedarfsniveau!L13,3. Bedarfsniveau!M13
+3. Bedarfsniveau,14,F,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen,2437188.6728744195,2437188.6728744195,GWh/a,,3. Bedarfsniveau!L14,3. Bedarfsniveau!M14
+3. Bedarfsniveau,15,G,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Kraft/Licht/IKT/Kälte,329214.0656749311,329214.0656749311,GWh/a,,3. Bedarfsniveau!L15,3. Bedarfsniveau!M15
+3. Bedarfsniveau,16,H,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Kraft/Licht/IKT/Kälte / davon Strom,329214.0656749311,329214.0656749311,GWh/a,,3. Bedarfsniveau!L16,3. Bedarfsniveau!M16
+3. Bedarfsniveau,17,G,"Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Gebäudewärme (Raumw., Warmwass.)",798867.2532382089,798867.2532382089,GWh/a,,3. Bedarfsniveau!L17,3. Bedarfsniveau!M17
+3. Bedarfsniveau,18,H,"Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Gebäudewärme (Raumw., Warmwass.) / davon Strom",32876.978218549135,32876.978218549135,GWh/a,,3. Bedarfsniveau!L18,3. Bedarfsniveau!M18
+3. Bedarfsniveau,19,H,"Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Gebäudewärme (Raumw., Warmwass.) / davon Brennstoffe (gasförmig)",346430.05089072546,346430.05089072546,GWh/a,,3. Bedarfsniveau!L19,3. Bedarfsniveau!M19
+3. Bedarfsniveau,20,H,"Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Gebäudewärme (Raumw., Warmwass.) / davon Brennstoffe (flüssig)",136478.33441230486,136478.33441230486,GWh/a,,3. Bedarfsniveau!L20,3. Bedarfsniveau!M20
+3. Bedarfsniveau,21,H,"Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Gebäudewärme (Raumw., Warmwass.) / davon Brennstoffe (fest)",149501.39419651052,149501.39419651052,GWh/a,,3. Bedarfsniveau!L21,3. Bedarfsniveau!M21
+3. Bedarfsniveau,22,,"Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Gebäudewärme (Raumw., Warmwass.) / davon Brennstoffe (fest)",632409.7794995408,632409.7794995408,GWh/a,,3. Bedarfsniveau!L22,3. Bedarfsniveau!M22
+3. Bedarfsniveau,23,H,"Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Gebäudewärme (Raumw., Warmwass.) / davon Wärme (Fernw., Nahw., lokale W.)",133580.49552011894,133580.49552011894,GWh/a,,3. Bedarfsniveau!L23,3. Bedarfsniveau!M23
+3. Bedarfsniveau,24,G,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Prozesswärme,555394.5695538963,555394.5695538963,GWh/a,,3. Bedarfsniveau!L24,3. Bedarfsniveau!M24
+3. Bedarfsniveau,25,H,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Prozesswärme / davon Strom,76888.81139118457,76888.81139118457,GWh/a,,3. Bedarfsniveau!L25,3. Bedarfsniveau!M25
+3. Bedarfsniveau,26,H,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Prozesswärme / davon Brennstoffe (gasförmig),192513.58951790634,192513.58951790634,GWh/a,,3. Bedarfsniveau!L26,3. Bedarfsniveau!M26
+3. Bedarfsniveau,27,H,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Prozesswärme / davon Brennstoffe (flüssig),24796.57225436181,24796.57225436181,GWh/a,,3. Bedarfsniveau!L27,3. Bedarfsniveau!M27
+3. Bedarfsniveau,28,H,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Prozesswärme / davon Brennstoffe (fest),117624.0538292011,117624.05382920109,GWh/a,,3. Bedarfsniveau!L28,3. Bedarfsniveau!M28
+3. Bedarfsniveau,29,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Prozesswärme / davon Brennstoffe (fest),334934.2156014693,334934.2156014693,GWh/a,,3. Bedarfsniveau!L29,3. Bedarfsniveau!M29
+3. Bedarfsniveau,30,H,"Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Prozesswärme / davon Wärme (Fernw., Nahw., lokale W.)",143571.54256124247,143571.54256124247,GWh/a,,3. Bedarfsniveau!L30,3. Bedarfsniveau!M30
+3. Bedarfsniveau,31,G,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Mobile Anwendungen,753712.784407383,753712.784407383,GWh/a,,3. Bedarfsniveau!L31,3. Bedarfsniveau!M31
+3. Bedarfsniveau,32,H,"Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Mobile Anwendungen / am Boden (Straße, Schiene, Wasser)",639192.8837834619,639192.8837834619,GWh/a,,3. Bedarfsniveau!L32,3. Bedarfsniveau!M32
+3. Bedarfsniveau,33,,"Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Mobile Anwendungen / am Boden (Straße, Schiene, Wasser)",15300.012667584937,15300.012667584937,GWh/a,,3. Bedarfsniveau!L33,3. Bedarfsniveau!M33
+3. Bedarfsniveau,34,,"Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Mobile Anwendungen / am Boden (Straße, Schiene, Wasser)",9195.668593553719,9195.668593553719,GWh/a,,3. Bedarfsniveau!L34,3. Bedarfsniveau!M34
+3. Bedarfsniveau,35,,"Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Mobile Anwendungen / am Boden (Straße, Schiene, Wasser)",614697.2025223232,614697.2025223232,GWh/a,,3. Bedarfsniveau!L35,3. Bedarfsniveau!M35
+3. Bedarfsniveau,36,,"Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Mobile Anwendungen / am Boden (Straße, Schiene, Wasser)",623892.871115877,623892.871115877,GWh/a,,3. Bedarfsniveau!L36,3. Bedarfsniveau!M36
+3. Bedarfsniveau,37,H,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Mobile Anwendungen / in der Luft,114519.90062392101,114519.900623921,GWh/a,,3. Bedarfsniveau!L37,3. Bedarfsniveau!M37
+3. Bedarfsniveau,38,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Mobile Anwendungen / in der Luft,114519.90062392101,114519.900623921,GWh/a,,3. Bedarfsniveau!L38,3. Bedarfsniveau!M38
+3. Bedarfsniveau,39,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Mobile Anwendungen / in der Luft,,,,,3. Bedarfsniveau!L39,3. Bedarfsniveau!M39
+3. Bedarfsniveau,40,G,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,454279.8679522497,454279.8679522497,GWh/a,,3. Bedarfsniveau!L40,3. Bedarfsniveau!M40
+3. Bedarfsniveau,41,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,,,,,3. Bedarfsniveau!L41,3. Bedarfsniveau!M41
+3. Bedarfsniveau,42,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,,,,,3. Bedarfsniveau!L42,3. Bedarfsniveau!M42
+3. Bedarfsniveau,43,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,,,,,3. Bedarfsniveau!L43,3. Bedarfsniveau!M43
+3. Bedarfsniveau,44,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,,,,,3. Bedarfsniveau!L44,3. Bedarfsniveau!M44
+3. Bedarfsniveau,45,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,,,,,3. Bedarfsniveau!L45,3. Bedarfsniveau!M45
+3. Bedarfsniveau,46,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,,,,,3. Bedarfsniveau!L46,3. Bedarfsniveau!M46
+3. Bedarfsniveau,47,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,,,,,3. Bedarfsniveau!L47,3. Bedarfsniveau!M47
+3. Bedarfsniveau,48,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,,,,,3. Bedarfsniveau!L48,3. Bedarfsniveau!M48
+3. Bedarfsniveau,49,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,,,,,3. Bedarfsniveau!L49,3. Bedarfsniveau!M49
+3. Bedarfsniveau,50,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,,,,,3. Bedarfsniveau!L50,3. Bedarfsniveau!M50
+3. Bedarfsniveau,51,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,,,,,3. Bedarfsniveau!L51,3. Bedarfsniveau!M51
+3. Bedarfsniveau,52,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,,,,,3. Bedarfsniveau!L52,3. Bedarfsniveau!M52
+3. Bedarfsniveau,53,,Verbrauchsmaßstab gemäß Verursacher-Prinzip - Endenergie / Endenergie alle Anwendungen / Strom gesamt,,,,,3. Bedarfsniveau!L53,3. Bedarfsniveau!M53

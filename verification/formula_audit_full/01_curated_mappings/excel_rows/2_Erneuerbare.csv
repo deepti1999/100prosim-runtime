@@ -1,0 +1,290 @@
+sheet,row,row_indent_col,full_name,status,ziel,unit,d_ref,ref_status,ref_ziel
+2. Erneuerbare,5,E,Solarenergie,,,,,2. Erneuerbare!L5,2. Erneuerbare!M5
+2. Erneuerbare,6,F,Solarenergie / Solare Dachflächen,34242.69,199398.4011935508,ha,,2. Erneuerbare!L6,2. Erneuerbare!M6
+2. Erneuerbare,7,G,Solarenergie / Solare Dachflächen / Solarthermie,,,,,2. Erneuerbare!L7,2. Erneuerbare!M7
+2. Erneuerbare,8,H,Solarenergie / Solare Dachflächen / Solarthermie / Anteil an solaren Dachflächen,6.361941775018258,1.1,%,1.137,2. Erneuerbare!L8,2. Erneuerbare!M8
+2. Erneuerbare,9,I,Solarenergie / Solare Dachflächen / Solarthermie / Anteil an solaren Dachflächen / Energieertrag,3878.356667431719,5250,MWh/ha/a,1.143,2. Erneuerbare!L9,2. Erneuerbare!M9
+2. Erneuerbare,10,I,Solarenergie / Solare Dachflächen / Solarthermie / Anteil an solaren Dachflächen / Gebäudewärme,8448.999999999998,11515.25766892756,GWh/a,,2. Erneuerbare!L10,2. Erneuerbare!M10
+2. Erneuerbare,11,,Solarenergie / Solare Dachflächen / Solarthermie / Anteil an solaren Dachflächen / Gebäudewärme,,,,,2. Erneuerbare!L11,2. Erneuerbare!M11
+2. Erneuerbare,12,G,Solarenergie / Solare Dachflächen / Solarstrom,,,,,2. Erneuerbare!L12,2. Erneuerbare!M12
+2. Erneuerbare,13,H,Solarenergie / Solare Dachflächen / Solarstrom / Anteil an solaren Dachflächen,93.63805822498175,98.9,%,,2. Erneuerbare!L13,2. Erneuerbare!M13
+2. Erneuerbare,14,I,Solarenergie / Solare Dachflächen / Solarstrom / Anteil an solaren Dachflächen / Energieertrag,1382.8358208955224,1853,MWh/ha/a,1.153,2. Erneuerbare!L14,2. Erneuerbare!M14
+2. Erneuerbare,15,I,Solarenergie / Solare Dachflächen / Solarstrom / Anteil an solaren Dachflächen / Bruttostromerzeugung,44339.5105,365420.8998001215,GWh/a,,2. Erneuerbare!L15,2. Erneuerbare!M15
+2. Erneuerbare,16,I,Solarenergie / Solare Dachflächen / Solarstrom / Anteil an solaren Dachflächen / / / Vollbetriebstunden jährlich,926.5,926.5,h/a,1.166,2. Erneuerbare!L16,2. Erneuerbare!M16
+2. Erneuerbare,17,J,Solarenergie / Solare Dachflächen / Solarstrom / Anteil an solaren Dachflächen / / / Installierte Leistung,47857,394410.03756084346,MW,,2. Erneuerbare!L17,2. Erneuerbare!M17
+2. Erneuerbare,18,,Solarenergie / Solare Dachflächen / Solarstrom / Anteil an solaren Dachflächen / / / Installierte Leistung,,,,,2. Erneuerbare!L18,2. Erneuerbare!M18
+2. Erneuerbare,19,F,Solarenergie / Solar genutzte Freiflächen,19627.65,887749.85,ha,,2. Erneuerbare!L19,2. Erneuerbare!M19
+2. Erneuerbare,20,G,Solarenergie / Solar genutzte Freiflächen / Solarstrom,,,,,2. Erneuerbare!L20,2. Erneuerbare!M20
+2. Erneuerbare,21,H,Solarenergie / Solar genutzte Freiflächen / Solarstrom / Energieertrag,921.8905472636816,1235.3333333333333,MWh/ha/a,1.161,2. Erneuerbare!L21,2. Erneuerbare!M21
+2. Erneuerbare,22,H,Solarenergie / Solar genutzte Freiflächen / Solarstrom / Bruttostromerzeugung,18094.545,1096666.9813666665,GWh/a,,2. Erneuerbare!L22,2. Erneuerbare!M22
+2. Erneuerbare,23,H,Solarenergie / Solar genutzte Freiflächen / Solarstrom / / / Vollbetriebstunden jährlich,926.5,926.5,h/a,1.166,2. Erneuerbare!L23,2. Erneuerbare!M23
+2. Erneuerbare,24,I,Solarenergie / Solar genutzte Freiflächen / Solarstrom / / / Installierte Leistung,19530,1183666.4666666666,MW,,2. Erneuerbare!L24,2. Erneuerbare!M24
+2. Erneuerbare,25,,Solarenergie / Solar genutzte Freiflächen / Solarstrom / / / Installierte Leistung,,,,,2. Erneuerbare!L25,2. Erneuerbare!M25
+2. Erneuerbare,26,E,Windenergie,,,,,2. Erneuerbare!L26,2. Erneuerbare!M26
+2. Erneuerbare,27,F,Windenergie / Onshore-Windstrom,,,,,2. Erneuerbare!L27,2. Erneuerbare!M27
+2. Erneuerbare,28,G,Windenergie / Onshore-Windstrom / Windparkfläche,172555.8,715289.0305038091,ha,,2. Erneuerbare!L28,2. Erneuerbare!M28
+2. Erneuerbare,29,H,Windenergie / Onshore-Windstrom / Windparkfläche / spezifischer Flächenbedarf,2.9,3.8,ha/MW,1.197,2. Erneuerbare!L29,2. Erneuerbare!M29
+2. Erneuerbare,30,H,Windenergie / Onshore-Windstrom / Windparkfläche / Installierte Leistung,59502,188233.95539573923,MW,,2. Erneuerbare!L30,2. Erneuerbare!M30
+2. Erneuerbare,31,I,Windenergie / Onshore-Windstrom / Windparkfläche / Installierte Leistung / Vollbetriebstunden jährlich,1874.420205529969,2550,h/a,1.205,2. Erneuerbare!L31,2. Erneuerbare!M31
+2. Erneuerbare,32,I,Windenergie / Onshore-Windstrom / Windparkfläche / Installierte Leistung / Bruttostromerzeugung,111531.75106944422,479996.58625913505,GWh/a,,2. Erneuerbare!L32,2. Erneuerbare!M32
+2. Erneuerbare,33,I,Windenergie / Onshore-Windstrom / Windparkfläche / Installierte Leistung / Energieertrag,646.3517950103343,671.0526315789474,MWh/ha/a,,2. Erneuerbare!L33,2. Erneuerbare!M33
+2. Erneuerbare,34,F,Windenergie / Offshore-Windstrom,,,,,2. Erneuerbare!L34,2. Erneuerbare!M34
+2. Erneuerbare,35,G,Windenergie / Offshore-Windstrom / Install. Offshore-Leistung Deutschland,8337,70000,MW,1.216,2. Erneuerbare!L35,2. Erneuerbare!M35
+2. Erneuerbare,36,H,Windenergie / Offshore-Windstrom / Install. Offshore-Leistung Deutschland / Vollbetriebstunden jährlich,2823,3232,h/a,1.222,2. Erneuerbare!L36,2. Erneuerbare!M36
+2. Erneuerbare,37,H,Windenergie / Offshore-Windstrom / Install. Offshore-Leistung Deutschland / Bruttostromerzeugung Deutschland,23535.351,226240,GWh/a,,2. Erneuerbare!L37,2. Erneuerbare!M37
+2. Erneuerbare,38,H,Windenergie / Offshore-Windstrom / Install. Offshore-Leistung Deutschland / / / Einwohner Deutschland,84669326,84669326,,1.58,2. Erneuerbare!L38,2. Erneuerbare!M38
+2. Erneuerbare,39,I,Windenergie / Offshore-Windstrom / Install. Offshore-Leistung Deutschland / / / Energieverbraucher Deutschland 100%EE,84669326,84669326,,,2. Erneuerbare!L39,2. Erneuerbare!M39
+2. Erneuerbare,40,I,Windenergie / Offshore-Windstrom / Install. Offshore-Leistung Deutschland / / / Bruttostromerz.Anteil Deutschland 100%EE,23535.350999999995,226239.99999999997,GWh/a,,2. Erneuerbare!L40,2. Erneuerbare!M40
+2. Erneuerbare,41,,Windenergie / Offshore-Windstrom / Install. Offshore-Leistung Deutschland / / / Bruttostromerz.Anteil Deutschland 100%EE,,,,,2. Erneuerbare!L41,2. Erneuerbare!M41
+2. Erneuerbare,42,E,Laufwasser,,,,,2. Erneuerbare!L42,2. Erneuerbare!M42
+2. Erneuerbare,43,F,Laufwasser / Bodenfläche Nds.,35759529,35759529,ha,,2. Erneuerbare!L43,2. Erneuerbare!M43
+2. Erneuerbare,44,G,Laufwasser / Bodenfläche Nds. / Nutzanteil am techn. Potenzial,79.01899631414801,79.01899631414801,%,1.231,2. Erneuerbare!L44,2. Erneuerbare!M44
+2. Erneuerbare,45,H,Laufwasser / Bodenfläche Nds. / Nutzanteil am techn. Potenzial / Energieertrag (techn.Potenzial),0.6904173709894221,0.6904173709894221,MWh/ha/a,1.236,2. Erneuerbare!L45,2. Erneuerbare!M45
+2. Erneuerbare,46,H,Laufwasser / Bodenfläche Nds. / Nutzanteil am techn. Potenzial / Bruttostromerzeugung,19509.000000000004,19509.000000000004,GWh/a,,2. Erneuerbare!L46,2. Erneuerbare!M46
+2. Erneuerbare,47,,Laufwasser / Bodenfläche Nds. / Nutzanteil am techn. Potenzial / Bruttostromerzeugung,,,,,2. Erneuerbare!L47,2. Erneuerbare!M47
+2. Erneuerbare,48,E,Biogene Brennstoffe (fest),,,,#REF!,2. Erneuerbare!L48,2. Erneuerbare!M48
+2. Erneuerbare,49,F,Biogene Brennstoffe (fest) / Energieholz,,,,#REF!,2. Erneuerbare!L49,2. Erneuerbare!M49
+2. Erneuerbare,50,G,Biogene Brennstoffe (fest) / Energieholz / Aus Forstwirtschaft,,,,1.243,2. Erneuerbare!L50,2. Erneuerbare!M50
+2. Erneuerbare,51,H,Biogene Brennstoffe (fest) / Energieholz / Aus Forstwirtschaft / Nutzbare Forstfläche,9866633,9373000,ha,,2. Erneuerbare!L51,2. Erneuerbare!M51
+2. Erneuerbare,52,I,Biogene Brennstoffe (fest) / Energieholz / Aus Forstwirtschaft / Nutzbare Forstfläche / Energet.genutzter Anteil am Zuwachs,53.62904409218901,33.241067207024656,%,1.245,2. Erneuerbare!L52,2. Erneuerbare!M52
+2. Erneuerbare,53,J,Biogene Brennstoffe (fest) / Energieholz / Aus Forstwirtschaft / Nutzbare Forstfläche / Energet.genutzter Anteil am Zuwachs / Energieertrag,22.7,22.7,MWh/ha/a,1.257,2. Erneuerbare!L53,2. Erneuerbare!M53
+2. Erneuerbare,54,J,Biogene Brennstoffe (fest) / Energieholz / Aus Forstwirtschaft / Nutzbare Forstfläche / Energet.genutzter Anteil am Zuwachs / Energieholzaufkommen,120114.3478370475,70726.05470543735,GWh/a,,2. Erneuerbare!L54,2. Erneuerbare!M54
+2. Erneuerbare,55,,Biogene Brennstoffe (fest) / Energieholz / Aus Forstwirtschaft / Nutzbare Forstfläche / Energet.genutzter Anteil am Zuwachs / Energieholzaufkommen,,,,,2. Erneuerbare!L55,2. Erneuerbare!M55
+2. Erneuerbare,56,G,"Biogene Brennstoffe (fest) / Energieholz / Aus Ackerbau (KUP, Miscanthus usw.)",,,,1.264,2. Erneuerbare!L56,2. Erneuerbare!M56
+2. Erneuerbare,57,H,"Biogene Brennstoffe (fest) / Energieholz / Aus Ackerbau (KUP, Miscanthus usw.) / Anbaufläche",11200,11200,ha,,2. Erneuerbare!L57,2. Erneuerbare!M57
+2. Erneuerbare,58,I,"Biogene Brennstoffe (fest) / Energieholz / Aus Ackerbau (KUP, Miscanthus usw.) / Anbaufläche / Energieertrag",29.877260981912144,51.388888888888886,MWh/ha/a,1.272,2. Erneuerbare!L58,2. Erneuerbare!M58
+2. Erneuerbare,59,I,"Biogene Brennstoffe (fest) / Energieholz / Aus Ackerbau (KUP, Miscanthus usw.) / Anbaufläche / Energieholzaufkommen",334.625322997416,575.5555555555555,GWh/a,,2. Erneuerbare!L59,2. Erneuerbare!M59
+2. Erneuerbare,60,,"Biogene Brennstoffe (fest) / Energieholz / Aus Ackerbau (KUP, Miscanthus usw.) / Anbaufläche / Energieholzaufkommen",,,,,2. Erneuerbare!L60,2. Erneuerbare!M60
+2. Erneuerbare,61,G,Biogene Brennstoffe (fest) / Energieholz / Energieholzaufkommen gesamt,120448.97316004492,71301.61026099291,GWh/a,,2. Erneuerbare!L61,2. Erneuerbare!M61
+2. Erneuerbare,62,H,Biogene Brennstoffe (fest) / Energieholz / Energieholzaufkommen gesamt / davon für Gebäudewärme,73.27124776975538,0,%,1.281,2. Erneuerbare!L62,2. Erneuerbare!M62
+2. Erneuerbare,63,H,Biogene Brennstoffe (fest) / Energieholz / Energieholzaufkommen gesamt / davon für Prozesswärme,21.33447833119341,100,%,1.286,2. Erneuerbare!L63,2. Erneuerbare!M63
+2. Erneuerbare,64,H,Biogene Brennstoffe (fest) / Energieholz / Energieholzaufkommen gesamt / davon für Verstromung,5.394273899051208,0,%,1.291,2. Erneuerbare!L64,2. Erneuerbare!M64
+2. Erneuerbare,65,H,Biogene Brennstoffe (fest) / Energieholz / Energieholzaufkommen gesamt / davon für Wärmenetze GW,0,0,%,1.296,2. Erneuerbare!L65,2. Erneuerbare!M65
+2. Erneuerbare,66,,Biogene Brennstoffe (fest) / Energieholz / Energieholzaufkommen gesamt / davon für Wärmenetze GW,,,,,2. Erneuerbare!L66,2. Erneuerbare!M66
+2. Erneuerbare,67,F,Biogene Brennstoffe (fest) / Stroh aus Getreideanbau,,,,,2. Erneuerbare!L67,2. Erneuerbare!M67
+2. Erneuerbare,68,G,Biogene Brennstoffe (fest) / Stroh aus Getreideanbau / Getreide-Anbaufläche,6076200,5631254.918074889,ha,,2. Erneuerbare!L68,2. Erneuerbare!M68
+2. Erneuerbare,69,H,Biogene Brennstoffe (fest) / Stroh aus Getreideanbau / Getreide-Anbaufläche / Energet.genutzer Teil am Strohanfall,0.1684368044099455,33,%,1.303,2. Erneuerbare!L69,2. Erneuerbare!M69
+2. Erneuerbare,70,I,Biogene Brennstoffe (fest) / Stroh aus Getreideanbau / Getreide-Anbaufläche / Energet.genutzer Teil am Strohanfall / Energieertrag,23.833333333333332,23.833333333333332,MWh/ha/a,1.310,2. Erneuerbare!L70,2. Erneuerbare!M70
+2. Erneuerbare,71,I,Biogene Brennstoffe (fest) / Stroh aus Getreideanbau / Getreide-Anbaufläche / Energet.genutzer Teil am Strohanfall / Strohbrennstoff-Aufkommen,243.92361111111106,44289.819930659,GWh/a,,2. Erneuerbare!L71,2. Erneuerbare!M71
+2. Erneuerbare,72,J,Biogene Brennstoffe (fest) / Stroh aus Getreideanbau / Getreide-Anbaufläche / Energet.genutzer Teil am Strohanfall / Strohbrennstoff-Aufkommen / davon für Gebäudewärme,0,0,%,1.315,2. Erneuerbare!L72,2. Erneuerbare!M72
+2. Erneuerbare,73,J,Biogene Brennstoffe (fest) / Stroh aus Getreideanbau / Getreide-Anbaufläche / Energet.genutzer Teil am Strohanfall / Strohbrennstoff-Aufkommen / davon für Prozesswärme,0,100,%,1.320,2. Erneuerbare!L73,2. Erneuerbare!M73
+2. Erneuerbare,74,J,Biogene Brennstoffe (fest) / Stroh aus Getreideanbau / Getreide-Anbaufläche / Energet.genutzer Teil am Strohanfall / Strohbrennstoff-Aufkommen / davon für Verstromung,100,0,%,1.325,2. Erneuerbare!L74,2. Erneuerbare!M74
+2. Erneuerbare,75,J,Biogene Brennstoffe (fest) / Stroh aus Getreideanbau / Getreide-Anbaufläche / Energet.genutzer Teil am Strohanfall / Strohbrennstoff-Aufkommen / davon für Wärmenetze GW,0,0,%,1.330,2. Erneuerbare!L75,2. Erneuerbare!M75
+2. Erneuerbare,76,,Biogene Brennstoffe (fest) / Stroh aus Getreideanbau / Getreide-Anbaufläche / Energet.genutzer Teil am Strohanfall / Strohbrennstoff-Aufkommen / davon für Wärmenetze GW,,,,,2. Erneuerbare!L76,2. Erneuerbare!M76
+2. Erneuerbare,77,F,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt,120692.89677115603,115591.43019165192,GWh/a,,2. Erneuerbare!L77,2. Erneuerbare!M77
+2. Erneuerbare,78,,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt,,,,,2. Erneuerbare!L78,2. Erneuerbare!M78
+2. Erneuerbare,79,G,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Gebäudewärme,88254.46556022266,0,GWh/a,,2. Erneuerbare!L79,2. Erneuerbare!M79
+2. Erneuerbare,80,,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Gebäudewärme,,,,,2. Erneuerbare!L80,2. Erneuerbare!M80
+2. Erneuerbare,81,G,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Prozesswärme,25697.16007897475,115591.43019165192,GWh/a,,2. Erneuerbare!L81,2. Erneuerbare!M81
+2. Erneuerbare,82,,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Prozesswärme,,,,,2. Erneuerbare!L82,2. Erneuerbare!M82
+2. Erneuerbare,83,G,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Verstromung,6741.271131958609,0,GWh/a,,2. Erneuerbare!L83,2. Erneuerbare!M83
+2. Erneuerbare,84,H,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Verstromung / Nutzungsgrad Kraftwerk,25,35,%,1.337,2. Erneuerbare!L84,2. Erneuerbare!M84
+2. Erneuerbare,85,H,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Verstromung / Bruttostromerzeugung,1685.3177829896522,0,GWh/a,,2. Erneuerbare!L85,2. Erneuerbare!M85
+2. Erneuerbare,86,H,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Verstromung / Nutzungsgrad KWK-Abwärme effektiv,45,45,%,1.344,2. Erneuerbare!L86,2. Erneuerbare!M86
+2. Erneuerbare,87,H,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Verstromung / Wärmenetze GW (Endenergie),3033.572009381374,0,GWh/a,,2. Erneuerbare!L87,2. Erneuerbare!M87
+2. Erneuerbare,88,,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Verstromung / Wärmenetze GW (Endenergie),,,,,2. Erneuerbare!L88,2. Erneuerbare!M88
+2. Erneuerbare,89,G,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Heiwerke/Wärmenetze,0,0,GWh/a,,2. Erneuerbare!L89,2. Erneuerbare!M89
+2. Erneuerbare,90,H,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Heiwerke/Wärmenetze / Nutzungsgrad Heizwerk/Wärmenetz,75,75,%,1.350,2. Erneuerbare!L90,2. Erneuerbare!M90
+2. Erneuerbare,91,H,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Heiwerke/Wärmenetze / Wärmenetze GW (Endenergie),0,0,GWh/a,,2. Erneuerbare!L91,2. Erneuerbare!M91
+2. Erneuerbare,92,,Biogene Brennstoffe (fest) / Brennstoffaufk.(fest) NAWARO gesamt / davon Einsatz für Heiwerke/Wärmenetze / Wärmenetze GW (Endenergie),,,,,2. Erneuerbare!L92,2. Erneuerbare!M92
+2. Erneuerbare,93,F,Biogene Brennstoffe (fest) / Biogener Anteil der Abfälle (fest),14438,14438,GWh/a,,2. Erneuerbare!L93,2. Erneuerbare!M93
+2. Erneuerbare,94,G,Biogene Brennstoffe (fest) / Biogener Anteil der Abfälle (fest) / Bruttostromerzeugung,4525,4525,GWh/a,1.356,2. Erneuerbare!L94,2. Erneuerbare!M94
+2. Erneuerbare,95,G,Biogene Brennstoffe (fest) / Biogener Anteil der Abfälle (fest) / Wärmenetze GW (Endenergie),9913,9913,GWh/a,1.360,2. Erneuerbare!L95,2. Erneuerbare!M95
+2. Erneuerbare,96,,Biogene Brennstoffe (fest) / Biogener Anteil der Abfälle (fest) / Wärmenetze GW (Endenergie),,,,,2. Erneuerbare!L96,2. Erneuerbare!M96
+2. Erneuerbare,97,E,Biogene Brennstoffe (gasförmig): Biogas,,,,,2. Erneuerbare!L97,2. Erneuerbare!M97
+2. Erneuerbare,98,F,Biogene Brennstoffe (gasförmig): Biogas / Anbaufläche Energiepflanzen für Biogas,1410000,1307000,ha,,2. Erneuerbare!L98,2. Erneuerbare!M98
+2. Erneuerbare,99,G,Biogene Brennstoffe (gasförmig): Biogas / Anbaufläche Energiepflanzen für Biogas / Biogas - Methanertrag,50.94089834515367,40.75271867612294,MWh/ha/a,1.373,2. Erneuerbare!L99,2. Erneuerbare!M99
+2. Erneuerbare,100,E,+ / Biogas aus Energiepflanzen-Anbau,71826.66666666667,53263.80330969268,GWh/a,,2. Erneuerbare!L100,2. Erneuerbare!M100
+2. Erneuerbare,101,,+ / Biogas aus Energiepflanzen-Anbau,,,,,2. Erneuerbare!L101,2. Erneuerbare!M101
+2. Erneuerbare,102,E,+ / Biogas aus Abfall-/Reststoffverwertung,15997.66081871345,44571.22807017545,GWh/a,1.384,2. Erneuerbare!L102,2. Erneuerbare!M102
+2. Erneuerbare,103,E,+ / Biogas aus Kläranlagen und Deponien,4557.894736842105,12762.105263157895,GWh/a,1.391,2. Erneuerbare!L103,2. Erneuerbare!M103
+2. Erneuerbare,104,F,+ / Biogasaufkommen insgesamt,92382.22222222223,110597.13664302602,GWh/a,,2. Erneuerbare!L104,2. Erneuerbare!M104
+2. Erneuerbare,105,G,+ / Biogasaufkommen insgesamt / davon Einsatz für Prozesswärme,0,15.516938744235773,%,1.397,2. Erneuerbare!L105,2. Erneuerbare!M105
+2. Erneuerbare,106,H,+ / Biogasaufkommen insgesamt / davon Einsatz für Prozesswärme / Biogas für Prozesswärme,0,17161.289945777084,GWh/a,,2. Erneuerbare!L106,2. Erneuerbare!M106
+2. Erneuerbare,107,,+ / Biogasaufkommen insgesamt / davon Einsatz für Prozesswärme / Biogas für Prozesswärme,,,,,2. Erneuerbare!L107,2. Erneuerbare!M107
+2. Erneuerbare,108,G,+ / Biogasaufkommen insgesamt / davon für Verstromung,96.0951132355671,0,%,1.402,2. Erneuerbare!L108,2. Erneuerbare!M108
+2. Erneuerbare,109,H,+ / Biogasaufkommen insgesamt / davon für Verstromung / Nutzungsgrad Kraftwerk,37.5,45,%,1.407,2. Erneuerbare!L109,2. Erneuerbare!M109
+2. Erneuerbare,110,H,+ / Biogasaufkommen insgesamt / davon für Verstromung / Bruttostromerzeugung,33290.55039524163,0,GWh/a,,2. Erneuerbare!L110,2. Erneuerbare!M110
+2. Erneuerbare,111,H,+ / Biogasaufkommen insgesamt / davon für Verstromung / Nutzungsgrad KWK-Abwärme effektiv,21.888800635424943,25,%,1.412,2. Erneuerbare!L111,2. Erneuerbare!M111
+2. Erneuerbare,112,H,+ / Biogasaufkommen insgesamt / davon für Verstromung / Gebäudewärme (Endenergie),19431.7392172003,0,GWh/a,,2. Erneuerbare!L112,2. Erneuerbare!M112
+2. Erneuerbare,113,,+ / Biogasaufkommen insgesamt / davon für Verstromung / Gebäudewärme (Endenergie),,,,,2. Erneuerbare!L113,2. Erneuerbare!M113
+2. Erneuerbare,114,G,+ / Biogasaufkommen insgesamt / davon Biomethan für mobile Anwendungen,1.2498871057044014,84.48306125576423,%,1.419,2. Erneuerbare!L114,2. Erneuerbare!M114
+2. Erneuerbare,115,H,+ / Biogasaufkommen insgesamt / davon Biomethan für mobile Anwendungen / Nutzungsgrad Kraftstoffbereitstellung,98,98,%,1.424,2. Erneuerbare!L115,2. Erneuerbare!M115
+2. Erneuerbare,116,H,+ / Biogasaufkommen insgesamt / davon Biomethan für mobile Anwendungen / Biokraftstoff (gasförmig),1131.580013848367,91567.12976330396,GWh/a,,2. Erneuerbare!L116,2. Erneuerbare!M116
+2. Erneuerbare,117,,+ / Biogasaufkommen insgesamt / davon Biomethan für mobile Anwendungen / Biokraftstoff (gasförmig),,,,,2. Erneuerbare!L117,2. Erneuerbare!M117
+2. Erneuerbare,118,G,+ / Biogasaufkommen insgesamt / davon Flüssigkr.stoff für mobile Anwendungen,2.6549996587285007,0,%,1.431,2. Erneuerbare!L118,2. Erneuerbare!M118
+2. Erneuerbare,119,H,+ / Biogasaufkommen insgesamt / davon Flüssigkr.stoff für mobile Anwendungen / Nutzungsgrad Kraftstofferzeugung,45,45,%,1.435,2. Erneuerbare!L119,2. Erneuerbare!M119
+2. Erneuerbare,120,H,+ / Biogasaufkommen insgesamt / davon Flüssigkr.stoff für mobile Anwendungen / Biokraftstoff (flüssig),1103.7364581266124,0,GWh/a,,2. Erneuerbare!L120,2. Erneuerbare!M120
+2. Erneuerbare,121,,+ / Biogasaufkommen insgesamt / davon Flüssigkr.stoff für mobile Anwendungen / Biokraftstoff (flüssig),,,,,2. Erneuerbare!L121,2. Erneuerbare!M121
+2. Erneuerbare,122,E,Biogene Brennstoffe (flüssig),,,,,2. Erneuerbare!L122,2. Erneuerbare!M122
+2. Erneuerbare,123,F,Biogene Brennstoffe (flüssig) / Biodiesel (inkl. Pflanzenöl),,,,#REF!,2. Erneuerbare!L123,2. Erneuerbare!M123
+2. Erneuerbare,124,G,Biogene Brennstoffe (flüssig) / Biodiesel (inkl. Pflanzenöl) / Anbaufläche Ölpflanzen für Biodiesel,665000,303000,ha,,2. Erneuerbare!L124,2. Erneuerbare!M124
+2. Erneuerbare,125,H,Biogene Brennstoffe (flüssig) / Biodiesel (inkl. Pflanzenöl) / Anbaufläche Ölpflanzen für Biodiesel / Biodiesel - Energieertrag,17.75,14.200000000000001,MWh/ha/a,1.450,2. Erneuerbare!L125,2. Erneuerbare!M125
+2. Erneuerbare,126,F,Biogene Brennstoffe (flüssig) / + / Biodiesel aus eigenem Anbau,11803.75,4302.6,GWh/a,,2. Erneuerbare!L126,2. Erneuerbare!M126
+2. Erneuerbare,127,,Biogene Brennstoffe (flüssig) / + / Biodiesel aus eigenem Anbau,,,,,2. Erneuerbare!L127,2. Erneuerbare!M127
+2. Erneuerbare,128,F,Biogene Brennstoffe (flüssig) / + / Biodiesel aus Import (+) / Export (-),13402.583333333332,0,GWh/a,1.458,2. Erneuerbare!L128,2. Erneuerbare!M128
+2. Erneuerbare,129,G,Biogene Brennstoffe (flüssig) / + / Biodiesel Gesamtaufkommen,25206.333333333332,4302.6,GWh/a,,2. Erneuerbare!L129,2. Erneuerbare!M129
+2. Erneuerbare,130,H,Biogene Brennstoffe (flüssig) / + / Biodiesel Gesamtaufkommen / davon Einsatz für mobile Anwendungen,99.07430672185562,100,%,1.472,2. Erneuerbare!L130,2. Erneuerbare!M130
+2. Erneuerbare,131,I,Biogene Brennstoffe (flüssig) / + / Biodiesel Gesamtaufkommen / davon Einsatz für mobile Anwendungen / Biokraftstoff (flüssig),24973,4302.6,GWh/a,,2. Erneuerbare!L131,2. Erneuerbare!M131
+2. Erneuerbare,132,,Biogene Brennstoffe (flüssig) / + / Biodiesel Gesamtaufkommen / davon Einsatz für mobile Anwendungen / Biokraftstoff (flüssig),,,,,2. Erneuerbare!L132,2. Erneuerbare!M132
+2. Erneuerbare,133,H,Biogene Brennstoffe (flüssig) / + / Biodiesel Gesamtaufkommen / davon Einsatz für Verstromung,0.9256932781443816,0,%,1.477,2. Erneuerbare!L133,2. Erneuerbare!M133
+2. Erneuerbare,134,I,Biogene Brennstoffe (flüssig) / + / Biodiesel Gesamtaufkommen / davon Einsatz für Verstromung / Nutzungsgrad Blockheizkraftwerk,39,39,%,1.482,2. Erneuerbare!L134,2. Erneuerbare!M134
+2. Erneuerbare,135,I,Biogene Brennstoffe (flüssig) / + / Biodiesel Gesamtaufkommen / davon Einsatz für Verstromung / Bruttostromerzeugung,91,0,GWh/a,,2. Erneuerbare!L135,2. Erneuerbare!M135
+2. Erneuerbare,136,I,Biogene Brennstoffe (flüssig) / + / Biodiesel Gesamtaufkommen / davon Einsatz für Verstromung / Nutzungsgrad KWK-Abwärme effektiv,50,50,%,1.487,2. Erneuerbare!L136,2. Erneuerbare!M136
+2. Erneuerbare,137,I,Biogene Brennstoffe (flüssig) / + / Biodiesel Gesamtaufkommen / davon Einsatz für Verstromung / Gebäudewärme (Endenergie),116.66666666666666,0,GWh/a,,2. Erneuerbare!L137,2. Erneuerbare!M137
+2. Erneuerbare,138,,Biogene Brennstoffe (flüssig) / + / Biodiesel Gesamtaufkommen / davon Einsatz für Verstromung / Gebäudewärme (Endenergie),,,,,2. Erneuerbare!L138,2. Erneuerbare!M138
+2. Erneuerbare,139,F,Biogene Brennstoffe (flüssig) / Bioethanol,,,,#REF!,2. Erneuerbare!L139,2. Erneuerbare!M139
+2. Erneuerbare,140,G,Biogene Brennstoffe (flüssig) / Bioethanol / Anbaufläche Energiepfl. für Bioethanol,216200,0,ha,,2. Erneuerbare!L140,2. Erneuerbare!M140
+2. Erneuerbare,141,H,Biogene Brennstoffe (flüssig) / Bioethanol / Anbaufläche Energiepfl. für Bioethanol / Bioethanol - Energieertrag (brutto),17.1171,13.69368,MWh/ha/a,1.499,2. Erneuerbare!L141,2. Erneuerbare!M141
+2. Erneuerbare,142,F,Biogene Brennstoffe (flüssig) / + / Bioethanol aus eigenem Anbau,3700.71702,0,GWh/a,,2. Erneuerbare!L142,2. Erneuerbare!M142
+2. Erneuerbare,143,,Biogene Brennstoffe (flüssig) / + / Bioethanol aus eigenem Anbau,,,,,2. Erneuerbare!L143,2. Erneuerbare!M143
+2. Erneuerbare,144,F,Biogene Brennstoffe (flüssig) / + / Bioethanol aus Import (+) / Export (-),4991.28298,0,GWh/a,1.509,2. Erneuerbare!L144,2. Erneuerbare!M144
+2. Erneuerbare,145,G,Biogene Brennstoffe (flüssig) / + / Bioethanol ges. - Mobile Anwendungen,8692,0,GWh/a,,2. Erneuerbare!L145,2. Erneuerbare!M145
+2. Erneuerbare,146,,Biogene Brennstoffe (flüssig) / + / Bioethanol ges. - Mobile Anwendungen,,,,,2. Erneuerbare!L146,2. Erneuerbare!M146
+2. Erneuerbare,147,E,Umgebungswärme (Wärmepumpe),,,,,2. Erneuerbare!L147,2. Erneuerbare!M147
+2. Erneuerbare,148,G,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme,10108,136021.07481527407,GWh/a,1.519,2. Erneuerbare!L148,2. Erneuerbare!M148
+2. Erneuerbare,149,H,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / davon Anlagen mit Luftkopplung,71.1605495181464,92.2279792746114,%,1.527,2. Erneuerbare!L149,2. Erneuerbare!M149
+2. Erneuerbare,150,H,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Luft - Antriebsstromaufnahme,7192.908345294238,125449.48868973464,GWh/a,,2. Erneuerbare!L150,2. Erneuerbare!M150
+2. Erneuerbare,151,I,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Luft - Antriebsstromaufnahme / WP-Luft - Jahresarbeitszahl,3.2355568361907507,4.2,,1.532,2. Erneuerbare!L151,2. Erneuerbare!M151
+2. Erneuerbare,152,I,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Luft - Antriebsstromaufnahme / Nutzwärme (inkl. Antriebsstrom),23273.06376871027,526887.8524968856,GWh/a,,2. Erneuerbare!L152,2. Erneuerbare!M152
+2. Erneuerbare,153,I,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Luft - Antriebsstromaufnahme / davon Wärmgewinn aus der Luft,16080.155423416034,401438.3638071509,GWh/a,,2. Erneuerbare!L153,2. Erneuerbare!M153
+2. Erneuerbare,154,,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Luft - Antriebsstromaufnahme / davon Wärmgewinn aus der Luft,,,,,2. Erneuerbare!L154,2. Erneuerbare!M154
+2. Erneuerbare,155,H,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / davon Anl.m.Erdreich-/Wasserkoppl.,28.839450481853603,7.7720207253886,%,,2. Erneuerbare!L155,2. Erneuerbare!M155
+2. Erneuerbare,156,H,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Erdr.-/Wasser - Antriebsstromaufnahme,2915.091654705762,10571.586125539436,GWh/a,,2. Erneuerbare!L156,2. Erneuerbare!M156
+2. Erneuerbare,157,I,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Erdr.-/Wasser - Antriebsstromaufnahme / WP-Erdr.-/Wasser - Jahresarbeitszahl,3.7913259864912905,4.9,,1.540,2. Erneuerbare!L157,2. Erneuerbare!M157
+2. Erneuerbare,158,I,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Erdr.-/Wasser - Antriebsstromaufnahme / Nutzwärme (inkl. Antriebsstrom),11052.06274348985,51800.77201514324,GWh/a,,2. Erneuerbare!L158,2. Erneuerbare!M158
+2. Erneuerbare,159,I,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Erdr.-/Wasser - Antriebsstromaufnahme / davon Wärmgewinn Erdreich/Grundwasser,8136.971088784088,41229.1858896038,GWh/a,,2. Erneuerbare!L159,2. Erneuerbare!M159
+2. Erneuerbare,160,I,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Erdr.-/Wasser - Antriebsstromaufnahme / / / Wärmeertrag Erdreich/Grundwasser,1000,1000,MWh/ha/a,1.546,2. Erneuerbare!L160,2. Erneuerbare!M160
+2. Erneuerbare,161,J,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Erdr.-/Wasser - Antriebsstromaufnahme / / / Beanspruchte Entzugsfläche,8136.971088784088,41229.1858896038,ha,,2. Erneuerbare!L161,2. Erneuerbare!M161
+2. Erneuerbare,162,I,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Erdr.-/Wasser - Antriebsstromaufnahme / / / Gebäude-&Freifläche (Siedlung),3380079,3645799.0000000005,ha,,2. Erneuerbare!L162,2. Erneuerbare!M162
+2. Erneuerbare,163,J,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Erdr.-/Wasser - Antriebsstromaufnahme / / / Anteil beanspruchter Siedlungsfläche,0.24073316300548267,1.130868319663366,%,,2. Erneuerbare!L163,2. Erneuerbare!M163
+2. Erneuerbare,164,,Umgebungswärme (Wärmepumpe) / Wärmepumpen-Antriebsstromaufnahme / WP-Erdr.-/Wasser - Antriebsstromaufnahme / / / Anteil beanspruchter Siedlungsfläche,,,,,2. Erneuerbare!L164,2. Erneuerbare!M164
+2. Erneuerbare,165,E,Tiefengeothermie,,,,,2. Erneuerbare!L165,2. Erneuerbare!M165
+2. Erneuerbare,166,F,Tiefengeothermie / Netzanschlussleistung (elektrisch),57,0,MW,1.553,2. Erneuerbare!L166,2. Erneuerbare!M166
+2. Erneuerbare,167,G,Tiefengeothermie / Netzanschlussleistung (elektrisch) / Stromerzeugung - Vollbetriebsstunden,3421.0526315789475,3421.0526315789475,h/a,1.558,2. Erneuerbare!L167,2. Erneuerbare!M167
+2. Erneuerbare,168,G,Tiefengeothermie / Netzanschlussleistung (elektrisch) / Bruttostromerzeugung,195,0,GWh/a,,2. Erneuerbare!L168,2. Erneuerbare!M168
+2. Erneuerbare,169,G,Tiefengeothermie / Netzanschlussleistung (elektrisch) / / / Nutzungsgrad (elektrisch),0,0,%,1.563,2. Erneuerbare!L169,2. Erneuerbare!M169
+2. Erneuerbare,170,H,Tiefengeothermie / Netzanschlussleistung (elektrisch) / / / Wärmeförderung,0,0,GWh/a,,2. Erneuerbare!L170,2. Erneuerbare!M170
+2. Erneuerbare,171,I,Tiefengeothermie / Netzanschlussleistung (elektrisch) / / / Wärmeförderung / Techn.Pot.Äquifere Norddeutsch.Becken,6296.296296296296,,TWh,1.568,2. Erneuerbare!L171,2. Erneuerbare!M171
+2. Erneuerbare,172,J,Tiefengeothermie / Netzanschlussleistung (elektrisch) / / / Wärmeförderung / Techn.Pot.Äquifere Norddeutsch.Becken / Erschöpfung des Äquifer-Potenzials nach unendlich Jahren.,,,,,2. Erneuerbare!L172,2. Erneuerbare!M172
+2. Erneuerbare,173,,Tiefengeothermie / Netzanschlussleistung (elektrisch) / / / Wärmeförderung / Techn.Pot.Äquifere Norddeutsch.Becken / Erschöpfung des Äquifer-Potenzials nach unendlich Jahren.,,,,,2. Erneuerbare!L173,2. Erneuerbare!M173
+2. Erneuerbare,174,I,Tiefengeothermie / Netzanschlussleistung (elektrisch) / / / Wärmeförderung / Techn. Pot.Kristallin Norddeutsch.Becken,61111.1111111111,,TWh,1.573,2. Erneuerbare!L174,2. Erneuerbare!M174
+2. Erneuerbare,175,J,Tiefengeothermie / Netzanschlussleistung (elektrisch) / / / Wärmeförderung / Techn. Pot.Kristallin Norddeutsch.Becken / Erschöpfung Geoth.Gesamtpotenzial Nds. nach unendlich Jahren.,,,,,2. Erneuerbare!L175,2. Erneuerbare!M175
+2. Erneuerbare,176,,Tiefengeothermie / Netzanschlussleistung (elektrisch) / / / Wärmeförderung / Techn. Pot.Kristallin Norddeutsch.Becken / Erschöpfung Geoth.Gesamtpotenzial Nds. nach unendlich Jahren.,,,,,2. Erneuerbare!L176,2. Erneuerbare!M176
+2. Erneuerbare,177,I,Tiefengeothermie / Netzanschlussleistung (elektrisch) / / / Wärmeförderung / eff. Nutzungsgrad KWK-Abwärme,0,0,%,1.577,2. Erneuerbare!L177,2. Erneuerbare!M177
+2. Erneuerbare,178,F,Tiefengeothermie / Gebäudewärmebereitstellung (Endenergie),1797,12000,GWh/a,1.577,2. Erneuerbare!L178,2. Erneuerbare!M178
+2. Erneuerbare,179,,Tiefengeothermie / Gebäudewärmebereitstellung (Endenergie),,,,,2. Erneuerbare!L179,2. Erneuerbare!M179
+2. Erneuerbare,180,E,Stromwandlung / Stromspeicherung,,,,,2. Erneuerbare!L180,2. Erneuerbare!M180
+2. Erneuerbare,181,F,Stromwandlung / Stromspeicherung / Bruttostromerzeugung aus Erneuerbaren Energien gesamt (inklusive Abregelung),,,,,2. Erneuerbare!L181,2. Erneuerbare!M181
+2. Erneuerbare,182,E,+ / > aus Windenergie,135067.1020694442,706236.586259135,GWh/a,,2. Erneuerbare!L182,2. Erneuerbare!M182
+2. Erneuerbare,183,E,+ / > aus Solarenergie (Photovoltaik),62434.055499999995,1462087.881166788,GWh/a,,2. Erneuerbare!L183,2. Erneuerbare!M183
+2. Erneuerbare,184,E,+ / > aus Wasserkraft + Tiefengeothermie,19704.000000000004,19509.000000000004,GWh/a,,2. Erneuerbare!L184,2. Erneuerbare!M184
+2. Erneuerbare,185,E,+ / > aus Biobrennstoffen,39591.868178231285,4525,GWh/a,,2. Erneuerbare!L185,2. Erneuerbare!M185
+2. Erneuerbare,186,F,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung),256797.0257476755,2192358.467425923,GWh/a,,2. Erneuerbare!L186,2. Erneuerbare!M186
+2. Erneuerbare,187,,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung),,,,,2. Erneuerbare!L187,2. Erneuerbare!M187
+2. Erneuerbare,188,G,"+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / Wasser-Elektrolyse (H2 für Brennstoff, Kraftstoff- und Grundstoff-Synthese)",,,,,2. Erneuerbare!L188,2. Erneuerbare!M188
+2. Erneuerbare,189,G,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / Wasserstoff als Brennstoff für PW,0,0,GWh/a,1.595,2. Erneuerbare!L189,2. Erneuerbare!M189
+2. Erneuerbare,190,,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / Wasserstoff als Brennstoff für PW,,,,,2. Erneuerbare!L190,2. Erneuerbare!M190
+2. Erneuerbare,191,H,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / Wasserstoff (komprim.) f.FC-Traktion,0,0,GWh/a,1.568,2. Erneuerbare!L191,2. Erneuerbare!M191
+2. Erneuerbare,192,H,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / / / Nutzungsgrad tankfähiger Wasserstoff,0,80,%,1.617,2. Erneuerbare!L192,2. Erneuerbare!M192
+2. Erneuerbare,193,G,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / Wasserstoff für MA mit FC-Traktion,0,0,GWh/a,,2. Erneuerbare!L193,2. Erneuerbare!M193
+2. Erneuerbare,194,,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / Wasserstoff für MA mit FC-Traktion,,,,,2. Erneuerbare!L194,2. Erneuerbare!M194
+2. Erneuerbare,195,H,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / Kraftst.(gasförm.Methan) f.MA aus H2,0,0,GWh/a,1.582,2. Erneuerbare!L195,2. Erneuerbare!M195
+2. Erneuerbare,196,H,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / / / Nutzungsgrad Methansynthese,0,80,%,1.611,2. Erneuerbare!L196,2. Erneuerbare!M196
+2. Erneuerbare,197,G,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / Wasserstoff für Kraftstoffsynthese,0,0,GWh/a,,2. Erneuerbare!L197,2. Erneuerbare!M197
+2. Erneuerbare,198,,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / Wasserstoff für Kraftstoffsynthese,,,,,2. Erneuerbare!L198,2. Erneuerbare!M198
+2. Erneuerbare,199,H,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / Kraftstoffe (flüssig)  für MA aus H2,0,95329.71354281127,GWh/a,1.600,2. Erneuerbare!L199,2. Erneuerbare!M199
+2. Erneuerbare,200,H,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / / / Nutzungsgrad Kraftstofferzeugung,0,63,%,1.605,2. Erneuerbare!L200,2. Erneuerbare!M200
+2. Erneuerbare,201,G,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / Wasserstoff für Kraftstoffsynthese,0,151317.00562350993,GWh/a,,2. Erneuerbare!L201,2. Erneuerbare!M201
+2. Erneuerbare,202,H,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / Synth. Methan als Grundstoff,0,76544.50823642868,GWh/a,1.584,2. Erneuerbare!L202,2. Erneuerbare!M202
+2. Erneuerbare,203,H,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / / / Nutzungsgrad Methansynthese,0,80,%,1.611,2. Erneuerbare!L203,2. Erneuerbare!M203
+2. Erneuerbare,204,G,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / Wasserstoff für Grundstoffsynthese,0,95680.63529553585,GWh/a,,2. Erneuerbare!L204,2. Erneuerbare!M204
+2. Erneuerbare,205,H,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / Wasserstofferzeugung,0,246997.64091904578,GWh/a,,2. Erneuerbare!L205,2. Erneuerbare!M205
+2. Erneuerbare,206,H,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / / / Nutzungsgrad Wasserelektrolyse,,64,%,1.589,2. Erneuerbare!L206,2. Erneuerbare!M206
+2. Erneuerbare,207,I,+ / Bruttostromerzeug. Erneuerb. (inkl.Abregelung) / + / / / Stromeinsatz Wasserstofferzeug.,0,385933.813936009,GWh/a,,2. Erneuerbare!L207,2. Erneuerbare!M207
+2. Erneuerbare,208,F,+ / - / davon in der Zielregion,0,385933.813936009,GWh/a,,2. Erneuerbare!L208,2. Erneuerbare!M208
+2. Erneuerbare,209,J,+ / - / davon extern f. Importwasserstoff,0,0,GWh/a,,2. Erneuerbare!L209,2. Erneuerbare!M209
+2. Erneuerbare,210,,+ / - / davon extern f. Importwasserstoff,,,,,2. Erneuerbare!L210,2. Erneuerbare!M210
+2. Erneuerbare,211,G,+ / - / Langzeitspeicherung Strom stofflich (saisonaler Ausgleich > 1 Tag),,,,,2. Erneuerbare!L211,2. Erneuerbare!M211
+2. Erneuerbare,212,F,+ / - / Stromaufnahme (Überschussphasen),0,473487.4969769301,GWh/a,1.625,2. Erneuerbare!L212,2. Erneuerbare!M212
+2. Erneuerbare,213,H,+ / - / Stromaufnahme (Überschussphasen) / Nutzungsgrad Stromspeicherung,0,38.001801007841564,%,1.634,2. Erneuerbare!L213,2. Erneuerbare!M213
+2. Erneuerbare,214,F,+ / + / Stromabgabe (Mangelphasen),0,179933.77639818282,GWh/a,,2. Erneuerbare!L214,2. Erneuerbare!M214
+2. Erneuerbare,215,,+ / + / Stromabgabe (Mangelphasen),,,,,2. Erneuerbare!L215,2. Erneuerbare!M215
+2. Erneuerbare,216,H,+ / + / Nutzungsgrad KWK-Abwärme effektiv,0,12.7,%,1.644,2. Erneuerbare!L216,2. Erneuerbare!M216
+2. Erneuerbare,217,I,+ / + / Nutzungsgrad KWK-Abwärme effektiv / Gebäudewärme (Endenergie),0,60132.912116070125,GWh/a,,2. Erneuerbare!L217,2. Erneuerbare!M217
+2. Erneuerbare,218,,+ / + / Nutzungsgrad KWK-Abwärme effektiv / Gebäudewärme (Endenergie),,,,,2. Erneuerbare!L218,2. Erneuerbare!M218
+2. Erneuerbare,219,H,+ / + / Erforderliche Speicherkapazität,0,286224,GWh,1.649,2. Erneuerbare!L219,2. Erneuerbare!M219
+2. Erneuerbare,220,F,+ / - / Abregelung von Wind-/Solarstrom,0,189289.10554710336,GWh/a,1.654,2. Erneuerbare!L220,2. Erneuerbare!M220
+2. Erneuerbare,221,,+ / - / Abregelung von Wind-/Solarstrom,,,,,2. Erneuerbare!L221,2. Erneuerbare!M221
+2. Erneuerbare,222,G,+ / - / Stromangebot aus eigenen Erneuerb.E.,256797.0257476755,1323581.8273640631,GWh/a,,2. Erneuerbare!L222,2. Erneuerbare!M222
+2. Erneuerbare,223,G,+ / - / + / Stromeinfuhr (Erneuerb.) a.d.Ausland,0,0,GWh/a,1.661,2. Erneuerbare!L223,2. Erneuerbare!M223
+2. Erneuerbare,224,H,+ / - / + / Stromangebot aus Erneuerbaren E.,256797.0257476755,1323581.8273640631,GWh/a,,2. Erneuerbare!L224,2. Erneuerbare!M224
+2. Erneuerbare,225,I,+ / - / + / Stromangebot aus Erneuerbaren E. / Übertragungsverluste Stromnetz,5.512143039125169,9.2,% v. [224],1.666,2. Erneuerbare!L225,2. Erneuerbare!M225
+2. Erneuerbare,226,H,+ / - / + / - / inkl. Kurzzeitspeicher,14155.019379430963,121769.5281174938,GWh/a,,2. Erneuerbare!L226,2. Erneuerbare!M226
+2. Erneuerbare,227,I,+ / - / + / - / Stromangeb.Erneuerb.(Endenergie),242642.00636824453,1201812.2992465694,GWh/a,,2. Erneuerbare!L227,2. Erneuerbare!M227
+2. Erneuerbare,228,,+ / - / + / - / Stromangeb.Erneuerb.(Endenergie),,,,,2. Erneuerbare!L228,2. Erneuerbare!M228
+2. Erneuerbare,229,E,Endenergieangebot aus erneuerbaren Quellen gesamt,,,,,2. Erneuerbare!L229,2. Erneuerbare!M229
+2. Erneuerbare,230,E,Endenergie aus Erneuerbaren Q. gesamt,459452.05288486544,2061993.1821718658,GWh/a,,2. Erneuerbare!L230,2. Erneuerbare!M230
+2. Erneuerbare,231,,Endenergie aus Erneuerbaren Q. gesamt,,,,,2. Erneuerbare!L231,2. Erneuerbare!M231
+2. Erneuerbare,232,F,Endenergie aus Erneuerbaren Q. gesamt / Strom (alle Anwendungsbereiche),242642.00636824453,1201812.2992465694,GWh/a,,2. Erneuerbare!L232,2. Erneuerbare!M232
+2. Erneuerbare,233,F,Endenergie aus Erneuerbaren Q. gesamt / / / Stromverbrauch insgesamt,467131.23274726106,1003827.9660048089,GWh/a,,2. Erneuerbare!L233,2. Erneuerbare!M233
+2. Erneuerbare,234,G,Endenergie aus Erneuerbaren Q. gesamt / / / Anteil Erneuerb.an Stromverbrauch,51.94300645264813,119.72293460100832,%,,2. Erneuerbare!L234,2. Erneuerbare!M234
+2. Erneuerbare,235,,Endenergie aus Erneuerbaren Q. gesamt / / / Anteil Erneuerb.an Stromverbrauch,,,,,2. Erneuerbare!L235,2. Erneuerbare!M235
+2. Erneuerbare,236,F,Endenergie aus Erneuerbaren Q. gesamt / Kraft/Licht/Inform.Komm.Tech./Kälte (KLIK),171003.68337655472,374437.5035180524,GWh/a,,2. Erneuerbare!L236,2. Erneuerbare!M236
+2. Erneuerbare,237,G,Endenergie aus Erneuerbaren Q. gesamt / Kraft/Licht/Inform.Komm.Tech./Kälte (KLIK) / davon Strom (erneuerb. Anteil),171003.68337655472,374437.5035180524,GWh/a,,2. Erneuerbare!L237,2. Erneuerbare!M237
+2. Erneuerbare,238,,Endenergie aus Erneuerbaren Q. gesamt / Kraft/Licht/Inform.Komm.Tech./Kälte (KLIK) / davon Strom (erneuerb. Anteil),,,,,2. Erneuerbare!L238,2. Erneuerbare!M238
+2. Erneuerbare,239,F,Endenergie aus Erneuerbaren Q. gesamt / Gebäudewärme (GW),172289.86088316783,699077.1419264316,GWh/a,,2. Erneuerbare!L239,2. Erneuerbare!M239
+2. Erneuerbare,240,G,Endenergie aus Erneuerbaren Q. gesamt / Gebäudewärme (GW) / davon Brennstoffe,88254.46556022266,0,GWh/a,,2. Erneuerbare!L240,2. Erneuerbare!M240
+2. Erneuerbare,241,H,Endenergie aus Erneuerbaren Q. gesamt / Gebäudewärme (GW) / davon Brennstoffe / davon Kohlenwasserstoffe (gasförmig),0,0,GWh/a,,2. Erneuerbare!L241,2. Erneuerbare!M241
+2. Erneuerbare,242,H,Endenergie aus Erneuerbaren Q. gesamt / Gebäudewärme (GW) / davon Brennstoffe / davon Kohlenwassrestoffe (flüssig),0,0,GWh/a,,2. Erneuerbare!L242,2. Erneuerbare!M242
+2. Erneuerbare,243,H,Endenergie aus Erneuerbaren Q. gesamt / Gebäudewärme (GW) / davon Brennstoffe / davon Kohlenwasserstoffe (fest),88254.46556022266,0,GWh/a,,2. Erneuerbare!L243,2. Erneuerbare!M243
+2. Erneuerbare,244,,Endenergie aus Erneuerbaren Q. gesamt / Gebäudewärme (GW) / davon Brennstoffe / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L244,2. Erneuerbare!M244
+2. Erneuerbare,245,G,Endenergie aus Erneuerbaren Q. gesamt / Gebäudewärme (GW) / davon Wärme,66958.10440544847,536228.7194817524,GWh/a,,2. Erneuerbare!L245,2. Erneuerbare!M245
+2. Erneuerbare,246,G,Endenergie aus Erneuerbaren Q. gesamt / Gebäudewärme (GW) / davon Strom (erneuerb. Anteil),17077.290917496724,162848.42244467916,GWh/a,,2. Erneuerbare!L246,2. Erneuerbare!M246
+2. Erneuerbare,247,,Endenergie aus Erneuerbaren Q. gesamt / Gebäudewärme (GW) / davon Strom (erneuerb. Anteil),,,,,2. Erneuerbare!L247,2. Erneuerbare!M247
+2. Erneuerbare,248,F,Endenergie aus Erneuerbaren Q. gesamt / Prozesswärme (PW),65635.52034126216,560767.1028506921,GWh/a,,2. Erneuerbare!L248,2. Erneuerbare!M248
+2. Erneuerbare,249,G,Endenergie aus Erneuerbaren Q. gesamt / Prozesswärme (PW) / davon Brennstoffe,25697.16007897475,132752.72013742902,GWh/a,,2. Erneuerbare!L249,2. Erneuerbare!M249
+2. Erneuerbare,250,H,Endenergie aus Erneuerbaren Q. gesamt / Prozesswärme (PW) / davon Brennstoffe / davon Kohlenwasserstoffe (gasförmig),0,17161.289945777084,GWh/a,,2. Erneuerbare!L250,2. Erneuerbare!M250
+2. Erneuerbare,251,H,Endenergie aus Erneuerbaren Q. gesamt / Prozesswärme (PW) / davon Brennstoffe / davon Wasserstoff,0,0,GWh/a,,2. Erneuerbare!L251,2. Erneuerbare!M251
+2. Erneuerbare,252,H,Endenergie aus Erneuerbaren Q. gesamt / Prozesswärme (PW) / davon Brennstoffe / davon Kohlenwasserstoffe (flüssig),0,0,GWh/a,,2. Erneuerbare!L252,2. Erneuerbare!M252
+2. Erneuerbare,253,H,Endenergie aus Erneuerbaren Q. gesamt / Prozesswärme (PW) / davon Brennstoffe / davon Kohlenwasserstoffe (fest),25697.16007897475,115591.43019165192,GWh/a,,2. Erneuerbare!L253,2. Erneuerbare!M253
+2. Erneuerbare,254,,Endenergie aus Erneuerbaren Q. gesamt / Prozesswärme (PW) / davon Brennstoffe / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L254,2. Erneuerbare!M254
+2. Erneuerbare,255,G,Endenergie aus Erneuerbaren Q. gesamt / Prozesswärme (PW) / davon Wärme,0,0,GWh/a,,2. Erneuerbare!L255,2. Erneuerbare!M255
+2. Erneuerbare,256,G,Endenergie aus Erneuerbaren Q. gesamt / Prozesswärme (PW) / davon Strom (erneuerb. Anteil),39938.36026228742,428014.38271326304,GWh/a,,2. Erneuerbare!L256,2. Erneuerbare!M256
+2. Erneuerbare,257,,Endenergie aus Erneuerbaren Q. gesamt / Prozesswärme (PW) / davon Strom (erneuerb. Anteil),,,,,2. Erneuerbare!L257,2. Erneuerbare!M257
+2. Erneuerbare,258,F,Endenergie aus Erneuerbaren Q. gesamt / Mobile Anwendungen,50522.98828388071,427711.43387668976,,,2. Erneuerbare!L258,2. Erneuerbare!M258
+2. Erneuerbare,259,G,Endenergie aus Erneuerbaren Q. gesamt / Mobile Anwendungen / davon Kraftstoffe,35900.316471974984,191199.44330611522,GWh/a,,2. Erneuerbare!L259,2. Erneuerbare!M259
+2. Erneuerbare,260,H,Endenergie aus Erneuerbaren Q. gesamt / Mobile Anwendungen / davon Kraftstoffe / davon Wasserstoff (FC-Traktion),0,0,GWh/a,,2. Erneuerbare!L260,2. Erneuerbare!M260
+2. Erneuerbare,261,H,Endenergie aus Erneuerbaren Q. gesamt / Mobile Anwendungen / davon Kraftstoffe / davon Kohlenwasserst.(gasförmig),1131.580013848367,91567.12976330396,GWh/a,,2. Erneuerbare!L261,2. Erneuerbare!M261
+2. Erneuerbare,262,H,Endenergie aus Erneuerbaren Q. gesamt / Mobile Anwendungen / davon Kraftstoffe / davon Kohlenwasserst.flüssig (Luftverkehr),34768.736458126616,99632.31354281127,GWh/a,,2. Erneuerbare!L262,2. Erneuerbare!M262
+2. Erneuerbare,263,,Endenergie aus Erneuerbaren Q. gesamt / Mobile Anwendungen / davon Kraftstoffe / davon Kohlenwasserst.flüssig (Luftverkehr),,,,,2. Erneuerbare!L263,2. Erneuerbare!M263
+2. Erneuerbare,264,G,Endenergie aus Erneuerbaren Q. gesamt / Mobile Anwendungen / davon Strom (erneuerb. Anteil),14622.671811905728,236511.99057057456,GWh/a,,2. Erneuerbare!L264,2. Erneuerbare!M264
+2. Erneuerbare,265,,Endenergie aus Erneuerbaren Q. gesamt / Mobile Anwendungen / davon Strom (erneuerb. Anteil),,,,,2. Erneuerbare!L265,2. Erneuerbare!M265
+2. Erneuerbare,266,F,Endenergie aus Erneuerbaren Q. gesamt / Brennstoffe (alle Anwendungsbereiche),149851.9421111724,323952.16344354424,GWh/a,,2. Erneuerbare!L266,2. Erneuerbare!M266
+2. Erneuerbare,267,G,Endenergie aus Erneuerbaren Q. gesamt / Brennstoffe (alle Anwendungsbereiche) / davon Wasserstoff,0,0,GWh/a,,2. Erneuerbare!L267,2. Erneuerbare!M267
+2. Erneuerbare,268,G,Endenergie aus Erneuerbaren Q. gesamt / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (gasförmig),1131.580013848367,108728.41970908105,GWh/a,,2. Erneuerbare!L268,2. Erneuerbare!M268
+2. Erneuerbare,269,G,Endenergie aus Erneuerbaren Q. gesamt / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (flüssig),34768.736458126616,99632.31354281127,GWh/a,,2. Erneuerbare!L269,2. Erneuerbare!M269
+2. Erneuerbare,270,G,Endenergie aus Erneuerbaren Q. gesamt / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),113951.6256391974,115591.43019165192,GWh/a,,2. Erneuerbare!L270,2. Erneuerbare!M270
+2. Erneuerbare,271,,Endenergie aus Erneuerbaren Q. gesamt / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L271,2. Erneuerbare!M271
+2. Erneuerbare,272,F,Endenergie aus Erneuerbaren Q. gesamt / Grundstoff Methan (stoffliche Verwendung),0,76544.50823642868,GWh/a,,2. Erneuerbare!L272,2. Erneuerbare!M272
+2. Erneuerbare,273,,Endenergie aus Erneuerbaren Q. gesamt / Grundstoff Methan (stoffliche Verwendung),,,,,2. Erneuerbare!L273,2. Erneuerbare!M273
+2. Erneuerbare,274,E,Primärenergie-Einsatz Biobrennstoffe,,,,,2. Erneuerbare!L274,2. Erneuerbare!M274
+2. Erneuerbare,275,F,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche),257710.73530671158,244929.16683467795,GWh/a,,2. Erneuerbare!L275,2. Erneuerbare!M275
+2. Erneuerbare,276,G,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (gasförmig),92382.22222222223,110597.13664302602,GWh/a,,2. Erneuerbare!L276,2. Erneuerbare!M276
+2. Erneuerbare,277,G,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (flüssig),30197.616313333332,4302.6,GWh/a,,2. Erneuerbare!L277,2. Erneuerbare!M277
+2. Erneuerbare,278,G,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),135130.89677115603,130029.43019165192,GWh/a,,2. Erneuerbare!L278,2. Erneuerbare!M278
+2. Erneuerbare,279,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L279,2. Erneuerbare!M279
+2. Erneuerbare,280,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L280,2. Erneuerbare!M280
+2. Erneuerbare,281,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L281,2. Erneuerbare!M281
+2. Erneuerbare,282,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L282,2. Erneuerbare!M282
+2. Erneuerbare,283,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L283,2. Erneuerbare!M283
+2. Erneuerbare,284,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L284,2. Erneuerbare!M284
+2. Erneuerbare,285,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L285,2. Erneuerbare!M285
+2. Erneuerbare,286,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L286,2. Erneuerbare!M286
+2. Erneuerbare,287,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L287,2. Erneuerbare!M287
+2. Erneuerbare,288,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L288,2. Erneuerbare!M288
+2. Erneuerbare,289,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L289,2. Erneuerbare!M289
+2. Erneuerbare,290,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L290,2. Erneuerbare!M290
+2. Erneuerbare,291,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L291,2. Erneuerbare!M291
+2. Erneuerbare,292,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L292,2. Erneuerbare!M292
+2. Erneuerbare,293,,Primärenergie-Einsatz Biobrennstoffe / Brennstoffe (alle Anwendungsbereiche) / davon Kohlenwasserstoffe (fest),,,,,2. Erneuerbare!L293,2. Erneuerbare!M293

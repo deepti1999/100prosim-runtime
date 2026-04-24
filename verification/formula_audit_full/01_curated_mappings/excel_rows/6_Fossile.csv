@@ -1,0 +1,90 @@
+sheet,row,row_indent_col,full_name,status,ziel,unit,d_ref,ref_status,ref_ziel
+6. Fossile,5,F,Strom fossil/atomar,,,,,6. Fossile!L5,6. Fossile!M5
+6. Fossile,6,H,Strom fossil/atomar / Strom-Endverbrauch / (%),,,(GWh/a),,6. Fossile!L6,6. Fossile!M6
+6. Fossile,7,H,Strom fossil/atomar / > Bruttostromverbr. / Status / Ziel,Ziel,,Status,,6. Fossile!L7,6. Fossile!M7
+6. Fossile,8,G,Strom fossil/atomar / Endverbrauch,0,[5.11] [5.53],,,6. Fossile!L8,6. Fossile!M8
+6. Fossile,9,G,Strom fossil/atomar / + / Leitungsverluste / 5.512143039125169 / 5.512143039125169,0,[8.22],,,6. Fossile!L9,6. Fossile!M9
+6. Fossile,10,G,Strom fossil/atomar / + / Verbr.Umwandl.ber. / 0 / 0,0,[8.23],,,6. Fossile!L10,6. Fossile!M10
+6. Fossile,11,H,Strom fossil/atomar / + / Bruttostromverbrauch,0,,,,6. Fossile!L11,6. Fossile!M11
+6. Fossile,12,,Strom fossil/atomar / + / Bruttostromverbrauch,,,,,6. Fossile!L12,6. Fossile!M12
+6. Fossile,13,H,Strom fossil/atomar / + / Bruttostromverbr. / Mix-Anteil,,Jahresnutz.grad,Bruttostromverbr.,,6. Fossile!L13,6. Fossile!M13
+6. Fossile,14,H,Strom fossil/atomar / + / > Primärenergie-V. / (%),,(%),(GWh/a),,6. Fossile!L14,6. Fossile!M14
+6. Fossile,15,I,Strom fossil/atomar / + / > Primärenergie-V. / Status / Ziel,Ziel,Status,Status,,6. Fossile!L15,6. Fossile!M15
+6. Fossile,16,G,Strom fossil/atomar / Bruttostromverbrauch / 0 / 100,0,,,,6. Fossile!L16,6. Fossile!M16
+6. Fossile,17,H,Strom fossil/atomar / Bruttostromverbrauch / 0-Verbrauch / 0,0,0,,,6. Fossile!L17,6. Fossile!M17
+6. Fossile,18,H,Strom fossil/atomar / Bruttostromverbrauch / 0-Verbrauch / 0,0,0,,,6. Fossile!L18,6. Fossile!M18
+6. Fossile,19,H,Strom fossil/atomar / Bruttostromverbrauch / 0-Verbrauch / 0,0,0,,,6. Fossile!L19,6. Fossile!M19
+6. Fossile,20,H,Strom fossil/atomar / Bruttostromverbrauch / 0-Verbrauch / 0 / 100,0,0,,,6. Fossile!L20,6. Fossile!M20
+6. Fossile,21,H,Strom fossil/atomar / Bruttostromverbrauch / 0-Verbrauch / 0,0,0,,,6. Fossile!L21,6. Fossile!M21
+6. Fossile,22,H,Strom fossil/atomar / Bruttostromverbrauch / 0 / 0,0,0,,,6. Fossile!L22,6. Fossile!M22
+6. Fossile,23,,Strom fossil/atomar / Bruttostromverbrauch / 0 / 0,,,,,6. Fossile!L23,6. Fossile!M23
+6. Fossile,24,F,Brennstoffe fossil gasförmig,,,,,6. Fossile!L24,6. Fossile!M24
+6. Fossile,25,H,Brennstoffe fossil gasförmig / Endverbrauch,,Jahresnutz.grad,,,6. Fossile!L25,6. Fossile!M25
+6. Fossile,26,H,Brennstoffe fossil gasförmig / > Primärenergie-V. / (%),,(%),(GWh/a),,6. Fossile!L26,6. Fossile!M26
+6. Fossile,27,I,Brennstoffe fossil gasförmig / > Primärenergie-V. / Status / Ziel,Ziel,Status,Status,,6. Fossile!L27,6. Fossile!M27
+6. Fossile,28,G,Brennstoffe fossil gasförmig / Endverbrauch,3.3408071992453183e-13,,,,6. Fossile!L28,6. Fossile!M28
+6. Fossile,29,G,Brennstoffe fossil gasförmig / + / Leit./Fackelverluste / 0 / 0,0,,,,6. Fossile!L29,6. Fossile!M29
+6. Fossile,30,G,Brennstoffe fossil gasförmig / + / Verbr.Umwandl.ber. / 0 / 0,0,,,,6. Fossile!L30,6. Fossile!M30
+6. Fossile,31,H,Brennstoffe fossil gasförmig / + / Naturgase-Verbrauch,3.3408071992453183e-13,100,,,6. Fossile!L31,6. Fossile!M31
+6. Fossile,32,,Brennstoffe fossil gasförmig / + / Naturgase-Verbrauch,,,,,6. Fossile!L32,6. Fossile!M32
+6. Fossile,33,F,Brennstoffe fossil flüssig,,,,,6. Fossile!L33,6. Fossile!M33
+6. Fossile,34,H,Brennstoffe fossil flüssig / Endverbrauch,,Jahresnutz.grad,,,6. Fossile!L34,6. Fossile!M34
+6. Fossile,35,H,Brennstoffe fossil flüssig / > Primärenergie-V. / (%),,(%),(GWh/a),,6. Fossile!L35,6. Fossile!M35
+6. Fossile,36,I,Brennstoffe fossil flüssig / > Primärenergie-V. / Status / Ziel,Ziel,Status,Status,,6. Fossile!L36,6. Fossile!M36
+6. Fossile,37,G,Brennstoffe fossil flüssig / Endverbrauch,2.876974973680917e-11,,,,6. Fossile!L37,6. Fossile!M37
+6. Fossile,38,H,Brennstoffe fossil flüssig / Endverbrauch / Leit./Fackelverluste / 0 / 0,0,,,,6. Fossile!L38,6. Fossile!M38
+6. Fossile,39,H,Brennstoffe fossil flüssig / Endverbrauch / Verbr.Umwandl.ber. / 0 / 0,0,,,,6. Fossile!L39,6. Fossile!M39
+6. Fossile,40,H,Brennstoffe fossil flüssig / Endverbrauch / Erdöl-Verbrauch,2.876974973680917e-11,0,,,6. Fossile!L40,6. Fossile!M40
+6. Fossile,41,,Brennstoffe fossil flüssig / Endverbrauch / Erdöl-Verbrauch,,,,,6. Fossile!L41,6. Fossile!M41
+6. Fossile,42,F,Brennstoffe fossil fest,,,,,6. Fossile!L42,6. Fossile!M42
+6. Fossile,43,I,Brennstoffe fossil fest / (%),,,(GWh/a),,6. Fossile!L43,6. Fossile!M43
+6. Fossile,44,G,Brennstoffe fossil fest / Gebäudewärme / Status / Ziel,Ziel,,Status,,6. Fossile!L44,6. Fossile!M44
+6. Fossile,45,H,Brennstoffe fossil fest / Gebäudewärme / Endverbrauch / 100 / 100,0,[5.20] [5.59],,,6. Fossile!L45,6. Fossile!M45
+6. Fossile,46,H,Brennstoffe fossil fest / Gebäudewärme / davon Steinkohle / 0 / 0,0,[8.45],,,6. Fossile!L46,6. Fossile!M46
+6. Fossile,47,H,Brennstoffe fossil fest / Gebäudewärme / davon Braunkohle / 0 / 0,0,[8.45],,,6. Fossile!L47,6. Fossile!M47
+6. Fossile,48,G,Brennstoffe fossil fest / Prozesswärme,,,,,6. Fossile!L48,6. Fossile!M48
+6. Fossile,49,H,Brennstoffe fossil fest / Prozesswärme / Endverbrauch / 100 / 100,0,[5.24] [5.59],,,6. Fossile!L49,6. Fossile!M49
+6. Fossile,50,H,Brennstoffe fossil fest / Prozesswärme / davon Steinkohle / 0 / 0,0,[8.46],,,6. Fossile!L50,6. Fossile!M50
+6. Fossile,51,H,Brennstoffe fossil fest / Prozesswärme / davon Braunkohle / 0 / 0,0,[8.46],,,6. Fossile!L51,6. Fossile!M51
+6. Fossile,52,,Brennstoffe fossil fest / Prozesswärme / davon Braunkohle / 0 / 0,,,,,6. Fossile!L52,6. Fossile!M52
+6. Fossile,53,H,Brennstoffe fossil fest / Prozesswärme / Endverbrauch,,Jahresnutz.grad,,,6. Fossile!L53,6. Fossile!M53
+6. Fossile,54,H,Brennstoffe fossil fest / Prozesswärme / > Primärenergie-V. / (%),,(%),(GWh/a),,6. Fossile!L54,6. Fossile!M54
+6. Fossile,55,I,Brennstoffe fossil fest / Prozesswärme / > Primärenergie-V. / Status / Ziel,Ziel,Status,Status,,6. Fossile!L55,6. Fossile!M55
+6. Fossile,56,G,Brennstoffe fossil fest / Endverbr.Steinkohle,0,,,,6. Fossile!L56,6. Fossile!M56
+6. Fossile,57,H,Brennstoffe fossil fest / Endverbr.Steinkohle / Verbr.Umwandl.b. / 0 / 0,0,,,,6. Fossile!L57,6. Fossile!M57
+6. Fossile,58,H,Brennstoffe fossil fest / Endverbr.Steinkohle / Steinkohle-Verbrauch,0,0,,,6. Fossile!L58,6. Fossile!M58
+6. Fossile,59,G,Brennstoffe fossil fest / Endverbr.Braunkohle,0,,,,6. Fossile!L59,6. Fossile!M59
+6. Fossile,60,H,Brennstoffe fossil fest / Endverbr.Braunkohle / Verbr.Umwandl.b. / 0 / 0,0,,,,6. Fossile!L60,6. Fossile!M60
+6. Fossile,61,H,Brennstoffe fossil fest / Endverbr.Braunkohle / Braunkohle-Verbrauch,0,0,,,6. Fossile!L61,6. Fossile!M61
+6. Fossile,62,,Brennstoffe fossil fest / Endverbr.Braunkohle / Braunkohle-Verbrauch,,,,,6. Fossile!L62,6. Fossile!M62
+6. Fossile,63,F,Wärme fossil,,,,,6. Fossile!L63,6. Fossile!M63
+6. Fossile,64,H,Wärme fossil / Wärmeendverbr. / (%),,,(GWh/a),,6. Fossile!L64,6. Fossile!M64
+6. Fossile,65,H,Wärme fossil / >Bruttowärmeverbr. / Status / Ziel,Ziel,,Status,,6. Fossile!L65,6. Fossile!M65
+6. Fossile,66,G,Wärme fossil / Endverbrauch,0,[5.24] [5.63],,,6. Fossile!L66,6. Fossile!M66
+6. Fossile,67,G,Wärme fossil / + / Leitungsverluste / 11.584540187191616 / 11.584540187191616,0,[8.65],,,6. Fossile!L67,6. Fossile!M67
+6. Fossile,68,G,Wärme fossil / + / Verbr.Umwandl.ber. / 0 / 0,0,[8.66],,,6. Fossile!L68,6. Fossile!M68
+6. Fossile,69,H,Wärme fossil / + / Bruttowärmeverbrauch,0,,,,6. Fossile!L69,6. Fossile!M69
+6. Fossile,70,,Wärme fossil / + / Bruttowärmeverbrauch,,,,,6. Fossile!L70,6. Fossile!M70
+6. Fossile,71,H,Wärme fossil / + / Bruttowärmeverbr. / Mix-Anteil,,Jahresnutz.grad,Burttowärmeverbr.,,6. Fossile!L71,6. Fossile!M71
+6. Fossile,72,H,Wärme fossil / + / > Primärenergie-V. / (%),,(%),(GWh/a),,6. Fossile!L72,6. Fossile!M72
+6. Fossile,73,I,Wärme fossil / + / > Primärenergie-V. / Status / Ziel,Ziel,Status,Status,,6. Fossile!L73,6. Fossile!M73
+6. Fossile,74,G,Wärme fossil / Bruttowärmeverbrauch,0,,,,6. Fossile!L74,6. Fossile!M74
+6. Fossile,75,H,Wärme fossil / Bruttowärmeverbrauch / 0 / 0,0,0,,,6. Fossile!L75,6. Fossile!M75
+6. Fossile,76,H,Wärme fossil / Bruttowärmeverbrauch / 0 / 0,0,0,,,6. Fossile!L76,6. Fossile!M76
+6. Fossile,77,H,Wärme fossil / Bruttowärmeverbrauch / 0 / 0 / 100,0,0,,,6. Fossile!L77,6. Fossile!M77
+6. Fossile,78,H,Wärme fossil / Bruttowärmeverbrauch / 0 / 0,0,0,,,6. Fossile!L78,6. Fossile!M78
+6. Fossile,79,H,Wärme fossil / Bruttowärmeverbrauch / 0 / 0,0,0,,,6. Fossile!L79,6. Fossile!M79
+6. Fossile,80,,Wärme fossil / Bruttowärmeverbrauch / 0 / 0,,,,,6. Fossile!L80,6. Fossile!M80
+6. Fossile,81,,Wärme fossil / Bruttowärmeverbrauch / 0 / 0,,,,,6. Fossile!L81,6. Fossile!M81
+6. Fossile,82,F,Primärenergieverbrauch fossil/atomar -,,,,,6. Fossile!L82,6. Fossile!M82
+6. Fossile,83,G,Primärenergieverbrauch fossil/atomar - / Energetisch bedingte Treibhausgasemissionen,,,,,6. Fossile!L83,6. Fossile!M83
+6. Fossile,84,,Primärenergieverbrauch fossil/atomar - / Energetisch bedingte Treibhausgasemissionen,,Emissionsfaktor,Primärenergie,,6. Fossile!L84,6. Fossile!M84
+6. Fossile,85,,Primärenergieverbrauch fossil/atomar - / Energetisch bedingte Treibhausgasemissionen,,t CO2-Äqu./GWh,GWh/a [17] … [79],,6. Fossile!L85,6. Fossile!M85
+6. Fossile,86,,Primärenergieverbrauch fossil/atomar - / Energetisch bedingte Treibhausgasemissionen,Ziel,Status,Status,,6. Fossile!L86,6. Fossile!M86
+6. Fossile,87,H,Primärenergieverbrauch fossil/atomar - / Energetisch bedingte Treibhausgasemissionen / Braunkohle,#DIV/0!,0,#DIV/0!,,6. Fossile!L87,6. Fossile!M87
+6. Fossile,88,H,Primärenergieverbrauch fossil/atomar - / Energetisch bedingte Treibhausgasemissionen / Steinkohle,#DIV/0!,0,#DIV/0!,,6. Fossile!L88,6. Fossile!M88
+6. Fossile,89,H,Primärenergieverbrauch fossil/atomar - / Energetisch bedingte Treibhausgasemissionen / Erdöl,#DIV/0!,0,#DIV/0!,,6. Fossile!L89,6. Fossile!M89
+6. Fossile,90,H,Primärenergieverbrauch fossil/atomar - / Energetisch bedingte Treibhausgasemissionen / Naturgase,#DIV/0!,0,#DIV/0!,,6. Fossile!L90,6. Fossile!M90
+6. Fossile,91,H,Primärenergieverbrauch fossil/atomar - / Energetisch bedingte Treibhausgasemissionen / Abfälle fossil,#DIV/0!,0,#DIV/0!,,6. Fossile!L91,6. Fossile!M91
+6. Fossile,92,H,Primärenergieverbrauch fossil/atomar - / Energetisch bedingte Treibhausgasemissionen / Kernenergie,#DIV/0!,0,#DIV/0!,,6. Fossile!L92,6. Fossile!M92
+6. Fossile,93,H,Primärenergieverbrauch fossil/atomar - / Energetisch bedingte Treibhausgasemissionen / Insgesamt,#DIV/0!,,#REF!,,6. Fossile!L93,6. Fossile!M93

@@ -1,0 +1,615 @@
+excel_sheet,excel_ref,cached_value,formula_text,row,col
+5. Bilanz,A1,"100prosim (_S.xlsx, 250517.1803_hsk)",,1,A
+5. Bilanz,AB1,'5. Bilanz',"=""'""&MID(AF1,FIND(""]"",AF1)+1,255)&""'""",1,AB
+5. Bilanz,AE1,5. Bilanz,"=MID(AF1,FIND(""]"",AF1)+1,255)",1,AE
+5. Bilanz,AF1,C:\Users\kkran\OneDrive\Desktop\100prosim_d_250517_250517.1817m\[_S.xlsx]5. Bilanz,"=CELL(""dateiname"",AF1)",1,AF
+5. Bilanz,AR1,Vorlagen>>>,,1,AR
+5. Bilanz,AS1,S.5.,=AT1&AV1,1,AS
+5. Bilanz,AT1,S.,"=MID(AU1,2,1)&"".""",1,AT
+5. Bilanz,AU1,_S.,"=MID(AX1,FIND(""["",AX1)+1,FIND(""xls"",AX1)-FIND(""["",AX1)-1)",1,AU
+5. Bilanz,AV1,5.,"=LEFT(AW1,FIND(""."",AW1))",1,AV
+5. Bilanz,AW1,5. Bilanz,"=MID(AX1,FIND(""]"",AX1)+1,255)",1,AW
+5. Bilanz,AX1,C:\Users\kkran\OneDrive\Desktop\100prosim_d_250517_250517.1817m\[_S.xlsx]5. Bilanz,"=CELL(""dateiname"",AX1)",1,AX
+5. Bilanz,BD1,[,,1,BD
+5. Bilanz,BE1,],,1,BE
+5. Bilanz,BH1,[_S.xlsx],"=""[""&AU1&""xlsx]""",1,BH
+5. Bilanz,BJ1,S.5. Bilanz - ,"=AT1&AW1&"" - """,1,BJ
+5. Bilanz,BK1,Szenario 'Deutschland 100%EE' (250517),"=""Szenario '""&I_!K4&""' (""&I_!S6&"")""",1,BK
+5. Bilanz,BN1,#REF!,=#REF!,1,BN
+5. Bilanz,BO1,04.02.2026,"=TEXT(TODAY(),""tt.MM.jjjj"")",1,BO
+5. Bilanz,BP1,22:38,"=TEXT(NOW(),""hh:mm"")",1,BP
+5. Bilanz,BQ1,#REF!,"=""100prosim (""&AU1&"".xlsx, V.""&BN1&"")   -   ""&BO1&""  ""&BP1",1,BQ
+5. Bilanz,BV1,[BS.xls],,1,BV
+5. Bilanz,BW1,2.'!,,1,BW
+5. Bilanz,W2,"100prosim (_S.xlsx, 250517.1803_hsk) - 04.02.2026 22:38","=A1&"" - ""&Stempel!B13&"" ""&Stempel!B14",2,W
+5. Bilanz,D3,S.5. Bilanz - Szenario 'Deutschland 100%EE' (250517),=BJ1&BK1,3,D
+5. Bilanz,A4,S.8,=AT$1&B4,4,A
+5. Bilanz,B4,8,,4,B
+5. Bilanz,C4,[4] ,"=""[""&D4&""] """,4,C
+5. Bilanz,D4,4,=ROW(),4,D
+5. Bilanz,A5,S.5.5,=AT$1&B5,5,A
+5. Bilanz,B5,5.5,=AV$1&D5,5,B
+5. Bilanz,C5,[5] ,"=""[""&D5&""] """,5,C
+5. Bilanz,D5,5,=ROW(),5,D
+5. Bilanz,F5,Status-Bilanz Endenergie:   Erneuerbar + Fossil (Aktiva) = Verbrauch (Passiva) ,,5,F
+5. Bilanz,A6,S.5.6,=AT$1&B6,6,A
+5. Bilanz,B6,5.6,=AV$1&D6,6,B
+5. Bilanz,C6,[6] ,"=""[""&D6&""] """,6,C
+5. Bilanz,D6,6,=ROW(),6,D
+5. Bilanz,G6,Angaben in GWh,,6,G
+5. Bilanz,H6,Anwendung,='7. Verbrauch Status'!H8,6,H
+5. Bilanz,W6,[28] ,=C28,6,W
+5. Bilanz,A7,S.5.7,=AT$1&B7,7,A
+5. Bilanz,B7,5.7,=AV$1&D7,7,B
+5. Bilanz,C7,[7] ,"=""[""&D7&""] """,7,C
+5. Bilanz,D7,7,=ROW(),7,D
+5. Bilanz,H7,"Kraft/Licht/
+IKT/Kälte",='7. Verbrauch Status'!H9,7,H
+5. Bilanz,K7,Gebäudewärme,='7. Verbrauch Status'!K9,7,K
+5. Bilanz,N7,"Prozess-
+wärme",='7. Verbrauch Status'!N9,7,N
+5. Bilanz,Q7,Mobile Anwend.,='7. Verbrauch Status'!Q9,7,Q
+5. Bilanz,T7,insgesamt,='7. Verbrauch Status'!T9,7,T
+5. Bilanz,A8,S.5.8,=AT$1&B8,8,A
+5. Bilanz,B8,5.8,=AV$1&D8,8,B
+5. Bilanz,C8,[8] ,"=""[""&D8&""] """,8,C
+5. Bilanz,D8,8,=ROW(),8,D
+5. Bilanz,A9,S.5.9,=AT$1&B9,9,A
+5. Bilanz,B9,5.9,=AV$1&D9,9,B
+5. Bilanz,C9,[9] ,"=""[""&D9&""] """,9,C
+5. Bilanz,D9,9,=ROW(),9,D
+5. Bilanz,F9,Endenergieträger,,9,F
+5. Bilanz,G9,Verbrauch Strom,,9,G
+5. Bilanz,H9,329214.0656749311,='7. Verbrauch Status'!H11,9,H
+5. Bilanz,K9,32876.978218549135,='7. Verbrauch Status'!K11,9,K
+5. Bilanz,N9,76888.81139118457,='7. Verbrauch Status'!N11,9,N
+5. Bilanz,Q9,15300.012667584937,='7. Verbrauch Status'!Q11,9,Q
+5. Bilanz,T9,454279.8679522497,=SUM(H9:S9),9,T
+5. Bilanz,W9,[7.11],"=""[""&'7. Verbrauch Status'!B11&""]""",9,W
+5. Bilanz,A10,S.5.10,=AT$1&B10,10,A
+5. Bilanz,B10,5.10,=AV$1&D10,10,B
+5. Bilanz,C10,[10] ,"=""[""&D10&""] """,10,C
+5. Bilanz,D10,10,=ROW(),10,D
+5. Bilanz,G10,erneuerbar,,10,G
+5. Bilanz,I10,171003.68337655472,='2. Erneuerbare'!L237,10,I
+5. Bilanz,L10,17077.290917496724,='2. Erneuerbare'!L246,10,L
+5. Bilanz,O10,39938.36026228742,='2. Erneuerbare'!L256,10,O
+5. Bilanz,R10,14622.671811905728,='2. Erneuerbare'!L264,10,R
+5. Bilanz,U10,242642.00636824456,=SUM(I10:R10),10,U
+5. Bilanz,W10,[2.237] [2.246] [2.256] [2.264],"=""[""&'2. Erneuerbare'!B237&""] [""&'2. Erneuerbare'!B246&""] [""&'2. Erneuerbare'!B256&""] [""&'2. Erneuerbare'!B264&""]""",10,W
+5. Bilanz,A11,S.5.11,=AT$1&B11,11,A
+5. Bilanz,B11,5.11,=AV$1&D11,11,B
+5. Bilanz,C11,[11] ,"=""[""&D11&""] """,11,C
+5. Bilanz,D11,11,=ROW(),11,D
+5. Bilanz,G11,fossil/atomar,,11,G
+5. Bilanz,J11,158210.38229837638,=H9-I10,11,J
+5. Bilanz,M11,15799.68730105241,=K9-L10,11,M
+5. Bilanz,P11,36950.451128897155,=N9-O10,11,P
+5. Bilanz,S11,677.3408556792092,=Q9-R10,11,S
+5. Bilanz,V11,211637.86158400515,=SUM(J11:S11),11,V
+5. Bilanz,W11,= [9] - [10] ,"=""= ""&C9&""- ""&C10",11,W
+5. Bilanz,Y11,211637.86158400515,=SUM(V11:V11),11,Y
+5. Bilanz,A12,S.5.12,=AT$1&B12,12,A
+5. Bilanz,B12,5.12,=AV$1&D12,12,B
+5. Bilanz,C12,[12] ,"=""[""&D12&""] """,12,C
+5. Bilanz,D12,12,=ROW(),12,D
+5. Bilanz,G12,Verbr.Brennst.gasf.,,12,G
+5. Bilanz,K12,346430.05089072546,='7. Verbrauch Status'!K13,12,K
+5. Bilanz,N12,192513.58951790634,='7. Verbrauch Status'!N13,12,N
+5. Bilanz,Q12,9195.668593553719,='7. Verbrauch Status'!Q13,12,Q
+5. Bilanz,T12,548139.3090021855,=SUM(H12:S12),12,T
+5. Bilanz,W12,[7.13],"=""[""&'7. Verbrauch Status'!B13&""]""",12,W
+5. Bilanz,A13,S.5.13,=AT$1&B13,13,A
+5. Bilanz,B13,5.13,=AV$1&D13,13,B
+5. Bilanz,C13,[13] ,"=""[""&D13&""] """,13,C
+5. Bilanz,D13,13,=ROW(),13,D
+5. Bilanz,G13,erneuerbar,,13,G
+5. Bilanz,L13,0,='2. Erneuerbare'!L241,13,L
+5. Bilanz,O13,0,='2. Erneuerbare'!L250,13,O
+5. Bilanz,R13,1131.580013848367,='2. Erneuerbare'!L261,13,R
+5. Bilanz,U13,1131.580013848367,=SUM(J13:R13),13,U
+5. Bilanz,W13,[2.241] [2.250] [2.261],"=""[""&'2. Erneuerbare'!B241&""] [""&'2. Erneuerbare'!B250&""] [""&'2. Erneuerbare'!B261&""]""",13,W
+5. Bilanz,A14,S.5.14,=AT$1&B14,14,A
+5. Bilanz,B14,5.14,=AV$1&D14,14,B
+5. Bilanz,C14,[14] ,"=""[""&D14&""] """,14,C
+5. Bilanz,D14,14,=ROW(),14,D
+5. Bilanz,G14,fossil     ,,14,G
+5. Bilanz,M14,346430.05089072546,=K12-L13,14,M
+5. Bilanz,P14,192513.58951790634,=N12-O13,14,P
+5. Bilanz,S14,8064.0885797053525,=Q12-R13,14,S
+5. Bilanz,V14,547007.7289883371,=SUM(I14:S14),14,V
+5. Bilanz,W14,= [12] - [13] ,"=""= ""&C12&""- ""&C13",14,W
+5. Bilanz,A15,S.5.15,=AT$1&B15,15,A
+5. Bilanz,B15,5.15,=AV$1&D15,15,B
+5. Bilanz,C15,[15] ,"=""[""&D15&""] """,15,C
+5. Bilanz,D15,15,=ROW(),15,D
+5. Bilanz,G15,Verbr.Brennst.flüssig,,15,G
+5. Bilanz,K15,136478.33441230486,='7. Verbrauch Status'!K15,15,K
+5. Bilanz,N15,24796.57225436181,='7. Verbrauch Status'!N15,15,N
+5. Bilanz,Q15,729217.1031462443,='7. Verbrauch Status'!Q15,15,Q
+5. Bilanz,T15,890492.009812911,=SUM(H15:S15),15,T
+5. Bilanz,W15,[7.15],"=""[""&'7. Verbrauch Status'!B15&""]""",15,W
+5. Bilanz,A16,S.5.16,=AT$1&B16,16,A
+5. Bilanz,B16,5.16,=AV$1&D16,16,B
+5. Bilanz,C16,[16] ,"=""[""&D16&""] """,16,C
+5. Bilanz,D16,16,=ROW(),16,D
+5. Bilanz,G16,erneuerbar,,16,G
+5. Bilanz,L16,0,='2. Erneuerbare'!L242,16,L
+5. Bilanz,O16,0,='2. Erneuerbare'!L252,16,O
+5. Bilanz,R16,34768.736458126616,='2. Erneuerbare'!L262,16,R
+5. Bilanz,U16,34768.736458126616,=SUM(J16:R16),16,U
+5. Bilanz,W16,[2.242] [2.252] [2.262],"=""[""&'2. Erneuerbare'!B242&""] [""&'2. Erneuerbare'!B252&""] [""&'2. Erneuerbare'!B262&""]""",16,W
+5. Bilanz,A17,S.5.17,=AT$1&B17,17,A
+5. Bilanz,B17,5.17,=AV$1&D17,17,B
+5. Bilanz,C17,[17] ,"=""[""&D17&""] """,17,C
+5. Bilanz,D17,17,=ROW(),17,D
+5. Bilanz,G17,fossil     ,,17,G
+5. Bilanz,M17,136478.33441230486,=K15-L16,17,M
+5. Bilanz,P17,24796.57225436181,=N15-O16,17,P
+5. Bilanz,S17,694448.3666881177,=Q15-R16,17,S
+5. Bilanz,V17,855723.2733547844,=SUM(I17:S17),17,V
+5. Bilanz,W17,= [15] - [16] ,"=""= ""&C15&""- ""&C16",17,W
+5. Bilanz,A18,S.5.18,=AT$1&B18,18,A
+5. Bilanz,B18,5.18,=AV$1&D18,18,B
+5. Bilanz,C18,[18] ,"=""[""&D18&""] """,18,C
+5. Bilanz,D18,18,=ROW(),18,D
+5. Bilanz,G18,Verbr.Brennst.fest,,18,G
+5. Bilanz,K18,149501.39419651052,='7. Verbrauch Status'!K17,18,K
+5. Bilanz,N18,117624.0538292011,='7. Verbrauch Status'!N17,18,N
+5. Bilanz,T18,267125.44802571164,=SUM(H18:S18),18,T
+5. Bilanz,W18,[7.17],"=""[""&'7. Verbrauch Status'!B17&""]""",18,W
+5. Bilanz,A19,S.5.19,=AT$1&B19,19,A
+5. Bilanz,B19,5.19,=AV$1&D19,19,B
+5. Bilanz,C19,[19] ,"=""[""&D19&""] """,19,C
+5. Bilanz,D19,19,=ROW(),19,D
+5. Bilanz,G19,erneuerbar,,19,G
+5. Bilanz,L19,88254.46556022266,='2. Erneuerbare'!L243,19,L
+5. Bilanz,O19,25697.16007897475,='2. Erneuerbare'!L253,19,O
+5. Bilanz,U19,113951.6256391974,=SUM(J19:S19),19,U
+5. Bilanz,W19,[2.243] [2.253],"=""[""&'2. Erneuerbare'!B243&""] [""&'2. Erneuerbare'!B253&""]""",19,W
+5. Bilanz,A20,S.5.20,=AT$1&B20,20,A
+5. Bilanz,B20,5.20,=AV$1&D20,20,B
+5. Bilanz,C20,[20] ,"=""[""&D20&""] """,20,C
+5. Bilanz,D20,20,=ROW(),20,D
+5. Bilanz,G20,fossil     ,,20,G
+5. Bilanz,M20,61246.92863628786,=K18-L19,20,M
+5. Bilanz,P20,91926.89375022636,=N18-O19,20,P
+5. Bilanz,V20,153173.82238651422,=SUM(I20:R20),20,V
+5. Bilanz,W20,= [18] - [19] ,"=""= ""&C18&""- ""&C19",20,W
+5. Bilanz,A21,S.5.21,=AT$1&B21,21,A
+5. Bilanz,B21,5.21,=AV$1&D21,21,B
+5. Bilanz,C21,[21] ,"=""[""&D21&""] """,21,C
+5. Bilanz,D21,21,=ROW(),21,D
+5. Bilanz,G21,Verbrauch Wärme,,21,G
+5. Bilanz,K21,133580.49552011894,='7. Verbrauch Status'!K19,21,K
+5. Bilanz,N21,143571.54256124247,='7. Verbrauch Status'!N19,21,N
+5. Bilanz,T21,277152.03808136145,=SUM(H21:S21),21,T
+5. Bilanz,W21,[7.20],"=""[""&'7. Verbrauch Status'!B20&""]""",21,W
+5. Bilanz,AA21,GW Deut.(PJ),,21,AA
+5. Bilanz,AB21,PW Deut.(PJ),,21,AB
+5. Bilanz,A22,S.5.22,=AT$1&B22,22,A
+5. Bilanz,B22,5.22,=AV$1&D22,22,B
+5. Bilanz,C22,[22] ,"=""[""&D22&""] """,22,C
+5. Bilanz,D22,22,=ROW(),22,D
+5. Bilanz,G22,erneuerbar,,22,G
+5. Bilanz,L22,32782.79317886679,='2. Erneuerbare'!L10+'2. Erneuerbare'!L91+'2. Erneuerbare'!L137+'2. Erneuerbare'!L153+'2. Erneuerbare'!L159,22,L
+5. Bilanz,U22,32782.79317886679,=SUM(J22:S22),22,U
+5. Bilanz,W22,[2.10] [2.91] [2.137] [2.153] [2.159],"=""[""&'2. Erneuerbare'!B10&""] [""&'2. Erneuerbare'!B91&""] [""&'2. Erneuerbare'!B137&""] [""&'2. Erneuerbare'!B153&""] [""&'2. Erneuerbare'!B159&""]""",22,W
+5. Bilanz,A23,S.5.23,=AT$1&B23,23,A
+5. Bilanz,B23,5.23,=AV$1&D23,23,B
+5. Bilanz,C23,[23] ,"=""[""&D23&""] """,23,C
+5. Bilanz,D23,23,=ROW(),23,D
+5. Bilanz,G23,Abwärme,,23,G
+5. Bilanz,L23,34175.311226581674,='2. Erneuerbare'!L87+'2. Erneuerbare'!L95+'2. Erneuerbare'!L112+'2. Erneuerbare'!L178,23,L
+5. Bilanz,M23,48977.13218368661,=(K21-SUM(L22:L23))*AA23/(AA24+AA23),23,M
+5. Bilanz,P23,143571.54256124247,=N21,23,P
+5. Bilanz,U23,34175.311226581674,=L23+O23,23,U
+5. Bilanz,V23,192548.67474492907,=M23+P23,23,V
+5. Bilanz,W23,[2.87] [2.95] [2.112] [2.178],"=""[""&'2. Erneuerbare'!B87&""] [""&'2. Erneuerbare'!B95&""] [""&'2. Erneuerbare'!B112&""] [""&'2. Erneuerbare'!B178&""]""",23,W
+5. Bilanz,AA23,275.9,,23,AA
+5. Bilanz,AB23,[BS.4.114],,23,AB
+5. Bilanz,A24,S.5.24,=AT$1&B24,24,A
+5. Bilanz,B24,5.24,=AV$1&D24,24,B
+5. Bilanz,C24,[24] ,"=""[""&D24&""] """,24,C
+5. Bilanz,D24,24,=ROW(),24,D
+5. Bilanz,G24,fossil ,,24,G
+5. Bilanz,M24,17645.25893098387,=(K21-SUM(L22:L23))*AA24/(AA24+AA23),24,M
+5. Bilanz,V24,17645.25893098387,=SUM(I24:R24),24,V
+5. Bilanz,W24,siehe [30] ,"=""siehe ""&C30",24,W
+5. Bilanz,AA24,99.4,,24,AA
+5. Bilanz,AB24,[BS.4.112],,24,AB
+5. Bilanz,A25,S.5.25,=AT$1&B25,25,A
+5. Bilanz,B25,5.25,=AV$1&D25,25,B
+5. Bilanz,C25,[25] ,"=""[""&D25&""] """,25,C
+5. Bilanz,D25,25,=ROW(),25,D
+5. Bilanz,G25,Verbrauch gesamt ,,25,G
+5. Bilanz,H25,329214.0656749311,=SUM(H9:H21),25,H
+5. Bilanz,K25,798867.2532382089,=SUM(K9:K21),25,K
+5. Bilanz,N25,555394.5695538963,=SUM(N9:N21),25,N
+5. Bilanz,Q25,753712.784407383,=SUM(Q9:Q21),25,Q
+5. Bilanz,T25,2437188.6728744195,=SUM(T9:T21),25,T
+5. Bilanz,W25,= [7.21],"=""= [""&'7. Verbrauch Status'!B21&""]""",25,W
+5. Bilanz,Y25,2437188.6728744195,=SUM(H25:S25),25,Y
+5. Bilanz,AA25,268277.77777777775,=965800/3.6,25,AA
+5. Bilanz,A26,S.5.26,=AT$1&B26,26,A
+5. Bilanz,B26,5.26,=AV$1&D26,26,B
+5. Bilanz,C26,[26] ,"=""[""&D26&""] """,26,C
+5. Bilanz,D26,26,=ROW(),26,D
+5. Bilanz,G26,erneuerbar,,26,G
+5. Bilanz,I26,171003.68337655472,=SUM(I10:I23),26,I
+5. Bilanz,L26,172289.86088316783,=SUM(L10:L23),26,L
+5. Bilanz,O26,65635.52034126216,=SUM(O10:O23),26,O
+5. Bilanz,R26,50522.98828388071,=SUM(R10:R23),26,R
+5. Bilanz,U26,459452.05288486544,=SUM(H26:R26),26,U
+5. Bilanz,W26,[10] … [23] ,"=C10&""… ""&C23",26,W
+5. Bilanz,Y26,2437188.6728744195,=U26+V27,26,Y
+5. Bilanz,A27,S.5.27,=AT$1&B27,27,A
+5. Bilanz,B27,5.27,=AV$1&D27,27,B
+5. Bilanz,C27,[27] ,"=""[""&D27&""] """,27,C
+5. Bilanz,D27,27,=ROW(),27,D
+5. Bilanz,G27,fossil     ,,27,G
+5. Bilanz,J27,158210.38229837638,=SUM(J11:J24),27,J
+5. Bilanz,M27,626577.392355041,=SUM(M11:M24),27,M
+5. Bilanz,P27,489759.04921263416,=SUM(P11:P24),27,P
+5. Bilanz,S27,703189.7961235023,=SUM(S11:S24),27,S
+5. Bilanz,V27,1977736.619989554,=SUM(J27:S27),27,V
+5. Bilanz,W27,[11] … [24] ,"=C11&""… ""&C24",27,W
+5. Bilanz,Y27,0,=Y25-Y26,27,Y
+5. Bilanz,A28,S.5.28,=AT$1&B28,28,A
+5. Bilanz,B28,5.28,=AV$1&D28,28,B
+5. Bilanz,C28,[28] ,"=""[""&D28&""] """,28,C
+5. Bilanz,D28,28,=ROW(),28,D
+5. Bilanz,F28,"Fossil/atomar ist der Teil des verursachten Endenergieverbrauches zu decken,  der nicht aus erneuerbaren Quellen gedeckt ist: ","=""Fossil/atomar ist der Teil des verursachten Endenergieverbrauches zu decken,  der nicht aus erneuerbaren Quellen gedeckt ist: """,28,F
+5. Bilanz,BX28,88254.46556022266,='2. Erneuerbare'!L243,28,BX
+5. Bilanz,A29,S.5.29,=AT$1&B29,29,A
+5. Bilanz,B29,5.29,=AV$1&D29,29,B
+5. Bilanz,C29,[29] ,"=""[""&D29&""] """,29,C
+5. Bilanz,D29,29,=ROW(),29,D
+5. Bilanz,F29,   Fossil/atomar  =  Verbrauch  -  erneuerbar,"=""   Fossil/atomar  =  Verbrauch  -  erneuerbar""",29,F
+5. Bilanz,BX29,0,='2. Erneuerbare'!L244,29,BX
+5. Bilanz,A30,S.5.30,=AT$1&B30,30,A
+5. Bilanz,B30,5.30,=AV$1&D30,30,B
+5. Bilanz,C30,[30] ,"=""[""&D30&""] """,30,C
+5. Bilanz,D30,30,=ROW(),30,D
+5. Bilanz,F30,"Fossile Wärme aufgeteilt gemäß Deutschem Mittel: 99,4 PJ von Fernheizwerken [BS.4.112] zu 275,9 PJ Abwärme von Heizkraftwerken [BS.4.114].","=""Fossile Wärme aufgeteilt gemäß Deutschem Mittel: ""&AA24&"" PJ von Fernheizwerken ""&AB24&"" zu ""&AA23&"" PJ Abwärme von Heizkraftwerken ""&AB23&"".""",30,F
+5. Bilanz,BX30,66958.10440544847,=SUM(L22:L23),30,BX
+5. Bilanz,CG30,459452.05288486544,=SUM(U10:U24),30,CG
+5. Bilanz,CH30,1977736.619989554,=SUM(V11:V24),30,CH
+5. Bilanz,A31,S.5.31,=AT$1&B31,31,A
+5. Bilanz,B31,5.31,=AV$1&D31,31,B
+5. Bilanz,C31,[31] ,"=""[""&D31&""] """,31,C
+5. Bilanz,D31,31,=ROW(),31,D
+5. Bilanz,BX31,66958.10440544847,='2. Erneuerbare'!L245,31,BX
+5. Bilanz,A32,S.5.32,=AT$1&B32,32,A
+5. Bilanz,B32,5.32,=AV$1&D32,32,B
+5. Bilanz,C32,[32] ,"=""[""&D32&""] """,32,C
+5. Bilanz,D32,32,=ROW(),32,D
+5. Bilanz,F32,Endenergie: Fossiler Brennstoffmix,,32,F
+5. Bilanz,A33,S.5.33,=AT$1&B33,33,A
+5. Bilanz,B33,5.33,=AV$1&D33,33,B
+5. Bilanz,C33,[33] ,"=""[""&D33&""] """,33,C
+5. Bilanz,D33,33,=ROW(),33,D
+5. Bilanz,G33,Anteil an jew. Brennstoffsumme in % ,,33,G
+5. Bilanz,K33,Gebäudewärme,,33,K
+5. Bilanz,N33,Prozesswärme,,33,N
+5. Bilanz,Q33,Mobile Anwend.,,33,Q
+5. Bilanz,A34,S.5.34,=AT$1&B34,34,A
+5. Bilanz,B34,5.34,=AV$1&D34,34,B
+5. Bilanz,C34,[34] ,"=""[""&D34&""] """,34,C
+5. Bilanz,D34,34,=ROW(),34,D
+5. Bilanz,L34,Status,,34,L
+5. Bilanz,M34,Ziel,,34,M
+5. Bilanz,O34,Status,,34,O
+5. Bilanz,P34,Ziel,,34,P
+5. Bilanz,R34,Status,,34,R
+5. Bilanz,S34,Ziel,,34,S
+5. Bilanz,A35,S.5.35,=AT$1&B35,35,A
+5. Bilanz,B35,5.35,=AV$1&D35,35,B
+5. Bilanz,C35,[35] ,"=""[""&D35&""] """,35,C
+5. Bilanz,D35,35,=ROW(),35,D
+5. Bilanz,G35,Brennstoffe gasförmig,,35,G
+5. Bilanz,L35,63.663818401920054,=M14/(M14+M17+M20)%,35,L
+5. Bilanz,M35,100,=100-M36-M37,35,M
+5. Bilanz,O35,62.25437284436391,=P14/(P14+P17+P20)%,35,O
+5. Bilanz,P35,100,=100-P36-P37,35,P
+5. Bilanz,R35,1.1478926130400111,=S14/(S14+S17+S20)%,35,R
+5. Bilanz,S35,1.1478926130399998,=100-S36-S37,35,S
+5. Bilanz,U35,[14] [17] [20] ,=C$14&C$17&C$20,35,U
+5. Bilanz,A36,S.5.36,=AT$1&B36,36,A
+5. Bilanz,B36,5.36,=AV$1&D36,36,B
+5. Bilanz,C36,[36] ,"=""[""&D36&""] """,36,C
+5. Bilanz,D36,36,=ROW(),36,D
+5. Bilanz,G36,Brennstoffe flüssig,,36,G
+5. Bilanz,L36,25.08076847109947,=M17/(M14+M17+M20)%,36,L
+5. Bilanz,M36,0,,36,M
+5. Bilanz,O36,8.018629013416557,=P17/(P14+P17+P20)%,36,O
+5. Bilanz,P36,0,,36,P
+5. Bilanz,R36,98.85210738696,=S17/(S14+S17+S20)%,36,R
+5. Bilanz,S36,98.85210738696,=R36,36,S
+5. Bilanz,U36,[14] [17] [20] ,=C$14&C$17&C$20,36,U
+5. Bilanz,A37,S.5.37,=AT$1&B37,37,A
+5. Bilanz,B37,5.37,=AV$1&D37,37,B
+5. Bilanz,C37,[37] ,"=""[""&D37&""] """,37,C
+5. Bilanz,D37,37,=ROW(),37,D
+5. Bilanz,G37,Brennstoffe fest,,37,G
+5. Bilanz,L37,11.255413126980482,=M20/(M14+M17+M20)%,37,L
+5. Bilanz,M37,0,,37,M
+5. Bilanz,O37,29.726998142219546,=P20/(P14+P17+P20)%,37,O
+5. Bilanz,P37,0,,37,P
+5. Bilanz,R37,0,=S20/(S14+S17+S20)%,37,R
+5. Bilanz,S37,0,=R37,37,S
+5. Bilanz,U37,[14] [17] [20] ,=C$14&C$17&C$20,37,U
+5. Bilanz,A38,S.5.38,=AT$1&B38,38,A
+5. Bilanz,B38,5.38,=AV$1&D38,38,B
+5. Bilanz,C38,[38] ,"=""[""&D38&""] """,38,C
+5. Bilanz,D38,38,=ROW(),38,D
+5. Bilanz,F38,Gelbe Felder: Zielansatz für den Brennstoffmix (bei 100%EE nicht relevant),,38,F
+5. Bilanz,BX38,100.00000000000001,=SUM(L35:L37),38,BX
+5. Bilanz,CA38,100,=SUM(O35:O37),38,CA
+5. Bilanz,CD38,100.00000000000001,=SUM(R35:R37),38,CD
+5. Bilanz,A39,S.5.39,=AT$1&B39,39,A
+5. Bilanz,B39,5.39,=AV$1&D39,39,B
+5. Bilanz,C39,[39] ,"=""[""&D39&""] """,39,C
+5. Bilanz,D39,39,=ROW(),39,D
+5. Bilanz,A40,S.5.40,=AT$1&B40,40,A
+5. Bilanz,B40,5.40,=AV$1&D40,40,B
+5. Bilanz,C40,[40] ,"=""[""&D40&""] """,40,C
+5. Bilanz,D40,40,=ROW(),40,D
+5. Bilanz,F40,Endenergie: Fossile Wärme,,40,F
+5. Bilanz,A41,S.5.41,=AT$1&B41,41,A
+5. Bilanz,B41,5.41,=AV$1&D41,41,B
+5. Bilanz,C41,[41] ,"=""[""&D41&""] """,41,C
+5. Bilanz,D41,41,=ROW(),41,D
+5. Bilanz,G41,Anteil an jew. Wärmesumme in % ,,41,G
+5. Bilanz,K41,Gebäudewärme,,41,K
+5. Bilanz,N41,Prozesswärme,,41,N
+5. Bilanz,A42,S.5.42,=AT$1&B42,42,A
+5. Bilanz,B42,5.42,=AV$1&D42,42,B
+5. Bilanz,C42,[42] ,"=""[""&D42&""] """,42,C
+5. Bilanz,D42,42,=ROW(),42,D
+5. Bilanz,L42,Status,,42,L
+5. Bilanz,M42,Ziel,,42,M
+5. Bilanz,O42,Status,,42,O
+5. Bilanz,P42,Ziel,,42,P
+5. Bilanz,A43,S.5.43,=AT$1&B43,43,A
+5. Bilanz,B43,5.43,=AV$1&D43,43,B
+5. Bilanz,C43,[43] ,"=""[""&D43&""] """,43,C
+5. Bilanz,D43,43,=ROW(),43,D
+5. Bilanz,G43,Abwärme,,43,G
+5. Bilanz,L43,73.51452171596057,=M23/(M24+M23)%,43,L
+5. Bilanz,M43,73.51452171596056,=100-M44-M45,43,M
+5. Bilanz,O43,100,,43,O
+5. Bilanz,P43,100,=100-P44-P45,43,P
+5. Bilanz,R43,[23] [24] ,=C23&C24,43,R
+5. Bilanz,A44,S.5.44,=AT$1&B44,44,A
+5. Bilanz,B44,5.44,=AV$1&D44,44,B
+5. Bilanz,C44,[44] ,"=""[""&D44&""] """,44,C
+5. Bilanz,D44,44,=ROW(),44,D
+5. Bilanz,G44,Fernheizwerk,,44,G
+5. Bilanz,L44,26.48547828403944,=M24/(M24+M23)%,44,L
+5. Bilanz,M44,26.48547828403944,=L44,44,M
+5. Bilanz,R44,[23] [24] ,=C23&C24,44,R
+5. Bilanz,A45,S.5.45,=AT$1&B45,45,A
+5. Bilanz,B45,5.45,=AV$1&D45,45,B
+5. Bilanz,C45,[45] ,"=""[""&D45&""] """,45,C
+5. Bilanz,D45,45,=ROW(),45,D
+5. Bilanz,F45,Gelbes Felder: Zielansatz für den Anteil Fernheizwerke an fossiler Wärmeversorgung (bei 100%EE nicht relevant),,45,F
+5. Bilanz,A46,S.5.46,=AT$1&B46,46,A
+5. Bilanz,B46,5.46,=AV$1&D46,46,B
+5. Bilanz,C46,[46] ,"=""[""&D46&""] """,46,C
+5. Bilanz,D46,46,=ROW(),46,D
+5. Bilanz,A47,S.5.47,=AT$1&B47,47,A
+5. Bilanz,B47,5.47,=AV$1&D47,47,B
+5. Bilanz,C47,[47] ,"=""[""&D47&""] """,47,C
+5. Bilanz,D47,47,=ROW(),47,D
+5. Bilanz,F47,Ziel-Bilanz Endenergie:   Erneuerbar + Fossil (Aktiva) = Verbrauch (Passiva) ,,47,F
+5. Bilanz,A48,S.5.48,=AT$1&B48,48,A
+5. Bilanz,B48,5.48,=AV$1&D48,48,B
+5. Bilanz,C48,[48] ,"=""[""&D48&""] """,48,C
+5. Bilanz,D48,48,=ROW(),48,D
+5. Bilanz,G48,Angaben in GWh,,48,G
+5. Bilanz,H48,Anwendung,=H6,48,H
+5. Bilanz,W48,[28] ,=C28,48,W
+5. Bilanz,A49,S.5.49,=AT$1&B49,49,A
+5. Bilanz,B49,5.49,=AV$1&D49,49,B
+5. Bilanz,C49,[49] ,"=""[""&D49&""] """,49,C
+5. Bilanz,D49,49,=ROW(),49,D
+5. Bilanz,H49,"Kraft/Licht/
+IKT/Kälte",=H7,49,H
+5. Bilanz,K49,Gebäudewärme,=K7,49,K
+5. Bilanz,N49,"Prozess-
+wärme",=N7,49,N
+5. Bilanz,Q49,Mobile Anwend.,=Q7,49,Q
+5. Bilanz,T49,insgesamt,=T7,49,T
+5. Bilanz,A50,S.5.50,=AT$1&B50,50,A
+5. Bilanz,B50,5.50,=AV$1&D50,50,B
+5. Bilanz,C50,[50] ,"=""[""&D50&""] """,50,C
+5. Bilanz,D50,50,=ROW(),50,D
+5. Bilanz,A51,S.5.51,=AT$1&B51,51,A
+5. Bilanz,B51,5.51,=AV$1&D51,51,B
+5. Bilanz,C51,[51] ,"=""[""&D51&""] """,51,C
+5. Bilanz,D51,51,=ROW(),51,D
+5. Bilanz,F51,Endenergieträger,=F9,51,F
+5. Bilanz,G51,Verbrauch Strom,,51,G
+5. Bilanz,H51,312753.36239118455,='4. Verbrauch'!M42,51,H
+5. Bilanz,K51,136021.07481527407,='4. Verbrauch'!M87,51,K
+5. Bilanz,N51,357504.08569558925,='4. Verbrauch'!M118,51,N
+5. Bilanz,Q51,197549.4431027609,='4. Verbrauch'!M187,51,Q
+5. Bilanz,T51,1003827.9660048089,=SUM(H51:S51),51,T
+5. Bilanz,W51,[4.42] [4.87] [4.118] [4.187],"=""[""&'4. Verbrauch'!B42&""] [""&'4. Verbrauch'!B87&""] [""&'4. Verbrauch'!B118&""] [""&'4. Verbrauch'!B187&""]""",51,W
+5. Bilanz,A52,S.5.52,=AT$1&B52,52,A
+5. Bilanz,B52,5.52,=AV$1&D52,52,B
+5. Bilanz,C52,[52] ,"=""[""&D52&""] """,52,C
+5. Bilanz,D52,52,=ROW(),52,D
+5. Bilanz,G52,erneuerbar*,,52,G
+5. Bilanz,I52,374437.5035180524,='2. Erneuerbare'!M237,52,I
+5. Bilanz,L52,162848.42244467916,='2. Erneuerbare'!M246,52,L
+5. Bilanz,O52,428014.38271326304,='2. Erneuerbare'!M256,52,O
+5. Bilanz,R52,236511.99057057456,='2. Erneuerbare'!M264,52,R
+5. Bilanz,U52,1201812.2992465692,=SUM(I52:R52),52,U
+5. Bilanz,W52,[2.237] [2.246] [2.256] [2.264],"=""[""&'2. Erneuerbare'!B237&""] [""&'2. Erneuerbare'!B246&""] [""&'2. Erneuerbare'!B256&""] [""&'2. Erneuerbare'!B264&""]""",52,W
+5. Bilanz,Y52,1201812.2992465692,=SUM(U52:V53),52,Y
+5. Bilanz,A53,S.5.53,=AT$1&B53,53,A
+5. Bilanz,B53,5.53,=AV$1&D53,53,B
+5. Bilanz,C53,[53] ,"=""[""&D53&""] """,53,C
+5. Bilanz,D53,53,=ROW(),53,D
+5. Bilanz,G53,fossil/atomar,,53,G
+5. Bilanz,J53,0,"=IF(H51<I52,0,H51-I52)",53,J
+5. Bilanz,M53,0,"=IF(K51<L52,0,K51-L52)",53,M
+5. Bilanz,P53,0,"=IF(N51<O52,0,N51-O52)",53,P
+5. Bilanz,S53,0,"=IF(Q51<R52,0,Q51-R52)",53,S
+5. Bilanz,V53,0,=SUM(J53:S53),53,V
+5. Bilanz,W53,= [51] - [52] ,"=""= ""&C51&""- ""&C52",53,W
+5. Bilanz,A54,S.5.54,=AT$1&B54,54,A
+5. Bilanz,B54,5.54,=AV$1&D54,54,B
+5. Bilanz,C54,[54] ,"=""[""&D54&""] """,54,C
+5. Bilanz,D54,54,=ROW(),54,D
+5. Bilanz,G54,Verbr.Brennst.ges.,,54,G
+5. Bilanz,K54,0,='4. Verbrauch'!M77,54,K
+5. Bilanz,N54,132747.16619173347,='4. Verbrauch'!M109,54,N
+5. Bilanz,Q54,191199.44330611525,='4. Verbrauch'!M183,54,Q
+5. Bilanz,T54,323946.6094978487,=SUM(H54:S54),54,T
+5. Bilanz,W54,[4.77] [4.113] [4.183],"=""[""&'4. Verbrauch'!B77&""] [""&'4. Verbrauch'!B113&""] [""&'4. Verbrauch'!B183&""]""",54,W
+5. Bilanz,A55,S.5.55,=AT$1&B55,55,A
+5. Bilanz,B55,5.55,=AV$1&D55,55,B
+5. Bilanz,C55,[55] ,"=""[""&D55&""] """,55,C
+5. Bilanz,D55,55,=ROW(),55,D
+5. Bilanz,G55,erneuerbar*,,55,G
+5. Bilanz,L55,0,='2. Erneuerbare'!M240,55,L
+5. Bilanz,O55,132752.72013742902,='2. Erneuerbare'!M249,55,O
+5. Bilanz,R55,191199.44330611522,='2. Erneuerbare'!M259,55,R
+5. Bilanz,U55,323952.16344354424,=SUM(I55:R55),55,U
+5. Bilanz,W55,[2.240] [2.249] [2.259],"=""[""&'2. Erneuerbare'!B240&""] [""&'2. Erneuerbare'!B249&""] [""&'2. Erneuerbare'!B259&""]""",55,W
+5. Bilanz,A56,S.5.56,=AT$1&B56,56,A
+5. Bilanz,B56,5.56,=AV$1&D56,56,B
+5. Bilanz,C56,[56] ,"=""[""&D56&""] """,56,C
+5. Bilanz,D56,56,=ROW(),56,D
+5. Bilanz,G56,fossil         ,,56,G
+5. Bilanz,M56,0,"=IF(K54<L55,0,K54-L55)",56,M
+5. Bilanz,P56,0,"=IF(N54<O55,0,N54-O55)",56,P
+5. Bilanz,S56,2.9103830456733704e-11,"=IF(Q54<R55,0,Q54-R55)",56,S
+5. Bilanz,V56,2.9103830456733704e-11,=SUM(J56:S56),56,V
+5. Bilanz,W56,= [54] - [55] ,"=""= ""&C54&""- ""&C55",56,W
+5. Bilanz,A57,S.5.57,=AT$1&B57,57,A
+5. Bilanz,B57,5.57,=AV$1&D57,57,B
+5. Bilanz,C57,[57] ,"=""[""&D57&""] """,57,C
+5. Bilanz,D57,57,=ROW(),57,D
+5. Bilanz,G57,davon gasf.,,57,G
+5. Bilanz,M57,0,=M$56*M35%,57,M
+5. Bilanz,P57,0,=P$56*P35%,57,P
+5. Bilanz,S57,3.3408071992453183e-13,=S$56*S35%,57,S
+5. Bilanz,V57,3.3408071992453183e-13,=SUM(J57:S57),57,V
+5. Bilanz,W57,[56] [35] ,=C$56&C35,57,W
+5. Bilanz,A58,S.5.58,=AT$1&B58,58,A
+5. Bilanz,B58,5.58,=AV$1&D58,58,B
+5. Bilanz,C58,[58] ,"=""[""&D58&""] """,58,C
+5. Bilanz,D58,58,=ROW(),58,D
+5. Bilanz,G58,davon flüss.,,58,G
+5. Bilanz,M58,0,=M$56*M36%,58,M
+5. Bilanz,P58,0,=P$56*P36%,58,P
+5. Bilanz,S58,2.876974973680917e-11,=S$56*S36%,58,S
+5. Bilanz,V58,2.876974973680917e-11,=SUM(J58:S58),58,V
+5. Bilanz,W58,[56] [36] ,=C$56&C36,58,W
+5. Bilanz,A59,S.5.59,=AT$1&B59,59,A
+5. Bilanz,B59,5.59,=AV$1&D59,59,B
+5. Bilanz,C59,[59] ,"=""[""&D59&""] """,59,C
+5. Bilanz,D59,59,=ROW(),59,D
+5. Bilanz,G59,davon fest,,59,G
+5. Bilanz,M59,0,=M$56*M37%,59,M
+5. Bilanz,P59,0,=P$56*P37%,59,P
+5. Bilanz,V59,0,=SUM(J59:S59),59,V
+5. Bilanz,W59,[56] [37] ,=C$56&C37,59,W
+5. Bilanz,A60,S.5.60,=AT$1&B60,60,A
+5. Bilanz,B60,5.60,=AV$1&D60,60,B
+5. Bilanz,C60,[60] ,"=""[""&D60&""] """,60,C
+5. Bilanz,D60,60,=ROW(),60,D
+5. Bilanz,G60,Verbrauch Wärme,,60,G
+5. Bilanz,K60,527517.7575261146,='4. Verbrauch'!M84,60,K
+5. Bilanz,N60,0,='4. Verbrauch'!M116,60,N
+5. Bilanz,T60,527517.7575261146,=SUM(H60:S60),60,T
+5. Bilanz,W60,[4.84] [4.116],"=""[""&'4. Verbrauch'!B84&""] [""&'4. Verbrauch'!B116&""]""",60,W
+5. Bilanz,A61,S.5.61,=AT$1&B61,61,A
+5. Bilanz,B61,5.61,=AV$1&D61,61,B
+5. Bilanz,C61,[61] ,"=""[""&D61&""] """,61,C
+5. Bilanz,D61,61,=ROW(),61,D
+5. Bilanz,G61,erneuerbar*,,61,G
+5. Bilanz,L61,503733.74158850405,='2. Erneuerbare'!M245-L62,61,L
+5. Bilanz,O61,0,='2. Erneuerbare'!M255,61,O
+5. Bilanz,U61,503733.74158850405,=SUM(H61:Q61),61,U
+5. Bilanz,W61,[2.245] [2.255],"=""[""&'2. Erneuerbare'!B245&""] [""&'2. Erneuerbare'!B255&""]""",61,W
+5. Bilanz,A62,S.5.62,=AT$1&B62,62,A
+5. Bilanz,B62,5.62,=AV$1&D62,62,B
+5. Bilanz,C62,[62] ,"=""[""&D62&""] """,62,C
+5. Bilanz,D62,62,=ROW(),62,D
+5. Bilanz,G62,Abwärme*,,62,G
+5. Bilanz,L62,32494.977893248342,='2. Erneuerbare'!L87+'2. Erneuerbare'!L95+'2. Erneuerbare'!L112+'2. Erneuerbare'!L137+'2. Erneuerbare'!L217,62,L
+5. Bilanz,M62,0,"=IF(Z62<0,0,Z62)",62,M
+5. Bilanz,P62,0,"=IF(N60<O61,0,N60-O61)",62,P
+5. Bilanz,U62,32494.977893248342,=L62+O62,62,U
+5. Bilanz,V62,0,=M62+P62,62,V
+5. Bilanz,W62,[2.87] [2.95] [2.112] [2.137] [2.217],"=""[""&'2. Erneuerbare'!B87&""] [""&'2. Erneuerbare'!B95&""] [""&'2. Erneuerbare'!B112&""] [""&'2. Erneuerbare'!B137&""] [""&'2. Erneuerbare'!B217&""]""",62,W
+5. Bilanz,Z62,-6403.822018546403,=(K60-SUM(L61:L62))*M43%,62,Z
+5. Bilanz,A63,S.5.63,=AT$1&B63,63,A
+5. Bilanz,B63,5.63,=AV$1&D63,63,B
+5. Bilanz,C63,[63] ,"=""[""&D63&""] """,63,C
+5. Bilanz,D63,63,=ROW(),63,D
+5. Bilanz,G63,fossil     ,,63,G
+5. Bilanz,M63,0,"=IF(Z63<0,0,Z63)",63,M
+5. Bilanz,V63,0,=SUM(J63:S63),63,V
+5. Bilanz,W63,[61] [62] [63] [64] ,=C61&C62&C63&C64,63,W
+5. Bilanz,Z63,-8606.450313319707,=(K61-SUM(L62:L63))*M44%,63,Z
+5. Bilanz,A64,S.5.64,=AT$1&B64,64,A
+5. Bilanz,B64,5.64,=AV$1&D64,64,B
+5. Bilanz,C64,[64] ,"=""[""&D64&""] """,64,C
+5. Bilanz,D64,64,=ROW(),64,D
+5. Bilanz,G64,Verbrauch gesamt,,64,G
+5. Bilanz,H64,312753.36239118455,=SUM(H51:H60),64,H
+5. Bilanz,K64,663538.8323413887,=SUM(K51:K60),64,K
+5. Bilanz,N64,490251.25188732275,=SUM(N51:N60),64,N
+5. Bilanz,Q64,388748.88640887616,=SUM(Q51:Q60),64,Q
+5. Bilanz,T64,1855292.3330287721,=SUM(T51:T60),64,T
+5. Bilanz,W64,[51] … [60] ,"=C51&""… ""&C60",64,W
+5. Bilanz,Y64,1855292.3330287721,=SUM(H64:S64),64,Y
+5. Bilanz,A65,S.5.65,=AT$1&B65,65,A
+5. Bilanz,B65,5.65,=AV$1&D65,65,B
+5. Bilanz,C65,[65] ,"=""[""&D65&""] """,65,C
+5. Bilanz,D65,65,=ROW(),65,D
+5. Bilanz,G65,erneuerbar*,,65,G
+5. Bilanz,I65,374437.5035180524,=SUM(I52:I63),65,I
+5. Bilanz,L65,699077.1419264316,=SUM(L52:L63),65,L
+5. Bilanz,O65,560767.1028506921,=SUM(O52:O63),65,O
+5. Bilanz,R65,427711.43387668976,=SUM(R52:R63),65,R
+5. Bilanz,U65,2061993.1821718658,=SUM(I65:S65),65,U
+5. Bilanz,W65,[52] … [63] ,"=C52&""… ""&C63",65,W
+5. Bilanz,BX65,2061993.1821718658,=SUM(U52:U62),65,BX
+5. Bilanz,BY65,5.820766091346741e-11,=SUM(V52:V63),65,BY
+5. Bilanz,A66,S.5.66,=AT$1&B66,66,A
+5. Bilanz,B66,5.66,=AV$1&D66,66,B
+5. Bilanz,C66,[66] ,"=""[""&D66&""] """,66,C
+5. Bilanz,D66,66,=ROW(),66,D
+5. Bilanz,G66,fossil     ,,66,G
+5. Bilanz,J66,0,=SUM(J52:J63),66,J
+5. Bilanz,M66,0,=SUM(M52:M63)-M56,66,M
+5. Bilanz,P66,0,=SUM(P52:P63)-P56,66,P
+5. Bilanz,S66,2.9103830456733704e-11,=SUM(S52:S63)-S56,66,S
+5. Bilanz,V66,2.9103830456733704e-11,=SUM(H66:S66),66,V
+5. Bilanz,W66,[53] … [63] ,"=C53&""… ""&C63",66,W
+5. Bilanz,A67,S.5.67,=AT$1&B67,67,A
+5. Bilanz,B67,5.67,=AV$1&D67,67,B
+5. Bilanz,C67,[67] ,"=""[""&D67&""] """,67,C
+5. Bilanz,D67,67,=ROW(),67,D
+5. Bilanz,G67,erneuerbar+Abw.+fossil,,67,G
+5. Bilanz,I67,374437.5035180524,=SUM(I65:J66),67,I
+5. Bilanz,L67,699077.1419264316,=SUM(L65:M66),67,L
+5. Bilanz,O67,560767.1028506921,=SUM(O65:P66),67,O
+5. Bilanz,R67,427711.43387668976,=SUM(R65:S66),67,R
+5. Bilanz,U67,2061993.1821718658,=SUM(U65:V66),67,U
+5. Bilanz,A68,S.5.68,=AT$1&B68,68,A
+5. Bilanz,B68,5.68,=AV$1&D68,68,B
+5. Bilanz,C68,[68] ,"=""[""&D68&""] """,68,C
+5. Bilanz,D68,68,=ROW(),68,D
+5. Bilanz,F68,*) Deckungsanteile erneuerbar und Abwärme können den Verbrauch übersteigen.,,68,F
+5. Bilanz,A69,S.5.69,=AT$1&B69,69,A
+5. Bilanz,B69,5.69,=AV$1&D69,69,B
+5. Bilanz,C69,[69] ,"=""[""&D69&""] """,69,C
+5. Bilanz,D69,69,=ROW(),69,D

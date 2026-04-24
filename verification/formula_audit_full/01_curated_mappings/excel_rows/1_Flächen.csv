@@ -1,0 +1,33 @@
+sheet,row,row_indent_col,full_name,status,ziel,unit,d_ref,ref_status,ref_ziel
+1. Flächen,5,E,Flächenart / Energetische Nutzung,Status,Ziel,Status,,1. Flächen!I5,1. Flächen!L5
+1. Flächen,6,E,1. / 2. / 3. / Hierarchiestufe (HS),ha,ha,ha,,1. Flächen!I6,1. Flächen!L6
+1. Flächen,7,,1. / 2. / 3. / Hierarchiestufe (HS),,,,,1. Flächen!I7,1. Flächen!L7
+1. Flächen,8,E,Bodenfläche gesamt,35759529,35759529,,1.64,1. Flächen!I8,1. Flächen!L8
+1. Flächen,9,F,Bodenfläche gesamt / Siedlung (Gebäude- & Freifläche),3380079,3645799.0000000005,,1.69,1. Flächen!I9,1. Flächen!L9
+1. Flächen,10,H,Bodenfläche gesamt / Siedlung (Gebäude- & Freifläche) / Solare Dachflächen,34242.69,199398.4011935508,,1.120,1. Flächen!I10,1. Flächen!L10
+1. Flächen,11,,Bodenfläche gesamt / Siedlung (Gebäude- & Freifläche) / Solare Dachflächen,,,,,1. Flächen!I11,1. Flächen!L11
+1. Flächen,12,F,Bodenfläche gesamt / Landwirtschaftsfläche (LF),18020717,17754997,,1.75,1. Flächen!I12,1. Flächen!L12
+1. Flächen,13,H,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / Solare Freiflächen,19627.65,887749.85,,1.129,1. Flächen!I13,1. Flächen!L13
+1. Flächen,14,G,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / Ackerland,11681400,10826000,,1.80,1. Flächen!I14,1. Flächen!L14
+1. Flächen,15,H,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / Ackerland / Getreide-Anbaufl. (Stroh),6076200,5631254.918074889,,1.85,1. Flächen!I15,1. Flächen!L15
+1. Flächen,16,H,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / Ackerland / Energiepfl. (Biogas),1410000,1307000,,1.365,1. Flächen!I16,1. Flächen!L16
+1. Flächen,17,H,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / Ackerland / Energiepfl. (Pflanzenöl),665000,303000,,1.445,1. Flächen!I17,1. Flächen!L17
+1. Flächen,18,H,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / Ackerland / Energiepfl. (Ethanol),216200,0,,1.494,1. Flächen!I18,1. Flächen!L18
+1. Flächen,19,H,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / Ackerland / Energiepfl. (Kurzumtr.),11200,11200,,1.266,1. Flächen!I19,1. Flächen!L19
+1. Flächen,20,H,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / Ackerland / (ohne energet. Relevanz),3302800,3573545.081925111,,,1. Flächen!I20,1. Flächen!L20
+1. Flächen,21,,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / Ackerland / (ohne energet. Relevanz),,,,,1. Flächen!I21,1. Flächen!L21
+1. Flächen,22,G,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / Dauergrünland,4704200,4371149.768479563,,1.90,1. Flächen!I22,1. Flächen!L22
+1. Flächen,23,H,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / Dauergrünland / Grasschnitt (Biogas),,,,#REF!,1. Flächen!I23,1. Flächen!L23
+1. Flächen,24,,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / Dauergrünland / Grasschnitt (Biogas),,,,,1. Flächen!I24,1. Flächen!L24
+1. Flächen,25,G,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / (sonstige Nutzung),1615489.35,1670097.3815204366,,,1. Flächen!I25,1. Flächen!L25
+1. Flächen,26,,Bodenfläche gesamt / Landwirtschaftsfläche (LF) / (sonstige Nutzung),,,,,1. Flächen!I26,1. Flächen!L26
+1. Flächen,27,F,Bodenfläche gesamt / Waldfläche,11538455,11538455,,1.96,1. Flächen!I27,1. Flächen!L27
+1. Flächen,28,H,Bodenfläche gesamt / Waldfläche / Forstfl. (u.a.Energieholz),9866633,9373000,,1.109,1. Flächen!I28,1. Flächen!L28
+1. Flächen,29,H,Bodenfläche gesamt / Waldfläche / (ohne forstwirtsch.Nutzung),1671822,2165455,,,1. Flächen!I29,1. Flächen!L29
+1. Flächen,30,,Bodenfläche gesamt / Waldfläche / (ohne forstwirtsch.Nutzung),,,,,1. Flächen!I30,1. Flächen!L30
+1. Flächen,31,F,Bodenfläche gesamt / (sonstige Flächen),2820278,2820278,,,1. Flächen!I31,1. Flächen!L31
+1. Flächen,32,,Bodenfläche gesamt / (sonstige Flächen),,,,,1. Flächen!I32,1. Flächen!L32
+1. Flächen,33,F,Bodenfläche gesamt / Windenergie Flächenpotenzial,2089000,1671200,,1.173,1. Flächen!I33,1. Flächen!L33
+1. Flächen,34,H,Bodenfläche gesamt / Windenergie Flächenpotenzial / Windparkfläche*,172555.8,715289.0305038091,,1.188,1. Flächen!I34,1. Flächen!L34
+1. Flächen,35,H,Bodenfläche gesamt / Windenergie Flächenpotenzial / Belegung (Potenzialflächen) *,n.r.,182121.89264773717,n.r.,1.181,1. Flächen!I35,1. Flächen!L35
+1. Flächen,36,H,Bodenfläche gesamt / Windenergie Flächenpotenzial / * ACHTUNG: %-Angabe bezieht sich auf Bodenfläche gesamt (HS 1),,,,,1. Flächen!I36,1. Flächen!L36

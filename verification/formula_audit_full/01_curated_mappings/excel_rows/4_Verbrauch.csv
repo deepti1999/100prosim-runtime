@@ -1,0 +1,210 @@
+sheet,row,row_indent_col,full_name,status,ziel,unit,d_ref,ref_status,ref_ziel
+4. Verbrauch,5,E,Wirtschaftliche Entwicklung (Bruttoinlandsprodukt BIP),,,,,4. Verbrauch!L5,4. Verbrauch!M5
+4. Verbrauch,6,F,Wirtschaftliche Entwicklung (Bruttoinlandsprodukt BIP) / Betrachteter Zeitraum: 22 Jahre,2023,2045,Kalenderjahr,1.674,4. Verbrauch!L6,4. Verbrauch!M6
+4. Verbrauch,7,G,Wirtschaftliche Entwicklung (Bruttoinlandsprodukt BIP) / Betrachteter Zeitraum: 22 Jahre / Durchschnittliche Jahresrate BIP/Kopf,0,,%/a,1.681,4. Verbrauch!L7,4. Verbrauch!M7
+4. Verbrauch,8,G,Wirtschaftliche Entwicklung (Bruttoinlandsprodukt BIP) / Betrachteter Zeitraum: 22 Jahre / Bruttoinlandsprodukt BIP/Kopf,49525,49525,€/Einwohn.,1.688,4. Verbrauch!L8,4. Verbrauch!M8
+4. Verbrauch,9,H,Wirtschaftliche Entwicklung (Bruttoinlandsprodukt BIP) / Betrachteter Zeitraum: 22 Jahre / Bruttoinlandsprodukt BIP/Kopf / Entwicklung BIP/Kopf gesamt,100,100,% v.Status,,4. Verbrauch!L9,4. Verbrauch!M9
+4. Verbrauch,10,H,Wirtschaftliche Entwicklung (Bruttoinlandsprodukt BIP) / Betrachteter Zeitraum: 22 Jahre / Bruttoinlandsprodukt BIP/Kopf / Anteil Dienstleistungsbereiche,69.7,69.7,% v. [8],1.693,4. Verbrauch!L10,4. Verbrauch!M10
+4. Verbrauch,11,H,Wirtschaftliche Entwicklung (Bruttoinlandsprodukt BIP) / Betrachteter Zeitraum: 22 Jahre / Bruttoinlandsprodukt BIP/Kopf / BIP/Kopf Anteil Dienstleistungsbereiche,34518.925,34518.925,€/Einwohn.,,4. Verbrauch!L11,4. Verbrauch!M11
+4. Verbrauch,12,I,Wirtschaftliche Entwicklung (Bruttoinlandsprodukt BIP) / Betrachteter Zeitraum: 22 Jahre / Bruttoinlandsprodukt BIP/Kopf / BIP/Kopf Anteil Dienstleistungsbereiche / Entwickl.BIP/Kopf Dienstleistungsber.,100,100,% v.Status,,4. Verbrauch!L12,4. Verbrauch!M12
+4. Verbrauch,13,,Wirtschaftliche Entwicklung (Bruttoinlandsprodukt BIP) / Betrachteter Zeitraum: 22 Jahre / Bruttoinlandsprodukt BIP/Kopf / BIP/Kopf Anteil Dienstleistungsbereiche / Entwickl.BIP/Kopf Dienstleistungsber.,,,,,4. Verbrauch!L13,4. Verbrauch!M13
+4. Verbrauch,14,H,Wirtschaftliche Entwicklung (Bruttoinlandsprodukt BIP) / Betrachteter Zeitraum: 22 Jahre / Bruttoinlandsprodukt BIP/Kopf / Anteil Produzierende Bereiche,30.299999999999997,30.299999999999997,% v. [12],,4. Verbrauch!L14,4. Verbrauch!M14
+4. Verbrauch,15,H,Wirtschaftliche Entwicklung (Bruttoinlandsprodukt BIP) / Betrachteter Zeitraum: 22 Jahre / Bruttoinlandsprodukt BIP/Kopf / BIP/Kopf Anteil Produzierende Bereiche,15006.074999999999,15006.074999999999,€/Einwohn.,,4. Verbrauch!L15,4. Verbrauch!M15
+4. Verbrauch,16,I,Wirtschaftliche Entwicklung (Bruttoinlandsprodukt BIP) / Betrachteter Zeitraum: 22 Jahre / Bruttoinlandsprodukt BIP/Kopf / BIP/Kopf Anteil Produzierende Bereiche / Entw.BIP/Kopf Produzierende Ber.,100,100,% v.Status,,4. Verbrauch!L16,4. Verbrauch!M16
+4. Verbrauch,17,,Wirtschaftliche Entwicklung (Bruttoinlandsprodukt BIP) / Betrachteter Zeitraum: 22 Jahre / Bruttoinlandsprodukt BIP/Kopf / BIP/Kopf Anteil Produzierende Bereiche / Entw.BIP/Kopf Produzierende Ber.,,,,,4. Verbrauch!L17,4. Verbrauch!M17
+4. Verbrauch,18,E,Endenergieverbrauch insgesamt,2437188.6728744195,1855292.3330287721,GWh/a,,4. Verbrauch!L18,4. Verbrauch!M18
+4. Verbrauch,19,F,Endenergieverbrauch insgesamt / Energieproduktivität pro Person,20.320544138090973,26.6939064633282,€/kWh/a,,4. Verbrauch!L19,4. Verbrauch!M19
+4. Verbrauch,20,,Endenergieverbrauch insgesamt / Energieproduktivität pro Person,,,,,4. Verbrauch!L20,4. Verbrauch!M20
+4. Verbrauch,21,E,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK)",,,,,4. Verbrauch!L21,4. Verbrauch!M21
+4. Verbrauch,22,F,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom",329214.0656749311,329214.0656749311,GWh/a,,4. Verbrauch!L22,4. Verbrauch!M22
+4. Verbrauch,23,G,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Haushalte",18.60082304526749,18.60082304526749,%,1.700,4. Verbrauch!L23,4. Verbrauch!M23
+4. Verbrauch,24,,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Haushalte",61236.52579632463,61236.52579632463,GWh/a,,4. Verbrauch!L24,4. Verbrauch!M24
+4. Verbrauch,25,H,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Haushalte / Zieleinfluss Endanwendungs-Effizienz",100,95,%,1.705,4. Verbrauch!L25,4. Verbrauch!M25
+4. Verbrauch,26,,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Haushalte / Zieleinfluss Endanwendungs-Effizienz",61236.52579632463,58174.6995065084,GWh/a,,4. Verbrauch!L26,4. Verbrauch!M26
+4. Verbrauch,27,,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Haushalte / Zieleinfluss Endanwendungs-Effizienz",,,,,4. Verbrauch!L27,4. Verbrauch!M27
+4. Verbrauch,28,G,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Handel/Dienstleistungen",34.65768799102133,34.65768799102133,%,1.712,4. Verbrauch!L28,4. Verbrauch!M28
+4. Verbrauch,29,,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Handel/Dienstleistungen",114097.98370417365,114097.98370417365,GWh/a,,4. Verbrauch!L29,4. Verbrauch!M29
+4. Verbrauch,30,H,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Handel/Dienstleistungen / Zieleinfluss Handels-/Dienstl.-Vol./Pers.",100,100,%,1.717,4. Verbrauch!L30,4. Verbrauch!M30
+4. Verbrauch,31,,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Handel/Dienstleistungen / Zieleinfluss Handels-/Dienstl.-Vol./Pers.",114097.98370417365,114097.98370417365,GWh/a,,4. Verbrauch!L31,4. Verbrauch!M31
+4. Verbrauch,32,I,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Handel/Dienstleistungen / Zieleinfluss Handels-/Dienstl.-Vol./Pers. / Zieleinfluss Prozess-Effizienz",100,95,%,1.722,4. Verbrauch!L32,4. Verbrauch!M32
+4. Verbrauch,33,,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Handel/Dienstleistungen / Zieleinfluss Handels-/Dienstl.-Vol./Pers. / Zieleinfluss Prozess-Effizienz",114097.98370417365,108393.08451896496,GWh/a,,4. Verbrauch!L33,4. Verbrauch!M33
+4. Verbrauch,34,,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Handel/Dienstleistungen / Zieleinfluss Handels-/Dienstl.-Vol./Pers. / Zieleinfluss Prozess-Effizienz",,,,,4. Verbrauch!L34,4. Verbrauch!M34
+4. Verbrauch,35,G,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Industrie + Gewerbeanteil GHD",46.741488963711184,46.741488963711184,%,1.728,4. Verbrauch!L35,4. Verbrauch!M35
+4. Verbrauch,36,,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Industrie + Gewerbeanteil GHD",153879.55617443283,153879.55617443283,GWh/a,,4. Verbrauch!L36,4. Verbrauch!M36
+4. Verbrauch,37,H,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Industrie + Gewerbeanteil GHD / Zieleinfluss Materialdurchsatz/Pers.",100,100,%,1.733,4. Verbrauch!L37,4. Verbrauch!M37
+4. Verbrauch,38,,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Industrie + Gewerbeanteil GHD / Zieleinfluss Materialdurchsatz/Pers.",153879.55617443283,153879.55617443283,GWh/a,,4. Verbrauch!L38,4. Verbrauch!M38
+4. Verbrauch,39,I,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Industrie + Gewerbeanteil GHD / Zieleinfluss Materialdurchsatz/Pers. / Zieleinfluss Prozess-Effizienz",100,95,%,1.738,4. Verbrauch!L39,4. Verbrauch!M39
+4. Verbrauch,40,,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Industrie + Gewerbeanteil GHD / Zieleinfluss Materialdurchsatz/Pers. / Zieleinfluss Prozess-Effizienz",153879.55617443283,146185.57836571118,GWh/a,,4. Verbrauch!L40,4. Verbrauch!M40
+4. Verbrauch,41,,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Bedarfsniveau (statisch), 100% Strom / davon Industrie + Gewerbeanteil GHD / Zieleinfluss Materialdurchsatz/Pers. / Zieleinfluss Prozess-Effizienz",,,,,4. Verbrauch!L41,4. Verbrauch!M41
+4. Verbrauch,42,F,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Endverbrauch Strom für KLIK gesamt",329214.0656749311,312753.36239118455,GWh/a,,4. Verbrauch!L42,4. Verbrauch!M42
+4. Verbrauch,43,,"Kraft, Licht, Informat./Kommunikat., Kälte (KLIK) / Endverbrauch Strom für KLIK gesamt",,,,,4. Verbrauch!L43,4. Verbrauch!M43
+4. Verbrauch,44,E,Gebäudewärme (GW),,,,,4. Verbrauch!L44,4. Verbrauch!M44
+4. Verbrauch,45,F,Gebäudewärme (GW) / Bedarfsniveau (statisch),798867.2532382089,798867.2532382089,GWh/a,,4. Verbrauch!L45,4. Verbrauch!M45
+4. Verbrauch,46,G,Gebäudewärme (GW) / Bedarfsniveau (statisch) / davon Haushalte,71.64093767867352,71.64093767867352,%,1.746,4. Verbrauch!L46,4. Verbrauch!M46
+4. Verbrauch,47,,Gebäudewärme (GW) / Bedarfsniveau (statisch) / davon Haushalte,572315.9910277162,572315.9910277162,GWh/a,,4. Verbrauch!L47,4. Verbrauch!M47
+4. Verbrauch,48,H,Gebäudewärme (GW) / Bedarfsniveau (statisch) / davon Haushalte / Wohnfläche pro Person,44.67669791064594,44.67669791064594,qm/Person,1.751,4. Verbrauch!L48,4. Verbrauch!M48
+4. Verbrauch,49,H,Gebäudewärme (GW) / Bedarfsniveau (statisch) / davon Haushalte / Zieleinfluss Wohnflächen-Entwicklung,100,100,% v. Status,,4. Verbrauch!L49,4. Verbrauch!M49
+4. Verbrauch,50,E,+,572315.9910277162,572315.9910277162,GWh/a,,4. Verbrauch!L50,4. Verbrauch!M50
+4. Verbrauch,51,,+,,,,,4. Verbrauch!L51,4. Verbrauch!M51
+4. Verbrauch,52,G,"+ / dav.Gewerbe,Handel,Dienstl. + Industr.",28.35906232132647,28.35906232132647,%,1.756,4. Verbrauch!L52,4. Verbrauch!M52
+4. Verbrauch,53,,"+ / dav.Gewerbe,Handel,Dienstl. + Industr.",226551.2622104926,226551.2622104926,GWh/a,,4. Verbrauch!L53,4. Verbrauch!M53
+4. Verbrauch,54,H,"+ / dav.Gewerbe,Handel,Dienstl. + Industr. / Zieleinfluss Erwerbstätigkeit",100,100,% v. Status,1.761,4. Verbrauch!L54,4. Verbrauch!M54
+4. Verbrauch,55,E,+,226551.2622104926,226551.2622104926,GWh/a,,4. Verbrauch!L55,4. Verbrauch!M55
+4. Verbrauch,56,,+,,,,,4. Verbrauch!L56,4. Verbrauch!M56
+4. Verbrauch,57,F,+ / Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.),798867.2532382088,798867.2532382088,GWh/a,,4. Verbrauch!L57,4. Verbrauch!M57
+4. Verbrauch,58,G,+ / Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.) / davon Raumwärme,85.92911239479102,85.92911239479102,%,1.767,4. Verbrauch!L58,4. Verbrauch!M58
+4. Verbrauch,59,,+ / Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.) / davon Raumwärme,686459.5399202403,686459.5399202403,GWh/a,,4. Verbrauch!L59,4. Verbrauch!M59
+4. Verbrauch,60,H,+ / Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.) / davon Raumwärme / Spez.Raumwärmebed.Status/Saniert,136,75,kWh/qm/a,1.772,4. Verbrauch!L60,4. Verbrauch!M60
+4. Verbrauch,61,I,+ / Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.) / davon Raumwärme / Spez.Raumwärmebed.Status/Saniert / Veränderung zum Status,99.99999999999999,-44.85294117647059,% v.Status,,4. Verbrauch!L61,4. Verbrauch!M61
+4. Verbrauch,62,,+ / Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.) / davon Raumwärme / Spez.Raumwärmebed.Status/Saniert / Veränderung zum Status,,,,,4. Verbrauch!L62,4. Verbrauch!M62
+4. Verbrauch,63,I,+ / Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.) / davon Raumwärme / Spez.Raumwärmebed.Status/Saniert / Gebäude - Sanierungs-/Ersatzrate,1.5,,%/a,1.781,4. Verbrauch!L63,4. Verbrauch!M63
+4. Verbrauch,64,I,+ / Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.) / davon Raumwärme / Spez.Raumwärmebed.Status/Saniert / Sanierungszeitraum: 22 Jahre,2023,2045,Kalenderjahr,1.784,4. Verbrauch!L64,4. Verbrauch!M64
+4. Verbrauch,65,J,+ / Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.) / davon Raumwärme / Spez.Raumwärmebed.Status/Saniert / Sanierungszeitraum: 22 Jahre / Gebäudeanteil mit Ziel-Wärmeschutz,0,33,% v.Status,,4. Verbrauch!L65,4. Verbrauch!M65
+4. Verbrauch,66,J,+ / Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.) / davon Raumwärme / Spez.Raumwärmebed.Status/Saniert / Sanierungszeitraum: 22 Jahre / Result.spez.Raumwärmebed. ges.,136,115.86999999999999,kWh/qm/a,,4. Verbrauch!L66,4. Verbrauch!M66
+4. Verbrauch,67,I,+ / Bedarfsniveau (Wohnfläche/Wirtschaftl.Entw.) / davon Raumwärme / Spez.Raumwärmebed.Status/Saniert / Raumwärmebedarf Veränderung,0,-14.801470588235293,% v.Status,,4. Verbrauch!L67,4. Verbrauch!M67
+4. Verbrauch,68,E,+ / Bedarfsniveau (Sanierung/Ersatz),686459.5399202403,584853.4330188107,GWh/a,,4. Verbrauch!L68,4. Verbrauch!M68
+4. Verbrauch,69,,+ / Bedarfsniveau (Sanierung/Ersatz),,,,,4. Verbrauch!L69,4. Verbrauch!M69
+4. Verbrauch,70,G,+ / davon Warmwasser,14.070887605208974,14.070887605208974,%,1.789,4. Verbrauch!L70,4. Verbrauch!M70
+4. Verbrauch,71,,+ / davon Warmwasser,112407.7133179685,112407.7133179685,GWh/a,,4. Verbrauch!L71,4. Verbrauch!M71
+4. Verbrauch,72,H,+ / davon Warmwasser / Zieleinfluss Anwendungs-/Prozess-Effizienz,100,70,%,1.794,4. Verbrauch!L72,4. Verbrauch!M72
+4. Verbrauch,73,E,+,112407.7133179685,78685.39932257794,GWh/a,,4. Verbrauch!L73,4. Verbrauch!M73
+4. Verbrauch,74,I,+ / Res. Anteil Warmwasser an Gebäudew.,14.070887605208974,11.858446783728635,%,,4. Verbrauch!L74,4. Verbrauch!M74
+4. Verbrauch,75,F,"+ / Bedarfsniveau (Sanierung, Anwendungseff.)",798867.2532382088,663538.8323413887,GWh/a,,4. Verbrauch!L75,4. Verbrauch!M75
+4. Verbrauch,76,G,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / davon Brennstoffe",79.16331241968767,0,% v. [75],1.810,4. Verbrauch!L76,4. Verbrauch!M76
+4. Verbrauch,77,H,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / davon Brennstoffe / Endenergieverbrauch",632409.7794995407,0,GWh/a,,4. Verbrauch!L77,4. Verbrauch!M77
+4. Verbrauch,78,G,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / > / Nutzungsgrad Endanwendung",86,88,%,1.816,4. Verbrauch!L78,4. Verbrauch!M78
+4. Verbrauch,79,H,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / > / > / Wandlungsverluste Endanwendung",11.082863738756275,0,% v. [75],,4. Verbrauch!L79,4. Verbrauch!M79
+4. Verbrauch,80,I,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / > / > / Einsparung gegenüber Status (relativ)",0,11.082863738756275,% v. [75],,4. Verbrauch!L80,4. Verbrauch!M80
+4. Verbrauch,81,I,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / > / > / (absolut)",0,0,GWh/a,,4. Verbrauch!L81,4. Verbrauch!M81
+4. Verbrauch,82,,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / > / > / (absolut)",,,,,4. Verbrauch!L82,4. Verbrauch!M82
+4. Verbrauch,83,G,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / davon Wärme (30-100°C,verlustarm nutzbar)",16.72123810040408,79.50066097332919,% v. [75],1.804,4. Verbrauch!L83,4. Verbrauch!M83
+4. Verbrauch,84,H,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / davon Wärme (30-100°C,verlustarm nutzbar) / Endenergieverbrauch",133580.49552011892,527517.7575261146,GWh/a,,4. Verbrauch!L84,4. Verbrauch!M84
+4. Verbrauch,85,,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / davon Wärme (30-100°C,verlustarm nutzbar) / Endenergieverbrauch",,,,,4. Verbrauch!L85,4. Verbrauch!M85
+4. Verbrauch,86,G,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / davon Strom (verlustarm nutzb.)",4.11544947990825,20.49933902667081,% v. [75],1.799,4. Verbrauch!L86,4. Verbrauch!M86
+4. Verbrauch,87,H,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / davon Strom (verlustarm nutzb.) / Endenergieverbrauch",32876.978218549186,136021.07481527407,GWh/a,,4. Verbrauch!L87,4. Verbrauch!M87
+4. Verbrauch,88,H,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / davon Strom (verlustarm nutzb.) / davon für Wärmepumpen",30.744918017730317,100,%,,4. Verbrauch!L88,4. Verbrauch!M88
+4. Verbrauch,89,,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / davon Strom (verlustarm nutzb.) / davon für Wärmepumpen",10108,136021.07481527407,GWh/a,1.519,4. Verbrauch!L89,4. Verbrauch!M89
+4. Verbrauch,90,,"+ / Bedarfsniveau (Sanierung, Anwendungseff.) / davon Strom (verlustarm nutzb.) / davon für Wärmepumpen",,,,,4. Verbrauch!L90,4. Verbrauch!M90
+4. Verbrauch,91,F,+ / Endenergieverbrauch GW gesamt,798867.2532382088,663538.8323413887,GWh/a,,4. Verbrauch!L91,4. Verbrauch!M91
+4. Verbrauch,92,,+ / Endenergieverbrauch GW gesamt,,,,,4. Verbrauch!L92,4. Verbrauch!M92
+4. Verbrauch,93,E,Prozesswärme (PW),,,,,4. Verbrauch!L93,4. Verbrauch!M93
+4. Verbrauch,94,F,Prozesswärme (PW) / Bedarfsniveau (statisch),555394.5695538963,555394.5695538963,GWh/a,,4. Verbrauch!L94,4. Verbrauch!M94
+4. Verbrauch,95,G,Prozesswärme (PW) / Bedarfsniveau (statisch) / davon Haushalte,8.716463774967497,8.716463774967497,%,1.823,4. Verbrauch!L95,4. Verbrauch!M95
+4. Verbrauch,96,,Prozesswärme (PW) / Bedarfsniveau (statisch) / davon Haushalte,48410.76646330204,48410.76646330204,GWh/a,,4. Verbrauch!L96,4. Verbrauch!M96
+4. Verbrauch,97,H,Prozesswärme (PW) / Bedarfsniveau (statisch) / davon Haushalte / Zieleinfluss Endanwendungs-Effizienz,100,95,%,1.828,4. Verbrauch!L97,4. Verbrauch!M97
+4. Verbrauch,98,,Prozesswärme (PW) / Bedarfsniveau (statisch) / davon Haushalte / Zieleinfluss Endanwendungs-Effizienz,48410.76646330204,45990.22814013693,GWh/a,,4. Verbrauch!L98,4. Verbrauch!M98
+4. Verbrauch,99,,Prozesswärme (PW) / Bedarfsniveau (statisch) / davon Haushalte / Zieleinfluss Endanwendungs-Effizienz,,,,,4. Verbrauch!L99,4. Verbrauch!M99
+4. Verbrauch,100,G,Prozesswärme (PW) / Bedarfsniveau (statisch) / davon Industrie + Gewerbeant.GHD,91.2835362250325,91.2835362250325,%,1.833,4. Verbrauch!L100,4. Verbrauch!M100
+4. Verbrauch,101,,Prozesswärme (PW) / Bedarfsniveau (statisch) / davon Industrie + Gewerbeant.GHD,506983.8030905943,506983.8030905943,GWh/a,,4. Verbrauch!L101,4. Verbrauch!M101
+4. Verbrauch,102,H,Prozesswärme (PW) / Bedarfsniveau (statisch) / davon Industrie + Gewerbeant.GHD / Zieleinfluss Materialdurchsatz/Pers.,100,100,%,1.838,4. Verbrauch!L102,4. Verbrauch!M102
+4. Verbrauch,103,,Prozesswärme (PW) / Bedarfsniveau (statisch) / davon Industrie + Gewerbeant.GHD / Zieleinfluss Materialdurchsatz/Pers.,506983.8030905943,506983.8030905943,GWh/a,,4. Verbrauch!L103,4. Verbrauch!M103
+4. Verbrauch,104,I,Prozesswärme (PW) / Bedarfsniveau (statisch) / davon Industrie + Gewerbeant.GHD / Zieleinfluss Materialdurchsatz/Pers. / Zieleinfluss Prozess-Effizienz,100,89,%,1.843,4. Verbrauch!L104,4. Verbrauch!M104
+4. Verbrauch,105,,Prozesswärme (PW) / Bedarfsniveau (statisch) / davon Industrie + Gewerbeant.GHD / Zieleinfluss Materialdurchsatz/Pers. / Zieleinfluss Prozess-Effizienz,506983.8030905943,451215.5847506289,GWh/a,,4. Verbrauch!L105,4. Verbrauch!M105
+4. Verbrauch,106,,Prozesswärme (PW) / Bedarfsniveau (statisch) / davon Industrie + Gewerbeant.GHD / Zieleinfluss Materialdurchsatz/Pers. / Zieleinfluss Prozess-Effizienz,,,,,4. Verbrauch!L106,4. Verbrauch!M106
+4. Verbrauch,107,F,"Prozesswärme (PW) / Bedarfsniveau (Prod.-Vol., Proz.-Effiz.)",555394.5695538963,497205.81289076584,GWh/a,,4. Verbrauch!L107,4. Verbrauch!M107
+4. Verbrauch,108,G,"Prozesswärme (PW) / Bedarfsniveau (Prod.-Vol., Proz.-Effiz.) / davon Brennstoffe",60.30563386143566,26.69863520298334,% v. [107],1.852,4. Verbrauch!L108,4. Verbrauch!M108
+4. Verbrauch,109,H,"Prozesswärme (PW) / Bedarfsniveau (Prod.-Vol., Proz.-Effiz.) / davon Brennstoffe / Endenergieverbrauch",334934.21560146933,132747.16619173347,GWh/a,,4. Verbrauch!L109,4. Verbrauch!M109
+4. Verbrauch,110,G,"Prozesswärme (PW) / Bedarfsniveau (Prod.-Vol., Proz.-Effiz.) / > / Nutzungsgrad Endanwendung",86,88,%,1.857,4. Verbrauch!L110,4. Verbrauch!M110
+4. Verbrauch,111,H,"Prozesswärme (PW) / Bedarfsniveau (Prod.-Vol., Proz.-Effiz.) / > / > / Wandlungsverluste Endanwendung",8.442788740600992,3.2038362243580005,% v. [107],,4. Verbrauch!L111,4. Verbrauch!M111
+4. Verbrauch,112,I,"Prozesswärme (PW) / Bedarfsniveau (Prod.-Vol., Proz.-Effiz.) / > / > / Einsparung gegenüber Status (relativ)",0,5.238952516242992,% v. [107],,4. Verbrauch!L112,4. Verbrauch!M112
+4. Verbrauch,113,I,"Prozesswärme (PW) / Bedarfsniveau (Prod.-Vol., Proz.-Effiz.) / > / > / (absolut)",0,6954.5610034430865,GWh/a,,4. Verbrauch!L113,4. Verbrauch!M113
+4. Verbrauch,114,,"Prozesswärme (PW) / Bedarfsniveau (Prod.-Vol., Proz.-Effiz.) / > / > / (absolut)",,,,,4. Verbrauch!L114,4. Verbrauch!M114
+4. Verbrauch,115,G,"Prozesswärme (PW) / Bedarfsniveau (Prod.-Vol., Proz.-Effiz.) / davon Wärme (>100°C,verlustarm nutzbar)",25.85036844644735,0,% v. [107],1.862,4. Verbrauch!L115,4. Verbrauch!M115
+4. Verbrauch,116,H,"Prozesswärme (PW) / Bedarfsniveau (Prod.-Vol., Proz.-Effiz.) / davon Wärme (>100°C,verlustarm nutzbar) / Endenergieverbrauch",143571.5425612425,0,GWh/a,,4. Verbrauch!L116,4. Verbrauch!M116
+4. Verbrauch,117,G,"Prozesswärme (PW) / Bedarfsniveau (Prod.-Vol., Proz.-Effiz.) / davon Strom (verlustarm nutzbar)",13.84399769211699,71.90263597624742,% v. [107],1.867,4. Verbrauch!L117,4. Verbrauch!M117
+4. Verbrauch,118,H,"Prozesswärme (PW) / Bedarfsniveau (Prod.-Vol., Proz.-Effiz.) / davon Strom (verlustarm nutzbar) / Endenergieverbrauch",76888.8113911845,357504.08569558925,GWh/a,,4. Verbrauch!L118,4. Verbrauch!M118
+4. Verbrauch,119,,"Prozesswärme (PW) / Bedarfsniveau (Prod.-Vol., Proz.-Effiz.) / davon Strom (verlustarm nutzbar) / Endenergieverbrauch",,,,,4. Verbrauch!L119,4. Verbrauch!M119
+4. Verbrauch,120,F,Prozesswärme (PW) / Endenergieverbrauch PW gesamt,555394.5695538963,490251.25188732275,GWh/a,,4. Verbrauch!L120,4. Verbrauch!M120
+4. Verbrauch,121,,Prozesswärme (PW) / Endenergieverbrauch PW gesamt,,,,,4. Verbrauch!L121,4. Verbrauch!M121
+4. Verbrauch,122,E,Mobile Anwendungen (MA),,,,,4. Verbrauch!L122,4. Verbrauch!M122
+4. Verbrauch,123,F,"Mobile Anwendungen (MA) / MA am Boden (Straße, Schiene, Schifffahrt, Maschinen)",,,,,4. Verbrauch!L123,4. Verbrauch!M123
+4. Verbrauch,124,F,Mobile Anwendungen (MA) / Bedarfsniveau (statisch),639192.8837834619,639192.8837834619,GWh/a,,4. Verbrauch!L124,4. Verbrauch!M124
+4. Verbrauch,125,G,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / davon Personenverkehr (PVk),67.41832181954476,67.41832181954476,%,1.876,4. Verbrauch!L125,4. Verbrauch!M125
+4. Verbrauch,126,G,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Zieleinfluss Pers.-Verkehrsleist./Pers.,100,100,%,1.882,4. Verbrauch!L126,4. Verbrauch!M126
+4. Verbrauch,127,G,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung),430933.11543676304,430933.11543676304,GWh/a,,4. Verbrauch!L127,4. Verbrauch!M127
+4. Verbrauch,128,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Nutzungsgrad Traktionsmix,27.075,62.67931307672608,%,,4. Verbrauch!L128,4. Verbrauch!M128
+4. Verbrauch,129,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Nutzenergie (NE) gesamt PVk,116675.14100450359,,GWh/a,,4. Verbrauch!L129,4. Verbrauch!M129
+4. Verbrauch,130,,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Nutzenergie (NE) gesamt PVk,,116675.1410045036,,,4. Verbrauch!L130,4. Verbrauch!M130
+4. Verbrauch,131,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil Elektrotraktion an PvK-Leistung,8.642659279778393,86,% v.[135] + [141],1.888,4. Verbrauch!L131,4. Verbrauch!M131
+4. Verbrauch,132,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil Elektrotraktion an Endverbr. PVk,3,69.1071584230155,% v.[136] + [142],1.897,4. Verbrauch!L132,4. Verbrauch!M132
+4. Verbrauch,133,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil Elektrotraktion an Endverbr. PVk / Nutzungsgrad Elektrotraktion (NG e),78,78,%,1.906,4. Verbrauch!L133,4. Verbrauch!M133
+4. Verbrauch,134,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil Elektrotraktion an Endverbr. PVk / Anteil NE Elektrotrakt.an Endverbr. PVk,2.34,53.9035835699521,% v.[136] + [142],,4. Verbrauch!L134,4. Verbrauch!M134
+4. Verbrauch,135,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil NE Elektrotrakt.an NE ges.PVk,8.642659279778393,85.99900178224422,% v.[129] | [130],,4. Verbrauch!L135,4. Verbrauch!M135
+4. Verbrauch,136,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil NE Elektrotrakt.an NE ges.PVk / Stromverbrauch PVk,12927.99346310289,128640.32896397308,GWh/a,,4. Verbrauch!L136,4. Verbrauch!M136
+4. Verbrauch,137,,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil NE Elektrotrakt.an NE ges.PVk / Stromverbrauch PVk,,,,,4. Verbrauch!L137,4. Verbrauch!M137
+4. Verbrauch,138,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil Verbrenn.Trakt.an Endverbr.PVk,97,30.892841576984495,% v.[136] +[142],,4. Verbrauch!L138,4. Verbrauch!M138
+4. Verbrauch,139,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil Verbrenn.Trakt.an Endverbr.PVk / Nutzungsgrad Verbrenn.Traktion (NG k),25.5,28.407000000000004,%,1.913,4. Verbrauch!L139,4. Verbrauch!M139
+4. Verbrauch,140,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil Verbrenn.Trakt.an Endverbr.PVk / Anteil NE Verbrenn.Trakt.an Endverbr.PVk,24.735,8.775729506773986,% v.[136] +[142],,4. Verbrauch!L140,4. Verbrauch!M140
+4. Verbrauch,141,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil NE Verbrenn.Trakt.an NE ges.PVk,91.3573407202216,14.000998217755779,% v.[129] | [130],,4. Verbrauch!L141,4. Verbrauch!M141
+4. Verbrauch,142,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil NE Verbrenn.Trakt.an NE ges.PVk / Kohlenwasserstoff-Verbr.(gasf.) PVk,418005.12197366013,57505.84156230714,GWh/a,,4. Verbrauch!L142,4. Verbrauch!M142
+4. Verbrauch,143,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Alternativ zur Verbrennungsmotoren: Brennstoffzellen (FC) -Traktion:,,(Passiv),,1.919,4. Verbrauch!L143,4. Verbrauch!M143
+4. Verbrauch,144,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil FC-Trakt.an Endverbr.PVk,,0,% v.[136] +[148],,4. Verbrauch!L144,4. Verbrauch!M144
+4. Verbrauch,145,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil FC-Trakt.an Endverbr.PVk / Nutzungsgrad FC-Traktion (NG FC),35,35,%,1.924,4. Verbrauch!L145,4. Verbrauch!M145
+4. Verbrauch,146,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil FC-Trakt.an Endverbr.PVk / Anteil NE FC-Trakt.an Endverbr.PVk,,0,% v.[136] +[148],,4. Verbrauch!L146,4. Verbrauch!M146
+4. Verbrauch,147,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil NE FC-Trakt.an NE ges.PVk,,0,% v.[129] | [130],,4. Verbrauch!L147,4. Verbrauch!M147
+4. Verbrauch,148,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil NE FC-Trakt.an NE ges.PVk / Wasserstoffverbrauch PVk,,0,GWh/a,,4. Verbrauch!L148,4. Verbrauch!M148
+4. Verbrauch,149,,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau PVk (nach Entwicklung) / Anteil NE FC-Trakt.an NE ges.PVk / Wasserstoffverbrauch PVk,,,,,4. Verbrauch!L149,4. Verbrauch!M149
+4. Verbrauch,150,G,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / davon Güterverkehr u. a. (GVk),32.58167818045524,32.58167818045524,%,,4. Verbrauch!L150,4. Verbrauch!M150
+4. Verbrauch,151,G,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Zieleinfluss Güterverk.-Leistung/Pers.,100,100,%,1.930,4. Verbrauch!L151,4. Verbrauch!M151
+4. Verbrauch,152,G,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung),208259.76834669884,208259.76834669884,GWh/a,,4. Verbrauch!L152,4. Verbrauch!M152
+4. Verbrauch,153,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Nutzungsgrad Traktionsmix,30.728000804656958,62.14801713814897,%,,4. Verbrauch!L153,4. Verbrauch!M153
+4. Verbrauch,154,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Nutzenergie (NE) gesamt GVk,63994.06329335034,,GWh/a,,4. Verbrauch!L154,4. Verbrauch!M154
+4. Verbrauch,155,,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Nutzenergie (NE) gesamt GVk,,63994.06329335034,,,4. Verbrauch!L155,4. Verbrauch!M155
+4. Verbrauch,156,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil Elektrotraktion an GVk-Leistung,18.555220450955044,84,% v.[160] + [166],1.936,4. Verbrauch!L156,4. Verbrauch!M156
+4. Verbrauch,157,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil Elektrotraktion an Endverbr. GVk,7.309805499327357,66.92128278900917,% v.[161] +[167],1.945,4. Verbrauch!L157,4. Verbrauch!M157
+4. Verbrauch,158,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil Elektrotraktion an Endverbr. GVk / Nutzungsgrad Elektrotraktion (NG e),78,78,%,1.954,4. Verbrauch!L158,4. Verbrauch!M158
+4. Verbrauch,159,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil Elektrotraktion an Endverbr. GVk / Anteil NE Elektrotrakt.an Endverbr. GVk,5.701648289475338,52.19860057542715,% v.[161] +[167],,4. Verbrauch!L159,4. Verbrauch!M159
+4. Verbrauch,160,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil NE Elektrotrakt.an NE ges.GVk,18.555220450955044,83.99077392830533,% v.[154] | [155],,4. Verbrauch!L160,4. Verbrauch!M160
+4. Verbrauch,161,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil NE Elektrotrakt.an NE ges.GVk / Stromverbrauch GVk,15223.383999493406,68909.11413878783,GWh/a,,4. Verbrauch!L161,4. Verbrauch!M161
+4. Verbrauch,162,,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil NE Elektrotrakt.an NE ges.GVk / Stromverbrauch GVk,,,,,4. Verbrauch!L162,4. Verbrauch!M162
+4. Verbrauch,163,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil Verbrenn.-Trakt.an Endverbr.GVk,92.69019450067265,33.07871721099083,% v.[161] +[167],,4. Verbrauch!L163,4. Verbrauch!M163
+4. Verbrauch,164,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil Verbrenn.-Trakt.an Endverbr.GVk / Nutzungsgrad Verbrenn.-Traktion (NG k),27,30.078000000000003,%,1.961,4. Verbrauch!L164,4. Verbrauch!M164
+4. Verbrauch,165,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil Verbrenn.-Trakt.an Endverbr.GVk / Anteil NE Verbrenn-Trakt.an Endverbr.GVk,25.026352515181618,9.949416562721824,% v.[161] +[167],,4. Verbrauch!L165,4. Verbrauch!M165
+4. Verbrauch,166,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil NE Verbrenn.Trakt.an NE ges.GVk,81.44477954904495,16.00922607169467,% v.[154] | [155],,4. Verbrauch!L166,4. Verbrauch!M166
+4. Verbrauch,167,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil NE Verbrenn.Trakt.an NE ges.GVk / Kohlenwasserstoff-Verbr.(gasf.) GVk,193036.38434720546,34061.28820099684,GWh/a,,4. Verbrauch!L167,4. Verbrauch!M167
+4. Verbrauch,168,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Alternativ zur Kraftstofftraktion: Brennstoffzellen (FC) -Traktion:,,(Passiv),,,4. Verbrauch!L168,4. Verbrauch!M168
+4. Verbrauch,169,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil FC-Trakt.an Endverbr.GVk,,0,% v.[161] +[173],,4. Verbrauch!L169,4. Verbrauch!M169
+4. Verbrauch,170,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil FC-Trakt.an Endverbr.GVk / Nutzungsgrad FC-Traktion (NG FC),35,35,%,1.924,4. Verbrauch!L170,4. Verbrauch!M170
+4. Verbrauch,171,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil FC-Trakt.an Endverbr.GVk / Anteil NE FC-Trakt.an Endverbr.GVk,,0,% v.[161] +[173],,4. Verbrauch!L171,4. Verbrauch!M171
+4. Verbrauch,172,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil NE FC-Trakt.an NE ges.GVk,,0,% v.[154] | [155],,4. Verbrauch!L172,4. Verbrauch!M172
+4. Verbrauch,173,I,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil NE FC-Trakt.an NE ges.GVk / Wasserstoffverbrauch GVk,,0,GWh/a,,4. Verbrauch!L173,4. Verbrauch!M173
+4. Verbrauch,174,,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniveau GVk (nach Entwicklung) / Anteil NE FC-Trakt.an NE ges.GVk / Wasserstoffverbrauch GVk,,,,,4. Verbrauch!L174,4. Verbrauch!M174
+4. Verbrauch,175,F,Mobile Anwendungen (MA) / MA Luftverkehr,,,,,4. Verbrauch!L175,4. Verbrauch!M175
+4. Verbrauch,176,F,Mobile Anwendungen (MA) / Bedarfsniveau (statisch),114519.90062392101,114519.900623921,GWh/a,,4. Verbrauch!L176,4. Verbrauch!M176
+4. Verbrauch,177,G,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Zieleinfluss Luftverk.-Leistung/Person,100,100,%,1.968,4. Verbrauch!L177,4. Verbrauch!M177
+4. Verbrauch,178,G,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniv. Luftverk. (nach Entwicklung),114519.90062392101,114519.900623921,GWh/a,,4. Verbrauch!L178,4. Verbrauch!M178
+4. Verbrauch,179,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniv. Luftverk. (nach Entwicklung) / Zieleinfluss Luftverkehrs-Effizienz,100,87,%,1.973,4. Verbrauch!L179,4. Verbrauch!M179
+4. Verbrauch,180,H,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniv. Luftverk. (nach Entwicklung) / Kraftstoffverbrauch (flüssig) Luftverkehr,114519.90062392101,99632.31354281127,GWh/a,,4. Verbrauch!L180,4. Verbrauch!M180
+4. Verbrauch,181,,Mobile Anwendungen (MA) / Bedarfsniveau (statisch) / Bedarfsniv. Luftverk. (nach Entwicklung) / Kraftstoffverbrauch (flüssig) Luftverkehr,,,,,4. Verbrauch!L181,4. Verbrauch!M181
+4. Verbrauch,182,F,Mobile Anwendungen (MA) / Endenergieverbrauch MA gesamt,753712.784407383,388748.88640887616,GWh/a,,4. Verbrauch!L182,4. Verbrauch!M182
+4. Verbrauch,183,G,Mobile Anwendungen (MA) / Endenergieverbrauch MA gesamt / davon Kraftstoffe,725561.4069447867,191199.44330611525,GWh/a,,4. Verbrauch!L183,4. Verbrauch!M183
+4. Verbrauch,184,H,Mobile Anwendungen (MA) / Endenergieverbrauch MA gesamt / davon Kraftstoffe / davon Wasserstoff (FC-Traktion),0,0,GWh/a,,4. Verbrauch!L184,4. Verbrauch!M184
+4. Verbrauch,185,H,Mobile Anwendungen (MA) / Endenergieverbrauch MA gesamt / davon Kraftstoffe / davon Kohlenwassserst.(gasförmig),611041.5063208656,91567.12976330398,GWh/a,,4. Verbrauch!L185,4. Verbrauch!M185
+4. Verbrauch,186,H,"Mobile Anwendungen (MA) / Endenergieverbrauch MA gesamt / davon Kraftstoffe / dav.Kohlenwasserst. (flüssig, für Luftverk.)",114519.90062392101,99632.31354281127,GWh/a,,4. Verbrauch!L186,4. Verbrauch!M186
+4. Verbrauch,187,G,Mobile Anwendungen (MA) / Endenergieverbrauch MA gesamt / davon Strom,28151.377462596298,197549.4431027609,GWh/a,,4. Verbrauch!L187,4. Verbrauch!M187
+4. Verbrauch,188,,Mobile Anwendungen (MA) / Endenergieverbrauch MA gesamt / davon Strom,,,,,4. Verbrauch!L188,4. Verbrauch!M188
+4. Verbrauch,189,E,Strom-Endverbrauch insgesamt,467131.23274726106,1003827.9660048089,GWh/a,,4. Verbrauch!L189,4. Verbrauch!M189
+4. Verbrauch,190,,Strom-Endverbrauch insgesamt,,,,,4. Verbrauch!L190,4. Verbrauch!M190
+4. Verbrauch,191,E,Endenergieverbrauch insgesamt,2437188.6728744195,1855292.3330287721,GWh/a,,4. Verbrauch!L191,4. Verbrauch!M191
+4. Verbrauch,192,,Endenergieverbrauch insgesamt,,,,,4. Verbrauch!L192,4. Verbrauch!M192
+4. Verbrauch,193,E,Grundstoff-Synthetisierung,,,,,4. Verbrauch!L193,4. Verbrauch!M193
+4. Verbrauch,194,F,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch),2336.626000262364,2336.626000262364,kWh/a/Pers.,1.584,4. Verbrauch!L194,4. Verbrauch!M194
+4. Verbrauch,195,H,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Zieleinfluss Kunststofferzeugung/Pers.,100,53,%,1.584,4. Verbrauch!L195,4. Verbrauch!M195
+4. Verbrauch,196,H,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an Grundstoffen,197840.5485562902,104855.4907348338,GWh/a,,4. Verbrauch!L196,4. Verbrauch!M196
+4. Verbrauch,197,H,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Anteil aus H2 synthetisierter Grundstoffe,0,73,%,1.981,4. Verbrauch!L197,4. Verbrauch!M197
+4. Verbrauch,198,H,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,0,76544.50823642868,GWh/a,,4. Verbrauch!L198,4. Verbrauch!M198
+4. Verbrauch,199,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L199,4. Verbrauch!M199
+4. Verbrauch,200,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L200,4. Verbrauch!M200
+4. Verbrauch,201,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L201,4. Verbrauch!M201
+4. Verbrauch,202,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L202,4. Verbrauch!M202
+4. Verbrauch,203,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L203,4. Verbrauch!M203
+4. Verbrauch,204,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L204,4. Verbrauch!M204
+4. Verbrauch,205,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L205,4. Verbrauch!M205
+4. Verbrauch,206,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L206,4. Verbrauch!M206
+4. Verbrauch,207,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L207,4. Verbrauch!M207
+4. Verbrauch,208,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L208,4. Verbrauch!M208
+4. Verbrauch,209,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L209,4. Verbrauch!M209
+4. Verbrauch,210,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L210,4. Verbrauch!M210
+4. Verbrauch,211,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L211,4. Verbrauch!M211
+4. Verbrauch,212,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L212,4. Verbrauch!M212
+4. Verbrauch,213,,Grundstoff-Synthetisierung / Bedarfsniveau Grundstoffe (statisch) / Bedarf an synthetischen Grundstoffen,,,,,4. Verbrauch!L213,4. Verbrauch!M213
