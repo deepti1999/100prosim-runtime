@@ -49,7 +49,7 @@ Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md
 | T25 | 4-E | auto-cascade Erneuerbare | **PASS** | skip_cascade=True bug fixed. |
 | T26 | 4-E | auto-cascade Flächen | **PASS** | V2 green. |
 | T27 | 4-E | clear visual feedback | **PASS-WITH-CAVEAT (ACCEPTED)** | Persistent panel; ephemeral toast not re-captured. |
-| T28 | 1-A | Save All Values removed | **PASS-WITH-CAVEAT** | Removed from /landuse/; analogous button still on /gebaeudewarme/. |
+| T28 | 1-A | Save All Values removed | **PASS** | Removed from /landuse/; /gebaeudewarme/ button retained per PDF §2.4.5 literal scope (Fix 2 2026-04-24). |
 | T29 | 2-A | page headings German | **PASS** | 13 pages all German. |
 | T30 | 2-A | column labels German | **PASS** | All parameter pages. |
 | T31 | 2-A | button labels German | **PASS-WITH-CAVEAT (ACCEPTED)** | "Balance Solar/Wind" intentionally English (PDF-body convention). |

@@ -1,8 +1,7 @@
-"""T33 German-UI residue regression — assert every known English residue on
-user-visible pages has been replaced with German per the fix-bundle
-2026-04-24 (Fix 1).
+"""T33 German-UI residue regression + T28 "Save All Values" scope regression
+— tests landed in the fix-bundle 2026-04-24 (Fix 1 + Fix 2).
 
-Covers:
+Fix 1 (T33) covers:
   - Cockpit: "Ziel (2050)" → "Ziel (2045)" (year + language fix)
   - LandUse: empty-state "No changes yet" → "Noch keine Änderungen"
   - Renewable: empty-state "No changes yet. When you modify …" → German
@@ -10,9 +9,11 @@ Covers:
   - Register / logout flashes → German
   - Invalid-credentials error → German
 
-Each test navigates to the relevant page or triggers the relevant flash
-and asserts the German string is present while the old English one is
-NOT. Prevents a regression that re-introduces English text.
+Fix 2 (T28) covers:
+  - /landuse/ must NOT carry a "Save All Values" / "Alle Werte speichern"
+    button — removed per PDF §2.4.5 (literal Flächen-only scope).
+  - /gebaeudewarme/ keeps its "Alle Werte speichern" button — PDF §2.4.5
+    does NOT extend to this page; retention is the intentional decision.
 """
 
 from django.contrib.auth import get_user_model
@@ -109,3 +110,49 @@ class GermanUIResiduesTests(TestCase):
                         msg=f"Expected German logout flash, got: {texts}")
         self.assertFalse(any("You have been successfully logged out" in t for t in texts),
                          msg=f"English 'You have been successfully logged out' should not appear: {texts}")
+
+
+class T28SaveAllScopeTests(TestCase):
+    """Asserts PDF §2.4.5's literal scope: remove `Save All Values` from
+    /landuse/ (Flächen), retain the analogous button on /gebaeudewarme/
+    per the Fix 2 scope-alignment decision 2026-04-24.
+    """
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = get_user_model().objects.create_user(
+            username="t28_user",
+            password="test-pass-123",
+        )
+
+    def _login(self):
+        self.client.login(username="t28_user", password="test-pass-123")
+
+    def test_landuse_has_no_save_all_button(self):
+        """PDF §2.4.5: Flächen's 'Save All Values' button was removed.
+        Assert the button element is absent; explanatory JS comments
+        that still reference the old button name (for maintainers)
+        are fine.
+        """
+        self._login()
+        response = self.client.get(reverse("simulator:landuse_list"))
+        self.assertEqual(response.status_code, 200)
+        body = response.content.decode("utf-8")
+        self.assertNotIn('id="saveAllBtn"', body)
+        # The old German label "Alle Werte speichern" must not be present
+        # as rendered button text on /landuse/ either.
+        self.assertNotIn("Alle Werte speichern", body)
+
+    def test_gebaeudewaerme_retains_alle_werte_speichern(self):
+        """PDF §2.4.5 is literally scoped to 'Flächen' only. The
+        Gebäudewärme page carries a separate 'Alle Werte speichern'
+        button; per Fix 2 scope-alignment, it is INTENTIONALLY retained.
+        If this test starts to fail, it means someone removed the
+        button without PDF authority — reinstate it or escalate.
+        """
+        self._login()
+        response = self.client.get(reverse("simulator:gebaeudewaerme"))
+        self.assertEqual(response.status_code, 200)
+        body = response.content.decode("utf-8")
+        self.assertIn("Alle Werte speichern", body)
+        self.assertIn('id="saveAllBtn"', body)

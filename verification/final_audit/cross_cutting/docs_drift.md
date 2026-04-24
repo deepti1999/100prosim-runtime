@@ -41,7 +41,7 @@ Up-to-date as of 2026-04-23. This audit confirms the ✅ marks are accurate per 
 
 2. **CLAUDE.md "50/63 shipped" headline stale:** ✅ **RESOLVED** — CLAUDE.md §"Stakeholder implementation plan" updated 2026-04-24 to read **57/63 shipped as of 2026-04-23; post-audit 42 PASS / 15 PASS-WITH-CAVEAT / 0 FAIL**, pointing at `verification/final_audit/index.md` for the breakdown.
 
-3. **CLAUDE.md does NOT mention /gebaeudewarme/ Save All Values:** ✅ **RESOLVED via Fix 2** — the 2026-04-24 fix-bundle's T28 scope alignment (see `targets/T28_save_all_values_removed/08_verdict.md` updated verdict) re-reads PDF §2.4.5 and either removes the analogous button or documents the retention decision; either way the drift is closed in the companion commit.
+3. **CLAUDE.md does NOT mention /gebaeudewarme/ Save All Values:** ✅ **RESOLVED via Fix 2 — retained per PDF scope.** PDF §2.4.5 literally names the Flächen page and notes the button does not exist on Erneuerbare/Verbrauch. No PDF mention of Gebäudewärme; the analogous `/gebaeudewarme/` button is a separate UX element. Retention is the intentional decision, locked by V2 test `T28SaveAllScopeTests::test_gebaeudewaerme_retains_alle_werte_speichern`. T28 verdict upgraded CAVEAT → PASS.
 
 4. **Cockpit charts blank not in docs:** ✅ **RESOLVED** — Bug #111 fixed in commit `f86aae9` (data-attribute payload pattern with `|unlocalize` filter). T43-T47 restored CAVEAT → PASS after V4 + V5 Heroku Playwright confirmation. No longer a known-issue needing CLAUDE.md mention; charts render correctly.
 
