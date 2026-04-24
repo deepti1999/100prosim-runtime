@@ -1,0 +1,9 @@
+Attribute VB_Name = "Userform1"
+Attribute VB_Base = "0{32C7ACC8-E277-431A-AC44-E148EF412C3D}{7FAE4049-06AE-4108-AA93-6052F99AAB86}"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Attribute VB_TemplateDerived = False
+Attribute VB_Customizable = False
+

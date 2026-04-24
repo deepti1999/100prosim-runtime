@@ -1,0 +1,66 @@
+Attribute VB_Name = "Step2"
+Option Explicit
+
+Public Sub Step2_OneIteration_SolarShock()
+
+    Dim wb As Workbook, ws As Worksheet, c As Range
+    Dim beforeVals As Object
+    Dim addr As String
+    Dim sModCell As Range
+    Dim originalValue As Double
+
+    Set beforeVals = CreateObject("Scripting.Dictionary")
+
+    Debug.Print "===== STEP 2: ONE ITERATION (s_Mod shock) ====="
+
+    ' --- 1) Snapshot BEFORE (ONLY _S.xlsx) ---
+    Set wb = Workbooks("_S.xlsx")
+
+    For Each ws In wb.Worksheets
+        For Each c In ws.UsedRange
+            If c.HasFormula Then
+                addr = ws.Name & "!" & c.Address(False, False)
+                beforeVals(addr) = c.Value
+            End If
+        Next c
+    Next ws
+
+    Debug.Print "Snapshot BEFORE taken for _S.xlsx"
+
+    ' --- 2) Perturb s_Mod ---
+    Set sModCell = wb.Names("s_Mod").RefersToRange
+    originalValue = sModCell.Value
+
+    sModCell.Value = originalValue * 1.01   ' +1% shock
+    Application.Calculate
+
+    Debug.Print "Applied +1% shock to s_Mod"
+
+    ' --- 3) Compare AFTER ---
+    Debug.Print "---- CHANGED CELLS (_S.xlsx only) ----"
+
+    For Each ws In wb.Worksheets
+        For Each c In ws.UsedRange
+            If c.HasFormula Then
+                addr = ws.Name & "!" & c.Address(False, False)
+                If beforeVals.Exists(addr) Then
+                    If c.Value <> beforeVals(addr) Then
+                        Debug.Print "[" & ws.Name & "] " & c.Address(False, False) _
+                                    & " : " & beforeVals(addr) & " -> " & c.Value
+                    End If
+                End If
+            End If
+        Next c
+    Next ws
+
+    Debug.Print "---- END STEP 2 ----"
+
+    ' --- 4) Restore original value ---
+    sModCell.Value = originalValue
+    Application.Calculate
+
+    Debug.Print "s_Mod restored."
+
+End Sub
+
+

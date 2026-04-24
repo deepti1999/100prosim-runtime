@@ -1,0 +1,64 @@
+Attribute VB_Name = "Step0"
+Option Explicit
+
+' Stores values before GoalSeek
+Dim beforeVals As Object
+
+' ============================
+' Take snapshot BEFORE balance
+' ============================
+Public Sub SnapshotBefore()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim c As Range
+
+    ' CHANGE THIS if the workbook name differs
+    Set wb = Workbooks("_S.xlsx")
+    Set ws = wb.Worksheets("2. Erneuerbare")
+
+    Set beforeVals = CreateObject("Scripting.Dictionary")
+
+    For Each c In ws.UsedRange
+        If c.HasFormula Then
+            beforeVals(c.Address(External:=True)) = c.Value
+        End If
+    Next c
+
+    Debug.Print "Snapshot BEFORE taken."
+
+End Sub
+
+
+' ============================
+' Compare AFTER balance
+' ============================
+Public Sub SnapshotAfter()
+
+    Dim wb As Workbook
+    Dim ws As Worksheet
+    Dim c As Range
+    Dim addr As String
+    Dim oldVal As Variant
+
+    ' CHANGE THIS if the workbook name differs
+    Set wb = Workbooks("_S.xlsx")
+    Set ws = wb.Worksheets("2. Erneuerbare")
+
+    Debug.Print "=== CHANGED CELLS ==="
+
+    For Each c In ws.UsedRange
+        If c.HasFormula Then
+            addr = c.Address(External:=True)
+            If beforeVals.Exists(addr) Then
+                oldVal = beforeVals(addr)
+                If c.Value <> oldVal Then
+                    Debug.Print addr & " : " & oldVal & " -> " & c.Value
+                End If
+            End If
+        End If
+    Next c
+
+    Debug.Print "=== END ==="
+
+End Sub

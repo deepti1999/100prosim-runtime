@@ -1,0 +1,43 @@
+Attribute VB_Name = "s_mod_m237"
+Public Sub Verify_sMod_affects_M237()
+
+    Dim wb As Workbook
+    Dim wsFlaechen As Worksheet
+    Dim wsErneu As Worksheet
+
+    Dim sMod As Range
+    Dim m237 As Range
+
+    Dim old_sMod As Double
+    Dim old_m237 As Double
+
+    Set wb = Workbooks("_S.xlsx")
+    Set wsFlaechen = wb.Worksheets("1. Flächen")
+    Set wsErneu = wb.Worksheets("2. Erneuerbare")
+
+    Set sMod = wsFlaechen.Range("R13")   ' s_Mod
+    Set m237 = wsErneu.Range("M237")
+
+    old_sMod = sMod.Value
+    old_m237 = m237.Value
+
+    Debug.Print "BEFORE"
+    Debug.Print "s_Mod =", old_sMod
+    Debug.Print "M237  =", old_m237
+
+    ' tiny shock
+    sMod.Value = old_sMod * 1.01
+    Application.Calculate
+
+    Debug.Print "AFTER"
+    Debug.Print "s_Mod =", sMod.Value
+    Debug.Print "M237  =", m237.Value
+
+    ' restore
+    sMod.Value = old_sMod
+    Application.Calculate
+
+    Debug.Print "RESTORED"
+
+End Sub
+

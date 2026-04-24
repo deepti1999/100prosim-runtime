@@ -1,0 +1,34 @@
+Attribute VB_Name = "Trace_Run"
+Option Explicit
+
+Public Sub Run_Full_Calc_Trace()
+
+    Dim wb As Workbook
+    Set wb = Workbooks("_S.xlsx")
+
+    ' Init log
+    InitLog
+
+    ' Log inputs
+    LogLine "_SYSTEM", "_SYSTEM", "s_Mod", "", _
+            wb.Names("s_Mod").RefersToRange.Value, "", "INPUT"
+
+    LogLine "_SYSTEM", "_SYSTEM", "s_Ziel", "", _
+            wb.Names("s_Ziel").RefersToRange.Value, "", "TARGET"
+
+    ' Snapshot BEFORE
+    SnapshotBefore_All
+
+    ' === BLACK BOX SOLVER ===
+    SolarFreiflaeche
+
+    ' Snapshot AFTER
+    SnapshotAfter_All
+
+    MsgBox "Trace completed." & vbCrLf & _
+           "Mode = " & TRACE_MODE & vbCrLf & _
+           "Log saved to:" & vbCrLf & LogFilePath
+
+End Sub
+
+

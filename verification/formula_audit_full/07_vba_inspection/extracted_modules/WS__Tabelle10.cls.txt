@@ -1,0 +1,27 @@
+Attribute VB_Name = "Tabelle10"
+Attribute VB_Base = "0{00020820-0000-0000-C000-000000000046}"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
+Attribute VB_TemplateDerived = False
+Attribute VB_Customizable = True
+Attribute VB_Control = "CommandButton1, 280, 0, MSForms, CommandButton"
+Private Sub CommandButton1_Click()
+' Zielwertsuche Makro
+' Makro am 29.4.2014 von Hans-Heinrich Schmidt-Kanefendt erstellt
+'
+'
+    Call JahresbilanzStromAbgleich
+End Sub
+
+
+' Dim Datum1
+' Dim Zeit1
+     ' Range("SpeicherBilanz").Select
+    ' Range("Speicherbilanz").GoalSeek Goal:=0, ChangingCell:=Range("VerbrauchStrom")
+    ' Datum1 = Date    ' Datum1 enthält das aktuelle Systemdatum.
+    ' Range("AL1").Value = Datum1
+    ' Zeit1 = Time      ' Aktuelle Systemzeit zurückgeben.
+    ' Range("AM1").Value = Zeit1
+' End Sub
