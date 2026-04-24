@@ -1,0 +1,22 @@
+column_name,stage,order,expression,description
+stromverbrauch,daily,10,annual_demand * verbrauch_promille / 1000,Daily electricity demand from annual demand and verbrauch promille.
+davon_raumw_korr,daily,20,raumw_korr_annual * heizung_abwaerm_promille / 365,Daily heating correction share.
+stromverbr_raumw_korr,daily,30,stromverbrauch + davon_raumw_korr,Corrected daily electricity demand.
+solar_strom,daily,40,ziel_912 * pct * solar_promille / 1000,Daily solar generation.
+wind_strom,daily,50,ziel_911 * pct * wind_promille / 1000,Daily wind generation.
+sonst_kraftw,daily,60,sonst_kraftw_daily,Constant daily other generation.
+wind_solar_konstant,daily,70,solar_strom + wind_strom + sonst_kraftw,Total generation (wind + solar + constant).
+direktverbr_strom,daily,80,"MIN(wind_solar_konstant, stromverbr_raumw_korr)",Directly used electricity.
+ueberschuss_strom,daily,90,"IF(direktverbr_strom == stromverbr_raumw_korr, wind_solar_konstant - stromverbr_raumw_korr, 0)",Surplus electricity.
+einspeich,daily,100,"IF(stromverbr_raumw_korr > 0, IF((ueberschuss_strom / stromverbr_raumw_korr) <= 1, ueberschuss_strom * ETA_STROM_GAS, stromverbr_raumw_korr * ETA_STROM_GAS), 0)",Stored energy flow.
+abregelung,daily,110,"IF(stromverbr_raumw_korr > 0, IF((ueberschuss_strom / stromverbr_raumw_korr) <= 1, 0, ueberschuss_strom - einspeich / ETA_STROM_GAS), 0)",Curtailment due to surplus above storage threshold.
+mangel_last,daily,120,stromverbr_raumw_korr - direktverbr_strom,Demand gap after direct consumption.
+brennstoff_ausgleich,daily,130,brennstoff_factor * mangel_last,Fuel compensation using annual scaling factor.
+speicher_ausgl_strom,daily,140,mangel_last - brennstoff_ausgleich,Storage compensation electricity.
+ausspeich_rueckverstr,daily,150,speicher_ausgl_strom / ETA_GAS_STROM,Discharge back-conversion.
+ausspeich_gas,daily,160,0,Gas discharge (currently fixed to 0).
+ladezust_brutto,daily,170,"PREV(""ladezust_brutto"") + einspeich - ausspeich_rueckverstr - ausspeich_gas",Gross storage level (recursive by day).
+selbstentl,daily,180,0,Self-discharge (currently fixed to 0).
+ladezust_netto,daily,190,"PREV(""ladezust_netto"") + einspeich - ausspeich_rueckverstr - ausspeich_gas - selbstentl",Net storage level (recursive by day).
+ladezust_abs_vorl_tl,post,210,"ladezust_brutto - COL_MIN(""ladezust_brutto"")",Absolute storage level before TL shift.
+ladezust_absolute,post,220,"ladezust_netto - COL_MIN(""ladezust_netto"")",Absolute net storage level.
