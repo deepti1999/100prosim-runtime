@@ -20,6 +20,8 @@
 
 New tally: **42 PASS / 15 CAVEAT / 0 FAIL.**
 
+**Update 2026-04-24 fix-bundle Task 2 (this run):** 11 caveats reviewed + accepted as non-breaking per `docs/stakeholder/CAVEATS_ACCEPTED.md` — 7 target verdicts (T10, T13, T18, T23, T27, T31, T62) + 4 cross-cutting (cross_process_cache, provenance_audit, heroku_cold_boot, security_sweep). Annotated "PASS-WITH-CAVEAT (ACCEPTED)" in the tables below. Remaining open caveats: T28, T33 (→ Fix 1, Fix 2), T54 (→ Fix 4 investigation).
+
 Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md`.
 
 ## Per-target verdicts (in T-ID order)
@@ -29,28 +31,28 @@ Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md
 | T6 | 0-C | bench script | **PASS** | Real measurement landed in `d7822c3`; A/C/D scenarios timed. |
 | T8 | A | source URL UI | **PASS** | Info-icon popover, V2 11/11. |
 | T9 | A | assumption UI | **PASS** | Same info-icon, V2 13/13. |
-| T10 | A | admin update no code | **PASS-WITH-CAVEAT** | CLI only, GUI deferred. |
+| T10 | A | admin update no code | **PASS-WITH-CAVEAT (ACCEPTED)** | CLI only, GUI deferred. |
 | T11 | B+C | region switcher | **PASS** | DE dropdown + Phase C TEST end-to-end. |
 | T12 | B+C | external Excel | **PASS** | --region flag, V2 6/6 + 4/4. |
-| T13 | B+C | non-dev admin edit | **PASS-WITH-CAVEAT** | 3-step CLI shell, GUI deferred. |
+| T13 | B+C | non-dev admin edit | **PASS-WITH-CAVEAT (ACCEPTED)** | 3-step CLI shell, GUI deferred. |
 | T14 | 4-A | clear restores base | **PASS** | data-base-value attrs, V2 green. |
 | T15 | 4-A | T14 across 3 surfaces | **PASS** | LandUse + Renewable + Verbrauch. |
 | T16 | 4-B | Create baseline removed | **PASS** | Staff-only gate, V2 green. |
 | T17 | 4-B | Reset loads admin baseline | **PASS** | V2 + V5 prior. |
-| T18 | 4-B | shared baseline | **PASS-WITH-CAVEAT** | V2 green; two-user roundtrip from prior session. |
+| T18 | 4-B | shared baseline | **PASS-WITH-CAVEAT (ACCEPTED)** | V2 green; two-user roundtrip from prior session. |
 | T19 | 1-B | Goal Seek removed | **PASS** | Visual-confirmed both envs. |
 | T20 | 1-B | Aktualisieren removed | **PASS** | Visual-confirmed both envs. |
 | T21 | 4-C | Balance Solar consolidation | **PASS** | 2 buttons visible. |
 | T22 | 4-C | Balance Wind consolidation | **PASS** | Same. |
-| T23 | 4-D | busy indicator + buttons functional | **PASS-WITH-CAVEAT** | DOM present + V2 green; live banner streaming from prior. |
+| T23 | 4-D | busy indicator + buttons functional | **PASS-WITH-CAVEAT (ACCEPTED)** | DOM present + V2 green; live banner streaming from prior. |
 | T24 | 4-E | auto-cascade Verbrauch | **PASS** | V2 green + console msg confirmed. |
 | T25 | 4-E | auto-cascade Erneuerbare | **PASS** | skip_cascade=True bug fixed. |
 | T26 | 4-E | auto-cascade Flächen | **PASS** | V2 green. |
-| T27 | 4-E | clear visual feedback | **PASS-WITH-CAVEAT** | Persistent panel; ephemeral toast not re-captured. |
+| T27 | 4-E | clear visual feedback | **PASS-WITH-CAVEAT (ACCEPTED)** | Persistent panel; ephemeral toast not re-captured. |
 | T28 | 1-A | Save All Values removed | **PASS-WITH-CAVEAT** | Removed from /landuse/; analogous button still on /gebaeudewarme/. |
 | T29 | 2-A | page headings German | **PASS** | 13 pages all German. |
 | T30 | 2-A | column labels German | **PASS** | All parameter pages. |
-| T31 | 2-A | button labels German | **PASS-WITH-CAVEAT** | "Balance Solar/Wind" intentionally English (PDF-body convention). |
+| T31 | 2-A | button labels German | **PASS-WITH-CAVEAT (ACCEPTED)** | "Balance Solar/Wind" intentionally English (PDF-body convention). |
 | T32 | 2-B | manual German | **PASS** | 11 German steps. |
 | T33 | 2-A/B | native German | **PASS-WITH-CAVEAT** | 2-3 small English residues (Renewable empty-state, login flash, Cockpit "Ziel (2050)"). |
 | T34 | 2-C | display number format | **PASS** | German format on every page on both envs. |
@@ -81,7 +83,7 @@ Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md
 | T59 | 5-B | Mangelausgleich | **PASS** | Third stacked series. |
 | T60 | 5-B | unit toggle | **PASS** | GWh/Tagesladung toggle. |
 | T61 | 6-A | history persists | **PASS** | V2 green + Letzte Änderungen panel. |
-| T62 | 6-A | history snapshots-as-columns | **PASS-WITH-CAVEAT** | Empty-state visible; populated layout from prior. |
+| T62 | 6-A | history snapshots-as-columns | **PASS-WITH-CAVEAT (ACCEPTED)** | Empty-state visible; populated layout from prior. |
 | T63 | 6-A | history inspectable | **PASS** | Hint banner explicit. |
 
 ## Cross-cutting
@@ -94,11 +96,11 @@ Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md
 | regression_C.md | ⚠️ CANNOT-VERIFY (golden stale, needs Pascal-approved re-capture) |
 | regression_D.md | ⚠️ CANNOT-VERIFY (same) |
 | e2e_ui_full.md | ⚠️ CANNOT-VERIFY (env-gated) |
-| cross_process_cache.md | ✅ PASS-WITH-CAVEAT — structural invariant preserved |
+| cross_process_cache.md | ✅ PASS-WITH-CAVEAT (ACCEPTED) — structural invariant preserved |
 | region_round_trip.md | ✅ PASS — Phase C verified end-to-end |
-| provenance_audit.md | ✅ PASS-WITH-CAVEAT — V2 spot checks; 10-row sweep skipped |
-| heroku_cold_boot.md | ✅ PASS-WITH-CAVEAT — timings observed, no gating threshold |
-| security_sweep.md | ✅ PASS-WITH-CAVEAT — auth/CSRF/owner-scope wired; not pen-tested |
+| provenance_audit.md | ✅ PASS-WITH-CAVEAT (ACCEPTED) — V2 spot checks; 10-row sweep skipped |
+| heroku_cold_boot.md | ✅ PASS-WITH-CAVEAT (ACCEPTED) — timings observed, no gating threshold |
+| security_sweep.md | ✅ PASS-WITH-CAVEAT (ACCEPTED) — auth/CSRF/owner-scope wired; not pen-tested |
 | docs_drift.md | ✅ PASS — 4 drift items resolved 2026-04-24 |
 
 ## Heroku spin-up state

@@ -22,3 +22,7 @@
 2. **CSV** is universal — kept literal.
 
 **Verdict:** PASS-WITH-CAVEAT — all user-facing button labels are German per the glossary, with documented exceptions for domain-standard untranslatable terms.
+
+## Caveat accepted 2026-04-24
+
+Caveat retained — not scheduled for fix. "Balance Solar" / "Balance Wind" / "CSV" are intentional per `TRANSLATION_GLOSSARY.md` Phase 2 (PDF §2.4.3 itself uses "Balance" untranslated in German body text). Indexed in `docs/stakeholder/CAVEATS_ACCEPTED.md`.

@@ -45,3 +45,7 @@ Settings.py sets `ssl_cert_reqs=ssl.CERT_NONE` for Heroku Redis (self-signed cer
 ## Verdict
 
 **PASS-WITH-CAVEAT** — auth + owner-scope + CSRF all wired correctly per code inspection + V2 tests. Active pen-testing is out of audit scope. No identified vulnerabilities; no live attack surface tested.
+
+## Caveat accepted 2026-04-24
+
+Caveat retained — not scheduled for fix. Django auto-hardening + V2 coverage (`test_bb_admin_baseline::test_non_staff_cannot_create`, `test_wb_workspace_region` 11/11, `test_wb_balance_region_routing` 4/4) sufficient for this audit; pen-testing explicitly out of charter. No identified vulnerabilities. Indexed in `docs/stakeholder/CAVEATS_ACCEPTED.md`.

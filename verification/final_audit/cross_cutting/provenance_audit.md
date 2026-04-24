@@ -35,3 +35,7 @@ So 1-row spot checks for both source_url and assumption_text exist in V2; this a
 ## Verdict
 
 **PASS-WITH-CAVEAT** — V2 spot-checks confirm the import path is wired correctly. Diversity-of-rows verification skipped in this audit. Open follow-up: run a Playwright sweep clicking 10 random "i" icons + comparing payload text against `d_xlsx.manifest.json`. ~10 min effort.
+
+## Caveat accepted 2026-04-24
+
+Caveat retained — not scheduled for fix. V2 `test_wb_excel_provenance_import` 13/13 ✅ covers idempotent + assumption + URL + orphan_csv + origin; 10-row diversity sweep is nice-to-have polish, not load-bearing. Indexed in `docs/stakeholder/CAVEATS_ACCEPTED.md`.

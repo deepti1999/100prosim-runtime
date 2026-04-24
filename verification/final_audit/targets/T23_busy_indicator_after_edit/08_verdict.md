@@ -5,3 +5,7 @@ Commit `eb5a6ae` adds persistent `#balanceProgressBanner` DOM element with `aria
 **Live banner streaming was verified previously** on Heroku `prosim-100-687a5505e19f` per `VERIFICATION_STATUS.md` §2 — banner text updated every 2 s ("Status: queued · Job 143f15a1 · 2s … 85s"), `aria-live` preserved, `<strong>` text "Balance läuft …".
 
 **Caveat for this audit:** I did not re-execute the banner streaming live today (would have dirtied testsim and required ~90 s of polling). Banner DOM is present in /ws/ HTML structure (verified via console / DOM inspection in prior phase). Cross-process cache fix (`54d4567`) holds.
+
+## Caveat accepted 2026-04-24
+
+Caveat retained — not scheduled for fix. DOM + prior V5 banner streaming verification sufficient; fresh ~90 s polling re-capture not scheduled. Indexed in `docs/stakeholder/CAVEATS_ACCEPTED.md`.

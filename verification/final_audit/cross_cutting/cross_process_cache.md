@@ -23,3 +23,7 @@ NOT a fresh test — instead, an audit-trail check:
 ## Recommended next action
 
 When the next major change touches signal handlers or cache code, add a deliberate two-process integration test (e.g. `test_it_cross_process_cache.py`) that: (a) writes via web on Heroku, (b) triggers a BalanceJob, (c) reads post-job state, (d) asserts the worker saw the web's write. Today this is implicit in the V5 verification rituals, not explicit.
+
+## Caveat accepted 2026-04-24
+
+Caveat retained — not scheduled for fix. Invariant verified by code inspection + Phase C synthetic TEST region end-to-end (implicit multi-process proof) + `test_wb_balance_region_routing` ✅; dedicated `test_it_cross_process_cache.py` is a next-major-change follow-up, not a blocker. Indexed in `docs/stakeholder/CAVEATS_ACCEPTED.md`.

@@ -5,3 +5,7 @@ The "Letzte Änderungen" panel at the bottom of /landuse/ (visible in `localhost
 **Toast/banner ephemeral signal:** the per-save inline confirmation may be a momentary green tick or "Gespeichert" toast — not visible in static screenshots taken some time after navigation. The `autoSaveValue` JS debounce + the persistent "Letzte Änderungen" panel together provide the feedback the PDF asked for.
 
 **Caveat:** I did not perform a live edit during this audit to capture the ephemeral toast; the persistent panel is visible. PASS based on persistent feedback + prior verification.
+
+## Caveat accepted 2026-04-24
+
+Caveat retained — not scheduled for fix. Persistent "Letzte Änderungen" panel IS the durable feedback; ephemeral toast is a bonus layer, not load-bearing. Indexed in `docs/stakeholder/CAVEATS_ACCEPTED.md`.

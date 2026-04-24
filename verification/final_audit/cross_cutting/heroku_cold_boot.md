@@ -37,3 +37,7 @@ The PDF §2.2 acid test (onshore 2.0→2.3 %, offshore 70→60 GW, measure Balan
 ## Verdict
 
 **PASS-WITH-CAVEAT** — timings observed and documented; no gating threshold (per PDF "praxistauglich" wording). Verbrauch + Bilanz are the slowest user-facing reads (~5s). Cold-boot dyno spin adds ~5-8s to first-hit. Improvements would target: Verbrauch per-row N+1 query (per `docs/PYPSA_MIGRATION_RESEARCH.md` §23.2), Bilanz daily-series compaction, possibly Cockpit chart-data endpoint optimization.
+
+## Caveat accepted 2026-04-24
+
+Caveat retained — not scheduled for fix. PDF §2.2 uses *"praxistauglich"* with no numeric target; single-sample timings logged for baseline. Architectural follow-ups documented in PYPSA_MIGRATION_RESEARCH §23.2 but not gated on cold-boot audit. Indexed in `docs/stakeholder/CAVEATS_ACCEPTED.md`.
