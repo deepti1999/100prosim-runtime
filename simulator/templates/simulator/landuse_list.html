@@ -2315,13 +2315,13 @@
             case 'loaded':
                 indicator.style.backgroundColor = '#17a2b8';
                 indicator.style.color = 'white';
-                indicator.innerHTML = `<i class="fas fa-database me-1"></i>${count} changes loaded`;
+                indicator.innerHTML = `<i class="fas fa-database me-1"></i>${count} Änderungen geladen`;
                 setTimeout(() => indicator.style.opacity = '0.5', 2000);
                 break;
             case 'empty':
                 indicator.style.backgroundColor = '#6c757d';
                 indicator.style.color = 'white';
-                indicator.innerHTML = `<i class="fas fa-inbox me-1"></i>No saved changes`;
+                indicator.innerHTML = `<i class="fas fa-inbox me-1"></i>Keine gespeicherten Änderungen`;
                 indicator.style.opacity = '0.5';
                 break;
             case 'error':
