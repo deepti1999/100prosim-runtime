@@ -61,7 +61,7 @@
           "after": 1109135.48
         },
         "speicherdrift_gwh": {
-          "after": 0.032
+          "after": 0.0077
         }
       }
     },
@@ -81,7 +81,7 @@
           "after": 1108742.15
         },
         "speicherdrift_gwh": {
-          "after": 0.0908
+          "after": 0.0654
         }
       }
     }

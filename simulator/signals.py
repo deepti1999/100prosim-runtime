@@ -172,7 +172,13 @@ def compute_ws_diagram_reference(use_ws_overrides: bool = True):
     flow_final_tages = final_stromnetz * tl_factor  # = 365 by definition
     flow_ely_branch_tages = ely_branch_value * tl_factor
     flow_n_output_branch_tages = n_output_branch * tl_factor
-    flow_gasspeicher_direkt_tages = (ely_branch_value * ws_consts["ETA_STROM_GAS"]) * tl_factor
+    # Gasspeicher-Direktverbrauch Tages matches Excel's L37 = L36 * TLproEingabeEinheit,
+    # where L36 is the actual gas-tank throughput (solver-simulated einspeich_sum
+    # post-efficiency = our gas_storage). The prior basis (ely_branch_value scenario
+    # target × ETA_STROM_GAS) under-shot by the scenario-target-vs-solver-actual drift
+    # (produced 83 instead of 87 on DE seed). Aligned 2026-04-24 per Pascal approval;
+    # Excel L37 formula confirmed authoritative in SOURCE_GROUNDED_ANSWERS.md Q4.
+    flow_gasspeicher_direkt_tages = gas_storage * tl_factor
     flow_gas_storage_tages = gas_storage * tl_factor
     flow_t_value_tages = t_value * tl_factor
     flow_reconversion_tages = t_output * tl_factor

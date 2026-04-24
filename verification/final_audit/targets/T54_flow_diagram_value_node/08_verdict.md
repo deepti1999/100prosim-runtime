@@ -1,4 +1,28 @@
-# T54 — Verdict: **PASS-WITH-CAVEAT**
+# T54 — Verdict: **PASS**
+
+*(upgraded 2026-04-24 CAVEAT → PASS — Gasspeicher math fix shipped per
+SOURCE_GROUNDED_ANSWERS.md Q4 + Pascal approval.)*
+
+## Closure 2026-04-24
+
+Math fix shipped: `simulator/signals.py:175` changed from
+`(ely_branch_value × ETA_STROM_GAS) × tl_factor` to
+`gas_storage × tl_factor`, aligning with Excel's `L37 = L36 ×
+TLproEingabeEinheit` formula authority. All three Gasspeicher diagram
+positions now read 87 (previously 83/87/87 inconsistent).
+
+- V2 — `simulator/test_wb_signals.py::T54GasspeicherTagesInvariantTests`
+  locks the formula at source level + asserts prior buggy basis won't
+  reappear.
+- V4 — localhost screenshot `verification/final_audit/t54_fix/
+  localhost_annual_electricity_87_87_87.png` shows 87/87/87.
+- V5 — Heroku screenshot under same dir (spin-up cycle).
+- V6 — this section + `HARDCODED_VALUES_TRACE.md` §6 correction
+  ("H37 hardcoded" claim replaced with actual L37 formula documentation).
+- Goldens C + D re-captured in the same commit (math change moves them
+  deliberately; Pascal approved).
+
+---
 
 All 6 D-items shipped (D1-D3+D4c via Track 1 `7c02458`, D4a/D4b via Phase B `897e212`). Visible in `screenshots/{localhost,heroku}/08_annual_electricity.png`:
 - D1 Tagesladungen under each source (italic blue: 397, 186, 5, 1)

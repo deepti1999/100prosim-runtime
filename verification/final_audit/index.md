@@ -86,7 +86,7 @@ Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md
 | T51 | 6-B | chart Primärenergie | **PASS** | Visible. |
 | T52 | 6-B | chart Ausbau Erneuerbare | **PASS** | Visible. |
 | T53 | 5-C | flow diagram audit | **PASS** | FLOW_DIAGRAM_AUDIT.md complete. |
-| T54 | 5-C | flow diagram value→node | **PASS-WITH-CAVEAT** | All 6 D-items visible; Gasspeicher 83 vs Excel 87 investigated (`gasspeicher_83_vs_87.md`) — Excel authoritative, math fix filed, Pascal decides. |
+| T54 | 5-C | flow diagram value→node | **PASS** | All 6 D-items visible; Gasspeicher math aligned with Excel L37 2026-04-24 (signals.py:175 `gas_storage × tl_factor`). All three positions now 87. |
 | T55 | 5-C | font + zoom | **PASS** | 75-200% zoom controls. |
 | T56 | 5-C | flow Excel structure | **PASS** | 22-pass iteration matches. |
 | T57 | 5-B | Min/Max/Kapazität badge | **PASS** | "242.831,1 GWh" badge. |

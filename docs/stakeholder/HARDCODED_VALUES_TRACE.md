@@ -358,15 +358,29 @@ Pass 10's SVG rewrite had accidentally dropped the
 test was therefore failing at baseline (5/6 green, not 6/6).
 Restored the Django interpolation; tests now 6/6 green.
 
-### Known discrepancy, documented
-The Tages for "Gasspeicher Direktverbr" (250.857 GWh) computes
-to **83** per the formula `val × TLproEingabeEinheit`, but the
-Excel diagram shows **87**. Inspection of Excel cell `H37`
-revealed it contains no formula at all — the "87" there is a
-visual copy, not a computed value. Our 83 is the mathematically
-correct output. This is an Excel-diagram-internal inconsistency;
-our backend corrects it. Kept 83 in code; future Track 2 scoping
-can choose to match Excel's "87" visually if Pascal prefers.
+### Gasspeicher-Direktverbrauch Tages — closed 2026-04-24 (was "83 vs 87")
+**Prior note (incorrect; corrected below):** ~~"Excel cell H37 contains no
+formula — the '87' there is a visual copy."~~ This was wrong on two
+counts:
+
+1. **There is no H37** involved. The Excel cells that render "87" on the
+   Gasspeicher diagram positions are `1.Jahresbilanz_Strom!L37` and
+   `1.Jahresbilanz_Strom!Q37`.
+2. **Both cells ARE formulas**, not hardcoded literals:
+   - `L37 = L36 × TLproEingabeEinheit` → 86.94 → rounds to "87"
+   - `Q37 = Q36 × TLproEingabeEinheit` → 86.89 → rounds to "87"
+   - where `L36 = L28 × N33` = `n_output_branch × ETA_STROM_GAS` (= our `gas_storage`),
+     and `TLproEingabeEinheit = 365 / VerbrauchStrom` = our `tl_factor`.
+
+**Resolution:** `simulator/signals.py` line 175 aligned to Excel's L37
+formula basis. `flow_gasspeicher_direkt_tages = gas_storage * tl_factor`
+(previously used the scenario-target `ely_branch_value × ETA_STROM_GAS`
+basis which under-shot by the scenario-target-vs-solver-actual drift →
+produced 83). All three Gasspeicher diagram positions (Ely-P2G →
+Direktverbr, Ely-ES → Gasspeicher, Gasspeicher → Rückverstromung) now
+read 87, matching Excel. Full investigation record in
+`verification/final_audit/gasspeicher_83_vs_87.md` and
+`verification/final_audit/SOURCE_GROUNDED_ANSWERS.md` Q4.
 
 ### Verification ledger
 
