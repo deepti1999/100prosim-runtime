@@ -1,17 +1,21 @@
 # What's remaining — single source of truth
 
-**Last updated:** 2026-04-23 (after §2.3 Phase C landed, V5-verified on Heroku — non-DE region proven end-to-end with synthetic TEST cloning DE × 1.05; D4a/D4b values change with active region as designed; DE values byte-identical pre/post round-trip)
+**Last updated:** 2026-04-24 (after source-grounded final closure —
+T10/T13/T31 upgraded to PASS per PDF §2.3.2 + §2.4.3; T54 math aligned
+with Excel L37; 7 ACCEPTED caveats annotated with PDF-silence rationale;
+2 new spot-check findings deferred below as non-blocking polish).
 **Source material:** `260403_Portierung_Bestandsaufnahme.pdf` (stakeholder PDF, 12 pages) + `IMPLEMENTATION_PLAN.md` (our 63-target decomposition)
 
 ---
 
 ## Headline
 
-**57/63 atomic targets shipped, Heroku-verified, AND operationally complete** (51 from the original push + T8/T9/T10 from §2.3 Phase A + T11/T12/T13 from §2.3 Phase B with Phase C operational closure). T54 diagram sub-items 6/6 shipped (Track 1 closed D1/D2/D3/D4c on 2026-04-23 commit `7c02458`; Phase B closed D4a/D4b). **6 items outstanding total — all external-gated:**
+**57/63 atomic targets shipped, Heroku-verified, AND operationally complete** (51 from the original push + T8/T9/T10 from §2.3 Phase A + T11/T12/T13 from §2.3 Phase B with Phase C operational closure). T54 diagram sub-items 6/6 shipped (Track 1 closed D1/D2/D3/D4c on 2026-04-23 commit `7c02458`; Phase B closed D4a/D4b; T54 math polish 2026-04-24 commit `d1fed89` aligned Gasspeicher with Excel L37 → 87/87/87). Post-audit verdict tally: 47 PASS / 8 ACCEPTED (all with PDF-silence rationale quotes) / 0 OPEN. **6 items outstanding total — all external-gated:**
 
 | Bucket | Count | Blocked on |
 |---|---:|---|
 | **External-gated (Phase 7)** | 6 | ErnES picks a compute platform |
+| **Deferred spot-check findings (non-blocking)** | 2 | see §4 below |
 
 T54 D1/D2/D3/D4c (source Tagesladungen, flow Tagesladungen, percent shares, Abgleichdifferenz) shipped 2026-04-23 in commit `7c02458`; T54 D4a/D4b (Pmax-Ely-ES 194 GW, Pmax-RV 261 GW) shipped 2026-04-23 in commit `897e212` via `Region.installed_pmax_*`. T54 fully closed. See `HARDCODED_VALUES_TRACE.md` §6 for the verification ledger and `DATA_MODEL_IMPORT_AUDIT.md` §0b for Phase B delivery table.
 
@@ -251,6 +255,63 @@ For reference, everything below is done + V5-verified on live Heroku (cost ~$0.3
 | ~~Deferred §2.3 scoping~~ | ~~Pascal~~ | ✅ Closed 2026-04-23 (Phases A + B both shipped) |
 | ~~T54 backend-data formulas (D1–D4c)~~ | ~~Schmidt-Kanefendt~~ | ✅ Closed 2026-04-23 (Track 1 D1-D4c + Phase B D4a/D4b) |
 | Per-Bundesland data (BB.xlsx etc.) | Pascal/Schmidt-Kanefendt drops files at `data/import/<region>/D.xlsx` | When stakeholder has them; Phase B plumbing is ready |
+
+---
+
+## 4. Deferred spot-check findings (2026-04-24) — non-blocking polish
+
+Both findings surfaced by Q9 in
+`verification/final_audit/SOURCE_GROUNDED_ANSWERS.md` (DB-vs-Excel
+reconciliation spot-check on 10 rows). Neither affects downstream
+calculation — tracked here so they don't get lost.
+
+### Finding A — Renewable 9.1.2 PV target: net-vs-gross scoping
+
+- **Excel `_S.xlsx!2. Erneuerbare!M183` target:** 1,462,088 GWh/a (gross PV — includes Strom-zur-Elektrolyse portion).
+- **Our DB `RenewableData.9.1.2` target:** 1,211,176 GWh/a (net-to-grid PV; electrolysis Strom held separately in code `9.2.1.5.2` = 385,933 GWh/a).
+- **Arithmetic:** 1,211,176 + 385,933 × 0.65 (`ETA_STROM_GAS`) = 1,462,033 vs Excel 1,462,088 → 55 GWh noise (0.004%).
+- **Not a bug** — our two-code split and Excel's one-code gross are
+  mathematically equivalent. Downstream `simulator/signals.py` uses
+  9.1.2 as net-to-grid and 9.2.1.5.2 as ely-input independently; no
+  double-counting, no missing capacity.
+- **Proposed polish:** add a one-line clarifier to the 9.1.2
+  provenance popover ("Net zum Netz; H₂-Anteil unter 9.2.1.5.2 separat
+  geführt.") so stakeholders reading §2.3.1's "Quellbezüge und
+  Annahmen" don't hit the 20% gap cold.
+- **Estimated effort:** 15 min Claude — edit the popover template text
+  + V4 localhost screenshot. No V5 Heroku needed (pure UI polish).
+
+### Finding B — GebaeudewaermeData 2.0 / 2.3 / 2.6 / 2.10 display scale 1000× undersized
+
+- **Model `GebaeudewaermeData.status` / `.ziel` for these 4 codes:**
+  798.867 / 663.539 GWh/a (labeled "GWh/a" but numerically 1000× below
+  Excel).
+- **Excel `_S.xlsx!4. Verbrauch!L91,M91`:** 798,867.25 / 663,538.83
+  GWh/a.
+- **Model `VerbrauchData.2.10`:** 799,186.55 / 672,097.55 GWh/a — the
+  correct scale.
+- **Not a math bug** — `calculation_engine/bilanz_engine.py:375`
+  explicitly reads `VerbrauchData('2.10')` (comment even says
+  `Status column: 798,867`). Bilanz / WS365 / all sector math use
+  VerbrauchData → unaffected. `GebaeudewaermeData.calculate_value()`
+  is a placeholder that returns `None`
+  (`simulator/models.py:1601`), so no downstream dependency.
+- **UX impact:** `/gebaeudewarme/` display page renders
+  `{{ row.status|floatformat:1 }}` from `GebaeudewaermeData` — users
+  see "798.9" under a "GWh/a" column for 4 absolute-total rows
+  (Bedarfsniveau + Endenergieverbrauch GW gesamt). Misleading by
+  three orders of magnitude.
+- **Proposed polish:** multiply those 4 seed rows in
+  `seed/sqlite_seed.json` + `seed/provenance_seed.json` by 1000 to
+  align with VerbrauchData scale. Percent rows (e.g. 2.1 = 71.6 %)
+  and specific-quantity rows (e.g. 2.4.1 = 136.0 kWh/qm/a) already
+  have correct scale — leave untouched.
+- **Estimated effort:** 30 min Claude + one Heroku cycle — edit 4
+  rows × 2 fixtures (8 edits), re-seed, restart, V4 localhost screenshot,
+  V5 Heroku screenshot + tear-down.
+
+Both findings are polish-tier, not correctness-tier. Defer until
+Pascal signals priority.
 
 ---
 

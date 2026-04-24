@@ -41,3 +41,20 @@ The PDF §2.2 acid test (onshore 2.0→2.3 %, offshore 70→60 GW, measure Balan
 ## Caveat accepted 2026-04-24
 
 Caveat retained — not scheduled for fix. PDF §2.2 uses *"praxistauglich"* with no numeric target; single-sample timings logged for baseline. Architectural follow-ups documented in PYPSA_MIGRATION_RESEARCH §23.2 but not gated on cold-boot audit. Indexed in `docs/stakeholder/CAVEATS_ACCEPTED.md`.
+
+## Source-grounded rationale (2026-04-24)
+
+Per `verification/final_audit/SOURCE_GROUNDED_ANSWERS.md` Q7 — PDF §2.2
+specifies NO numeric performance target. Verbatim:
+
+> *„**Praxistaugliche Antwortzeiten** sind Grundvoraussetzung für die
+> Einsatzfähigkeit. Nach der Installation auf einer leistungsfähigen
+> Rechnerplattform ist deshalb als erstes die damit erreichbare
+> Antwortzeit zu testen. … Falls so keine praxistauglichen
+> Antwortzeiten erreicht werden, müsste die Software-Architektur
+> überprüft und überarbeitet werden."*
+
+The threshold is "praxistauglich" (practically usable) — qualitative,
+decided after measuring on the actual ErnES platform. Heroku cold-boot
+observations are informational baseline numbers, not acceptance gates.
+Acceptance is PDF-grounded; numeric gate does not exist in source.

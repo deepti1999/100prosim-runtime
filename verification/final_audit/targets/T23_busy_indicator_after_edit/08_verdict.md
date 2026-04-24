@@ -9,3 +9,19 @@ Commit `eb5a6ae` adds persistent `#balanceProgressBanner` DOM element with `aria
 ## Caveat accepted 2026-04-24
 
 Caveat retained — not scheduled for fix. DOM + prior V5 banner streaming verification sufficient; fresh ~90 s polling re-capture not scheduled. Indexed in `docs/stakeholder/CAVEATS_ACCEPTED.md`.
+
+## Source-grounded rationale (2026-04-24)
+
+Per `verification/final_audit/SOURCE_GROUNDED_ANSWERS.md` Q5 — the PDF's
+only rigor mention for this item is §2.4.3:
+
+> *„Während der Tests waren die Buttons nach Szenario-Änderungen meist
+> ohne Funktion, nach Betätigung erfolgte kein Abgleich **und keine
+> Busy-Anzeige**."*
+
+The bar is "the busy indicator must exist". `#balanceProgressBanner`
+DOM is present + `aria-live="polite"` wired + cross-process cache fix
+lands the Balance job correctly. The PDF does NOT prescribe polling
+cadence, message format, ARIA dynamics, or stream-latency criteria.
+Live-streaming re-capture is therefore above-spec; acceptance is
+PDF-grounded.

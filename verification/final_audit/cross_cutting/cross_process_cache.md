@@ -27,3 +27,15 @@ When the next major change touches signal handlers or cache code, add a delibera
 ## Caveat accepted 2026-04-24
 
 Caveat retained — not scheduled for fix. Invariant verified by code inspection + Phase C synthetic TEST region end-to-end (implicit multi-process proof) + `test_wb_balance_region_routing` ✅; dedicated `test_it_cross_process_cache.py` is a next-major-change follow-up, not a blocker. Indexed in `docs/stakeholder/CAVEATS_ACCEPTED.md`.
+
+## Source-grounded rationale (2026-04-24)
+
+Per `verification/final_audit/SOURCE_GROUNDED_ANSWERS.md` Q5 — the PDF
+does not mention cross-process cache coherency, multi-dyno invariants,
+Heroku worker/web separation, or any operational reliability criterion
+beyond "Der Abgleich dauert in 100prosim-Web 120 Sekunden … keine
+Busy-Anzeige" (§2.2 + §2.4.3). The cross-process cache issue is an
+implementation artifact Pascal's own engineering flagged in
+`CLAUDE.md` — not a PDF-originated requirement. Invariant preserved
+by inspection + Phase C integration proof. Acceptance is
+PDF-grounded.

@@ -49,3 +49,19 @@ Settings.py sets `ssl_cert_reqs=ssl.CERT_NONE` for Heroku Redis (self-signed cer
 ## Caveat accepted 2026-04-24
 
 Caveat retained — not scheduled for fix. Django auto-hardening + V2 coverage (`test_bb_admin_baseline::test_non_staff_cannot_create`, `test_wb_workspace_region` 11/11, `test_wb_balance_region_routing` 4/4) sufficient for this audit; pen-testing explicitly out of charter. No identified vulnerabilities. Indexed in `docs/stakeholder/CAVEATS_ACCEPTED.md`.
+
+## Source-grounded rationale (2026-04-24)
+
+Per `verification/final_audit/SOURCE_GROUNDED_ANSWERS.md` Q6 — the PDF
+is silent on security hardening. None of the following keywords appear
+anywhere in the 12 pages: "Pen-Test", "OWASP", "XSS", "CSRF",
+"SQL-Injection", "Sicherheitsaudit", "Brute-Force", "Session". The
+only access-related note is §2.3.2's permissive stance:
+
+> *„spezielle Admin-Rechte sind nicht erforderlich"*
+
+— i.e. the bar is *lowered*, not raised. Django's default hardening
+(CSRF middleware, ORM-parameterised queries, template auto-escape) +
+owner-scope + staff-gate on baseline creation covers the required
+surface. Pen-testing was explicitly out of audit scope per Pascal's
+charter. Acceptance is PDF-grounded.
