@@ -1,0 +1,16 @@
+section,engine_key,sector,excel_cell,db,xl,drift
+Verbrauch Strom (total),verbrauch_strom,KLIK,H9,329345.68559999997,329214.0656749311,0.000399640653646583
+Verbrauch Strom (total),verbrauch_strom,GW,K9,0,32876.978218549135,1.0
+Verbrauch Strom (total),verbrauch_strom,PW,N9,71620.89060403779,76888.81139118457,0.06851348969807013
+Verbrauch Strom (total),verbrauch_strom,MA,Q9,28135.997474,15300.012667584937,0.456212182215206
+Verbrauch Strom (total),verbrauch_strom,total,T9,429102.57367803773,454279.8679522497,0.0554224302030008
+Verbrauch Strom (renewable),verbrauch_strom_renewable,KLIK,I10,172995.4884722678,171003.68337655472,0.011513624507221695
+Verbrauch Strom (renewable),verbrauch_strom_renewable,GW,L10,17211.345393769323,17077.290917496724,0.007788727331050343
+Verbrauch Strom (renewable),verbrauch_strom_renewable,PW,O10,37620.32264759194,39938.36026228742,0.058040380212713266
+Verbrauch Strom (renewable),verbrauch_strom_renewable,MA,R10,14779.00224440992,14622.671811905728,0.010577874603363225
+Verbrauch Strom (renewable),verbrauch_strom_renewable,total,U10,242606.158758039,242642.00636824456,0.00014773868194591775
+Verbrauch Strom (fossil),verbrauch_strom_fossil,KLIK,J11,156350.19712773216,158210.38229837638,0.011757668135432569
+Verbrauch Strom (fossil),verbrauch_strom_fossil,GW,M11,0,15799.68730105241,1.0
+Verbrauch Strom (fossil),verbrauch_strom_fossil,PW,P11,34000.567956445855,36950.451128897155,0.07983348192856947
+Verbrauch Strom (fossil),verbrauch_strom_fossil,MA,S11,13356.99522959008,677.3408556792092,0.9492894289444171
+Verbrauch Strom (fossil),verbrauch_strom_fossil,total,V11,203707.76031376809,211637.86158400515,0.03747014457093907
