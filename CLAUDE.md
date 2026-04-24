@@ -160,7 +160,7 @@ Required for any non-local deploy: `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, `D
 
 ## Stakeholder implementation plan (April 2026)
 
-The 12-page stakeholder PDF (`260403_Portierung_Bestandsaufnahme.pdf`, H. Schmidt-Kanefendt 2026-04-03) decomposes into 63 atomic targets (T1–T63). **50/63 are shipped + Heroku-verified** as of 2026-04-22. The plan, progress, and open-items live in `docs/stakeholder/`:
+The 12-page stakeholder PDF (`260403_Portierung_Bestandsaufnahme.pdf`, H. Schmidt-Kanefendt 2026-04-03) decomposes into 63 atomic targets (T1–T63). **57/63 are shipped + Heroku-verified** as of 2026-04-23; post-audit 2026-04-24 verdict mix is **42 PASS / 15 PASS-WITH-CAVEAT / 0 FAIL** (see `verification/final_audit/index.md`). Remaining 6 are ErnES-gated (T1–T5, T7). The plan, progress, and open-items live in `docs/stakeholder/`:
 
 - **`REMAINING.md`** — single source of truth for what's still open (13 targets across 3 buckets: T54 flow-diagram audit, Phase 7 external-gated, §2.3 data model deferred).
 - `IMPLEMENTATION_PLAN.md` — 63-target plan with the 5-way verification ritual.

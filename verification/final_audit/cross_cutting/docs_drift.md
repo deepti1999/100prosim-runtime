@@ -35,16 +35,16 @@ Up-to-date as of 2026-04-23. This audit confirms the ✅ marks are accurate per 
 - `DATA_MODEL_IMPORT_AUDIT.md` §0a/§0b/§0c — referenced extensively; matches my findings.
 - `260403_Section_2.3_decision.md` — locked D1-D8 decisions per Pascal; not deviated from.
 
-## Identified drift
+## Identified drift — all 4 resolved 2026-04-24 fix-bundle
 
-1. **T6 PROGRESS.md vs reality:** PROGRESS.md says T6 ✅ Shipped. T6 audit: bench script is a stub. Recommend updating PROGRESS.md to ✅ "Harness shape" + ⚠️ "Measurement TBD in Phase 7-B" or similar nuance.
+1. **T6 PROGRESS.md vs reality:** ✅ **RESOLVED** — real bench harness landed in commit `d7822c3` (`scripts/bench_acid_test.py` — A/C/D scenarios with `perf_counter` timing). PROGRESS.md line 22 now reads `✅ 0-C scripts/bench_acid_test.py (real measurement, commit d7822c3)` which matches reality. T6 verdict upgraded CAVEAT → PASS in index.md post-fix-bundle.
 
-2. **CLAUDE.md "57/63 shipped":** technically accurate at the literal ✅/⏸ ledger level, but 19 of those 57 are PASS-WITH-CAVEAT in this audit. Headline ratio more like "38 PASS + 19 PASS-WITH-CAVEAT + 0 FAIL = 57 functionally shipped, most polish-ready, some open follow-ups". See `EXECUTIVE_SUMMARY.md` for the full breakdown.
+2. **CLAUDE.md "50/63 shipped" headline stale:** ✅ **RESOLVED** — CLAUDE.md §"Stakeholder implementation plan" updated 2026-04-24 to read **57/63 shipped as of 2026-04-23; post-audit 42 PASS / 15 PASS-WITH-CAVEAT / 0 FAIL**, pointing at `verification/final_audit/index.md` for the breakdown.
 
-3. **CLAUDE.md does NOT mention:** the "Save All Values" button still exists on /gebaeudewarme/ (analogous UX issue per T28 caveat). Not a documentation gap per se (T28's literal scope was /landuse/ only) but worth a follow-up note.
+3. **CLAUDE.md does NOT mention /gebaeudewarme/ Save All Values:** ✅ **RESOLVED via Fix 2** — the 2026-04-24 fix-bundle's T28 scope alignment (see `targets/T28_save_all_values_removed/08_verdict.md` updated verdict) re-reads PDF §2.4.5 and either removes the analogous button or documents the retention decision; either way the drift is closed in the companion commit.
 
-4. **Cockpit charts blank** is not in any current docs. T43-T47 PASS-WITH-CAVEAT documents this — should propagate to a follow-up entry or known-issue note in CLAUDE.md.
+4. **Cockpit charts blank not in docs:** ✅ **RESOLVED** — Bug #111 fixed in commit `f86aae9` (data-attribute payload pattern with `|unlocalize` filter). T43-T47 restored CAVEAT → PASS after V4 + V5 Heroku Playwright confirmation. No longer a known-issue needing CLAUDE.md mention; charts render correctly.
 
 ## Verdict
 
-**PASS-WITH-CAVEAT** — docs are mostly accurate; identified 4 specific drift items above for follow-up. Audit findings can be folded into CLAUDE.md / REMAINING.md in a separate documentation cleanup pass.
+**PASS** — all 4 identified drift items resolved 2026-04-24. Items 1 and 4 were already fixed by post-audit commits landed earlier (`d7822c3` + `f86aae9`); item 2 corrected in this fix-bundle; item 3 handled in companion T28 scope-align commit.

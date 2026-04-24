@@ -99,7 +99,7 @@ Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md
 | provenance_audit.md | ✅ PASS-WITH-CAVEAT — V2 spot checks; 10-row sweep skipped |
 | heroku_cold_boot.md | ✅ PASS-WITH-CAVEAT — timings observed, no gating threshold |
 | security_sweep.md | ✅ PASS-WITH-CAVEAT — auth/CSRF/owner-scope wired; not pen-tested |
-| docs_drift.md | ✅ PASS-WITH-CAVEAT — 4 specific drift items identified |
+| docs_drift.md | ✅ PASS — 4 drift items resolved 2026-04-24 |
 
 ## Heroku spin-up state
 
