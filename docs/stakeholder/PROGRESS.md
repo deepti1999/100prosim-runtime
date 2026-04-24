@@ -19,7 +19,7 @@ Mandatory per item (non-negotiable, see IMPLEMENTATION_PLAN.md §1):
 ## Phase 0 — Scaffolding
 - ✅ 0-A Progress tracker file (this file)
 - ✅ 0-B Playwright regression scenarios (E/F/G) — YAML stubs committed; playbook scripts land when each phase arrives
-- ✅ 0-C `scripts/bench_acid_test.sh` + rolling `BENCHMARK_LOG.md` — harness stub committed; full flow in Phase 7-B
+- ✅ 0-C `scripts/bench_acid_test.py` (real measurement, commit `d7822c3`) + legacy `bench_acid_test.sh` retained for back-compat — A/C/D scenarios drive HTTP flows and record `time.perf_counter()` deltas; rolling `BENCHMARK_LOG.md` writeable
 
 ## Phase 1 — Surface removals
 - ✅ 1-A Remove "Save All Values" — T28 — condition verified (autoSaveValue debounce 1s), commit `455fa65`

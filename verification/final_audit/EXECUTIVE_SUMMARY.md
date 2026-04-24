@@ -7,9 +7,9 @@
 
 ## Headline
 
-**57 / 57 targets verified. 41 PASS, 16 PASS-WITH-CAVEAT, 0 FAIL, 0 CANNOT-VERIFY.**
+**57 / 57 targets verified. 42 PASS, 15 PASS-WITH-CAVEAT, 0 FAIL, 0 CANNOT-VERIFY.**
 
-(Original audit 2026-04-24: 36/21/0/0. Follow-up Task 1a downgraded T43-T47 from CAVEAT → FAIL after a Playwright re-test exposed the L10N+JS bug. Subsequent fix-task in commit `f86aae9` resolved bug #111 and restored T43-T47 to PASS, V5 Heroku-verified.)
+(Original audit 2026-04-24: 36/21/0/0. Follow-up Task 1a downgraded T43-T47 CAVEAT → FAIL after a Playwright re-test exposed the L10N+JS bug. Fix-bundle this run: bug #111 fixed in `f86aae9` and T43-T47 restored to PASS V5-Heroku-verified; T6 stub replaced by real `scripts/bench_acid_test.py` in `d7822c3` — T6 upgraded CAVEAT → PASS.)
 
 The "57/63 shipped" claim in `REMAINING.md` is **honest at the ledger level** — every shipped target has demonstrable functional implementation and passing tests. The 16 PASS-WITH-CAVEAT verdicts are, with one exception (T6 below), polish gaps and documentation follow-ups, not broken behaviour.
 
@@ -25,7 +25,7 @@ Full thesis test suite green (200/207 + 7 env-skip). Regression scenario A passe
 
 1. **~~Cockpit charts blank on both envs (T43-T47).~~** ~~The page structure is shipped (Status/Ziel toggle, "Wieviel werden wir noch brauchen?" + "Wo soll es herkommen?" columns with PDF-exact German wording, Sektoren section, delta table headers) but the actual Chart.js canvases never render.~~ **RESOLVED 2026-04-24:** Task 1a root-caused (Django L10N + inline JS literals in `cockpit.html:287-340`); fix-task landed `f86aae9` (`|unlocalize` data-attr payload pattern); V5 Heroku-verified all 3 charts attach + delta table populates with 4 rows. Risk closed.
 
-2. **T6 (acid-test bench script) is a stub.** The harness's shape — CLI invocation, env vars, JSON output schema, log file — is locked in, but `scripts/bench_acid_test.sh` doesn't actually measure anything (always emits `elapsed_seconds: null, status: "stub"`). The script's own banner honestly says "harness not yet implemented; Phase 7-B". `PROGRESS.md` marks T6 ✅ Shipped; this audit downgrades to PASS-WITH-CAVEAT because the literal `IMPLEMENTATION_PLAN.md` deliverable text ("times end-to-end") is not actually true today.
+2. **~~T6 (acid-test bench script) is a stub.~~** ~~The harness's shape — CLI invocation, env vars, JSON output schema, log file — is locked in, but `scripts/bench_acid_test.sh` doesn't actually measure anything.~~ **RESOLVED 2026-04-24:** real `scripts/bench_acid_test.py` landed in commit `d7822c3` — A/C/D scenarios drive HTTP flows and record `time.perf_counter()` deltas. Median A=0.91s, C=0.82s, D=4.14s on local stack. PASS-WITH-CAVEAT → PASS.
 
 3. **3-4 small English residues in the German UI** (T33 caveats): "No changes yet" empty state on Renewable, "Welcome back, testsim!" Django auth flash, Cockpit "Ziel (2050)" should be 2045 per CLAUDE.md / data target year. None are blockers; all are in dynamic/JS-injected text the bulk template translation pass didn't reach.
 

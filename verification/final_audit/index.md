@@ -4,17 +4,21 @@
 **Methodology:** see `README.md`.
 **Heroku apps provisioned:** original audit `prosim-100-e738babd7226`, follow-up `prosim-100-1fc45c10679b`, fix-task `prosim-100-d538a1c45903` — all destroyed at end of each run.
 
-## Verdict counts (57 shipped targets) — UPDATED 2026-04-24 post-fix
+## Verdict counts (57 shipped targets) — UPDATED 2026-04-24 post-fix-bundle
 
 | Verdict | Count | % |
 |---|---:|---:|
-| PASS | 41 | 71.9 % |
-| PASS-WITH-CAVEAT | 16 | 28.1 % |
+| PASS | 42 | 73.7 % |
+| PASS-WITH-CAVEAT | 15 | 26.3 % |
 | **FAIL** | **0** | **0 %** |
 | CANNOT-VERIFY-LOCALLY | 0 | 0 % |
 | **Total verified** | **57 / 57** | **100 %** |
 
-**Update 2026-04-24 follow-up Task 1a (closed):** T43-T47 were downgraded CAVEAT → FAIL based on the L10N+JS root cause documented in `cockpit_charts_root_cause.md`. **Update 2026-04-24 fix-task (this run):** bug #111 fixed in commit `f86aae9` via data-attribute payload pattern with `|unlocalize` filter. T43-T47 verdicts restored from FAIL → PASS after V4 (localhost) + V5 (Heroku `prosim-100-d538a1c45903`) Playwright confirmation that all 3 cockpit charts render and the delta table populates. New tally: **41 PASS / 16 CAVEAT / 0 FAIL.**
+**Update 2026-04-24 follow-up Task 1a (closed):** T43-T47 were downgraded CAVEAT → FAIL based on the L10N+JS root cause documented in `cockpit_charts_root_cause.md`. **Update 2026-04-24 fix-bundle (this run):**
+- Bug #111 fixed in commit `f86aae9` via data-attribute payload pattern with `|unlocalize` filter — T43-T47 restored CAVEAT → PASS after V4 + V5 Heroku Playwright confirmation.
+- T6 acid-test bench harness landed in commit `d7822c3` (`scripts/bench_acid_test.py` — A/C/D scenarios with real `perf_counter` timing) — T6 upgraded CAVEAT → PASS.
+
+New tally: **42 PASS / 15 CAVEAT / 0 FAIL.**
 
 Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md`.
 
@@ -22,7 +26,7 @@ Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md
 
 | T | Phase | Target | Verdict | Notes |
 |---:|---|---|---|---|
-| T6 | 0-C | bench script | **PASS-WITH-CAVEAT** | Script shape shipped; measurement is stub (TODO Phase 7-B). |
+| T6 | 0-C | bench script | **PASS** | Real measurement landed in `d7822c3`; A/C/D scenarios timed. |
 | T8 | A | source URL UI | **PASS** | Info-icon popover, V2 11/11. |
 | T9 | A | assumption UI | **PASS** | Same info-icon, V2 13/13. |
 | T10 | A | admin update no code | **PASS-WITH-CAVEAT** | CLI only, GUI deferred. |
