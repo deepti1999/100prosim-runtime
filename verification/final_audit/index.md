@@ -4,15 +4,17 @@
 **Methodology:** see `README.md`.
 **Heroku app provisioned:** `prosim-100-e738babd7226.herokuapp.com` (destroyed at end of run).
 
-## Verdict counts (57 shipped targets)
+## Verdict counts (57 shipped targets) — UPDATED 2026-04-24 follow-up
 
 | Verdict | Count | % |
 |---|---:|---:|
 | PASS | 36 | 63.2 % |
-| PASS-WITH-CAVEAT | 21 | 36.8 % |
-| FAIL | 0 | 0 % |
+| PASS-WITH-CAVEAT | 16 | 28.1 % |
+| **FAIL** | **5** | **8.8 %** |
 | CANNOT-VERIFY-LOCALLY | 0 | 0 % |
 | **Total verified** | **57 / 57** | **100 %** |
+
+**Update 2026-04-24 follow-up Task 1a:** T43, T44, T45, T46, T47 downgraded from CAVEAT → FAIL. Single root cause: Django L10N (`USE_L10N=True` + `LANGUAGE_CODE='de'`) auto-formats floats as `2.432.616,134` which is unparseable in JS object literals at `cockpit.html:287-340`. See `cockpit_charts_root_cause.md`. Bug task #111 created.
 
 Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md`.
 
@@ -56,11 +58,11 @@ Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md
 | T40 | 3-A | sidebar uniform Cockpit | **PASS** | Visible in 07. |
 | T41 | 3-B | top-bar dedup | **PASS** | Only right dropdowns. |
 | T42 | 3-B | brand in sidebar | **PASS** | 100ProSim at top. |
-| T43 | 5-A | cockpit Status↔Ziel | **PASS-WITH-CAVEAT** | Structure shipped; **chart canvases blank** on both envs. |
-| T44 | 5-A | per-sector breakdown | **PASS-WITH-CAVEAT** | Same blank issue. |
-| T45 | 5-A | left col demand | **PASS-WITH-CAVEAT** | Heading "Wieviel" present; donut blank. |
-| T46 | 5-A | right col supply | **PASS-WITH-CAVEAT** | Heading "Wo" present; donut blank. |
-| T47 | 5-A | % delta annotations | **PASS-WITH-CAVEAT** | Table headers present; body empty. |
+| T43 | 5-A | cockpit Status↔Ziel | **FAIL** | Inline JS bombs on German-formatted numbers (Task 1a, bug #111). |
+| T44 | 5-A | per-sector breakdown | **FAIL** | Same root cause. |
+| T45 | 5-A | left col demand | **FAIL** | Same root cause. |
+| T46 | 5-A | right col supply | **FAIL** | Same root cause. |
+| T47 | 5-A | % delta annotations | **FAIL** | Tbody empty because populating JS never runs. |
 | T48 | 6-B | chart Nachfrage | **PASS** | Visible. |
 | T49 | 6-B | chart Effizienz | **PASS** | Visible. |
 | T50 | 6-B | chart Endenergie | **PASS** | Visible. |
