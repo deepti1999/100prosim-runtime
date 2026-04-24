@@ -1,0 +1,179 @@
+Name                                                                                                Stmts   Miss Branch BrPart  Cover   Missing
+-----------------------------------------------------------------------------------------------------------------------------------------------
+calculation_engine/__init__.py                                                                          4      0      0      0   100%
+calculation_engine/bilanz_engine.py                                                                   256     77     64     10    64%   53-59, 77-96, 107-115, 141, 148, 151, 158-162, 190-213, 219-227, 254, 259-274, 279, 300, 308, 336, 339-344, 474
+calculation_engine/formula_evaluator.py                                                               125    112     48      0     8%   37-49, 53-142, 148-168, 173-202, 208-219
+calculation_engine/landuse_engine.py                                                                   23     14      8      0    29%   28-30, 44-46, 66, 84-95
+calculation_engine/renewable_engine.py                                                                102     60     48      6    36%   56->59, 59->52, 66->68, 68->64, 74->76, 76->72, 105-194, 198-201, 205-208
+calculation_engine/verbrauch_engine.py                                                                121     58     62     12    45%   49->52, 52->45, 57->66, 60->62, 62->58, 71->73, 73->67, 93, 104-107, 122-125, 136, 146-173, 181, 190-202, 209-212, 219-222, 235-243, 256-264
+calculation_engine/ws_calculator.py                                                                    49     49     26      0     0%   9-106
+calculation_engine/ws_engine.py                                                                       134    134     26      0     0%   15-317
+simulator/_e2e_seed_helper.py                                                                          19      0      0      0   100%
+simulator/admin.py                                                                                    301    172     96      0    32%   20, 31-44, 106-108, 113-119, 128-148, 157-160, 165-173, 182-183, 187-188, 193-208, 216-233, 238-250, 255-265, 270-274, 279-282, 313-319, 329-334, 343-344, 367-369, 374-376, 407-415, 452-455, 461-477, 484-496, 501-513, 518-531, 536-545, 550, 554-567, 644-647
+simulator/apps.py                                                                                       9      0      2      1    91%   10->exit
+simulator/balance_api.py                                                                              177    136     12      0    22%   31-34, 37, 40-45, 51-66, 82-89, 103-125, 138, 147-157, 170, 180-196, 231-246, 283-326, 333-388, 395-443
+simulator/balance_jobs.py                                                                              87     14     26      3    85%   55-56, 61-62, 66-67, 71, 73, 108-126
+simulator/baseline_api.py                                                                             280     51     84     24    78%   24, 58->60, 68->70, 93->95, 110->112, 118->120, 141->143, 147->149, 159->152, 178, 181-182, 192->196, 225-226, 245, 276-277, 285, 309-310, 327-337, 344, 356, 385-386, 391-417, 423-444, 451, 459, 466, 475, 479->481, 487-488, 495, 505, 510->512, 517-518
+simulator/calculations.py                                                                             512    512    182      0     0%   9-1401
+simulator/context_processors.py                                                                         9      2      0      0    78%   22-23
+simulator/formats/de/formats.py                                                                        12      0      0      0   100%
+simulator/formula_service.py                                                                          555    393    236     24    26%   66-69, 73-76, 127-152, 158-166, 173-178, 194-203, 221, 225-233, 245-274, 278-284, 294, 303-312, 335, 338-363, 366-392, 431-432, 474->484, 500-505, 512, 514, 520->538, 529-530, 533-535, 543-569, 574-601, 604-632, 635-639, 642-650, 663, 670-674, 690, 699-700, 705-709, 743-756, 760-780, 795-820, 837-862, 871->exit, 878-882, 890-892, 911-918, 943-1098, 1102-1107
+simulator/formula_validators.py                                                                       143    143     60      0     0%   13-298
+simulator/gebaeudewaerme_recalculator.py                                                                8      8      0      0     0%   1-17
+simulator/goal_seek.py                                                                                 55     55     34      0     0%   1-101
+simulator/input_api.py                                                                                196     62     46      9    66%   32-33, 36->40, 38, 57->66, 91-96, 106, 114-116, 167-168, 190-201, 233, 268-269, 278-304, 329-330, 352-363, 374-377, 396-397, 406, 438-441
+simulator/management/commands/check_all_formulas.py                                                    96     96     46      0     0%   5-123
+simulator/management/commands/clear_calculated_values.py                                               23     23      2      0     0%   1-52
+simulator/management/commands/import_clean.py                                                          35     35     10      0     0%   1-56
+simulator/management/commands/import_excel_provenance.py                                              415     68    194     32    81%   91, 94, 100-103, 116-118, 125, 132, 138, 199, 207, 216-217, 245-246, 265, 334-335, 337, 362, 393->399, 438-439, 446, 451-452, 459-460, 487, 488->491, 497->495, 518, 528-531, 546->551, 549-550, 557->569, 561-567, 570-578, 666->665, 674->676, 690-700, 702, 720, 732, 753, 777->776, 785
+simulator/management/commands/import_formulas_to_db.py                                                 71     71     10      0     0%   13-146
+simulator/management/commands/import_landuse.py                                                        39     39     12      0     0%   1-61
+simulator/management/commands/import_landuse_formulas.py                                               61     61     10      0     0%   11-177
+simulator/management/commands/import_verbrauch_formulas.py                                             49     49      8      0     0%   13-272
+simulator/management/commands/import_ws_constants.py                                                   11     11      2      0     0%   4-53
+simulator/management/commands/import_ws_formulas.py                                                     6      6      0      0     0%   3-17
+simulator/management/commands/list_formulas.py                                                         51     51     12      0     0%   11-95
+simulator/management/commands/load_endenergie_data.py                                                  58     58     16      0     0%   1-100
+simulator/management/commands/load_exact_gebaeudewaerme.py                                             33     33      4      0     0%   1-60
+simulator/management/commands/load_gebaeudewaerme_data.py                                              42     42      8      0     0%   1-81
+simulator/management/commands/load_verbrauch_data.py                                                   37     37      8      0     0%   1-62
+simulator/management/commands/migrate_ws_templates.py                                                   9      9      0      0     0%   3-28
+simulator/management/commands/recalc_gebaeudewaerme.py                                                  7      7      0      0     0%   1-10
+simulator/management/commands/recalc_verbrauch.py                                                       7      7      0      0     0%   1-10
+simulator/management/commands/run_balance_worker.py                                                    39     39      6      0     0%   1-57
+simulator/management/commands/sync_renewable_formulas.py                                               53     53     28      0     0%   12-102
+simulator/management/commands/update_calculated_verbrauch.py                                           17     17      2      0     0%   1-37
+simulator/management/commands/validate_formulas.py                                                     69     69     30      0     0%   14-125
+simulator/middleware.py                                                                                29      2      4      0    94%   21-22
+simulator/migrations/0001_initial.py                                                                    5      0      0      0   100%
+simulator/migrations/0002_alter_landuse_options_and_more.py                                             5      0      0      0   100%
+simulator/migrations/0003_landuse_change_ratio_landuse_status_percent_and_more.py                       4      0      0      0   100%
+simulator/migrations/0004_remove_landuse_change_ratio_and_more.py                                       4      0      0      0   100%
+simulator/migrations/0005_landuse_user_percent.py                                                       4      0      0      0   100%
+simulator/migrations/0006_auto_20250928_0110.py                                                         4      0      0      0   100%
+simulator/migrations/0007_renewabledata.py                                                              4      0      0      0   100%
+simulator/migrations/0008_renewabledata_is_fixed_renewabledata_parent_code.py                           4      0      0      0   100%
+simulator/migrations/0009_verbrauchdata.py                                                              4      0      0      0   100%
+simulator/migrations/0010_auto_20251021_1210.py                                                         4      0      0      0   100%
+simulator/migrations/0011_verbrauchdata_is_calculated.py                                                4      0      0      0   100%
+simulator/migrations/0012_gebaeudewaermedata.py                                                         4      0      0      0   100%
+simulator/migrations/0013_auto_20251021_1313.py                                                         4      0      0      0   100%
+simulator/migrations/0014_alter_landuse_user_percent.py                                                 4      0      0      0   100%
+simulator/migrations/0015_gebaeudewaermedata_status_calculated_and_more.py                              4      0      0      0   100%
+simulator/migrations/0016_wsdata.py                                                                     4      0      0      0   100%
+simulator/migrations/0017_remove_wsdata_kavon_wsdata_davon_raumw_korr.py                                4      0      0      0   100%
+simulator/migrations/0018_wsdata_einspeich.py                                                           4      0      0      0   100%
+simulator/migrations/0019_wsdata_abregelung.py                                                          4      0      0      0   100%
+simulator/migrations/0020_rename_abregelung_to_abregelung_z.py                                          4      0      0      0   100%
+simulator/migrations/0021_remove_wsdata_abgeltung_and_more.py                                           4      0      0      0   100%
+simulator/migrations/0022_wsdata_ausspeich_gas_wsdata_ausspeich_rueckverstr_and_more.py                 4      0      0      0   100%
+simulator/migrations/0023_wsdata_ladezustand_netto.py                                                   4      0      0      0   100%
+simulator/migrations/0024_wsdata_ladezustand_abs.py                                                     4      0      0      0   100%
+simulator/migrations/0025_calculationrun.py                                                             4      0      0      0   100%
+simulator/migrations/0026_landuse_target_locked.py                                                      4      0      0      0   100%
+simulator/migrations/0027_formula_tables.py                                                             5      0      0      0   100%
+simulator/migrations/0028_enhance_formula_models.py                                                     4      0      0      0   100%
+simulator/migrations/0029_add_custom_fields_to_ws.py                                                    4      0      0      0   100%
+simulator/migrations/0030_add_category_display_names.py                                                 4      0      0      0   100%
+simulator/migrations/0031_formula_formula_type_and_more.py                                              4      0      0      0   100%
+simulator/migrations/0032_add_ws_formula_template.py                                                    4      0      0      0   100%
+simulator/migrations/0033_add_ws_row_type_to_formula.py                                                 4      0      0      0   100%
+simulator/migrations/0034_verbrauchdata_is_user_editable.py                                             4      0      0      0   100%
+simulator/migrations/0035_remove_verbrauchdata_is_user_editable_and_more.py                             4      0      0      0   100%
+simulator/migrations/0036_add_ws_formula_variable_types.py                                              4      0      0      0   100%
+simulator/migrations/0037_landuse_increase_limit_baseline_percent.py                                    4      0      0      0   100%
+simulator/migrations/0038_balancejob.py                                                                 7      0      0      0   100%
+simulator/migrations/0039_remove_verbrauchdata_simulator_v_code_af60ee_idx_and_more.py                  6      0      0      0   100%
+simulator/migrations/0040_baselinesnapshot.py                                                           6      0      0      0   100%
+simulator/migrations/0041_alter_renewabledata_unit_length.py                                            4      0      0      0   100%
+simulator/migrations/0042_remove_wsdata_abacadae_remove_wsdata_abregelung_z_and_more.py                 4      0      0      0   100%
+simulator/migrations/0043_delete_wsformulatemplate_alter_formula_ws_row_type_and_more.py               11      0      0      0   100%
+simulator/migrations/0044_ws365formula.py                                                              10      1      2      1    83%   9
+simulator/migrations/0045_renewabledata_user_editable.py                                                4      0      0      0   100%
+simulator/migrations/0046_scenariosnapshot_and_more.py                                                  6      0      0      0   100%
+simulator/migrations/0047_alter_balancejob_job_type.py                                                  4      0      0      0   100%
+simulator/migrations/0048_alter_balancejob_job_type.py                                                  4      0      0      0   100%
+simulator/migrations/0049_alter_formula_ws_row_type_and_more.py                                         4      0      0      0   100%
+simulator/migrations/0050_modificationhistoryentry.py                                                   6      0      0      0   100%
+simulator/migrations/0051_phase_a_provenance_fields.py                                                  4      0      0      0   100%
+simulator/migrations/0052_region_model_and_de_seed.py                                                  10      2      0      0    80%   23-24
+simulator/migrations/0053_region_fk_on_parameter_models.py                                             14      1      2      0    94%   37
+simulator/migrations/0054_gebaeudewaerme_region_code_uniq.py                                            4      0      0      0   100%
+simulator/migrations/0055_wsdata_region_fk.py                                                          12      1      0      0    92%   16
+simulator/migrations/0056_rename_simulator_w_region__40c1aa_idx_simulator_w_region__10066f_idx.py       4      0      0      0   100%
+simulator/models.py                                                                                   807    382    232     31    46%   47, 61-62, 68->73, 128, 133-146, 248-251, 264-267, 272, 275, 276->287, 280->287, 282, 284, 292-296, 303, 306-308, 312-313, 323-347, 351-352, 440, 444-456, 460-472, 549, 572-589, 602, 636-684, 696-715, 798-800, 826-827, 830-831, 862, 876-877, 882-931, 941-955, 959, 982-1074, 1147, 1175-1176, 1179-1180, 1183, 1187-1199, 1210-1211, 1219->1223, 1223->exit, 1230->exit, 1246, 1258-1291, 1294, 1297->1300, 1300->exit, 1306->exit, 1320, 1337-1338, 1343-1392, 1396, 1400-1402, 1406-1412, 1416-1422, 1427-1462, 1466-1501, 1569, 1573, 1577-1579, 1583-1589, 1593-1597, 1603, 1609, 1625, 1653, 1693-1694, 1736, 1798
+simulator/owner_scope.py                                                                               50      2     14      2    94%   10, 12
+simulator/page_auth.py                                                                                 50     29     10      0    35%   17, 21, 25-41, 45-56, 60-62
+simulator/page_bilanz.py                                                                               30      0      0      0   100%
+simulator/page_cockpit.py                                                                              93     85      4      0     8%   17-83, 126-214
+simulator/page_historie.py                                                                             13      0      2      1    93%   22->25
+simulator/page_landuse.py                                                                              65     32     24      4    48%   10-24, 43-48, 51-52, 59-64, 67-68, 71->86, 75-80, 83-84, 109-120
+simulator/page_modifikationsdetails.py                                                                 58      8     24      6    83%   118, 122, 131, 136, 141, 143-145
+simulator/page_renewable.py                                                                            90     25     10      1    70%   25, 31-95, 144
+simulator/page_smard.py                                                                               121    116     24      0     3%   12-207
+simulator/percentage_rebalancer.py                                                                     80     67     32      2    15%   35, 55-121, 139-176, 195-196
+simulator/recalc_api.py                                                                                93     55      8      1    39%   51-95, 106-141, 168-219, 232, 250-251
+simulator/recalc_cache.py                                                                              34      2      4      1    92%   29, 132
+simulator/recalc_service.py                                                                           295    188     68      6    32%   12->16, 30-57, 75-110, 203-209, 212->269, 218-237, 241-263, 266->212, 344-394, 428-586, 617-619, 638-639
+simulator/region_scope.py                                                                              18      0      2      0   100%
+simulator/renewable_recalc.py                                                                          26     19      8      1    24%   19-54
+simulator/signals.py                                                                                  255    125     54      6    51%   26-27, 31-32, 35->39, 51-53, 83-86, 89-102, 106-191, 253-257, 280, 294-297, 310, 332, 337-342, 352-353, 377-378, 381-395, 405-416, 428-433
+simulator/templatetags/bilanz_filters.py                                                               17      4      2      0    79%   25-28
+simulator/templatetags/calculation_filters.py                                                           7      3      2      0    44%   8-10
+simulator/test_bb_admin_baseline.py                                                                    56      0      0      0   100%
+simulator/test_bb_bal.py                                                                              172    142     26      1    16%   18, 25, 36-81, 85-126, 130-139, 145-174, 178-193, 200-209, 222-281
+simulator/test_bb_calc.py                                                                              53      0      4      0   100%
+simulator/test_bb_current_app.py                                                                       95      0      0      0   100%
+simulator/test_bb_e2e.py                                                                               56      0      4      0   100%
+simulator/test_bb_history.py                                                                           52      0      0      0   100%
+simulator/test_bb_modifikationsdetails.py                                                             109      0     20      0   100%
+simulator/test_bb_renewable_edit.py                                                                    36      0      0      0   100%
+simulator/test_bb_val.py                                                                               49      0      0      0   100%
+simulator/test_e2e_browser_current.py                                                                  98     69     12      1    27%   11-14, 27-28, 34-49, 53-58, 62-65, 69, 73-76, 83, 86-96, 99, 102-108, 113-129, 132-151, 154-164
+simulator/test_e2e_current_scenario_flow.py                                                            35      0      0      0   100%
+simulator/test_e2e_ui_D_full_flow.py                                                                   62     10      8      4    80%   37, 40-41, 78-82, 96-100, 117
+simulator/test_e2e_ui_baseline.py                                                                     102     66     14      2    33%   27, 53, 57-58, 63-67, 71-77, 81-91, 94, 97, 100-105, 110-116, 119-124, 127-133, 136-141, 144-149, 152-155, 158-162
+simulator/test_e2e_ui_ws_balance.py                                                                   107     70     18      2    31%   29, 46, 50-51, 56-60, 64-70, 73-84, 87, 90, 93-97, 101-118, 121-129, 136-140, 147-154, 163-182
+simulator/test_it_current_recalc_contracts.py                                                          62      0      0      0   100%
+simulator/test_wb_balance_region_routing.py                                                            61      0      0      0   100%
+simulator/test_wb_excel_import_region.py                                                               83      2      2      1    96%   33, 73
+simulator/test_wb_excel_provenance_import.py                                                          134      1      6      3    97%   37, 217->219, 232->234
+simulator/test_wb_geb_region_uniq.py                                                                   23      0      0      0   100%
+simulator/test_wb_import_create_region.py                                                             103      2     10      2    96%   39, 50
+simulator/test_wb_pmax_dynamic.py                                                                      61      7      2      1    87%   39-40, 51-52, 73-74, 91
+simulator/test_wb_provenance_schema.py                                                                 54      0      6      0   100%
+simulator/test_wb_queue_jobs_middleware.py                                                            174      0     16      0   100%
+simulator/test_wb_region_fk.py                                                                         78      0      8      1    99%   101->99
+simulator/test_wb_region_middleware.py                                                                 93      5      2      1    94%   22-27, 71
+simulator/test_wb_region_model.py                                                                      56      0      0      0   100%
+simulator/test_wb_region_switcher.py                                                                   79      0      0      0   100%
+simulator/test_wb_scenario_state.py                                                                    89      0      0      0   100%
+simulator/test_wb_snapshot_region.py                                                                   49      0      0      0   100%
+simulator/test_wb_workspace_region.py                                                                 121      0      4      0   100%
+simulator/test_wb_ws365_formula_engine.py                                                              83      0      0      0   100%
+simulator/test_wb_wsdata_region.py                                                                     75      0      2      0   100%
+simulator/test_ws365_formulas.py                                                                       54      0      2      0   100%
+simulator/urls.py                                                                                      11      0      0      0   100%
+simulator/verbrauch_recalculator.py                                                                   127     29     48     10    71%   18, 20, 66-98, 195->202, 197->199, 199->202, 200->202, 202->221, 204-206, 259-260, 264-265, 267->270
+simulator/views.py                                                                                    236    142     68     15    37%   21->25, 23, 33, 43, 47-48, 52, 66, 70->73, 89-90, 100-105, 139, 145-146, 151, 155-160, 164-165, 174, 180, 197-200, 202->209, 227->234, 250-253, 257-272, 276-286, 290-296, 309-361, 365-462, 466-512
+simulator/views_balance.py                                                                              2      0      0      0   100%
+simulator/views_pages.py                                                                                9      0      0      0   100%
+simulator/views_recalc.py                                                                               5      0      0      0   100%
+simulator/views_region.py                                                                              20      1      6      1    92%   38
+simulator/views_ws.py                                                                                   3      0      0      0   100%
+simulator/workspace_service.py                                                                         60      4     30      3    92%   75, 77->70, 97, 106-110
+simulator/workspace_signals.py                                                                         15      2      4      2    79%   17->25, 19->25, 22-23
+simulator/ws365_core.py                                                                               243    109     68      4    51%   12->16, 32-43, 149, 160, 172, 283-287, 302-321, 335-408, 436-439, 445-448, 468-482, 501-519
+simulator/ws365_formula_engine.py                                                                     244     13     68      8    93%   84, 123->125, 131, 231, 276-277, 286, 291, 304-307, 410->408, 421-422
+simulator/ws365_gw_direct_solve.py                                                                     41     41     18      0     0%   15-102
+simulator/ws365_orchestrator.py                                                                       455    422     92      2     7%   22->34, 24, 113-125, 151-359, 381-384, 404-500, 548-818, 842-936
+simulator/ws365_sector_balance.py                                                                     291    283     80      1     2%   15->19, 17, 30-80, 92-585
+simulator/ws_365_service.py                                                                             4      0      0      0   100%
+simulator/ws_api.py                                                                                   136     34     40      5    77%   82-116, 144, 161-163, 171, 180-181, 213, 306-311, 316-317, 327-335
+simulator/ws_formula_service.py                                                                        78     78     20      0     0%   10-139
+simulator/ws_models.py                                                                                 59      6      2      1    89%   19-20, 89, 146-147, 158
+simulator/ws_queue_api.py                                                                             130     33     30      8    72%   88->exit, 119-120, 179-182, 188, 193, 206-209, 215, 220, 233-236, 242, 247, 260-263, 270-271, 276-294
+-----------------------------------------------------------------------------------------------------------------------------------------------
+TOTAL                                                                                               11694   5653   2740    263    48%
+
+7 empty files skipped.
