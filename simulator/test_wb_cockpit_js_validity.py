@@ -86,7 +86,6 @@ class CockpitTemplateSourceStaticCheckTests(TestCase):
     re-introduction of the 2026-04-24 bug when someone edits cockpit.html.
     """
 
-    @unittest.expectedFailure  # bug #111 — known broken until L10N+JS fix lands.
     def test_cockpit_has_localize_off_or_unlocalize_in_script_context(self):
         src = _read_cockpit_template_source()
         # Find every <script>...</script> block in the source (not the rendered HTML).
