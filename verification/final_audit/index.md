@@ -2,19 +2,19 @@
 
 **Run:** 2026-04-24, completed.
 **Methodology:** see `README.md`.
-**Heroku app provisioned:** `prosim-100-e738babd7226.herokuapp.com` (destroyed at end of run).
+**Heroku apps provisioned:** original audit `prosim-100-e738babd7226`, follow-up `prosim-100-1fc45c10679b`, fix-task `prosim-100-d538a1c45903` — all destroyed at end of each run.
 
-## Verdict counts (57 shipped targets) — UPDATED 2026-04-24 follow-up
+## Verdict counts (57 shipped targets) — UPDATED 2026-04-24 post-fix
 
 | Verdict | Count | % |
 |---|---:|---:|
-| PASS | 36 | 63.2 % |
+| PASS | 41 | 71.9 % |
 | PASS-WITH-CAVEAT | 16 | 28.1 % |
-| **FAIL** | **5** | **8.8 %** |
+| **FAIL** | **0** | **0 %** |
 | CANNOT-VERIFY-LOCALLY | 0 | 0 % |
 | **Total verified** | **57 / 57** | **100 %** |
 
-**Update 2026-04-24 follow-up Task 1a:** T43, T44, T45, T46, T47 downgraded from CAVEAT → FAIL. Single root cause: Django L10N (`USE_L10N=True` + `LANGUAGE_CODE='de'`) auto-formats floats as `2.432.616,134` which is unparseable in JS object literals at `cockpit.html:287-340`. See `cockpit_charts_root_cause.md`. Bug task #111 created.
+**Update 2026-04-24 follow-up Task 1a (closed):** T43-T47 were downgraded CAVEAT → FAIL based on the L10N+JS root cause documented in `cockpit_charts_root_cause.md`. **Update 2026-04-24 fix-task (this run):** bug #111 fixed in commit `f86aae9` via data-attribute payload pattern with `|unlocalize` filter. T43-T47 verdicts restored from FAIL → PASS after V4 (localhost) + V5 (Heroku `prosim-100-d538a1c45903`) Playwright confirmation that all 3 cockpit charts render and the delta table populates. New tally: **41 PASS / 16 CAVEAT / 0 FAIL.**
 
 Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md`.
 
@@ -58,11 +58,11 @@ Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md
 | T40 | 3-A | sidebar uniform Cockpit | **PASS** | Visible in 07. |
 | T41 | 3-B | top-bar dedup | **PASS** | Only right dropdowns. |
 | T42 | 3-B | brand in sidebar | **PASS** | 100ProSim at top. |
-| T43 | 5-A | cockpit Status↔Ziel | **FAIL** | Inline JS bombs on German-formatted numbers (Task 1a, bug #111). |
-| T44 | 5-A | per-sector breakdown | **FAIL** | Same root cause. |
-| T45 | 5-A | left col demand | **FAIL** | Same root cause. |
-| T46 | 5-A | right col supply | **FAIL** | Same root cause. |
-| T47 | 5-A | % delta annotations | **FAIL** | Tbody empty because populating JS never runs. |
+| T43 | 5-A | cockpit Status↔Ziel | **PASS** | Bug #111 fixed in `f86aae9`; V5 Heroku-verified. |
+| T44 | 5-A | per-sector breakdown | **PASS** | Same fix path; bars + delta badges paint. |
+| T45 | 5-A | left col demand | **PASS** | `demandStatusZielChart` attached, 4 sectors × 2 series. |
+| T46 | 5-A | right col supply | **PASS** | `supplyStatusZielChart` attached, 4 sectors × 2 series. |
+| T47 | 5-A | % delta annotations | **PASS** | Tbody populated, sector deltas coloured per sign. |
 | T48 | 6-B | chart Nachfrage | **PASS** | Visible. |
 | T49 | 6-B | chart Effizienz | **PASS** | Visible. |
 | T50 | 6-B | chart Endenergie | **PASS** | Visible. |
@@ -99,9 +99,10 @@ Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md
 
 ## Heroku spin-up state
 
-- App: `prosim-100` (provisioned 2026-04-24)
-- Hostname: `https://prosim-100-e738babd7226.herokuapp.com`
+- App: `prosim-100` (provisioned + destroyed 3× across audit, follow-up, and fix runs)
+- Original audit hostname: `prosim-100-e738babd7226.herokuapp.com` (destroyed)
+- Follow-up audit hostname: `prosim-100-1fc45c10679b.herokuapp.com` (destroyed)
+- Fix-task hostname: `prosim-100-d538a1c45903.herokuapp.com` (destroyed)
 - Login: `testsim / TestSim!2026`
-- testsim workspace: clean (Speicherdrift = 0,0 GWh confirmed at /ws/)
-- Total cycle cost: ~$0.10 amortised over the run
-- Tear down: complete via `bash scripts/heroku_down.sh` at end of audit
+- Total cycle cost: ~$0.30 amortised across all three runs
+- Tear down: complete via `bash scripts/heroku_down.sh` at end of each cycle

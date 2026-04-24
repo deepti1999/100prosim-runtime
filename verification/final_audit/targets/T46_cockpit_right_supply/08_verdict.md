@@ -1,5 +1,9 @@
-# T46 — Verdict: **FAIL** (downgraded from PASS-WITH-CAVEAT 2026-04-24)
+# T46 — Verdict: **PASS** (restored from FAIL after #111 fix landed in commit f86aae9, 2026-04-24)
 
-Right column heading "Wo soll es herkommen? (Erneuerbare Erzeugung je Sektor)" visible in 07_cockpit.png. Donut canvas (`supplyStatusZielChart`) is 300×150 default size, no Chart.js attached.
+Previously: PASS-WITH-CAVEAT → FAIL (Task 1a) → **PASS** (Task 1 fix verified V4 + V5).
 
-**Same root cause as T43.** See `verification/final_audit/cockpit_charts_root_cause.md`. Bug task #111.
+"Wo soll es herkommen? (Erneuerbare Erzeugung je Sektor)" — right column heading visible. The `supplyStatusZielChart` canvas is now resized to 588×525 with a Chart.js instance attached. The chart shows 4 sector groups × 2 series (Status light-green, Ziel dark-green) — supply growth from Status to Ziel, with the Gebäudewärme/Prozesswärme/Mobile bars visibly increasing toward 2050 (per the delta table's +536.1 % / +674.8 % / +684.3 % growth annotations).
+
+Same fix path as T43. Screenshots: `bug_111_fix/{01_localhost,02_heroku}_cockpit_post_fix.png`.
+
+**Bug #111 closed.**

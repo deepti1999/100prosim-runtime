@@ -5,6 +5,8 @@
 **Affected targets:** T43, T44, T45, T46, T47 (PDF §2.5.4 "Ergebnisübersicht").
 **Verdict change:** PASS-WITH-CAVEAT → **FAIL** for all 5.
 
+> **RESOLVED 2026-04-24** — bug #111 fixed in commit `f86aae9` via the data-attribute payload pattern (cockpit values render into a hidden `<div id="bilanzDataPayload">` with `|unlocalize`-d `data-*` attributes; JS reads via `dataset.<key>` + `parseFloat()`). T43-T47 verdicts restored from FAIL → PASS after V4 (localhost) + V5 (Heroku `prosim-100-d538a1c45903`) Playwright confirmation that all 3 charts attach and the delta table populates with 4 sector rows. New audit tally: **41 PASS / 16 PASS-WITH-CAVEAT / 0 FAIL.** Screenshots: `verification/final_audit/bug_111_fix/{01_localhost,02_heroku}_cockpit_post_fix.png`.
+
 ## Headline
 
 `/cockpit/` is **broken on both localhost and Heroku** because Django's German locale (Phase 2-C T34: `LANGUAGE_CODE='de'`, `USE_L10N=True`, `USE_THOUSAND_SEPARATOR=True`) auto-formats numeric template variables as German display strings (`2.432.616,134…`), and `simulator/templates/simulator/cockpit.html` interpolates ~30 such variables directly into a JavaScript object literal at lines 287-340. JavaScript cannot parse `2.432.616,134` as a numeric literal (the second `.` is unexpected after the first decimal interpretation), and the **entire `<script>` block fails at parse time before a single line executes**. As a result:

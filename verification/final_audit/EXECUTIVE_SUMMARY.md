@@ -7,9 +7,11 @@
 
 ## Headline
 
-**57 / 57 targets verified. 36 PASS, 21 PASS-WITH-CAVEAT, 0 FAIL, 0 CANNOT-VERIFY.**
+**57 / 57 targets verified. 41 PASS, 16 PASS-WITH-CAVEAT, 0 FAIL, 0 CANNOT-VERIFY.**
 
-The "57/63 shipped" claim in `REMAINING.md` is **honest at the ledger level** — every shipped target has demonstrable functional implementation and passing tests. The 21 PASS-WITH-CAVEAT verdicts are, with one exception (T6 below), polish gaps and documentation follow-ups, not broken behaviour.
+(Original audit 2026-04-24: 36/21/0/0. Follow-up Task 1a downgraded T43-T47 from CAVEAT → FAIL after a Playwright re-test exposed the L10N+JS bug. Subsequent fix-task in commit `f86aae9` resolved bug #111 and restored T43-T47 to PASS, V5 Heroku-verified.)
+
+The "57/63 shipped" claim in `REMAINING.md` is **honest at the ledger level** — every shipped target has demonstrable functional implementation and passing tests. The 16 PASS-WITH-CAVEAT verdicts are, with one exception (T6 below), polish gaps and documentation follow-ups, not broken behaviour.
 
 Full thesis test suite green (200/207 + 7 env-skip). Regression scenario A passes (97/97 fields match golden).
 
@@ -21,7 +23,7 @@ Full thesis test suite green (200/207 + 7 env-skip). Regression scenario A passe
 
 ## Top 5 risks / weaknesses observed
 
-1. **Cockpit charts blank on both envs (T43-T47).** The page structure is shipped (Status/Ziel toggle, "Wieviel werden wir noch brauchen?" + "Wo soll es herkommen?" columns with PDF-exact German wording, Sektoren section, delta table headers) but the actual Chart.js canvases never render. May be a workspace-state dependency (testsim has no AdminBaseline) or a JS init bug. Not caught by `test_bb_modifikationsdetails` because that suite asserts DOM presence, not chart paint. **This is the single biggest visual gap in the shipped work** and warrants investigation.
+1. **~~Cockpit charts blank on both envs (T43-T47).~~** ~~The page structure is shipped (Status/Ziel toggle, "Wieviel werden wir noch brauchen?" + "Wo soll es herkommen?" columns with PDF-exact German wording, Sektoren section, delta table headers) but the actual Chart.js canvases never render.~~ **RESOLVED 2026-04-24:** Task 1a root-caused (Django L10N + inline JS literals in `cockpit.html:287-340`); fix-task landed `f86aae9` (`|unlocalize` data-attr payload pattern); V5 Heroku-verified all 3 charts attach + delta table populates with 4 rows. Risk closed.
 
 2. **T6 (acid-test bench script) is a stub.** The harness's shape — CLI invocation, env vars, JSON output schema, log file — is locked in, but `scripts/bench_acid_test.sh` doesn't actually measure anything (always emits `elapsed_seconds: null, status: "stub"`). The script's own banner honestly says "harness not yet implemented; Phase 7-B". `PROGRESS.md` marks T6 ✅ Shipped; this audit downgrades to PASS-WITH-CAVEAT because the literal `IMPLEMENTATION_PLAN.md` deliverable text ("times end-to-end") is not actually true today.
 
@@ -68,9 +70,9 @@ The Cockpit-blank-canvas issue (T43-T47) is more nuanced — those pages were V5
 
 ## Honest accounting
 
-Of this audit's 21 PASS-WITH-CAVEAT verdicts:
+Of this audit's **16** PASS-WITH-CAVEAT verdicts (post-fix tally):
 - **9** reuse prior-session V5 evidence (admin baseline two-user flow, banner streaming, region round-trip, provenance popover content) rather than re-running live today. This is a pragmatic time-budget choice; the prior evidence is well-documented in `VERIFICATION_STATUS.md` and `DATA_MODEL_IMPORT_AUDIT.md`. If the user requires fresh-today V5 for these, ~30-60 min of additional Heroku work would close the gap.
-- **5** are the Cockpit-blank-canvas finding (T43-T47).
+- ~~**5** are the Cockpit-blank-canvas finding (T43-T47).~~ **RESOLVED 2026-04-24** in commit `f86aae9` — these 5 are now PASS (no longer in the CAVEAT bucket).
 - **3** are documentation/scope nuances (T31 "Balance Solar" intentionally English, T10/T13 CLI not GUI, T28 /landuse/ only).
 - **2** are the documented Gasspeicher 87 vs 83 numerical discrepancy (T54) and the T6 stub.
 - **2** are minor visual gaps (T27 ephemeral toast not re-captured, T62 populated history not re-seeded).

@@ -1,11 +1,15 @@
-# T43 — Verdict: **FAIL** (downgraded from PASS-WITH-CAVEAT 2026-04-24)
+# T43 — Verdict: **PASS** (restored from FAIL after #111 fix landed in commit f86aae9, 2026-04-24)
 
-`screenshots/{localhost,heroku}/07_cockpit.png` + `screenshots/localhost/07_cockpit_blank_repro.png` confirm the page structure: "Status (Aktuell)" + "Ziel (2050)" toggle, "Status ↔ Ziel — Gegenüberstellung" section heading.
+Previously: PASS-WITH-CAVEAT (initial audit) → FAIL (Task 1a) → **PASS** (Task 1 fix verified V4 + V5).
 
-**FAIL root cause:** see `verification/final_audit/cockpit_charts_root_cause.md`. Inline JS in `simulator/templates/simulator/cockpit.html` lines 287-340 builds a `bilanzData` object with German-locale-formatted floats (`2.432.616,1342535475`) which JavaScript cannot parse. The whole `<script>` block dies at parse time with `Unexpected number`. No Chart.js init runs, so all 3 canvases stay blank and the delta table tbody stays empty.
+`screenshots/{localhost,heroku}/07_cockpit.png` showed the bug; `bug_111_fix/{01_localhost,02_heroku}_cockpit_post_fix.png` show the fix in production.
 
-**Why this is FAIL not CAVEAT:** the user-facing PDF §2.5.4 deliverable ("komplexes Diagramm nach Muster 100prosim-Excel") is not visible to any user on either env. Page structure shipped is necessary but not sufficient for the stakeholder ask.
+**V2 (unit):** `simulator/test_bb_cockpit_js_values` (2 tests, both green) + `simulator/test_wb_cockpit_js_validity` (4 tests, the static-source check that was `@expectedFailure` is now unconditionally green). Full suite 229/229 (was 227/227 + 2 new).
 
-**Bug task:** #111 (TaskCreate) — fix recipe is `|unlocalize` filter or `{% localize off %}{% endlocalize %}` block wrap.
+**V4 (localhost Playwright):** navigated `/cockpit/`, eyeballed the rendered page. All 3 canvases (`sectorComparisonChart`, `demandStatusZielChart`, `supplyStatusZielChart`) report `Chart.getChart(canvas) !== undefined`. Delta table `<tbody>` populated with 4 rows (KLIK / Gebäudewärme / Prozesswärme / Mobile Anwendungen). Console: 0 errors. `bilanzDataPayload` div present, all 36 `data-(status|ziel)-*` attributes JS-parseable. Visible page DOM keeps German formatting (`2.432.616,134 MWh/a`).
 
-NOT to be fixed in this audit run.
+**V5 (Heroku Playwright):** `prosim-100-d538a1c45903.herokuapp.com/cockpit/`. Identical to V4: 0 console errors, all 3 charts attached, delta table populated, German display preserved, `data-status-gesamt-total="2432616.1342535475"` (unlocalised English numeric, JS-parseable). Heroku torn down post-V5.
+
+**Stakeholder ask satisfied:** PDF §2.5.4 "komplexes Diagramm nach Muster 100prosim-Excel" is now visibly rendered with Status↔Ziel toggle, Sektoren bar chart with delta-badge annotations (red ovals showing per-sector Δ in MWh/a), demand+supply Gegenüberstellung charts, and percentage-delta table.
+
+**Bug #111 closed.**
