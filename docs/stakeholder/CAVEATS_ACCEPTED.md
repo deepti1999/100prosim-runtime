@@ -1,41 +1,34 @@
 # Caveats accepted — index of non-breaking caveats retained post-audit
 
-**Last updated:** 2026-04-24
+**Last updated:** 2026-04-24 (post-source-grounded-re-read — see `verification/final_audit/SOURCE_GROUNDED_ANSWERS.md`)
 
 This document catalogues caveats identified in the 2026-04-24 final audit
 (`verification/final_audit/index.md`) that Pascal has accepted as
 **non-breaking** — evidence is sufficient, no fix is scheduled, and the
 CAVEAT verdict is retained for provenance but not actionable work.
 
-These 11 entries stem from the post-fix-bundle triage; the audit's
-evidence for each is either (a) inspection + prior V5 verification
-rather than re-run this audit, (b) a documented intentional scope
-reduction, or (c) an observation logged without a gating threshold.
+The initial 11 entries went through a source-grounded re-read; **3 of
+them upgraded CAVEAT → PASS** (T10, T13, T31 — see
+`SOURCE_GROUNDED_ANSWERS.md` Q2 + Q3) because the PDF literally
+endorses the current behaviour rather than tolerating it.
+
+The remaining 8 entries are **PDF-silent caveats** — the PDF does not
+specify acceptance criteria for the rigor they describe. Evidence for
+each is either (a) inspection + prior V5 verification rather than
+re-run this audit, (b) a documented intentional scope reduction, or
+(c) an observation logged without a gating threshold.
 
 Each entry below links to the source 08_verdict.md (targets) or
-cross_cutting doc — the verdict files carry matching
-"Caveat accepted 2026-04-24" sections.
+cross_cutting doc — those files carry matching "Caveat accepted
+2026-04-24" sections + source-grounded rationale quotes.
 
 ---
 
-## Target verdicts (7)
+## Target verdicts (4)
 
-### T10 — Admin update without code change
-**Caveat:** CLI-only (`manage.py import_excel_provenance D.xlsx --apply`);
-no GUI form surfaced in admin panel.
-**Rationale:** PDF "spezielle Admin-Rechte sind nicht erforderlich"
-satisfied at the reduced "no code change required" reading. GUI
-deferred to Phase D when stakeholders actually need a non-developer
-in the loop. Pascal's call whether to build.
-→ `verification/final_audit/targets/T10_admin_update_no_code/08_verdict.md`
-
-### T13 — Region-specific models editable by non-developer admins
-**Caveat:** Adding a region is a 3-step CLI incantation (drop xlsx +
-create Region via shell + run import), not a GUI form.
-**Rationale:** Documented intentional scope reduction in
-`IMPLEMENTATION_PLAN.md`; literal PDF ask ("no admin rights") reduced
-to "no code change required". GUI deferred to Phase D follow-up.
-→ `verification/final_audit/targets/T13_nondev_admin_edit/08_verdict.md`
+*(T10, T13 both upgraded to PASS 2026-04-24 — see their 08_verdict.md.
+Quotes from PDF §2.3.2 show the CLI path IS the PDF's proposal, not a
+reduced interpretation.)*
 
 ### T18 — Shared admin baseline
 **Caveat:** Two-user roundtrip not re-run in final audit pass
@@ -60,14 +53,9 @@ IS the durable feedback signal (visible in localhost/02_landuse.png
 and 03_renewable.png); toast is a bonus layer, not load-bearing.
 → `verification/final_audit/targets/T27_visual_feedback_cascade/08_verdict.md`
 
-### T31 — Button labels German
-**Caveat:** "Balance Solar" / "Balance Wind" kept as English-rooted
-German-energy-domain terms (not translated to "Solar-Abgleich").
-**Rationale:** Documented intentional choice in
-`TRANSLATION_GLOSSARY.md` Phase 2 — PDF §2.4.3 itself lists
-"Balance" untranslated as a button name in its German body text.
-CSV is universal domain term.
-→ `verification/final_audit/targets/T31_button_labels_german/08_verdict.md`
+*(T31 upgraded to PASS 2026-04-24 — see its 08_verdict.md. Quote from
+PDF §2.4.3 shows the PDF itself proposes "WS Balance Wind / Solar" as
+the post-consolidation button names.)*
 
 ### T62 — History snapshots-as-columns layout
 **Caveat:** Populated layout not re-captured this audit

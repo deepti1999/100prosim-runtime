@@ -4,24 +4,25 @@
 **Methodology:** see `README.md`.
 **Heroku apps provisioned:** original audit `prosim-100-e738babd7226`, follow-up `prosim-100-1fc45c10679b`, fix-task `prosim-100-d538a1c45903` — all destroyed at end of each run.
 
-## Verdict counts (57 shipped targets) — UPDATED 2026-04-24 post-caveat-fixes
+## Verdict counts (57 shipped targets) — UPDATED 2026-04-24 post-source-grounded-closure
 
 | Verdict | Count | % |
 |---|---:|---:|
-| PASS | 44 | 77.2 % |
-| PASS-WITH-CAVEAT (ACCEPTED) | 7 | 12.3 % |
-| PASS-WITH-CAVEAT (open) | 1 | 1.8 % |
-| PASS-WITH-CAVEAT (pre-fix tally) | 5 | 8.8 % (cross-cutting / ACCEPTED separately) |
+| PASS | 47 | 82.5 % |
+| PASS-WITH-CAVEAT (ACCEPTED — PDF-silent rigor) | 4 | 7.0 % |
+| PASS-WITH-CAVEAT (open) | 1 | 1.8 % (T54 pending Action 2 math fix) |
+| PASS-WITH-CAVEAT (cross-cutting, counted separately) | 4 | see cross-cutting table |
 | **FAIL** | **0** | **0 %** |
 | CANNOT-VERIFY-LOCALLY | 0 | 0 % |
 | **Total verified** | **57 / 57** | **100 %** |
 
-Post-caveat-fixes (2026-04-24 fix-bundle):
+Closure timeline (2026-04-24):
 - T28 CAVEAT → PASS (Fix 2: scope aligned to PDF §2.4.5 literal)
 - T33 CAVEAT → PASS (Fix 1: all residues now German)
-- T54 CAVEAT → CAVEAT (Fix 4: investigated, fix filed as TaskCreate; Pascal decides)
-- 7 CAVEATs ACCEPTED (Fix 5: T10, T13, T18, T23, T27, T31, T62)
-- 4 cross-cutting CAVEATs ACCEPTED (cross_process_cache, provenance_audit, heroku_cold_boot, security_sweep)
+- T54 still CAVEAT → shipped by Action 2 (this closeout)
+- T10, T13, T31 CAVEAT-ACCEPTED → **PASS** (source-grounded per PDF §2.3.2 + §2.4.3 — Action 1)
+- 4 targets remain CAVEAT-ACCEPTED with PDF-silent rationale: T18, T23, T27, T62
+- 4 cross-cutting remain CAVEAT-ACCEPTED with PDF-silent rationale: cross_process_cache, provenance_audit, heroku_cold_boot, security_sweep
 - docs_drift.md CAVEAT → PASS (Fix 3)
 
 **Update 2026-04-24 follow-up Task 1a (closed):** T43-T47 were downgraded CAVEAT → FAIL based on the L10N+JS root cause documented in `cockpit_charts_root_cause.md`. **Update 2026-04-24 fix-bundle (this run):**
@@ -41,10 +42,10 @@ Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md
 | T6 | 0-C | bench script | **PASS** | Real measurement landed in `d7822c3`; A/C/D scenarios timed. |
 | T8 | A | source URL UI | **PASS** | Info-icon popover, V2 11/11. |
 | T9 | A | assumption UI | **PASS** | Same info-icon, V2 13/13. |
-| T10 | A | admin update no code | **PASS-WITH-CAVEAT (ACCEPTED)** | CLI only, GUI deferred. |
+| T10 | A | admin update no code | **PASS** | CLI IS the PDF §2.3.2 proposal ("Schnittstelle zur Nutzung der Excel-Datenmodell-Dateien") — upgraded 2026-04-24. |
 | T11 | B+C | region switcher | **PASS** | DE dropdown + Phase C TEST end-to-end. |
 | T12 | B+C | external Excel | **PASS** | --region flag, V2 6/6 + 4/4. |
-| T13 | B+C | non-dev admin edit | **PASS-WITH-CAVEAT (ACCEPTED)** | 3-step CLI shell, GUI deferred. |
+| T13 | B+C | non-dev admin edit | **PASS** | PDF §2.3.2 "Das Editieren … in einer Excel-Datei" matches our CLI admin path — upgraded 2026-04-24. |
 | T14 | 4-A | clear restores base | **PASS** | data-base-value attrs, V2 green. |
 | T15 | 4-A | T14 across 3 surfaces | **PASS** | LandUse + Renewable + Verbrauch. |
 | T16 | 4-B | Create baseline removed | **PASS** | Staff-only gate, V2 green. |
@@ -62,7 +63,7 @@ Plus 6 ErnES-gated targets (T1-T5, T7) explicitly out of scope per `REMAINING.md
 | T28 | 1-A | Save All Values removed | **PASS** | Removed from /landuse/; /gebaeudewarme/ button retained per PDF §2.4.5 literal scope (Fix 2 2026-04-24). |
 | T29 | 2-A | page headings German | **PASS** | 13 pages all German. |
 | T30 | 2-A | column labels German | **PASS** | All parameter pages. |
-| T31 | 2-A | button labels German | **PASS-WITH-CAVEAT (ACCEPTED)** | "Balance Solar/Wind" intentionally English (PDF-body convention). |
+| T31 | 2-A | button labels German | **PASS** | PDF §2.4.3 itself proposes "WS Balance Wind / Solar" as post-consolidation names — upgraded 2026-04-24. |
 | T32 | 2-B | manual German | **PASS** | 11 German steps. |
 | T33 | 2-A/B | native German | **PASS** | All residues fixed in Fix 1 2026-04-24 (cockpit year, empty-states, login/logout flashes, persistence pill). V5 Heroku-verified. |
 | T34 | 2-C | display number format | **PASS** | German format on every page on both envs. |

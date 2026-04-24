@@ -1,4 +1,27 @@
-# T31 — Verdict: **PASS-WITH-CAVEAT**
+# T31 — Verdict: **PASS**
+
+*(upgraded 2026-04-24 ACCEPTED → PASS on source-grounded reading — see
+`verification/final_audit/SOURCE_GROUNDED_ANSWERS.md` Q3.)*
+
+## Source-grounded closure 2026-04-24
+
+PDF §2.4.3 itself proposes "WS Balance Wind" + "WS Balance Solar" as
+the post-consolidation button names. Not an accidental left-over
+Englishism — actively-endorsed German-energy-domain terminology.
+Verbatim:
+
+> *„Unklar ist, weshalb die Buttons ,WS Balance ....` und Sector + WS
+> … Balance jeweils nacheinander in dieser Reihenfolge betätigt
+> werden müssen. Dies sollte durch jeweils einen **Button WS Balance
+> Wind bzw. WS Balance Solar** möglich gemacht werden."* (§2.4.3,
+> PDF p. 5)
+
+The PDF's §2.5.1 localisation-sweep rule ("sämtliche … Buttons
+sind noch englisch beschriftet") is a general direction; §2.4.3's
+specific button-naming proposal is the governing text for these two
+buttons. No conflict — "Balance" is the accepted domain-loanword.
+
+---
 
 **Implementation:** commit `6c82cce` (Phase 2-A).
 **Test module:** `simulator.test_bb_current_app` ✅ green.
@@ -23,6 +46,6 @@
 
 **Verdict:** PASS-WITH-CAVEAT — all user-facing button labels are German per the glossary, with documented exceptions for domain-standard untranslatable terms.
 
-## Caveat accepted 2026-04-24
+## Prior "Caveat accepted" note (now superseded)
 
-Caveat retained — not scheduled for fix. "Balance Solar" / "Balance Wind" / "CSV" are intentional per `TRANSLATION_GLOSSARY.md` Phase 2 (PDF §2.4.3 itself uses "Balance" untranslated in German body text). Indexed in `docs/stakeholder/CAVEATS_ACCEPTED.md`.
+~~*Caveat retained — not scheduled for fix. "Balance Solar" / "Balance Wind" / "CSV" are intentional per `TRANSLATION_GLOSSARY.md` Phase 2.*~~ — verdict upgraded to PASS 2026-04-24; no longer in `docs/stakeholder/CAVEATS_ACCEPTED.md`.
