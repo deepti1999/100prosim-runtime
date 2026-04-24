@@ -9,3 +9,15 @@ All 6 D-items shipped (D1-D3+D4c via Track 1 `7c02458`, D4a/D4b via Phase B `897
 - D4c "Abgleichdifferenz 160" bottom-right
 
 **Caveat:** documented non-blocking discrepancy in `HARDCODED_VALUES_TRACE.md` §6 — Gasspeicher Direktverbr Tages shows `83` (formula-correct) vs Excel diagram's `87` (visual copy, Excel cell H37 has no formula). Carried through unchanged because the formula output is mathematically correct; matching the Excel visual would require a hand-fix that the formula doesn't justify.
+
+## Caveat investigated 2026-04-24 (Fix 4) — NOT resolved
+
+Full investigation at `verification/final_audit/gasspeicher_83_vs_87.md`. Key findings:
+
+1. **HARDCODED_VALUES_TRACE.md §6 is wrong about H37.** There is no H37; the actual Excel cells producing "87" are **L37** and **Q37** on `1.Jahresbilanz_Strom`, and **both are formulas** (`=L36*TLproEingabeEinheit`, `=Q36*TLproEingabeEinheit`), not hardcoded visual copies.
+
+2. **Excel is authoritative**, not "Excel is wrong". Excel's 87 reflects the solver-simulated actual einspeich (263,970 annual), while our 83 uses the scenario-target input (385,933 × 0.65 = 250,857). Both are internally consistent; Excel uses the same annual basis for all three Gasspeicher diagram positions → all three labeled 87. Our simulator produces 83/87/87 — subtly inconsistent across the gas-flow positions.
+
+3. **Fix proposal filed** — one-line change in `simulator/signals.py:175`: use `gas_storage * tl_factor` instead of `(ely_branch_value * ETA_STROM_GAS) * tl_factor`. Awaiting Pascal's approval per Fix 4 protocol (backend math change, not polish).
+
+**Verdict remains PASS-WITH-CAVEAT** — not upgraded to PASS. Pascal decides whether to ship the math change.
