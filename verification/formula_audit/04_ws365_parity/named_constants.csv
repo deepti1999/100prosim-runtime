@@ -1,0 +1,18 @@
+name,excel_ref,excel_cached_value,db_formula_key,db_expression,match
+AbregCopy,'1.Jahresbilanz_Strom'!$L$23,189627.90454725613,,,
+AbregPaste,'1.Jahresbilanz_Strom'!$AO$23,189627.90454725613,,,
+Abregelung,'1.Jahresbilanz_Strom'!$N$32,1,WS_ABREGELUNG_THRESHOLD,0.65,DRIFT db=0.65 vs xl=1
+AnimationFlussbild,'1.Jahresbilanz_Strom'!$K$1,1,,,
+AufnahmeCopy,'1.Jahresbilanz_Strom'!$L$28,406108.37619771546,,,
+AufnahmePaste,'1.Jahresbilanz_Strom'!$AN$28,26.283970673778207,,,
+AufnahmeProzentCopy,'1.Jahresbilanz_Strom'!$AL$28,26.283970673778207,,,
+EtaCopy,'1.Jahresbilanz_Strom'!$M$12,38.002171106380686,,,
+EtaPaste,'1.Jahresbilanz_Strom'!$AN$20,38.002171106380686,,,
+EtaRückverstromung,'1.Jahresbilanz_Strom'!$S$33,0.585,WS_ETA_GAS_STROM,0.585,EXACT
+EtaStromGas,'1.Jahresbilanz_Strom'!$N$33,0.65,WS_ETA_STROM_GAS,0.65,EXACT
+SelbstentladungsRate,'1.Jahresbilanz_Strom'!$R$41,0,,,
+SpeicherBilanz,'1.Jahresbilanz_Strom'!$AA$1,0,,,
+TLproEingabeEinheit,'1.Jahresbilanz_Strom'!$D$85,0.0003293634487435486,,,
+VerbrauchStrom,'1.Jahresbilanz_Strom'!$S$25,1108198.257555285,,,
+WS_Abgleich,'[1]2. Erneuerbare'!$S$203,,,,
+waste1,'1.Jahresbilanz_Strom'!$L$28,406108.37619771546,,,
