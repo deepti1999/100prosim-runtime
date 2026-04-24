@@ -2,6 +2,7 @@
 verification/*
 !verification/final_audit/
 !verification/formula_audit/
+!verification/formula_audit_full/
 verification/final_audit/screenshots/
 verification/final_audit/heroku_up.log
 verification/final_audit/heroku_down.log
