@@ -1,21 +1,23 @@
 # What's remaining — single source of truth
 
-**Last updated:** 2026-04-24 (after source-grounded final closure —
-T10/T13/T31 upgraded to PASS per PDF §2.3.2 + §2.4.3; T54 math aligned
-with Excel L37; 7 ACCEPTED caveats annotated with PDF-silence rationale;
-2 new spot-check findings deferred below as non-blocking polish).
+**Last updated:** 2026-04-25 (Round 2 deep audit added §5 — 14 findings
+with Excel cell references). Previous update 2026-04-24 (source-grounded
+final closure — T10/T13/T31 upgraded to PASS per PDF §2.3.2 + §2.4.3;
+T54 math aligned with Excel L37; 7 ACCEPTED caveats annotated with
+PDF-silence rationale; 2 spot-check findings logged as polish in §4).
 **Source material:** `260403_Portierung_Bestandsaufnahme.pdf` (stakeholder PDF, 12 pages) + `IMPLEMENTATION_PLAN.md` (our 63-target decomposition)
 
 ---
 
 ## Headline
 
-**57/63 atomic targets shipped, Heroku-verified, AND operationally complete** (51 from the original push + T8/T9/T10 from §2.3 Phase A + T11/T12/T13 from §2.3 Phase B with Phase C operational closure). T54 diagram sub-items 6/6 shipped (Track 1 closed D1/D2/D3/D4c on 2026-04-23 commit `7c02458`; Phase B closed D4a/D4b; T54 math polish 2026-04-24 commit `d1fed89` aligned Gasspeicher with Excel L37 → 87/87/87). Post-audit verdict tally: 47 PASS / 8 ACCEPTED (all with PDF-silence rationale quotes) / 0 OPEN. **6 items outstanding total — all external-gated:**
+**57/63 atomic targets shipped, Heroku-verified, AND operationally complete** + **14 audit findings (1 CRITICAL, 4 HIGH, 5 MEDIUM, 2 LOW, 2 carried) — all pre-existing in baseline codebase except F009** (51 from the original push + T8/T9/T10 from §2.3 Phase A + T11/T12/T13 from §2.3 Phase B with Phase C operational closure). T54 diagram sub-items 6/6 shipped (Track 1 closed D1/D2/D3/D4c on 2026-04-23 commit `7c02458`; Phase B closed D4a/D4b; T54 math polish 2026-04-24 commit `d1fed89` aligned Gasspeicher with Excel L37 → 87/87/87). Post-audit verdict tally: 47 PASS / 8 ACCEPTED (all with PDF-silence rationale quotes) / 0 OPEN. **22 items outstanding total — 6 external-gated + 16 local-fixable:**
 
 | Bucket | Count | Blocked on |
 |---|---:|---|
 | **External-gated (Phase 7)** | 6 | ErnES picks a compute platform |
-| **Deferred spot-check findings (non-blocking)** | 2 | see §4 below |
+| **Polish findings (2026-04-24)** | 2 | see §4 below — Findings A / B |
+| **Deep audit findings (2026-04-25)** | 14 | see §5 below — F001–F014 (13 pre-existing in `a5da7dd`, 1 from 2026-04-21 perf pass) |
 
 T54 D1/D2/D3/D4c (source Tagesladungen, flow Tagesladungen, percent shares, Abgleichdifferenz) shipped 2026-04-23 in commit `7c02458`; T54 D4a/D4b (Pmax-Ely-ES 194 GW, Pmax-RV 261 GW) shipped 2026-04-23 in commit `897e212` via `Region.installed_pmax_*`. T54 fully closed. See `HARDCODED_VALUES_TRACE.md` §6 for the verification ledger and `DATA_MODEL_IMPORT_AUDIT.md` §0b for Phase B delivery table.
 
@@ -312,6 +314,329 @@ calculation — tracked here so they don't get lost.
 
 Both findings are polish-tier, not correctness-tier. Defer until
 Pascal signals priority.
+
+---
+
+## 5. Deep audit findings (2026-04-25) — pre-existing codebase issues
+
+Surface for the 14 findings produced by `verification/formula_audit_full/`
+(Round 2 deep audit). **Headline tally: 1 CRITICAL + 4 HIGH + 5 MEDIUM
++ 2 LOW + 2 carried = 14.**
+
+**Origin breakdown:** 13 of the 14 are pre-existing in the initial
+runtime-bundle import commit `a5da7dd` ("chore: initial import of
+100ProSim runtime bundle") — they were inherited, NOT introduced by
+the 2026-04-22 → 2026-04-24 stakeholder-plan work. The single
+exception is F009 (Abregelung sum 3.3 % drift), introduced by the
+2026-04-21 perf pass that cut convergence iterations to bring
+Heroku cold-start balance from ~5 min to ~2 min — an accepted
+trade-off documented in `docs/CONVERGENCE_ITERATIONS_CHANGED.md`.
+
+**Pattern observation:** 4 of the 5 highest-severity findings (F007,
+F008, F011, F013) are the same structural bug — `bilanz_engine.py`
+picks too-narrow subcodes for sector aggregation. F007 picks
+`'2.9.2'` (heat-pumps-only) instead of `'2.9.0'` (total GW Strom).
+F008 picks `'6.2'` (which holds 28k vs Excel's 15k MA Strom).
+F011 misses Biogas + Solar-thermal heat in `heat_renewable_codes`.
+F013 uses `'10.x.3'` (Strom-only sub-subcode) instead of `'10.x'`
+(sector aggregate). Likely one refactor introduced the wrong
+subcode pattern across multiple sector mappings before the initial
+repo import.
+
+**Recommended fix order** (matching `verification/formula_audit_full/FINAL_REPORT.md`
+§8 — engine fixes first, then seed corrections, then design decisions):
+
+1. Engine fixes (F007 → F013 → F011 → F008): single-file bilanz_engine.py
+2. Seed corrections (F001 → F003 → F005): seed/sqlite_seed.json
+3. Design decisions (F004, F010, F012, F014): scope discussions
+4. Code hygiene (F006, F009): non-blocking
+
+Cross-link to full audit: `verification/formula_audit_full/FINAL_REPORT.md`
++ `verification/formula_audit_full/DISCREPANCY_LEDGER.csv`.
+
+---
+
+### F007 CRITICAL — Bilanz GW Strom returns 0
+- **Symptom:** `/bilanz/` shows "Gebäudewärme Strom = 0 GWh/a"
+- **DB:** `calculate_bilanz_data()` returns 0 for
+  `verbrauch_strom.gebaeudewaerme.status` (DB row
+  `VerbrauchData[2.9.2]` stores `status = 10,108` but `is_calculated=True`
+  and no status-formula → fallback masks it)
+- **Excel:** `_S.xlsx!5. Bilanz!K9 = 32,877 GWh/a` (formula chain
+  `='7. Verbrauch Status'!K11` → `=K41*$L$5/$AB$4` =
+  388.30 kWh/person × 84,669,326 / 1,000,000)
+- **Reasoning:** Two stacked bugs:
+  (a) `strom_codes['gebaeudewaerme'] = '2.9.2'` picks the heat-pumps-only
+  subcode (10,108 GWh/a); should be `'2.9.0'` (total GW electricity =
+  32,766 GWh/a, matches Excel within 0.3 %).
+  (b) `get_verbrauch_value()` returns 0 when `is_calculated=True` but
+  `calculate_value()` returns None (no status formula); the stored
+  10,108 is silently shadowed.
+- **Code:** `calculation_engine/bilanz_engine.py:518` (strom_codes map)
+  + `calculation_engine/bilanz_engine.py:229-280` (get_verbrauch_value
+  fallback at line 270)
+- **Fix effort:** ~10 min — 2-line change (`'2.9.2'` → `'2.9.0'` and
+  fallback to `verbrauch.status` when `calculate_value()` returns None).
+- **Goldens move:** YES (Bilanz scenario A/D).
+- **Origin:** pre-existing in commit `a5da7dd` initial import.
+- **Evidence:** `verification/formula_audit/09_findings/F007_Bilanz_GW_Strom_engine_zero.md`
+
+### F013 HIGH — Ziel renewable per-sector 51 % short
+- **Symptom:** `/bilanz/` Ziel-Bilanz renewable per-sector values diverge 16-80 % from Excel.
+- **DB:** `renewable_by_sector` = KLIK 312,753 / GW 137,950 / PW 357,517 / MA 197,521 / total 1,005,743 GWh/a (engine ziel)
+- **Excel:** `_S.xlsx!5. Bilanz!I65 = 374,437.50` (KLIK), `L65 = 699,077.14` (GW), `O65 = 560,767.10` (PW), `R65 = 427,711.43` (MA), `U65 = 2,061,993.18` (total)
+- **Reasoning:** Engine `renewable_by_sector` reads `10.3.1` / `10.4.3` /
+  `10.5.3` / `10.6.2` (these are Strom-only sub-subcodes). Excel
+  `L65 = M239` (full GW renewable across gas + liquid + solid + heat +
+  Strom). Should use `10.3` / `10.4` / `10.5` / `10.6` (sector aggregate
+  parents). With the parent codes, GW renewable would jump from 17,211
+  to ~172,290 (10× increase, matches Excel L239).
+- **Code:** `calculation_engine/bilanz_engine.py:407-419`
+- **Fix effort:** ~5 min — 4-line change in the `renewable_by_sector` dict.
+- **Goldens move:** YES.
+- **Origin:** pre-existing in commit `a5da7dd`.
+- **Evidence:** `verification/formula_audit_full/08_findings/F013_ziel_renewable_per_sector_drift.md`
+
+### F011 HIGH — verbrauch_heat_renewable returns 0
+- **Symptom:** Bilanz Wärme renewable row shows 0 across all sectors when Excel scenario has 32,783 GWh/a (Biogas Wärmenutzung + Solar thermal).
+- **DB:** `calculate_bilanz_data()['verbrauch_heat_renewable']['status']['gebaeudewaerme'] = 0`
+- **Excel:** `_S.xlsx!5. Bilanz!L22 = 32,782.79` (formula `=L10+L91+L137+L153+L159` summing solar thermal + biogas heat + wood heat + 2 more renewable heat sources)
+- **Reasoning:** Engine's `heat_renewable_codes` map doesn't aggregate
+  the Renewable subcodes that Excel sums in `L22`. The `v_heat_status_ren`
+  dict evaluates to `{kraft_licht: 0, gebaeudewaerme: 0, ...}` because
+  no contributing codes are wired in.
+- **Code:** `calculation_engine/bilanz_engine.py:660-661`
+  (verbrauch_heat_renewable assembly) + the `heat_renewable_codes` map
+  defined nearby that needs Biogas/Solar-thermal codes added.
+- **Fix effort:** ~30 min — cross-reference Excel `L22 = L10+L91+L137+L153+L159`
+  to the matching DB Renewable codes (likely under `10.4.2` family);
+  expand the heat_renewable_codes map.
+- **Goldens move:** YES.
+- **Origin:** pre-existing in commit `a5da7dd`.
+- **Evidence:** `verification/formula_audit_full/08_findings/F011_verbrauch_heat_renewable_zero.md`
+
+### F001 HIGH — LU_2.1 user_percent seed drift 3.856 vs 5
+- **Symptom:** Solare Freiflächen target_ha is 23 % short of scenario.
+- **DB:** `LandUse[LU_2.1].user_percent = 3.856 %`, `target_ha = 684,640.80 ha`
+- **Excel:** `_S.xlsx!1. Flächen!R13 = 5` (Ziel-Modifikation, literal),
+  `_S.xlsx!1. Flächen!L13 = 887,749.85 ha`
+- **Reasoning:** Excel L13 formula
+  `=IF(R13="",AF13,IF(T13="",INDIRECT("L"&AB13)*R13/100,R13))` with
+  R13=5 and AB13=12 → L12 × 5 / 100 = 17,754,997 × 0.05 = 887,749.85.
+  DB seed has `user_percent = 3.856 %` instead of 5 % → recomputes
+  ziel as 17,754,997 × 0.03856 ≈ 684,641. Formula shape is identical;
+  the **seed value** for `user_percent` diverges.
+- **Code:** seed row — `seed/sqlite_seed.json` `LandUse[code='LU_2.1']` (`user_percent` field, owner=None canonical)
+- **Fix effort:** ~5 min — single seed-value change + `percentage_rebalancer` cascade.
+- **Goldens move:** YES (LandUse + Bilanz Flächen totals).
+- **Origin:** pre-existing in commit `a5da7dd`.
+- **Evidence:** `verification/formula_audit/09_findings/F001_LU_2_1_user_percent_drift.md`
+
+### F003 HIGH — Verbrauch 3.2.2 Zieleinfluss Prozess-Effizienz drifts 89 vs 95
+- **Symptom:** PW efficiency multiplier ziel is 6 percentage points
+  below scenario; affects PW total (related F004).
+- **DB:** `VerbrauchData[3.2.2].ziel = 89.00004`, `status = 100.0` (matches),
+  `is_calculated = False`
+- **Excel:** `_S.xlsx!4. Verbrauch!M32 = 95` (literal hand-set scenario
+  parameter, not a formula); `L32 = 100` (matches DB status)
+- **Reasoning:** Hand-set scenario parameter at literal 95. DB seeds at
+  89.00004. Sibling row 1.1.2 (KLIK Endanwendungs-Effizienz) seed
+  matches Excel at 95 — so this drift is isolated to 3.2.2, not a
+  systemic miss across all Zieleinfluss rows.
+- **Code:** seed row — `seed/sqlite_seed.json` `VerbrauchData[code='3.2.2']` (`ziel` field, owner=None canonical)
+- **Fix effort:** ~5 min — single seed correction.
+- **Goldens move:** YES (PW sector ziel ~6 % lift).
+- **Origin:** pre-existing in commit `a5da7dd`.
+- **Evidence:** `verification/formula_audit/09_findings/F003_Verbrauch_3_2_2_ziel_drift.md`
+
+### F008 HIGH (carried) — Bilanz MA Strom subcode mismatch (28,136 vs 15,300)
+- **Symptom:** `/bilanz/` MA Strom is 84 % too high.
+- **DB:** `calculate_bilanz_data()['verbrauch_strom']['status']['mobile'] = 28,136`
+  (from DB row `VerbrauchData[6.2].status = 28,135.997474`, category "davon Strom")
+- **Excel:** `_S.xlsx!5. Bilanz!Q9 = 15,300.01 GWh/a` (formula
+  `='7. Verbrauch Status'!Q11` → `=Q41*$L$5/$AB$4` =
+  180.70 kWh/person × 84,669,326 / 1,000,000)
+- **Reasoning:** `strom_codes['mobile'] = '6.2'` selects a DB value
+  ~13k GWh/a above Excel's `Q9`. Either DB 6.2 includes electric-traction
+  rail that Excel tracks separately, OR DB 6.2 status is back-cast from
+  ziel state. Same class as F007 — subcode mapping error in
+  `bilanz_engine.py`.
+- **Code:** `calculation_engine/bilanz_engine.py:521` (strom_codes mobile entry)
+- **Fix effort:** ~30-60 min — enumerate VerbrauchData rows under
+  6.x; identify which one corresponds to Excel `Q9`; or correct seed
+  if 6.2 status is wrong.
+- **Goldens move:** YES.
+- **Origin:** pre-existing in commit `a5da7dd`.
+- **Evidence:** `verification/formula_audit/09_findings/F008_Bilanz_MA_Strom_code_mismatch.md`
+
+### F005 HIGH (carried) — Biogas Nutzungsgrad seed drift 12-23 pp
+- **Symptom:** Biogas power-plant + KWK efficiency factors diverge
+  12-23 percentage points from Excel; cascades into Biogas-Verstromung
+  GWh/a totals.
+- **DB:** `RenewableData[5.4.2.1] (Biogas Nutzungsgrad Kraftwerk).status = 37.5`,
+  `.target = 45`. `RenewableData[5.4.2.3] (Biogas Nutzungsgrad
+  KWK-Abwärme effektiv).status = 21.9`, `.target = 25`.
+- **Excel:** `_S.xlsx!2. Erneuerbare!L84 = 25`, `M84 = 35` (Biogas
+  Nutzungsgrad Kraftwerk). `_S.xlsx!2. Erneuerbare!L86 = 45`, `M86 = 45`
+  (Biogas Nutzungsgrad KWK-Abwärme effektiv).
+- **Reasoning:** Round 2's curated section-aware mapping placed the
+  Biogas + Biodiesel "Nutzungsgrad KWK-Abwärme effektiv" rows in
+  separate Excel sections (84/86 for Biogas vs 136 for Biodiesel).
+  Biodiesel row `6.1.3.2.3` matches Excel L136 EXACTLY at 50/50, so
+  the Biogas drift is isolated and confirmed real. Carried because
+  it's one specific instance of F014's Renewable-yield-cluster
+  pattern.
+- **Code:** seed rows — `seed/sqlite_seed.json` `RenewableData[code='5.4.2.1']`
+  + `RenewableData[code='5.4.2.3']`
+- **Fix effort:** ~10 min — 4 seed values (status + ziel for both rows)
+  pending stakeholder confirmation.
+- **Goldens move:** YES.
+- **Origin:** pre-existing in commit `a5da7dd`.
+- **Evidence:** `verification/formula_audit/09_findings/F005_Renewable_biogas_nutzungsgrad.md`
+  + closure `verification/formula_audit_full/04_renewable_section_aware/f005_resolution.md`
+
+### F002 MEDIUM — LU_2.4 (sonstige Nutzung) residual drift 12.8 %
+- **Symptom:** "(sonstige Nutzung)" target_ha is 12.8 % above scenario; **derived consequence of F001**.
+- **DB:** `LandUse[LU_2.4].target_ha = 1,883,157`
+- **Excel:** `_S.xlsx!1. Flächen!L25 = 1,670,097.38`
+  (formula `=L12-L14-L22-L13` = LF target − Ackerland − Dauergrünland − LU_2.1)
+- **Reasoning:** LU_2.4 is a residual. With LU_2.1 wrong (684,641 instead
+  of 887,750 — F001), the residual absorbs the 203 kha gap →
+  17,754,997 − 10,826,000 − 4,371,150 − 684,641 ≈ 1,873,206 (DB shows
+  1,883,157, small rounding). Fixing F001 cascades and self-corrects F002.
+- **Code:** none — derived
+- **Fix effort:** 0 min — auto-corrects when F001 is fixed.
+- **Goldens move:** YES (along with F001).
+- **Origin:** pre-existing in commit `a5da7dd` (consequence of F001's seed).
+- **Evidence:** `verification/formula_audit/09_findings/F002_LU_2_4_residual_drift.md`
+
+### F004 MEDIUM — Verbrauch 3.7 PW status 0.9 % short
+- **Symptom:** PW sector total status is 0.9 % below Excel; ziel matches.
+- **DB:** `VerbrauchData[3.7].status = 550,370.90 GWh/a`
+  (`is_calculated=True` — sum of PW children 3.3 / 3.4 / 3.5 / 3.6)
+- **Excel:** `_S.xlsx!4. Verbrauch!L120 = 555,394.57 GWh/a`
+- **Reasoning:** 0.9 % drift on a calculated sum suggests one PW child
+  status seed is slightly off. Ziel is identical (drift < 1 ppm) →
+  bug is status-side only.
+- **Code:** seed row — one of `seed/sqlite_seed.json`
+  `VerbrauchData[code in {3.3.0, 3.4.0, 3.5.0, 3.6.0}]` (`status` field)
+- **Fix effort:** ~30-60 min — drill-down to identify the single child;
+  correct the seed.
+- **Goldens move:** YES.
+- **Origin:** pre-existing in commit `a5da7dd`.
+- **Evidence:** `verification/formula_audit/09_findings/F004_Verbrauch_3_7_status_drift.md`
+
+### F010 MEDIUM — 10.x_ziel residual-vs-sum formula divergence
+- **Symptom:** Sector-total renewable Formulas (10.4_ziel / 10.5_ziel /
+  10.6_ziel) compute via sum-of-children in DB, residual in Excel.
+  Default-scenario identical; unbalanced-scenario may diverge.
+- **DB:** `Formula[10.5_ziel_target].expression =
+  'Renewable_10_5_1 + Renewable_10_5_3 + Renewable_10_5_2'`
+- **Excel:** `_S.xlsx!2. Erneuerbare!M62 = =100-M62-M64-M65` (residual form)
+- **Reasoning:** Sum-form: total = changed_value + other_siblings.
+  Residual-form: total = 100 − other_siblings (changed sibling
+  ignored). The two diverge when one sibling is moved without
+  rebalancing the others. Behavioural design question — Excel's
+  scenario state has the children sum to 100, so both forms agree
+  at default.
+- **Code:** Formula table rows `10.4_ziel_target`, `10.5_ziel_target`,
+  `10.6_ziel_target` — backed by `seed/sqlite_seed.json` Formula entries
+- **Fix effort:** ~30-45 min — Formula expression refactor + scenario
+  test under unbalanced edits.
+- **Goldens move:** NO at default scenario; YES if user-mutated workspaces are tested.
+- **Origin:** pre-existing in commit `a5da7dd`.
+- **Evidence:** `verification/formula_audit_full/08_findings/F010_residual_vs_sum_divergence.md`
+
+### F012 MEDIUM — verbrauch_fuels aggregates 3 carriers
+- **Symptom:** Engine `verbrauch_fuels` is a single aggregate for gas +
+  liquid + solid; Excel has 3 separate Bilanz rows.
+- **DB:** Single dict key `verbrauch_fuels.gebaeudewaerme = 632,956`
+  (sum of gas + liquid + solid)
+- **Excel:** `_S.xlsx!5. Bilanz!K12 = 346,430` (gas), `K15 = 136,478`
+  (liquid), `K18 = 149,501` (solid). Sum K12+K15+K18 = 632,410
+  (matches engine within 0.09 %, PASS_COSMETIC).
+- **Reasoning:** Engine model coarser than Excel. Aggregate math is
+  right; per-carrier display is missing. Stakeholder PDF §2.3 may
+  require per-carrier reporting; if not, accept as-is.
+- **Code:** `calculation_engine/bilanz_engine.py:642-653`
+  (verbrauch_fuels assembly)
+- **Fix effort:** ~60-90 min to split into 3 carriers; or 0 min if
+  accepted as out-of-scope.
+- **Goldens move:** NO at aggregate level; YES if per-carrier rows are added.
+- **Origin:** pre-existing in commit `a5da7dd`.
+- **Evidence:** `verification/formula_audit_full/08_findings/F012_verbrauch_fuels_no_carrier_breakdown.md`
+
+### F014 MEDIUM — Renewable yield / Nutzungsgrad cluster drift 5-30 %
+- **Symptom:** ~50 Renewable seed values diverge 5-30 % from Excel —
+  Solarthermie yield, Biomethan split, Biomasse Nutzungsgrad,
+  Biogas-Biomasse yields, etc.
+- **DB:** Examples: Solarthermie Energieertrag DB = 3,878 vs Excel 5,250
+  (26 % drift); Biomethan für MA DB = 1.2 % vs Excel 1.25 % (3.9 %).
+  Total: 68 status + 65 ziel rows >1 % drift after section-aware mapping.
+- **Excel:** `_S.xlsx!2. Erneuerbare` — Solarthermie yield row L9 = 5,250
+  (Excel cached); Biomethan-für-MA row `L114 = 1.249887...`; full list
+  in `verification/formula_audit_full/04_renewable_section_aware/per_row_parity.csv`
+  (rows with `verdict_status=DRIFT` or `verdict_ziel=DRIFT`).
+- **Reasoning:** Cluster pattern, not a single bug. DB Renewable seed
+  was captured at one point in time; Excel scenario parameters were
+  later refined. Drift is consistent with a seed-refresh lag of
+  ~2-3 months.
+- **Code:** seed rows — `seed/sqlite_seed.json` ~50 RenewableData rows
+  (those flagged DRIFT in `04_renewable_section_aware/per_row_parity.csv`)
+- **Fix effort:** ~2-4 hours — re-import Renewable seed values from
+  `_S.xlsx!2. Erneuerbare` using the curated mapping; produce a diff;
+  await stakeholder sign-off before committing seed change.
+- **Goldens move:** YES (Renewable + Bilanz renewable rows).
+- **Origin:** pre-existing in commit `a5da7dd`.
+- **Evidence:** `verification/formula_audit_full/08_findings/F014_renewable_yield_cluster_drift.md`
+
+### F006 LOW — WS_ABREGELUNG_THRESHOLD = 0.65 dead code
+- **Symptom:** Constant looks load-bearing but is unused; if rewired,
+  would produce 35 %-short Einspeich on max-excess days.
+- **DB:** `Formula[key='WS_ABREGELUNG_THRESHOLD', category='ws_constant'].expression = '0.65'`
+- **Excel:** Named range `Abregelung` →
+  `WS.xlsm!1.Jahresbilanz_Strom!N32 = 1` (cached value, formula
+  `=IF(O32="",D79,O32)/100` with D79 = 100).
+- **Reasoning:** `calculation_engine/ws_engine.py:40` loads the
+  constant and uses it as both threshold AND multiplier in
+  Einspeich/Abregelung branching; with 0.65 it would diverge from
+  Excel (which uses 1 for both). Grep confirms `ws_engine.py` has
+  zero importers in `simulator/` — production WS365 path uses
+  `WS365Formula[einspeich]` (migration 0044) which correctly uses
+  threshold = 1. Constant has no production effect today; documented
+  hygiene risk.
+- **Code:** `calculation_engine/ws_engine.py:40` (loader; entire file
+  is dead code) + Formula seed row in `seed/sqlite_seed.json`
+- **Fix effort:** ~5 min — either delete `ws_engine.py` + the seed
+  row, OR change the seed expression to `'1.0'` to match Excel if
+  someone re-wires it.
+- **Goldens move:** NO (no production effect).
+- **Origin:** pre-existing in commit `a5da7dd`.
+- **Evidence:** `verification/formula_audit/09_findings/F006_WS_ABREGELUNG_THRESHOLD_dead_code.md`
+
+### F009 LOW — Jahresstrom Abregelung sum 3.3 % drift (accepted perf trade-off)
+- **Symptom:** `n_input_branch` (Abregelung input) drifts 3.3 % from
+  Excel; flow_q_abregelung_tages drifts 3.25 %; abgleichdifferenz
+  drifts 1.66 %.
+- **DB:** `compute_ws_diagram_reference()`: `n_input_branch = 195,890.29`,
+  `flow_q_abregelung_tages = 64.55`, `abgleichdifferenz = 156.63`
+- **Excel:** `WS.xlsm!1.Jahresbilanz_Strom!L23 = 189,627.90` (named
+  range `AbregCopy` → `Zeitreihen Kalkulation!Q152` annual sum);
+  `L24 = 62.46` (Abregelung tages); `Q44 = 159.27` (Abgleichdifferenz)
+- **Reasoning:** 2026-04-21 perf pass intentionally cut convergence
+  iteration counts (Heroku cold-start balance ~5 min → ~2 min). Within
+  scenario D tolerance ±5 ha / ±1 GWh. Daily Einspeich + Abregelung
+  formulas in `WS365Formula` exactly match Excel; the 3.3 % drift is
+  the goal-seek solver's residual mis-balance from the iteration cut.
+- **Code:** convergence iteration counts — see `docs/CONVERGENCE_ITERATIONS_CHANGED.md`
+  for the exact revert recipe per file/line.
+- **Fix effort:** 0 min if accepted (current state); ~60 min if reverted
+  for bit-identical math.
+- **Goldens move:** NO (within tolerance; goldens already accept
+  current values).
+- **Origin:** **introduced** by 2026-04-21 perf pass (the only one of
+  the 14 NOT pre-existing in `a5da7dd`).
+- **Evidence:** `verification/formula_audit/09_findings/F009_Abregelung_sum_drift_from_perf_cuts.md`
 
 ---
 
