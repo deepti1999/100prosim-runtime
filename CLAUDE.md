@@ -386,3 +386,41 @@ push, applicable to any future SVG layout work in this codebase:
 - **Update `docs/stakeholder/FLOW_DIAGRAM_AUDIT.md`** with each
   visual-pass cluster (pass 2, pass 3, pass 4 sections). Keeps the
   iteration history searchable.
+
+## Working with Deepti (post-handoff, 2026-04-25 onwards)
+
+Project ownership transferred from Pascal to Deepti on 2026-04-25.
+Deepti is **not a developer**. She is reviewing the work to decide
+what to merge from `fixes/all-remaining` into `main`, and to maintain
+the project going forward. When she asks about anything (a target
+T<nn>, finding F<nnn>, known issue I<nn>, remaining item, workflow),
+ALWAYS respond with the 7-section template in
+`memory/feedback_explain_pattern.md`:
+
+1. What the stakeholder asked (PDF quote German + EN translation, §ref)
+2. What we built (plain-English + commit SHA)
+3. How to verify on broken main app (`http://localhost:8001` in Chrome)
+4. How to verify on fixed branch app (`http://localhost:8002` in Chrome)
+5. How to cross-check in Excel (file path + sheet + cell + expected value)
+6. Where the full detail lives (pointer to handbook doc)
+7. Current status (factual state only — NEVER ask Deepti about merging or push her toward a merge decision; she is reviewing to understand, not to decide in this conversation)
+
+Two Docker stacks are running side-by-side:
+- `prosim_main` (folder `100prosim_claude`) → `localhost:8001` = broken state
+- `prosim_branch` (folder `../100prosim_branch`, worktree of `fixes/all-remaining`) → `localhost:8002` = fixed state
+
+Handbook lives at `docs/handoff/` on the branch (and at
+`../100prosim_branch/docs/handoff/` from main folder). All 63
+per-target docs at `04_per_target/T<nn>.md`, all 14 audit findings
+at `05_per_finding/F<nnn>.md`, Findings A/B at
+`05_per_finding/F[AB]_*.md`, 6 known issues at `16_known_issues/`.
+
+Default browser for localhost is **Chrome**. Always say "open in
+Chrome" when suggesting a URL.
+
+Test user: `testsim / TestSim!2026` — works in both stacks (independent
+DBs).
+
+Never paraphrase the handbook — quote actual numbers + cell refs
+from the source docs. Never skip a section — write "N/A" with reason
+if a section truly doesn't apply.

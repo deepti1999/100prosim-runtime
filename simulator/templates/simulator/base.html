@@ -579,6 +579,51 @@
         }
     </script>
 
+    {# Shared "cascade running" overlay + helper. Used by per-cell save handlers #}
+    {# on Landuse / Verbrauch / Renewable to wait for the dependent recalc to #}
+    {# finish (or worker job to complete) before reloading the page. #}
+    <div id="cascade-overlay" style="display:none; position:fixed; inset:0; background:rgba(255,255,255,.75); z-index:9999; align-items:center; justify-content:center; flex-direction:column;">
+        <div class="spinner-border text-primary" style="width:3rem; height:3rem;" role="status"></div>
+        <div class="mt-3 fs-5 text-dark"><strong>Berechnung läuft, bitte warten…</strong></div>
+        <div class="mt-1 text-muted small">Abhängige Werte werden im Hintergrund neu berechnet.</div>
+    </div>
+    <script>
+        function showCascadeOverlay() {
+            const el = document.getElementById('cascade-overlay');
+            if (el) el.style.display = 'flex';
+        }
+        function hideCascadeOverlay() {
+            const el = document.getElementById('cascade-overlay');
+            if (el) el.style.display = 'none';
+        }
+        // Poll a BalanceJob until it succeeds or fails (or 60 s timeout), then reload.
+        // If jobId is null/empty, reload immediately (cascade ran in-request).
+        async function awaitCascadeAndReload(jobId) {
+            showCascadeOverlay();
+            if (!jobId) {
+                window.location.reload();
+                return;
+            }
+            const maxPolls = 40;            // ~60 s at 1.5 s interval
+            for (let i = 0; i < maxPolls; i++) {
+                try {
+                    const res = await fetch(`/api/ws/balance-job/${jobId}/`, { headers: { 'Accept': 'application/json' } });
+                    const data = await res.json();
+                    const status = (data && (data.status || (data.result && data.result.status))) || null;
+                    if (status === 'succeeded' || status === 'failed') {
+                        window.location.reload();
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('cascade poll error', e);
+                }
+                await new Promise(r => setTimeout(r, 1500));
+            }
+            // Timeout — reload anyway so user isn't stuck.
+            window.location.reload();
+        }
+    </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 

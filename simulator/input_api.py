@@ -331,7 +331,24 @@ def save_verbrauch_user_input(request):
 
         old_value = item.user_percent
         item.user_percent = float(user_percent) if user_percent is not None else None
+        # T25 follow-up: keep per-cell save fast (skip the inline cascade) and
+        # enqueue a background verbrauch_recalc job so dependent Verbrauch /
+        # Renewable / Bilanz cells recompute without blocking the user.
+        # Mirrors the queue path in save_and_recalculate_verbrauch.
         item.save(skip_cascade=True)
+
+        recalc_job_id = None
+        try:
+            from simulator.models import BalanceJob
+            from simulator.ws_queue_api import _queue_or_reuse_balance_job
+            recalc_job = _queue_or_reuse_balance_job(
+                request.user,
+                BalanceJob.TYPE_VERBRAUCH_RECALC,
+                {"scope": "verbrauch", "trigger_code": code},
+            )
+            recalc_job_id = str(recalc_job.id) if recalc_job else None
+        except Exception as e:
+            print(f"Failed to enqueue verbrauch_recalc after per-cell save: {e}")
 
         # Phase 6-A (T61): log user-initiated modification.
         _log_modification(
@@ -368,7 +385,8 @@ def save_verbrauch_user_input(request):
             'old_value': old_value,
             'new_value': item.user_percent,
             'message': f'Updated {code} user input to {user_percent}%',
-            'rebalanced': rebalanced
+            'rebalanced': rebalanced,
+            'recalc_job_id': recalc_job_id,
         })
 
     except ValueError as e:

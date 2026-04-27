@@ -684,11 +684,11 @@
                                 }
                             });
                             highlightRebalancedRows(data.rebalanced, code);
-                        } else if (!skipReload && !saveRecalcInProgress) {
-                            // No rebalancing, just reload after a short delay
-                            setTimeout(() => {
-                                location.reload();
-                            }, 500);
+                        }
+                        // Wait for the background verbrauch_recalc job (if any) to finish
+                        // before reloading so the whole page reflects the cascaded state.
+                        if (!skipReload && !saveRecalcInProgress && typeof awaitCascadeAndReload === 'function') {
+                            awaitCascadeAndReload(data.recalc_job_id || null);
                         }
                     } else {
                         if (!suppressAlert) {

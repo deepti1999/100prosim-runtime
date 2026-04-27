@@ -627,6 +627,8 @@
         const rowName = getRenewableRowName(cell);
         cell.classList.add('saving');
         cell.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        // Full-screen "Berechnung läuft" overlay while in-request cascade runs.
+        if (typeof showCascadeOverlay === 'function') showCascadeOverlay();
 
         try {
             const response = await fetch("{% url 'simulator:save_renewable_user_input' %}", {
@@ -658,8 +660,14 @@
             if (targetCell && data.target_value !== null && data.target_value !== undefined) {
                 targetCell.textContent = fmt1(data.target_value);
             }
+            // Renewable cascade runs in-request via signal -> save response means
+            // dependents are recalculated. Reload so all rows + dependent pages reflect it.
+            if (typeof awaitCascadeAndReload === 'function') {
+                awaitCascadeAndReload(null);
+            }
         } catch (error) {
             cell.innerHTML = previousHtml;
+            if (typeof hideCascadeOverlay === 'function') hideCascadeOverlay();
             alert('Fehler beim Speichern der Erneuerbaren-Eingabe: ' + error.message);
             throw error;
         } finally {

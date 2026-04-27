@@ -1549,11 +1549,29 @@
         // Set new timer to save after 1 second of no changes
         autoSaveTimers[code] = setTimeout(() => {
             console.log(`Auto-saving ${code}: ${percent}%`);
-            saveUserPercent(code, percent).catch(error => {
-                console.error(`Auto-save failed for ${code}:`, error);
-                // Show a subtle notification for auto-save failures
-                showSaveMessage(`Auto-save failed for ${code}. Try again or reload the page.`, 'warning');
-            });
+            const input = document.querySelector(`.user-percent-input[data-code="${code}"]`);
+            if (input) {
+                input.classList.remove('saving-success');
+                input.classList.add('saving-pending');
+            }
+            saveUserPercent(code, percent)
+                .then(() => {
+                    if (input) {
+                        input.classList.remove('saving-pending');
+                        input.classList.add('saving-success');
+                    }
+                    // Landuse cascade runs in-request via signal -> save response means
+                    // unified_recalc_all is done. Reload so the whole table + dependent
+                    // pages reflect the new state.
+                    if (typeof awaitCascadeAndReload === 'function') {
+                        awaitCascadeAndReload(null);
+                    }
+                })
+                .catch(error => {
+                    if (input) input.classList.remove('saving-pending');
+                    console.error(`Auto-save failed for ${code}:`, error);
+                    showSaveMessage(`Auto-save failed for ${code}. Try again or reload the page.`, 'warning');
+                });
         }, 1000); // Wait 1 second after user stops typing
     }
 
@@ -1574,6 +1592,21 @@
             .then(data => {
                 if (data.success) {
                     console.log(`Saved ${code}: ${percent}%`);
+                    // Update dependent display cells (Target ha + Target %) inline
+                    // so the row is consistent without needing a page reload.
+                    const inputElem = document.querySelector(`.user-percent-input[data-code="${code}"]`);
+                    if (inputElem) {
+                        const pk = inputElem.dataset.pk;
+                        const tHaCell = document.getElementById(`target_ha_${pk}`);
+                        const tPctCell = document.getElementById(`target_percent_${pk}`);
+                        if (tHaCell && data.target_ha != null) {
+                            tHaCell.textContent = Math.round(parseFloat(data.target_ha)).toLocaleString('de-DE');
+                        }
+                        if (tPctCell && percent != null && percent !== '') {
+                            const formatted = parseFloat(percent).toFixed(1).replace('.', ',');
+                            tPctCell.textContent = formatted + '%';
+                        }
+                    }
                     return data;
                 } else {
                     console.error(`Failed to save ${code}:`, data.error);
@@ -1722,7 +1755,16 @@
         }
         const inputField = document.getElementById(`user_percent_${pk}`);
         const userPercent = inputField.value;
-        
+
+        // Visual: yellow border while saving (per-cell feedback for the silent auto-save).
+        if (inputField) {
+            inputField.classList.remove('saving-success');
+            inputField.classList.add('saving-pending');
+        }
+        // Show full-screen "Berechnung läuft" overlay immediately so the user
+        // sees something while the in-request cascade runs (~1-2 s).
+        if (typeof showCascadeOverlay === 'function') showCascadeOverlay();
+
         // Get the old value from the input's dataset
         const oldPercent = inputField.dataset.oldValue ? parseFloat(inputField.dataset.oldValue) : null;
 
@@ -1740,6 +1782,16 @@
                     // Frontend already updated display - just log success
                     console.log(`Saved to database: ${data.message}`);
                     console.log(' Backend response data:', data);
+
+                    // Mark cell as saved + trigger cascade-and-reload (Landuse cascade
+                    // runs in-request, so response means unified_recalc_all is done).
+                    if (inputField) {
+                        inputField.classList.remove('saving-pending');
+                        inputField.classList.add('saving-success');
+                    }
+                    if (typeof awaitCascadeAndReload === 'function') {
+                        awaitCascadeAndReload(null);
+                    }
                     
                     // Track this change in history if we have change info
                     if (data.change) {
@@ -1766,6 +1818,8 @@
                     // Optionally show a subtle success indicator (commented out to avoid spam)
                     // showMessage('Saved', 'success');
                 } else if (data.status === "error") {
+                    if (inputField) inputField.classList.remove('saving-pending');
+                    if (typeof hideCascadeOverlay === 'function') hideCascadeOverlay();
                     console.error(`Save failed: ${data.message}`);
                     
                     // Show detailed error message with better formatting
@@ -1789,6 +1843,8 @@
                 }
             })
             .catch(error => {
+                if (inputField) inputField.classList.remove('saving-pending');
+                if (typeof hideCascadeOverlay === 'function') hideCascadeOverlay();
                 console.error('Error saving to database:', error);
                 showMessage('Failed to save. Please try again.', 'danger');
             });
@@ -2602,6 +2658,12 @@
     .change-tooltip:hover::after {
         opacity: 1;
     }
+
+    /* Per-cell auto-save feedback (T28: no global Save button — give the */
+    /* user a localised cue that the silent auto-save fired and succeeded). */
+    .user-percent-input { transition: border-color 0.25s, box-shadow 0.25s; }
+    .user-percent-input.saving-pending { border: 2px solid #ffc107 !important; box-shadow: 0 0 0 .15rem rgba(255,193,7,.18); }
+    .user-percent-input.saving-success { border: 2px solid #198754 !important; box-shadow: 0 0 0 .15rem rgba(25,135,84,.18); }
 </style>
 
 {% endblock %}

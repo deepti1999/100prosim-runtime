@@ -392,6 +392,8 @@ def _initial_state_already_balanced(sector_totals: dict, storage_drift: float) -
 def apply_balanced_landuse_sector_first():
     """
     Sector-first balancing flow (Solar mode):
+    0) WS-only pre-pass (mirrors pre-PDF's manual "Solar Balance" button):
+       prime LU_2.1 close to balance before sector knobs touch anything.
     1) Close sector gaps via sector knobs
     2) Re-run WS/electricity balancing (goal-seek + LU_2.1 update)
 
@@ -430,6 +432,20 @@ def apply_balanced_landuse_sector_first():
                 'storage_drift': initial_drift,
                 'annual_electricity': initial_annual,
             }
+
+        # Pre-pass — WS-only quick fix so LU_2.1 is primed close to balance
+        # before sector knobs touch anything. Mirrors pre-PDF's manual two-click
+        # workflow (Solar Balance → Solar Full Balance) inside a single click.
+        # Without this, sector knobs see a less-primed state, make bigger
+        # adjustments, and the post-WS pass can't fully converge -> sect_ok=False.
+        try:
+            print(" WS pre-pass to prime LU_2.1...")
+            apply_balanced_landuse(
+                include_sector_balance=False,
+                run_final_renewable_sync=False,
+            )
+        except Exception as _e:
+            print(f" WS pre-pass failed (non-fatal, continuing): {_e}")
 
         # Cut from 2 to 1: the second cycle rarely improved convergence
         # materially but added another ~3-5 min on Heroku when real work
@@ -836,6 +852,8 @@ def apply_balanced_wind_landuse(
 def apply_balanced_wind_landuse_sector_first():
     """
     Sector-first balancing flow (Wind mode):
+    0) WS-only pre-pass (mirrors pre-PDF's manual "Wind Balance" button):
+       prime LU_6 close to balance before sector knobs touch anything.
     1) Close sector gaps via sector knobs
     2) Re-run WS/electricity balancing with Wind goal-seek + LU_6 update
     """
@@ -868,6 +886,18 @@ def apply_balanced_wind_landuse_sector_first():
                 'storage_drift': initial_drift,
                 'annual_electricity': initial_annual,
             }
+
+        # Pre-pass — Wind WS-only quick fix so LU_6 is primed close to balance
+        # before sector knobs touch anything. Mirrors pre-PDF's manual two-click
+        # workflow (Wind Balance → Wind Full Balance) inside a single click.
+        try:
+            print(" Wind WS pre-pass to prime LU_6...")
+            apply_balanced_wind_landuse(
+                include_sector_balance=False,
+                run_final_renewable_sync=False,
+            )
+        except Exception as _e:
+            print(f" Wind WS pre-pass failed (non-fatal, continuing): {_e}")
 
         # Wind: same 2->1 cut as solar sector_first.
         max_cycles = 1
