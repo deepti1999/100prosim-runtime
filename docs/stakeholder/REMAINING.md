@@ -1,23 +1,27 @@
 # What's remaining — single source of truth
 
-**Last updated:** 2026-04-25 (Round 2 deep audit added §5 — 14 findings
-with Excel cell references). Previous update 2026-04-24 (source-grounded
-final closure — T10/T13/T31 upgraded to PASS per PDF §2.3.2 + §2.4.3;
-T54 math aligned with Excel L37; 7 ACCEPTED caveats annotated with
-PDF-silence rationale; 2 spot-check findings logged as polish in §4).
+**Last updated:** 2026-04-27 (Deepti-session F015 — Verbrauch percentage
+seed precision causes +230 GWh V2.10 vs Excel; added to §5 as LOW /
+deferred). Previous update 2026-04-25 (Round 2 deep audit added §5 — 14
+findings with Excel cell references). Earlier update 2026-04-24
+(source-grounded final closure — T10/T13/T31 upgraded to PASS per PDF
+§2.3.2 + §2.4.3; T54 math aligned with Excel L37; 7 ACCEPTED caveats
+annotated with PDF-silence rationale; 2 spot-check findings logged as
+polish in §4).
 **Source material:** `260403_Portierung_Bestandsaufnahme.pdf` (stakeholder PDF, 12 pages) + `IMPLEMENTATION_PLAN.md` (our 63-target decomposition)
 
 ---
 
 ## Headline
 
-**57/63 atomic targets shipped, Heroku-verified, AND operationally complete** + **14 audit findings (1 CRITICAL, 4 HIGH, 5 MEDIUM, 2 LOW, 2 carried) — all pre-existing in baseline codebase except F009** (51 from the original push + T8/T9/T10 from §2.3 Phase A + T11/T12/T13 from §2.3 Phase B with Phase C operational closure). T54 diagram sub-items 6/6 shipped (Track 1 closed D1/D2/D3/D4c on 2026-04-23 commit `7c02458`; Phase B closed D4a/D4b; T54 math polish 2026-04-24 commit `d1fed89` aligned Gasspeicher with Excel L37 → 87/87/87). Post-audit verdict tally: 47 PASS / 8 ACCEPTED (all with PDF-silence rationale quotes) / 0 OPEN. **22 items outstanding total — 6 external-gated + 16 local-fixable:**
+**57/63 atomic targets shipped, Heroku-verified, AND operationally complete** + **14 audit findings (1 CRITICAL, 4 HIGH, 5 MEDIUM, 2 LOW, 2 carried) — all pre-existing in baseline codebase except F009** (51 from the original push + T8/T9/T10 from §2.3 Phase A + T11/T12/T13 from §2.3 Phase B with Phase C operational closure). T54 diagram sub-items 6/6 shipped (Track 1 closed D1/D2/D3/D4c on 2026-04-23 commit `7c02458`; Phase B closed D4a/D4b; T54 math polish 2026-04-24 commit `d1fed89` aligned Gasspeicher with Excel L37 → 87/87/87). Post-audit verdict tally: 47 PASS / 8 ACCEPTED (all with PDF-silence rationale quotes) / 0 OPEN. **24 items outstanding total — 7 external-gated + 17 local-fixable:**
 
 | Bucket | Count | Blocked on |
 |---|---:|---|
 | **External-gated (Phase 7)** | 6 | ErnES picks a compute platform |
+| **§2.3 Phase D — non-coder Excel upload UI (T67)** | 1 | ErnES answers questions in `T67_PHASE_D_ERNES_QUESTIONS.md` |
 | **Polish findings (2026-04-24)** | 2 | see §4 below — Findings A / B |
-| **Deep audit findings (2026-04-25)** | 14 | see §5 below — F001–F014 (13 pre-existing in `a5da7dd`, 1 from 2026-04-21 perf pass) |
+| **Deep audit findings (2026-04-25 / -27)** | 15 | see §5 below — F001–F014 + F015 (14 pre-existing in `a5da7dd`, 1 from 2026-04-21 perf pass) |
 
 T54 D1/D2/D3/D4c (source Tagesladungen, flow Tagesladungen, percent shares, Abgleichdifferenz) shipped 2026-04-23 in commit `7c02458`; T54 D4a/D4b (Pmax-Ely-ES 194 GW, Pmax-RV 261 GW) shipped 2026-04-23 in commit `897e212` via `Region.installed_pmax_*`. T54 fully closed. See `HARDCODED_VALUES_TRACE.md` §6 for the verification ledger and `DATA_MODEL_IMPORT_AUDIT.md` §0b for Phase B delivery table.
 
@@ -67,7 +71,7 @@ boxes, gas-vs-Strom colours, label positions, and (after Phase B) all
 
 ---
 
-## 2. §2.3 status — Phase A SHIPPED, Phase B remaining (3 targets)
+## 2. §2.3 status — Phases A / B / C SHIPPED, Phase D pending (1 target)
 
 ### PDF §2.3 — Datenmodell
 
@@ -164,6 +168,20 @@ Execution (2026-04-23 afternoon, T64):
 71 new V2 tests + 1 spec-drift update. Full thesis suite 183/183
 green. V5 Heroku-verified on `prosim-100-7b2fe54360e6.herokuapp.com`
 (now destroyed; billing stopped).
+
+**§2.3 Phase D — pending (T67):** non-coder Excel upload UI.
+
+The literal PDF §2.3.2 ask is *"keine speziellen Admin-Rechte erforderlich"* (no special admin rights required). Phases A–C reduced this to *"no code change required"* — a single shell incantation (`docker exec … python manage.py import_excel_provenance --region=BB --apply`). For a true non-coder admin (per PDF §2.1's *"mindestens 2 ErnES-AdministratorInnen"*), this still requires SSH / Docker / CLI access.
+
+| ID | Description | Status |
+|---|---|---|
+| T67 | Non-coder Excel upload UI for region data models | ⏸ Open questions for ErnES |
+
+**Why deferred (not "do it now"):** the upload UX changes meaningfully depending on hosting platform (Heroku ephemeral filesystem behaves differently from on-prem shared volume), authentication model, and ErnES's expectations around audit / rollback. Building it before knowing the actual user risks shipping a form that doesn't fit how ErnES wants to operate.
+
+**What blocks shipping it:** answers to the questions in `docs/stakeholder/T67_PHASE_D_ERNES_QUESTIONS.md`. Once ErnES answers those, the form itself is ~1–2 days of work.
+
+**Effort once unblocked:** ~1–2 days for the upload form, validator, async-job, progress UI, and provenance audit log; another ~0.5 day for V4/V5 verification + documentation. Plus whatever scope answers to the questions add.
 
 **Phase C SHIPPED 2026-04-23** (T66) — operational closure of §2.3.
 After the audit `260403_Section_2.3_region_scope_check.md` flagged
@@ -317,11 +335,12 @@ Pascal signals priority.
 
 ---
 
-## 5. Deep audit findings (2026-04-25) — pre-existing codebase issues
+## 5. Deep audit findings — pre-existing codebase issues
 
-Surface for the 14 findings produced by `verification/formula_audit_full/`
-(Round 2 deep audit). **Headline tally: 1 CRITICAL + 4 HIGH + 5 MEDIUM
-+ 2 LOW + 2 carried = 14.**
+Surface for the 15 findings produced by `verification/formula_audit_full/`
+(Round 2 deep audit, 2026-04-25) plus one Deepti-session finding
+(2026-04-27). **Headline tally: 1 CRITICAL + 4 HIGH + 5 MEDIUM + 3 LOW
++ 2 carried = 15.**
 
 **Origin breakdown:** 13 of the 14 are pre-existing in the initial
 runtime-bundle import commit `a5da7dd` ("chore: initial import of
@@ -613,6 +632,18 @@ Cross-link to full audit: `verification/formula_audit_full/FINAL_REPORT.md`
 - **Goldens move:** NO (no production effect).
 - **Origin:** pre-existing in commit `a5da7dd`.
 - **Evidence:** `verification/formula_audit/09_findings/F006_WS_ABREGELUNG_THRESHOLD_dead_code.md`
+
+### F015 LOW (deferred) — Verbrauch percentage seed precision causes +230 GWh V2.10 vs Excel
+- **Symptom:** V2.10 (`Endenergieverbrauch GW gesamt`) reads 663,768.68 GWh/a in default scenario where Excel reads 663,538.83 — permanent +230 GWh offset that propagates into V2.6, V2.10, the GW supply target (R10.4), and the GW gap consumed by the balance optimiser. The drift is constant at ~+230 GWh regardless of V2.4.1 user input (verified by editing V2.4.1 75→80 in both stacks; main app gives 672,097.55 vs Excel-precise 671,867.20).
+- **DB:** `VerbrauchData[2.1].ziel = 71.64`, `VerbrauchData[2.2].ziel = 28.4`, `VerbrauchData[2.4].ziel = 85.9`, `VerbrauchData[2.5].ziel = 14.1` (all rounded to ≤2 decimals at seed-import time).
+- **Excel:** `_S.xlsx!4. Verbrauch!L46 = 71.64093767867352` (V2.1), `L52 = 28.35906232132647` (V2.2), `L58 = 85.92911239479102` (V2.4), `L70 = 14.07088760520898` (V2.5) — full precision, sums to exactly 100.
+- **Reasoning:** App seed truncates four percentage shares to ≤2 decimals. Excel's V2.1+V2.2 sums to exactly 100; ours sums to 71.64+28.4 = 100.04 → V2.3 inflates by 0.04 % (= +319 GWh) → cascades to V2.4.0 (+42 GWh) and V2.5.2 (+194 GWh) → V2.6 = V2.10 ends up +230 GWh. V2.4 + V2.5 = 100 in both seed and Excel (lucky cancellation), so the GW share split itself isn't the leak — only V2.1/V2.2 is. Math fully reproducible: with Excel-precise values plugged into the existing app formula chain, V2.10 lands at 671,867.20 vs the app's 672,097.55 — delta 230.56 GWh, matches the user's observation exactly.
+- **Code:** seed rows — `seed/sqlite_seed.json` `VerbrauchData[code in {2.1, 2.2, 2.4, 2.5}]` (`ziel` field; `user_percent` field if it shadows ziel for any of them).
+- **Fix effort:** ~30 min for the seed edit itself, **but** non-trivial in cascade: every regression golden (scenarios A / C / D) shifts because V2.3, V2.4.0, V2.4.9, V2.5.0, V2.5.2, V2.6, V2.10 all move ~230 GWh, downstream R10.4 supply target moves to compensate, the Bilanz GW row moves, and the GW gap can swing into / out of the balance optimiser's ±100 GWh tolerance window — so balance-button behaviour changes too. Effectively a baseline-regen sprint, not a one-line fix.
+- **Goldens move:** YES — every scenario A / C / D affected; downstream Bilanz, WS365 storage drift, and balance convergence path all change.
+- **Origin:** pre-existing in commit `a5da7dd` initial import (seed was captured at low precision before the runtime bundle was packaged).
+- **Priority:** **deferred / not important.** The math is internally consistent (V2.10 is reproducible from the seed values shown to the user), only the absolute level differs from Excel. Stakeholder hasn't flagged. Fits naturally into a future "Excel parity sweep" alongside F014 (Renewable yield cluster) and the Verbrauch / GW seed corrections in F003 / F004 / F005 — all share the pattern "seed captured at one point in time, Excel scenario refined later". Don't ship in isolation; bundle.
+- **Evidence:** session investigation 2026-04-27 (no audit folder yet — math reproduced live in `prosim_main` testsim workspace by parsing `_S.xlsx!4. Verbrauch` rows 46/52/57/58/68/70/73/75/91 and back-solving the formula chain).
 
 ### F009 LOW — Jahresstrom Abregelung sum 3.3 % drift (accepted perf trade-off)
 - **Symptom:** `n_input_branch` (Abregelung input) drifts 3.3 % from
