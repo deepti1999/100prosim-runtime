@@ -1,0 +1,49 @@
+{% load provenance_filters %}
+{% comment %}
+  §2.3 Phase A — provenance info-icon click popover (Pascal D4 = click).
+
+  Usage:
+    {% include "simulator/_provenance_icon.html" with source_url=row.source_url notes_assumption=row.notes_assumption source_refs=row.source_refs origin=row.origin quelle=row.quelle provenance_override_active=row.provenance_override_active %}
+
+  Popover content includes:
+    - Assumption text (if present)
+    - Human-readable cited sources (if present)
+
+  Important: user-facing UI intentionally hides workbook-internal
+  trace markers such as D.1.64 / 9.224 / d_xlsx. Those remain stored in
+  the DB for import traceability, but the popover should read like a
+  normal source explanation, not like Excel coordinates.
+{% endcomment %}
+{% if provenance_override_active %}
+{% if source_url or notes_assumption or source_refs %}
+<button type="button"
+        class="btn btn-link btn-sm p-0 provenance-icon"
+        data-bs-toggle="popover"
+        data-bs-trigger="click"
+        data-bs-html="true"
+        data-bs-placement="left"
+        data-bs-title="Datenquelle (§2.3)"
+        data-bs-content="<div class='small'>{% if notes_assumption %}<div><strong>Information:</strong><br><em>{{ notes_assumption|linebreaksbr }}</em></div>{% endif %}{% if source_refs %}<div class='mt-2'><strong>Quellen:</strong>{% for ref in source_refs %}<div class='mt-2 border-top pt-2'>{% if ref.section == 'status' %}<div class='text-muted small'>Status</div>{% elif ref.section == 'ziel' %}<div class='text-muted small'>Ziel</div>{% endif %}{% if ref.label %}<div><strong>{{ ref.label|escape }}</strong></div>{% endif %}{% if ref.description %}<div>{{ ref.description|escape }}</div>{% endif %}{% if ref.url %}<div class='mt-1'><a href='{{ ref.url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>{% endfor %}</div>{% elif source_url %}<div class='mt-2'><strong>Quelle:</strong> <a href='{{ source_url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>"
+        aria-label="Datenquelle anzeigen"
+        title="Klicken für Quellen-Information">
+  <span class="badge rounded-pill bg-info-subtle text-info border border-info">i</span>
+</button>
+{% endif %}
+{% else %}
+{% if source_url or notes_assumption or source_refs or origin == 'd_xlsx' or origin == 'derived' or quelle %}
+{% if source_url or notes_assumption or source_refs or origin == 'd_xlsx' or origin == 'derived' %}
+<button type="button"
+        class="btn btn-link btn-sm p-0 provenance-icon"
+        data-bs-toggle="popover"
+        data-bs-trigger="click"
+        data-bs-html="true"
+        data-bs-placement="left"
+        data-bs-title="Datenquelle (§2.3)"
+        data-bs-content="<div class='small'>{% if notes_assumption %}<div><strong>Information:</strong><br><em>{{ notes_assumption|render_provenance_note:source_refs }}</em></div>{% endif %}{% if source_refs %}<div class='mt-2'><strong>Quellen:</strong>{% for ref in source_refs %}<div class='mt-2 border-top pt-2'>{% if ref.section == 'status' %}<div class='text-muted small'>Status</div>{% elif ref.section == 'ziel' %}<div class='text-muted small'>Ziel</div>{% endif %}{% if ref.label %}<div><strong>{{ ref.label|escape }}</strong></div>{% endif %}{% if ref.description %}<div>{{ ref.description|escape }}</div>{% endif %}{% if ref.url %}<div class='mt-1'><a href='{{ ref.url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>{% endfor %}</div>{% elif source_url %}<div class='mt-2'><strong>Quelle:</strong> <a href='{{ source_url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>"
+        aria-label="Datenquelle anzeigen"
+        title="Klicken für Quellen-Information">
+  <span class="badge rounded-pill bg-info-subtle text-info border border-info">i</span>
+</button>
+{% endif %}
+{% endif %}
+{% endif %}

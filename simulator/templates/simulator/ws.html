@@ -1,0 +1,639 @@
+{% extends 'simulator/base.html' %}
+
+{% block title %}Szenario-Abgleich{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        {% include 'simulator/partials/sidebar_nav.html' with active_section='ws' %}
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    Szenario-Abgleich
+                </h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    {# "Goal Seek ausführen" + "Aktualisieren" buttons removed per   #}
+                    {# stakeholder PDF §2.4.3 (T19, T20): both are redundant.        #}
+                    {# Goal Seek runs automatically on page load because             #}
+                    {# refreshWsSummaryCards() calls /api/ws/summary/ which          #}
+                    {# invokes get_ws_365_data(run_goal_seek=True). Aktualisieren    #}
+                    {# just re-calls the same endpoint the page already loaded.     #}
+                    {# Stakeholder PDF §2.4.3 (T21, T22): 4 balance buttons -> 2 in Phase 4-C. #}
+                    {# "Balance Solar" calls apply_full_balance (Sector+WS pipeline). #}
+                    {# "Balance Wind"  calls apply_full_balance_wind (Sector+WS pipeline). #}
+                    {# The underlying simpler endpoints stay for programmatic/test callers. #}
+                    <button type="button" class="btn btn-warning me-2" id="applyFullBalanceBtn" disabled>
+                        <i class="fas fa-solar-panel me-1"></i>Balance Solar
+                    </button>
+                    <button type="button" class="btn btn-primary me-2" id="applyWindFullBalanceBtn" disabled>
+                        <i class="fas fa-wind me-1"></i>Balance Wind
+                    </button>
+                    {# Hidden retained IDs so existing JS continues to enable-on-goal-seek. #}
+                    {# The simple-WS buttons are gone from UX but the advanced endpoints are still reachable for automated tests. #}
+                    <button type="button" id="applyBalanceBtn" class="d-none" disabled></button>
+                    <button type="button" id="applyWindBalanceBtn" class="d-none" disabled></button>
+                </div>
+            </div>
+
+            {# Phase 4-D (T23): persistent progress banner that shows active #}
+            {# balance-job status. Fixes the PDF complaint that pressing the #}
+            {# button produced "no reconciliation and no busy indicator". #}
+            <div id="balanceProgressBanner" class="alert alert-info d-none" role="status" aria-live="polite">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-spinner fa-spin me-2"></i>
+                    <div>
+                        <strong>Balance läuft …</strong>
+                        <span id="balanceProgressDetail" class="ms-2 text-muted"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="row mb-4">
+                <!-- Solar Result Card -->
+                <div class="col-md-6 mb-3">
+                    <div class="card border-warning h-100">
+                        <div class="card-header bg-warning text-dark">
+                            <i class="fas fa-solar-panel me-2"></i>Balance by Solar (Balanciert)
+                        </div>
+                        <div class="card-body" id="solarGoalSeekBody">
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-spinner fa-spin me-2"></i>Aktuelle Solar-Balance wird geladen...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wind Result Card -->
+                <div class="col-md-6 mb-3">
+                    <div class="card border-primary h-100">
+                        <div class="card-header bg-primary text-white">
+                            <i class="fas fa-wind me-2"></i>Balance by Wind (Balanciert)
+                        </div>
+                        <div class="card-body" id="windGoalSeekBody">
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-spinner fa-spin me-2"></i>Aktuelle Wind-Balance wird geladen...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Storage Flow Summary -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card border-secondary">
+                        <div class="card-body text-center">
+                            <h6 class="text-secondary"><i class="fas fa-arrow-up me-1"></i>Überschuss Summe</h6>
+                            <h4 id="ueberschuss_sum">– GWh</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-info">
+                        <div class="card-body text-center">
+                            <h6 class="text-info"><i class="fas fa-download me-1"></i>Einspeich. Summe</h6>
+                            <h4 id="einspeich_sum">– GWh</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-warning">
+                        <div class="card-body text-center">
+                            <h6 class="text-warning"><i class="fas fa-upload me-1"></i>Ausspeich. Summe</h6>
+                            <h4 id="ausspeich_sum">– GWh</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card border-danger">
+                        <div class="card-body text-center">
+                            <h6 class="text-danger"><i class="fas fa-ban me-1"></i>Abregelung Summe</h6>
+                            <h4 id="abregelung_sum">– GWh</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Jahresstrom-Hinweis
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'simulator:annual_electricity' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-bolt me-1"></i>Zur Seite Jahresstrom
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<style>
+.sidebar {
+    position: fixed;
+    top: 56px;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #333;
+    padding: 0.75rem 1rem;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(0,0,0,.05);
+}
+
+.sidebar .nav-link.active {
+    color: #2470dc;
+    background-color: rgba(36, 112, 220, 0.1);
+}
+
+.sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+#ws365Table th {
+    white-space: nowrap;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+#ws365Table thead.ws-main-header tr:first-child th {
+    color: #111111 !important;
+    background-color: #f2f4f7 !important;
+    border-color: #d4d9e0 !important;
+}
+
+#ws365Table td {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+}
+</style>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function roundMaybe(value, digits) {
+        if (value === null || value === undefined || value === '') {
+            return null;
+        }
+        const num = Number(value);
+        if (!Number.isFinite(num)) {
+            return null;
+        }
+        return Number(num.toFixed(digits));
+    }
+
+    function trackAutoLandUseChange(change) {
+        try {
+            if (!change || change.old_ha === undefined || change.new_ha === undefined) {
+                return;
+            }
+
+            let history = [];
+            const saved = localStorage.getItem('landuse_changes_history') || sessionStorage.getItem('landuse_changes_history_backup');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed)) {
+                    history = parsed;
+                }
+            }
+
+            const normalized = {
+                code: change.code || 'LU',
+                name: change.name || 'Land Use',
+                old_percent: roundMaybe(change.old_percent, 2),
+                new_percent: roundMaybe(change.new_percent, 2),
+                old_ha: roundMaybe(change.old_ha, 2),
+                new_ha: roundMaybe(change.new_ha, 2),
+                change_ha: roundMaybe(change.change_ha, 2) ?? 0,
+                timestamp: new Date().toLocaleTimeString(),
+            };
+
+            history.unshift(normalized);
+            if (history.length > 50) {
+                history = history.slice(0, 50);
+            }
+
+            const dataToSave = JSON.stringify(history);
+            localStorage.setItem('landuse_changes_history', dataToSave);
+            sessionStorage.setItem('landuse_changes_history_backup', dataToSave);
+            console.log('Auto balance change saved for landuse history:', normalized);
+        } catch (e) {
+            console.warn('Could not store auto balance change:', e);
+        }
+    }
+
+    async function fetchJsonSafe(url, options) {
+        const response = await fetch(url, options || {});
+        const raw = await response.text();
+        let data = {};
+
+        try {
+            data = raw ? JSON.parse(raw) : {};
+        } catch (e) {
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status + ' - ' + raw.slice(0, 200));
+            }
+            throw new Error('Ungültige JSON-Antwort vom Server');
+        }
+
+        if (!response.ok) {
+            throw new Error(data.error || ('HTTP ' + response.status));
+        }
+        return data;
+    }
+
+    // Phase 4-D (T23): persistent progress banner hooks.
+    const balanceBanner = document.getElementById('balanceProgressBanner');
+    const balanceDetail = document.getElementById('balanceProgressDetail');
+    function showBalanceProgress(msg) {
+        if (!balanceBanner) return;
+        balanceBanner.classList.remove('d-none');
+        if (balanceDetail) balanceDetail.textContent = msg || '';
+    }
+    function hideBalanceProgress() {
+        if (balanceBanner) balanceBanner.classList.add('d-none');
+        if (balanceDetail) balanceDetail.textContent = '';
+    }
+
+    async function waitForBalanceJob(jobId) {
+        const statusUrlTemplate = '{% url "simulator:ws_api_balance_job_status" job_id="00000000-0000-0000-0000-000000000000" %}';
+        const statusUrl = statusUrlTemplate.replace('00000000-0000-0000-0000-000000000000', jobId);
+
+        const startedAt = Date.now();
+        const maxPolls = 600; // ~20 minutes at 2s interval
+        for (let i = 0; i < maxPolls; i++) {
+            const payload = await fetchJsonSafe(statusUrl, { method: 'GET' });
+            if (payload.status === 'succeeded') {
+                return payload.result || {};
+            }
+            if (payload.status === 'failed') {
+                throw new Error(payload.error || 'Balance-Job fehlgeschlagen');
+            }
+            const elapsedSec = Math.round((Date.now() - startedAt) / 1000);
+            showBalanceProgress(`Status: ${payload.status || 'queued'} · Job ${jobId.slice(0, 8)} · ${elapsedSec}s`);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+        throw new Error('Balance läuft zu lange (Timeout beim Warten auf Worker)');
+    }
+
+    async function runBalanceAction(url, startError) {
+        showBalanceProgress('Job wird gestartet …');
+        try {
+            const payload = await fetchJsonSafe(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            });
+
+            if (!payload.success) {
+                throw new Error(payload.error || startError || 'Job konnte nicht gestartet werden');
+            }
+
+            if (payload.job_id) {
+                return await waitForBalanceJob(payload.job_id);
+            }
+
+            if (payload.status === 'succeeded' && payload.result) {
+                return payload.result;
+            }
+
+            return payload;
+        } finally {
+            hideBalanceProgress();
+        }
+    }
+
+    function fmt0(value) {
+        const num = Number(value || 0);
+        return Math.round(num).toLocaleString('de-DE');
+    }
+
+    function fmt1(value) {
+        const num = Number(value || 0);
+        return num.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    }
+
+    function colorClass(value) {
+        return Number(value || 0) < 0 ? 'text-danger' : 'text-success';
+    }
+
+    function renderSolarSummary(goalSeek) {
+        const body = document.getElementById('solarGoalSeekBody');
+        if (!goalSeek || !Object.keys(goalSeek).length) {
+            body.innerHTML = '<p class="text-muted mb-0">Solar-Balance wird automatisch beim Laden der Seite berechnet.</p>';
+            document.getElementById('applyBalanceBtn').disabled = true;
+            document.getElementById('applyFullBalanceBtn').disabled = true;
+            return;
+        }
+        body.innerHTML = `
+            <table class="table table-sm table-borderless mb-0">
+                <tr><td><strong>Optimales Solar:</strong></td><td class="text-end fw-bold">${fmt0(goalSeek.optimal_solar)}</td><td>GWh</td></tr>
+                <tr><td><strong>Änderung:</strong></td><td class="text-end ${colorClass(goalSeek.solar_change)}">${fmt0(goalSeek.solar_change)} (${fmt1(goalSeek.solar_change_pct)}%)</td><td></td></tr>
+                <tr><td><strong>Speicherdrift:</strong></td><td class="text-end ${colorClass(goalSeek.storage_drift)}">${fmt1(goalSeek.storage_drift)}</td><td>GWh</td></tr>
+                <tr><td><strong>Jahresstrom:</strong></td><td class="text-end">${fmt0(goalSeek.annual_electricity)}</td><td>GWh</td></tr>
+                <tr><td><strong>Iterationen:</strong></td><td class="text-end">${goalSeek.iterations ?? ''}</td><td></td></tr>
+                <tr class="table-warning"><td><strong>Benötigtes LU_2.1:</strong></td><td class="text-end fw-bold">${fmt0(goalSeek.required_landuse)}</td><td>ha</td></tr>
+                <tr><td><strong>LU_2.1 Änderung:</strong></td><td class="text-end ${colorClass(goalSeek.landuse_change)}">${fmt0(goalSeek.landuse_change)} ha</td><td></td></tr>
+            </table>
+        `;
+        document.getElementById('applyBalanceBtn').disabled = false;
+        document.getElementById('applyFullBalanceBtn').disabled = false;
+    }
+
+    function renderWindSummary(goalSeekWind) {
+        const body = document.getElementById('windGoalSeekBody');
+        if (!goalSeekWind || !Object.keys(goalSeekWind).length) {
+            body.innerHTML = '<p class="text-muted mb-0">Klicken Sie auf "Balance by Wind", um Wind zu berechnen.</p>';
+            document.getElementById('applyWindBalanceBtn').disabled = true;
+            document.getElementById('applyWindFullBalanceBtn').disabled = true;
+            return;
+        }
+        body.innerHTML = `
+            <table class="table table-sm table-borderless mb-0">
+                <tr><td><strong>Optimaler Wind:</strong></td><td class="text-end fw-bold">${fmt0(goalSeekWind.optimal_wind)}</td><td>GWh</td></tr>
+                <tr><td><strong>Änderung:</strong></td><td class="text-end ${colorClass(goalSeekWind.wind_change)}">${fmt0(goalSeekWind.wind_change)} (${fmt1(goalSeekWind.wind_change_pct)}%)</td><td></td></tr>
+                <tr><td><strong>Speicherdrift:</strong></td><td class="text-end ${colorClass(goalSeekWind.storage_drift)}">${fmt1(goalSeekWind.storage_drift)}</td><td>GWh</td></tr>
+                <tr><td><strong>Jahresstrom:</strong></td><td class="text-end">${fmt0(goalSeekWind.annual_electricity)}</td><td>GWh</td></tr>
+                <tr><td><strong>Iterationen:</strong></td><td class="text-end">${goalSeekWind.iterations ?? ''}</td><td></td></tr>
+                <tr class="table-info"><td><strong>Benötigtes LU_6:</strong></td><td class="text-end fw-bold">${fmt0(goalSeekWind.required_landuse)}</td><td>ha</td></tr>
+                <tr><td><strong>LU_6 Änderung:</strong></td><td class="text-end ${colorClass(goalSeekWind.landuse_change)}">${fmt0(goalSeekWind.landuse_change)} ha</td><td></td></tr>
+            </table>
+        `;
+        document.getElementById('applyWindBalanceBtn').disabled = false;
+        document.getElementById('applyWindFullBalanceBtn').disabled = false;
+    }
+
+    function renderCurrentSummary(current) {
+        if (!current) return;
+        document.getElementById('ueberschuss_sum').textContent = `${fmt0(current.ueberschuss_sum)} GWh`;
+        document.getElementById('einspeich_sum').textContent = `${fmt0(current.einspeich_sum)} GWh`;
+        document.getElementById('ausspeich_sum').textContent = `${fmt0(current.ausspeich_sum)} GWh`;
+        document.getElementById('abregelung_sum').textContent = `${fmt0(current.abregelung_sum)} GWh`;
+    }
+
+    async function refreshWsSummaryCards() {
+        const payload = await fetchJsonSafe('{% url "simulator:ws_api_summary" %}', { method: 'GET' });
+        if (!payload.success) {
+            throw new Error(payload.error || 'WS-Zusammenfassung konnte nicht geladen werden');
+        }
+        renderSolarSummary(payload.goal_seek);
+        renderWindSummary(payload.goal_seek_wind);
+        renderCurrentSummary(payload.current);
+    }
+
+    // Refresh Data + Goal Seek button click handlers removed per
+    // stakeholder PDF §2.4.3 (T19, T20). Goal-seek results populate
+    // automatically via the initial refreshWsSummaryCards() call below
+    // (the summary endpoint runs goal_seek=True internally).
+    refreshWsSummaryCards().catch(() => {});
+
+
+    // Apply Balance Button
+    document.getElementById('applyBalanceBtn').addEventListener('click', async function() {
+        const btn = this;
+        if (!confirm('Möchten Sie den WS-Strom-/Drift-Ausgleich per Solar anwenden?\n\nDies passt LU_2.1 an, sodass Tag 365 = Tag 1 (Speicher balanciert).')) {
+            return;
+        }
+        
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Wird angewendet...';
+        
+        try {
+            const data = await runBalanceAction('{% url "simulator:ws_api_apply_balance" %}', 'Solar-Job konnte nicht gestartet werden');
+
+            if (data.success) {
+                trackAutoLandUseChange({
+                    code: data.landuse_code || 'LU_2.1',
+                    name: data.landuse_name || 'Solar Freiflächen',
+                    old_percent: data.old_landuse_percent,
+                    new_percent: data.new_landuse_percent,
+                    old_ha: data.old_landuse,
+                    new_ha: data.new_landuse,
+                    change_ha: data.landuse_change
+                });
+
+                alert('WS-Balance (Solar) angewendet!\n\n' +
+                      'LU_2.1 aktualisiert: ' + Math.round(data.new_landuse).toLocaleString('de-DE') + ' ha\n' +
+                      '(vorher: ' + Math.round(data.old_landuse).toLocaleString('de-DE') + ' ha)\n\n' +
+                      'Solar (9.1.2): ' + Math.round(data.new_solar).toLocaleString('de-DE') + ' GWh\n' +
+                      'Speicherdrift: ' + data.storage_drift.toFixed(1) + ' GWh\n\n' +
+                      'Seite wird aktualisiert...');
+                window.location.reload();
+            } else {
+                alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
+            }
+        } catch (error) {
+            alert('Fehler beim Anwenden: ' + (error?.message || error));
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-balance-scale me-1"></i>WS Balance Solar';
+        }
+    });
+
+    // Apply Sector Balance Button (sector-first, then WS/LU rebalance)
+    document.getElementById('applyFullBalanceBtn').addEventListener('click', async function() {
+        const btn = this;
+        if (!confirm('Möchten Sie die vollständige 2-Schritt-Balance ausführen?\n\nSchritt 1: Sektoren ausgleichen (Gebäudewärme, Prozesswärme, Mobile Anwendungen)\nSchritt 2: WS-Drift + Strom/LU_2.1 erneut balancieren')) {
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Wird angewendet...';
+
+        try {
+            const data = await runBalanceAction('{% url "simulator:ws_api_apply_full_balance" %}', 'Job konnte nicht gestartet werden');
+            if (data.success) {
+                if (
+                    data.landuse_code &&
+                    data.old_landuse != null &&
+                    data.new_landuse != null
+                ) {
+                    trackAutoLandUseChange({
+                        code: data.landuse_code,
+                        name: data.landuse_name || 'Solar Freiflächen',
+                        old_percent: data.old_landuse_percent,
+                        new_percent: data.new_landuse_percent,
+                        old_ha: data.old_landuse,
+                        new_ha: data.new_landuse,
+                        change_ha: data.landuse_change
+                    });
+                }
+                if (data.heat_balance && data.heat_balance.after) {
+                    const gw = data.heat_balance.after.gebaeudewaerme;
+                    const pw = data.heat_balance.after.prozesswaerme;
+                    const mobile = data.heat_balance.after.mobile_anwendungen;
+                    const wsInfo = data.ws_rebalance || {};
+                    const luInfo = (
+                        wsInfo.new_landuse != null && wsInfo.old_landuse != null
+                            ? ('\nLU_2.1: ' + Math.round(wsInfo.old_landuse).toLocaleString('de-DE') + ' -> ' +
+                               Math.round(wsInfo.new_landuse).toLocaleString('de-DE') + ' ha')
+                            : ''
+                    );
+                    let sectorInfo = '\nGebäudewärme Gap (2.10-10.4): ' + gw.gap.toFixed(1) + ' GWh' +
+                                     '\nProzesswärme Gap (3.7-10.5): ' + pw.gap.toFixed(1) + ' GWh';
+                    if (mobile) {
+                        sectorInfo += '\nMobile Anwendungen Gap (6.1-10.6.1): ' + mobile.gap.toFixed(1) + ' GWh';
+                    }
+                    const warningInfo = data.warning ? ('\n\nHinweis: ' + data.warning) : '';
+                    alert('Sector-Balance angewendet!\n\n' +
+                          'Speicherdrift (nach Schritt 2): ' + data.storage_drift.toFixed(1) + ' GWh' +
+                          luInfo +
+                          sectorInfo + warningInfo + '\n\n' +
+                          'Seite wird aktualisiert...');
+                } else {
+                    alert('2-Schritt-Balance angewendet.\n\nSeite wird aktualisiert...');
+                }
+                window.location.reload();
+            } else {
+                alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
+            }
+        } catch (error) {
+            alert('Fehler beim Sector-Balance: ' + error);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-solar-panel me-1"></i>Balance Solar';
+        }
+    });
+
+    // Apply Wind WS-Only Balance Button
+    document.getElementById('applyWindBalanceBtn').addEventListener('click', async function() {
+        const btn = this;
+        if (!confirm('Möchten Sie den WS-Strom-/Drift-Ausgleich per Wind anwenden?\n\nDies passt LU_6 an, sodass Tag 365 = Tag 1 (Speicher balanciert).')) {
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Wird angewendet...';
+
+        try {
+            const data = await runBalanceAction('{% url "simulator:ws_api_apply_balance_wind" %}', 'Wind-Job konnte nicht gestartet werden');
+
+            if (data.success) {
+                trackAutoLandUseChange({
+                    code: data.landuse_code || 'LU_6',
+                    name: data.landuse_name || 'Windparkfläche',
+                    old_percent: data.old_landuse_percent,
+                    new_percent: data.new_landuse_percent,
+                    old_ha: data.old_landuse,
+                    new_ha: data.new_landuse,
+                    change_ha: data.landuse_change
+                });
+
+                let sectorInfo = '';
+                if (data.heat_balance && data.heat_balance.after) {
+                    const gw = data.heat_balance.after.gebaeudewaerme;
+                    const pw = data.heat_balance.after.prozesswaerme;
+                    const mobile = data.heat_balance.after.mobile_anwendungen;
+                    sectorInfo = '\nGebäudewärme Gap (2.10-10.4): ' + gw.gap.toFixed(1) + ' GWh' +
+                                 '\nProzesswärme Gap (3.7-10.5): ' + pw.gap.toFixed(1) + ' GWh';
+                    if (mobile) {
+                        sectorInfo += '\nMobile Anwendungen Gap (6.1-10.6.1): ' + mobile.gap.toFixed(1) + ' GWh';
+                    }
+                }
+                alert('WS-Balance (Wind) angewendet!\n\n' +
+                      'LU_6 aktualisiert: ' + Math.round(data.new_landuse).toLocaleString('de-DE') + ' ha\n' +
+                      '(vorher: ' + Math.round(data.old_landuse).toLocaleString('de-DE') + ' ha)\n\n' +
+                      'Wind (9.1.1): ' + Math.round(data.new_wind).toLocaleString('de-DE') + ' GWh\n' +
+                      'Speicherdrift: ' + data.storage_drift.toFixed(1) + ' GWh' +
+                      sectorInfo + '\n\n' +
+                      'Seite wird aktualisiert...');
+                window.location.reload();
+            } else {
+                alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
+            }
+        } catch (error) {
+            alert('Fehler beim Anwenden (Wind): ' + (error?.message || error));
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-wind me-1"></i>WS Balance Wind';
+        }
+    });
+
+    // Apply Wind Sector+WS Balance Button
+    document.getElementById('applyWindFullBalanceBtn').addEventListener('click', async function() {
+        const btn = this;
+        if (!confirm('Möchten Sie die vollständige 2-Schritt-Balance mit Wind ausführen?\n\nSchritt 1: Sektoren ausgleichen (Gebäudewärme, Prozesswärme, Mobile Anwendungen)\nSchritt 2: WS-Drift + Strom/LU_6 erneut balancieren')) {
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Wird angewendet...';
+
+        try {
+            const data = await runBalanceAction('{% url "simulator:ws_api_apply_full_balance_wind" %}', 'Wind-Job konnte nicht gestartet werden');
+            if (data.success) {
+                if (
+                    data.landuse_code &&
+                    data.old_landuse != null &&
+                    data.new_landuse != null
+                ) {
+                    trackAutoLandUseChange({
+                        code: data.landuse_code,
+                        name: data.landuse_name || 'Windparkfläche',
+                        old_percent: data.old_landuse_percent,
+                        new_percent: data.new_landuse_percent,
+                        old_ha: data.old_landuse,
+                        new_ha: data.new_landuse,
+                        change_ha: data.landuse_change
+                    });
+                }
+                if (data.heat_balance && data.heat_balance.after) {
+                    const gw = data.heat_balance.after.gebaeudewaerme;
+                    const pw = data.heat_balance.after.prozesswaerme;
+                    const mobile = data.heat_balance.after.mobile_anwendungen;
+                    const wsInfo = data.ws_rebalance || {};
+                    const luInfo = (
+                        wsInfo.new_landuse != null && wsInfo.old_landuse != null
+                            ? ('\nLU_6: ' + Math.round(wsInfo.old_landuse).toLocaleString('de-DE') + ' -> ' +
+                               Math.round(wsInfo.new_landuse).toLocaleString('de-DE') + ' ha')
+                            : ''
+                    );
+                    let sectorInfo = '\nGebäudewärme Gap (2.10-10.4): ' + gw.gap.toFixed(1) + ' GWh' +
+                                     '\nProzesswärme Gap (3.7-10.5): ' + pw.gap.toFixed(1) + ' GWh';
+                    if (mobile) {
+                        sectorInfo += '\nMobile Anwendungen Gap (6.1-10.6.1): ' + mobile.gap.toFixed(1) + ' GWh';
+                    }
+                    const warningInfo = data.warning ? ('\n\nHinweis: ' + data.warning) : '';
+                    alert('Wind Sector-Balance angewendet!\n\n' +
+                          'Speicherdrift (nach Schritt 2): ' + data.storage_drift.toFixed(1) + ' GWh' +
+                          luInfo +
+                          sectorInfo + warningInfo + '\n\n' +
+                          'Seite wird aktualisiert...');
+                } else {
+                    alert('Wind 2-Schritt-Balance angewendet.\n\nSeite wird aktualisiert...');
+                }
+                window.location.reload();
+            } else {
+                alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
+            }
+        } catch (error) {
+            alert('Fehler beim Wind Sector-Balance: ' + error);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-wind me-1"></i>Balance Wind';
+        }
+    });
+    
+});
+</script>
+{% endblock %}

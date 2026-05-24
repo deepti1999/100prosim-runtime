@@ -1,0 +1,37 @@
+{
+  "name": "100ProSim",
+  "description": "Django-based energy simulation platform with PostgreSQL and background worker.",
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "standard-1x"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "standard-1x"
+    }
+  },
+  "addons": [
+    "heroku-postgresql:standard-0"
+  ],
+  "env": {
+    "DJANGO_DEBUG": {
+      "value": "false"
+    },
+    "DJANGO_LOG_LEVEL": {
+      "value": "INFO"
+    },
+    "DJANGO_WHITENOISE_ENABLED": {
+      "value": "true"
+    },
+    "DJANGO_STATICFILES_USE_MANIFEST": {
+      "value": "true"
+    },
+    "DB_CONN_MAX_AGE": {
+      "value": "600"
+    },
+    "DB_CONN_HEALTH_CHECKS": {
+      "value": "true"
+    }
+  }
+}

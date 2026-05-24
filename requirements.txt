@@ -1,0 +1,9 @@
+django==4.2.24
+pandas
+numpy
+dj-database-url
+psycopg[binary]
+gunicorn
+whitenoise
+django-redis
+openpyxl>=3.1

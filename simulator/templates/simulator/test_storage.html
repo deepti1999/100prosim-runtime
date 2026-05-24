@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>localStorage-Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #fff; }
+        .test { margin: 10px 0; padding: 10px; border-left: 4px solid #0d6efd; background: #2d2d2d; }
+        .success { border-color: #28a745; }
+        .error { border-color: #dc3545; }
+        button { padding: 10px 20px; margin: 5px; font-size: 14px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1> localStorage-Diagnosetest</h1>
+    <p>Diese Seite prüft, ob localStorage im aktuellen Browser korrekt funktioniert.</p>
+
+    <div id="results"></div>
+
+    <button onclick="runTests()">Tests erneut ausführen</button>
+    <button onclick="testSaveAndRefresh()">Speichern &amp; Neu-Laden testen</button>
+    <button onclick="viewStorage()">Speicher anzeigen</button>
+    <button onclick="clearStorage()">Speicher löschen</button>
+
+    <script>
+        function log(message, isError = false) {
+            const div = document.createElement('div');
+            div.className = 'test ' + (isError ? 'error' : 'success');
+            div.innerHTML = message;
+            document.getElementById('results').appendChild(div);
+        }
+
+        function runTests() {
+            document.getElementById('results').innerHTML = '';
+
+            log(' Test 1: localStorage verfügbar?');
+            if (typeof(Storage) !== "undefined") {
+                log('localStorage wird von diesem Browser unterstützt');
+            } else {
+                log('localStorage wird NICHT unterstützt', true);
+                return;
+            }
+
+            log(' Test 2: Schreibzugriff prüfen ...');
+            try {
+                localStorage.setItem('test_key', 'test_value');
+                log('Schreiben in localStorage erfolgreich');
+            } catch (e) {
+                log('Schreiben FEHLGESCHLAGEN: ' + e.message, true);
+                return;
+            }
+
+            log(' Test 3: Lesezugriff prüfen ...');
+            const value = localStorage.getItem('test_key');
+            if (value === 'test_value') {
+                log('Lesen aus localStorage erfolgreich');
+            } else {
+                log('Lesen FEHLGESCHLAGEN (gelesen: ' + value + ')', true);
+            }
+
+            log(' Test 4: Auf landuse_changes_history prüfen ...');
+            const saved = localStorage.getItem('landuse_changes_history');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    log('landuse_changes_history gefunden mit ' + parsed.length + ' Einträgen');
+                    log(' Daten: ' + JSON.stringify(parsed, null, 2));
+                } catch (e) {
+                    log('Daten gefunden, aber beschädigt: ' + e.message, true);
+                }
+            } else {
+                log('Keine landuse_changes_history gefunden (leer)');
+            }
+
+            log(' Test 5: Browser-Informationen ...');
+            log('User-Agent: ' + navigator.userAgent);
+            log('Cookies aktiviert: ' + navigator.cookieEnabled);
+            log('Privater Modus: ' + (window.localStorage ? 'Nein (wahrscheinlich)' : 'Ja (wahrscheinlich)'));
+
+            localStorage.removeItem('test_key');
+        }
+
+        function testSaveAndRefresh() {
+            const testData = [{
+                code: 'TEST',
+                name: 'Test-Änderung',
+                old_percent: 0,
+                new_percent: 5,
+                timestamp: new Date().toLocaleTimeString()
+            }];
+
+            localStorage.setItem('landuse_changes_history', JSON.stringify(testData));
+            log('Testdaten gespeichert. Laden Sie jetzt die Seite neu (F5) und führen Sie die Tests erneut aus, um zu verifizieren!');
+        }
+
+        function viewStorage() {
+            document.getElementById('results').innerHTML = '';
+            log(' Alle localStorage-Einträge:');
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                log(key + ' = ' + value.substring(0, 100) + (value.length > 100 ? '...' : ''));
+            }
+        }
+
+        function clearStorage() {
+            localStorage.clear();
+            log(' Gesamter localStorage geleert');
+        }
+
+        // Run tests on page load
+        runTests();
+    </script>
+</body>
+</html>

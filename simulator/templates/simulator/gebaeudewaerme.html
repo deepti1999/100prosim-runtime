@@ -1,0 +1,144 @@
+{% extends 'simulator/base.html' %}
+
+{% block title %}Gebäudewärme{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {# Stakeholder PDF §2.5.3: sidebar on every page. #}
+        {% include 'simulator/partials/sidebar_nav.html' with active_section='verbrauch' %}
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
+    <h3>Gebäudewärme – Datenübersicht</h3>
+    <p class="text-muted mb-4">Nachgebildet nach Excel-Tabellenblatt S.5 "Gebäudewärme"</p>
+
+    <div class="row text-center mb-4">
+        <div class="col-md-3"><h6>Datensätze gesamt</h6><p>{{ data|length }}</p></div>
+        <div class="col-md-3"><h6>Kategorien</h6><p>10</p></div>
+        <div class="col-md-3"><h6>Datenquelle</h6><p class="text-success">CSV-Daten</p></div>
+        <div class="col-md-3"><h6>Status</h6><p class="text-success">Aktiv</p></div>
+    </div>
+
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th style="width: 8%;">Code</th>
+                <th style="width: 35%;">Kategorie</th>
+                <th style="width: 10%;">Einheit</th>
+                <th style="width: 12%;">Status</th>
+                <th style="width: 12%;">Ziel</th>
+                <th style="width: 12%;">Formel</th>
+                <th style="width: 8%;">Benutzer %</th>
+                <th style="width: 8%;">Aktionen</th>
+                <th style="width: 30px;" title="Datenquelle (§2.3)">Q</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td class="fw-bold">{{ row.code }}</td>
+                <td style="padding-left: {% if '.' in row.code %}30px{% else %}10px{% endif %};">
+                    <span class="{% if '.' in row.code %}text-muted{% else %}fw-bold{% endif %}">
+                        {{ row.category }}
+                    </span>
+                </td>
+                <td class="text-center small">{{ row.unit }}</td>
+                <td class="text-end">
+                    {% if row.status %}
+                        {{ row.status|floatformat:1 }}
+                    {% else %}
+                        <span class="text-muted">-</span>
+                    {% endif %}
+                </td>
+                <td class="text-end">
+                    {% if row.ziel %}
+                        {{ row.ziel|floatformat:1 }}
+                    {% else %}
+                        <span class="text-muted">-</span>
+                    {% endif %}
+                </td>
+                <td class="text-center small">
+                    {% if row.formula %}
+                        <span class="badge bg-info">{{ row.formula|truncatechars:10 }}</span>
+                    {% else %}
+                        <span class="text-muted">-</span>
+                    {% endif %}
+                </td>
+                <td contenteditable="true" class="bg-light text-center" data-field="user_percent" data-code="{{ row.code }}">
+                    {% if row.user_percent %}{{ row.user_percent|floatformat:1 }}{% else %}% eingeben ...{% endif %}
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-sm btn-outline-primary" onclick="editRow('{{ row.code }}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </td>
+                <td class="text-center align-middle">
+                    {% include "simulator/_provenance_icon.html" with source_url=row.source_url notes_assumption=row.notes_assumption source_refs=row.source_refs origin=row.origin provenance_override_active=row.provenance_override_active %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-end mt-3">
+        <button class="btn btn-success me-2" id="saveAllBtn">
+            <i class="fas fa-save"></i> Alle Werte speichern
+        </button>
+        <button class="btn btn-secondary" id="exportBtn">
+            <i class="fas fa-download"></i> CSV exportieren
+        </button>
+    </div>
+        </main>
+    </div>
+</div>
+
+<style>
+.editable-cell {
+    cursor: text;
+    min-height: 40px;
+    position: relative;
+}
+.editable-cell:hover {
+    background-color: #f8f9fa !important;
+    border: 2px solid #007bff;
+}
+.editable-cell:focus {
+    outline: none;
+    background-color: white !important;
+    border: 2px solid #0056b3;
+}
+</style>
+
+<script>
+function editRow(code) {
+    alert(`Bearbeiten-Funktion für ${code} wird später implementiert.`);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle editable cells
+    const editableCells = document.querySelectorAll('[contenteditable="true"]');
+
+    editableCells.forEach(cell => {
+        cell.addEventListener('focus', function() {
+            if (this.textContent.includes('eingeben')) {
+                this.textContent = '';
+            }
+        });
+
+        cell.addEventListener('blur', function() {
+            if (this.textContent.trim() === '') {
+                this.textContent = this.dataset.field === 'user_percent' ? '% eingeben ...' : 'Wert eingeben ...';
+            }
+        });
+    });
+
+    document.getElementById('saveAllBtn').addEventListener('click', function() {
+        alert('Speichern-Funktion wird später implementiert.');
+    });
+
+    document.getElementById('exportBtn').addEventListener('click', function() {
+        alert('Export-Funktion wird später implementiert.');
+    });
+});
+</script>
+{% endblock %}

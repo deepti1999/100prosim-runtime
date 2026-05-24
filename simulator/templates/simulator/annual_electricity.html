@@ -1,0 +1,688 @@
+{% extends 'simulator/base.html' %}
+{% load l10n %}
+
+{% block title %}Jahresstrom – Flussdiagramm{% endblock %}
+
+{% block extra_head %}
+<style>
+        .diagram-wrapper {
+            flex: 1;
+            padding: 24px;
+            background: #fff;
+            position: relative;
+        }
+
+        .diagram-scroll {
+            overflow: auto;
+        }
+
+        .ws1-svg {
+            width: 1650px;
+            height: 980px;
+            max-width: none;
+            display: block;
+            margin: 0 auto;
+            background: #fff;
+        }
+
+        .node-yellow { fill: #ffe8b0; stroke: #1f4e79; stroke-width: 2; }
+        .node-blue { fill: #d9ecff; stroke: #1f4e79; stroke-width: 2; }
+        .node-pink { fill: #ffe2e6; stroke: #c97b84; stroke-width: 2; }
+        .flow-line { stroke: #f4b942; stroke-width: 4; marker-end: url(#arrow); }
+        .flow-line-thin { stroke: #f4b942; stroke-width: 3; marker-end: url(#arrow); }
+        .node-circle { fill: #fff; stroke: #f4b942; stroke-width: 4; }
+
+        .gas-line { stroke: #2b7bd6; stroke-width: 3; marker-end: url(#arrow-gas); fill: none; }
+        .value-box { fill: #fff; stroke: #222; stroke-width: 1.2; }
+        .txt-tages { font-size: 13px; font-weight: 700; fill: #1f4e79; font-style: italic; }
+        .txt-pct { font-size: 12px; font-weight: 800; fill: #222; }
+        .txt-red { font-size: 13px; font-weight: 900; fill: #c0392b; }
+        .txt-src-label { font-size: 16px; font-weight: 900; fill: #222; }
+        .txt-src-sub { font-size: 13px; font-weight: 700; fill: #444; font-style: italic; }
+        .txt-box-val { font-size: 15px; font-weight: 900; fill: #111; }
+        .txt-arrow-val { font-size: 15px; font-weight: 900; fill: #111; stroke: #fff; stroke-width: 5; paint-order: stroke fill; }
+
+        /* Phase 5-C (T55): font sizes bumped per PDF §2.5.6 complaint about
+           small, hard-to-read labels. Legend block reads text up to ~25%
+           larger than before while the viewBox stays at 1650×980 so the
+           page-level zoom behaviour is unchanged. */
+        .txt-title { font-size: 24px; font-weight: 900; fill: #222; }
+        .txt-title-meta { font-size: 15px; font-weight: 700; fill: #5b6472; }
+        .txt-label { font-size: 14px; font-weight: 900; fill: #222; }
+        .txt-label-lg { font-size: 19px; font-weight: 900; fill: #222; }
+        .txt-sub { font-size: 11px; font-weight: 700; fill: #4b5563; font-style: italic; }
+        .txt-value { font-size: 18px; font-weight: 900; fill: #111; }
+        .txt-value-sm { font-size: 17px; font-weight: 900; fill: #111; }
+        .txt-flow { font-size: 17px; font-weight: 900; fill: #111; stroke: #fff; stroke-width: 6; paint-order: stroke fill; }
+        .txt-flow-sm { font-size: 15px; font-weight: 900; fill: #111; stroke: #fff; stroke-width: 5; paint-order: stroke fill; }
+        .txt-node { font-size: 20px; font-weight: 900; fill: #222; }
+        .txt-node-value { font-size: 17px; font-weight: 900; fill: #111; }
+        .txt-metric { font-size: 14px; font-weight: 900; fill: #111; }
+        .txt-metric-label { font-size: 11px; font-weight: 800; fill: #111; }
+        .txt-badge { font-size: 12px; font-weight: 900; fill: #555; }
+
+        .badge-bg { fill: #f3f4f6; stroke: #d1d5db; stroke-width: 1; }
+        .metric-bg { fill: #fff; stroke: #444; stroke-width: 1.2; }
+
+        /* Excel page 10 parity (T54 visual pass 2) */
+        .txt-col-header { font-size: 16px; font-weight: 900; fill: #222; text-decoration: underline; }
+        .txt-datasource { font-size: 12px; font-weight: 700; fill: #5b6472; font-style: italic; }
+        .txt-key { font-size: 15px; font-weight: 900; fill: #1f4e79; font-style: italic; }
+        .txt-key-circle { font-size: 18px; font-weight: 900; fill: #1f4e79; font-style: italic; }
+        .txt-sidebar-label { font-size: 11px; font-weight: 700; fill: #111; }
+        .txt-sidebar-val { font-size: 12px; font-weight: 900; fill: #111; }
+
+        #ws365Table th {
+            white-space: nowrap;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        #ws365Table thead.ws-main-header tr:first-child th {
+            color: #111111 !important;
+            background-color: #f2f4f7 !important;
+            border-color: #d4d9e0 !important;
+        }
+        #ws365Table td {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        /* Phase 5-C (T55): zoom controls + responsive scaling. */
+        .ws1-svg-zoom-wrap { position: relative; }
+        .ws1-svg-zoom-controls {
+            position: sticky; top: 0; z-index: 5; background: #fff; padding: 6px 0;
+            display: flex; gap: 8px; align-items: center;
+        }
+        .ws1-svg-zoom-controls .zoom-label { font-size: 13px; color: #555; }
+        .ws1-svg { transform-origin: 0 0; transition: transform 0.15s ease; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {# Stakeholder PDF §2.5.3 (T38): sidebar added here in Phase 3-A. #}
+        {% include 'simulator/partials/sidebar_nav.html' with active_section='annual_electricity' %}
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2"><i class="fas fa-bolt me-2"></i>Jahresstrom – Flussdiagramm</h1>
+            </div>
+
+        <div class="diagram-wrapper">
+            {# Phase 5-C (T55): zoom controls for the flow diagram. #}
+            <div class="ws1-svg-zoom-controls">
+                <span class="zoom-label"><i class="fas fa-search-plus me-1"></i>Zoom:</span>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Zoom-Stufe">
+                    <button type="button" class="btn btn-outline-primary" data-zoom="0.75">75 %</button>
+                    <button type="button" class="btn btn-outline-primary active" data-zoom="1.0">100 %</button>
+                    <button type="button" class="btn btn-outline-primary" data-zoom="1.25">125 %</button>
+                    <button type="button" class="btn btn-outline-primary" data-zoom="1.5">150 %</button>
+                    <button type="button" class="btn btn-outline-primary" data-zoom="2.0">200 %</button>
+                </div>
+            </div>
+            <div class="diagram-scroll ws1-svg-zoom-wrap">
+            <svg class="ws1-svg" viewBox="0 0 1650 980" xmlns="http://www.w3.org/2000/svg" aria-label="Annual electricity flow">
+                <defs>
+                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                        <polygon points="0 0, 10 3, 0 6" fill="#f4b942"/>
+                    </marker>
+                    <marker id="arrow-gas" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                        <polygon points="0 0, 10 3, 0 6" fill="#2b7bd6"/>
+                    </marker>
+                </defs>
+
+                <!-- =============================================================
+                     FLOW DIAGRAM — Excel page 10 replica (T54 pass 10, clean rewrite)
+                     Grid: sources y=100,220,340,460; main flow y=375;
+                     middle row y=520; gas row y=740.
+                     ============================================================= -->
+
+                <!-- Title + data-source strip -->
+                <text x="40" y="38" class="txt-title">Jahresbilanz Strom</text>
+                <text x="40" y="60" class="txt-title-meta">{{ diagram_scenario_label|default:"Aktuelles Szenario" }} | Stand {{ diagram_generated_on }}</text>
+                <text x="40" y="78" class="txt-datasource">Verwendete Zeitreihen: Anlagenpark Deutschland 2023 [SMARD]</text>
+
+                <!-- Column headers -->
+                <text x="270" y="104" text-anchor="middle" class="txt-col-header">Bruttostromerzeugung:</text>
+                <text x="1400" y="104" text-anchor="middle" class="txt-col-header">Nettostromerzeugung:</text>
+
+                <!-- Eta Stromspeicherung box top-centre -->
+                <rect x="820" y="60" width="240" height="50" rx="3" class="metric-bg"/>
+                <text x="940" y="80" text-anchor="middle" class="txt-sidebar-label">Eta Stromspeicherung (%):</text>
+                <text x="940" y="100" text-anchor="middle" style="font-size:17px;font-weight:900;fill:#111" id="eta_storage_value">0,0</text>
+
+                <!-- ============================================================
+                     SOURCES (left column) + metadata stacks
+                     ============================================================ -->
+
+                <!-- Bio source row -->
+                <rect x="30" y="120" width="190" height="80" rx="6" class="node-yellow"/>
+                <text x="125" y="148" text-anchor="middle" class="txt-src-label">Bedarfs-</text>
+                <text x="125" y="166" text-anchor="middle" class="txt-src-label">Kraftwerke</text>
+                <text x="125" y="186" text-anchor="middle" class="txt-src-sub">Biobrennstoffe</text>
+
+                <!-- Bio stack -->
+                <text x="305" y="138" text-anchor="middle" class="txt-key">S</text>
+                <rect x="260" y="144" width="90" height="22" class="value-box"/>
+                <text x="305" y="160" text-anchor="middle" class="txt-box-val" id="bio_value">0</text>
+                <text x="305" y="178" text-anchor="middle" class="txt-tages" id="bio_tages">{{ bio_tages|default:1 }}</text>
+                <text x="305" y="192" text-anchor="middle" class="txt-pct" id="bio_pct">0,2%</text>
+
+                <!-- PV source -->
+                <rect x="30" y="220" width="190" height="80" rx="6" class="node-yellow"/>
+                <text x="125" y="258" text-anchor="middle" class="txt-label-lg">PV</text>
+                <text x="125" y="280" text-anchor="middle" class="txt-src-sub">(fluktuierend)</text>
+
+                <!-- PV stack -->
+                <text x="305" y="238" text-anchor="middle" class="txt-key">K</text>
+                <rect x="255" y="244" width="100" height="22" class="value-box"/>
+                <text x="305" y="260" text-anchor="middle" class="txt-box-val" id="pv_value">0</text>
+                <text x="305" y="278" text-anchor="middle" class="txt-tages" id="pv_tages">{{ pv_tages|default:397 }}</text>
+                <text x="305" y="292" text-anchor="middle" class="txt-pct" id="pv_pct">62,2%</text>
+
+                <!-- Wind source -->
+                <rect x="30" y="320" width="190" height="80" rx="6" class="node-yellow"/>
+                <text x="125" y="358" text-anchor="middle" class="txt-label-lg">Wind</text>
+                <text x="125" y="380" text-anchor="middle" class="txt-src-sub">(fluktuierend)</text>
+
+                <!-- Wind stack -->
+                <text x="305" y="338" text-anchor="middle" class="txt-key">J</text>
+                <rect x="255" y="344" width="100" height="22" class="value-box"/>
+                <text x="305" y="360" text-anchor="middle" class="txt-box-val" id="wind_value">0</text>
+                <text x="305" y="378" text-anchor="middle" class="txt-tages" id="wind_tages">{{ wind_tages|default:186 }}</text>
+                <text x="305" y="392" text-anchor="middle" class="txt-pct" id="wind_pct">29,2%</text>
+
+                <!-- Hydro source -->
+                <rect x="30" y="420" width="190" height="90" rx="6" class="node-yellow"/>
+                <text x="125" y="452" text-anchor="middle" class="txt-src-label">Laufwasser</text>
+                <text x="125" y="470" text-anchor="middle" class="txt-src-label">Tief.-Geoth.</text>
+                <text x="125" y="490" text-anchor="middle" class="txt-src-sub">(konstant)</text>
+
+                <!-- Hydro stack -->
+                <text x="305" y="438" text-anchor="middle" class="txt-key">L</text>
+                <rect x="260" y="444" width="90" height="22" class="value-box"/>
+                <text x="305" y="460" text-anchor="middle" class="txt-box-val" id="hydro_value">0</text>
+                <text x="305" y="478" text-anchor="middle" class="txt-tages" id="hydro_tages">{{ hydro_tages|default:5 }}</text>
+                <text x="305" y="492" text-anchor="middle" class="txt-pct" id="hydro_pct">0,8%</text>
+
+                <!-- ============================================================
+                     MAIN FLOW (y=375). M-circle, splitter, Q-circle, N, S.
+                     ============================================================ -->
+
+                <!-- Source→M arrows (stacks end at x=355 so arrows start at 360).
+                     M-circle is r=16 centered (465,375); arrow tips land on boundary. -->
+                <line x1="360" y1="260" x2="450" y2="365" class="flow-line"/>
+                <line x1="360" y1="360" x2="449" y2="375" class="flow-line"/>
+                <line x1="360" y1="460" x2="450" y2="385" class="flow-line"/>
+
+                <!-- M-circle (r=16) -->
+                <circle cx="465" cy="375" r="16" class="node-circle"/>
+
+                <!-- M → splitter arrow FURTHER stretched. -->
+                <line x1="481" y1="375" x2="620" y2="375" class="flow-line"/>
+
+                <!-- M stack centered on M→splitter arrow midpoint (x=550). -->
+                <text x="550" y="320" text-anchor="middle" class="txt-key-circle">M</text>
+                <rect x="500" y="330" width="100" height="24" class="value-box"/>
+                <text x="550" y="347" text-anchor="middle" class="txt-box-val" id="m_value">0</text>
+
+                <!-- Splitter circle — shifted +80 from original (now x=630) -->
+                <circle cx="630" cy="375" r="10" class="node-circle"/>
+
+                <!-- Splitter → Q arrow (endpoint updated to reach Q-left boundary at x=854). -->
+                <line x1="640" y1="375" x2="854" y2="375" class="flow-line"/>
+                <rect x="697" y="335" width="100" height="24" class="value-box"/>
+                <text x="747" y="352" text-anchor="middle" class="txt-box-val" id="o_value_svg">0</text>
+                <text x="747" y="406" text-anchor="middle" class="txt-tages" id="flow_n_value_tages">509</text>
+
+                <!-- Q-circle shifted to x=870 (aligned with new Stromspeicher center). -->
+                <circle cx="870" cy="375" r="16" class="node-circle"/>
+
+                <!-- Abregelung up-arrow from Q-top; value box TO THE RIGHT of arrow. -->
+                <line x1="870" y1="359" x2="870" y2="205" class="flow-line"/>
+                <text x="870" y="185" text-anchor="middle" class="txt-label-lg">Abregelung</text>
+                <rect x="885" y="240" width="90" height="22" class="value-box"/>
+                <text x="930" y="256" text-anchor="middle" class="txt-box-val" id="q_value">0</text>
+                <text x="930" y="276" text-anchor="middle" class="txt-tages" id="flow_q_abregelung_tages">62</text>
+                <text x="985" y="256" class="txt-key">Q</text>
+
+                <!-- Q → S arrow. -->
+                <line x1="886" y1="375" x2="1164" y2="375" class="flow-line"/>
+                <rect x="920" y="335" width="100" height="24" class="value-box"/>
+                <text x="970" y="352" text-anchor="middle" class="txt-box-val" id="bio_rejoin_value">0</text>
+                <text x="970" y="406" text-anchor="middle" class="txt-tages" id="flow_n_to_right_tages">313</text>
+                <text x="1030" y="352" class="txt-key">N</text>
+
+                <!-- S-circle (r=16) shifted +30 from last stretch (now x=1180) -->
+                <circle cx="1180" cy="375" r="16" class="node-circle"/>
+                <text x="1203" y="360" class="txt-key-circle">S</text>
+
+                <!-- S → Stromnetz arrow. -->
+                <line x1="1196" y1="375" x2="1326" y2="375" class="flow-line"/>
+                <rect x="1225" y="335" width="100" height="24" class="value-box"/>
+                <text x="1275" y="352" text-anchor="middle" class="txt-box-val" id="final_value">0</text>
+                <text x="1275" y="406" text-anchor="middle" class="txt-tages" id="flow_final_tages">365</text>
+                <text x="1355" y="320" class="txt-key">I</text>
+
+                <!-- Stromnetz box shifted +30 -->
+                <rect x="1330" y="335" width="260" height="90" rx="6" class="node-yellow"/>
+                <text x="1460" y="368" text-anchor="middle" class="txt-label-lg">Stromnetz zum</text>
+                <text x="1460" y="393" text-anchor="middle" class="txt-label-lg">Endverbrauch</text>
+
+                <!-- BIO top path — ends at new S x=1180 -->
+                <line x1="355" y1="158" x2="1180" y2="158" style="stroke:#f4b942;stroke-width:3"/>
+                <line x1="1180" y1="158" x2="1180" y2="349" class="flow-line-thin"/>
+
+                <!-- ============================================================
+                     DOWN BRANCHES to the middle row (Elektrolyse P2G, Ely ES)
+                     ============================================================ -->
+
+                <!-- Splitter → Elektrolyse P2G; shifted to match new splitter x=630. -->
+                <line x1="630" y1="385" x2="630" y2="520" class="flow-line"/>
+                <rect x="640" y="440" width="90" height="22" class="value-box"/>
+                <text x="685" y="456" text-anchor="middle" class="txt-box-val" id="ely_branch_value">0</text>
+                <text x="740" y="456" class="txt-key">P</text>
+
+                <!-- Q → Elektrolyse Stromspeicher; shifted to new Q x=870. -->
+                <line x1="870" y1="391" x2="870" y2="520" class="flow-line"/>
+                <rect x="880" y="440" width="90" height="22" class="value-box"/>
+                <text x="925" y="456" text-anchor="middle" class="txt-box-val" id="n_output_branch_value">0</text>
+                <text x="925" y="478" text-anchor="middle" class="txt-tages" id="flow_n_output_branch_tages">134</text>
+                {# T54 D4a (Phase B): Pmax-Ely-ES from Region.installed_pmax_ely_gw #}
+                <text x="925" y="494" text-anchor="middle" class="txt-red" id="pmax_ely_value">194 GW</text>
+                <text x="980" y="456" class="txt-key">P/Eta</text>
+
+                <!-- ============================================================
+                     MIDDLE ROW — Elektrolyse P2G, Elektrolyse ES, Rückverstromung
+                     ============================================================ -->
+
+                <!-- Elektrolyse Power to Gas — Eta Ely badge outside, with clear bordered box. -->
+                <rect x="545" y="520" width="170" height="95" rx="6" class="node-blue"/>
+                <text x="630" y="555" text-anchor="middle" class="txt-src-label">Elektrolyse</text>
+                <text x="630" y="575" text-anchor="middle" class="txt-src-label">Power to Gas</text>
+                <text x="630" y="595" text-anchor="middle" class="txt-src-sub">(nach Angebot)</text>
+                <rect x="720" y="565" width="60" height="46" rx="3" class="metric-bg"/>
+                <text x="750" y="582" text-anchor="middle" class="txt-red" id="eta_ely_value">65%</text>
+                <text x="750" y="600" text-anchor="middle" class="txt-src-label" style="font-size:11px">Eta Ely.</text>
+
+                <!-- Elektrolyse Stromspeicher — shifted right to make room for Eta Ely badge. -->
+                <rect x="785" y="520" width="170" height="95" rx="6" class="node-blue"/>
+                <text x="870" y="555" text-anchor="middle" class="txt-src-label">Elektrolyse</text>
+                <text x="870" y="575" text-anchor="middle" class="txt-src-label">Stromspeicher</text>
+                <text x="870" y="595" text-anchor="middle" class="txt-src-sub">(Überschuss)</text>
+
+                <!-- Pmax/Pv — bordered group box; sits in gap between Stromspeicher and Rückv. -->
+                <rect x="990" y="528" width="80" height="92" rx="3" class="metric-bg"/>
+                <text x="1030" y="546" text-anchor="middle" class="txt-sidebar-label">P_max/P_v</text>
+                <text x="1030" y="566" text-anchor="middle" class="txt-red">100%</text>
+                <text x="1030" y="584" text-anchor="middle" class="txt-sidebar-val" id="eta_es_value">65%</text>
+                <text x="1030" y="606" text-anchor="middle" class="txt-src-label" style="font-size:11px">Eta ES</text>
+
+                <!-- Rückverstromung — Eta labels in a tight bordered badge to the right. -->
+                <rect x="1095" y="520" width="170" height="95" rx="6" class="node-yellow"/>
+                <text x="1180" y="555" text-anchor="middle" class="txt-src-label">Rückver-</text>
+                <text x="1180" y="575" text-anchor="middle" class="txt-src-label">stromung</text>
+                <text x="1180" y="595" text-anchor="middle" class="txt-src-sub">(Mangelausgl.)</text>
+
+                <!-- 261 GW red above Rückv badge, badge holds Eta RS stack. -->
+                {# T54 D4b (Phase B): Pmax-RV from Region.installed_pmax_rv_gw #}
+                <text x="1275" y="540" class="txt-red" id="pmax_rv_value">261 GW (elekt.)</text>
+                <rect x="1268" y="565" width="60" height="46" rx="3" class="metric-bg"/>
+                <text x="1298" y="582" text-anchor="middle" class="txt-red" id="eta_rs_value">59%</text>
+                <text x="1298" y="600" text-anchor="middle" class="txt-src-label" style="font-size:11px">Eta RS</text>
+
+                <!-- Rückverstromung → S (T arrow): now a clean straight vertical from
+                     Rückv top-center (1180, 520) directly to S bottom (1180, 391). -->
+                <line x1="1180" y1="520" x2="1180" y2="391" class="flow-line-thin"/>
+                <rect x="1190" y="430" width="90" height="22" class="value-box"/>
+                <text x="1235" y="446" text-anchor="middle" class="txt-box-val" id="reconversion_value">0</text>
+                <text x="1235" y="464" text-anchor="middle" class="txt-tages" id="flow_reconversion_tages">51</text>
+                <text x="1235" y="480" text-anchor="middle" class="txt-sub" id="reconversion_share">0,0%</text>
+                <text x="1290" y="446" class="txt-key">T</text>
+
+                <!-- ============================================================
+                     GAS PATH (blue) — bottom row, all aligned with their middle-row columns.
+                     ============================================================ -->
+
+                <!-- P2G → Direktverbr (both centered at x=630). -->
+                <line x1="630" y1="615" x2="630" y2="680" class="gas-line"/>
+                <rect x="640" y="632" width="90" height="22" class="value-box"/>
+                <text x="685" y="648" text-anchor="middle" class="txt-box-val" id="gasspeicher_direkt_value">0</text>
+                <text x="685" y="668" text-anchor="middle" class="txt-tages" id="flow_gasspeicher_direkt_tages">87</text>
+                <text x="740" y="648" class="txt-key">P</text>
+
+                <!-- Gasspeicher Direktverbr box — centered at x=630 -->
+                <rect x="545" y="680" width="170" height="60" rx="6" class="node-blue"/>
+                <text x="630" y="706" text-anchor="middle" class="txt-src-label">Gasspeicher</text>
+                <text x="630" y="724" text-anchor="middle" class="txt-src-label">Direktverbr.</text>
+
+                <!-- Gas-Verbraucher label on LEFT of Direktverbr. -->
+                <line x1="545" y1="710" x2="485" y2="710" class="gas-line"/>
+                <text x="480" y="714" text-anchor="end" class="txt-src-sub">Gas-Verbraucher</text>
+
+                <!-- Ely-ES → Gasspeicher Strom (both centered on Q x=870). -->
+                <line x1="870" y1="615" x2="870" y2="740" class="gas-line"/>
+                <rect x="880" y="668" width="90" height="22" class="value-box"/>
+                <text x="925" y="684" text-anchor="middle" class="txt-box-val" id="gas_storage_arrow_value">0</text>
+                <text x="925" y="704" text-anchor="middle" class="txt-tages" id="flow_gas_storage_tages">87</text>
+                <text x="980" y="684" class="txt-key">P</text>
+
+                <!-- Gasspeicher Strom — shifted right so it doesn't share a horizontal edge with
+                     Gasspeicher Direktverbr (which ends at x=715). Starts at x=730. -->
+                <rect x="730" y="740" width="500" height="80" rx="6" class="node-blue"/>
+                <text x="980" y="785" text-anchor="middle" class="txt-label-lg">Gasspeicher Strom</text>
+
+                <!-- Speicherkapazität: label / value / Tages — Excel style with colon. -->
+                <line x1="980" y1="820" x2="980" y2="870" class="gas-line"/>
+                <text x="980" y="895" text-anchor="middle" class="txt-label-lg">Speicherkapazit&#228;t:</text>
+                <text x="980" y="918" text-anchor="middle" class="txt-flow" id="storage_capacity_value">0 GWh</text>
+                <text x="980" y="938" text-anchor="middle" class="txt-tages" id="flow_storage_capacity_tages">80</text>
+
+                <!-- Rückverstromung ← Gasspeicher (U arrow, UP) — centered on Rückv x=1180. -->
+                <line x1="1180" y1="740" x2="1180" y2="615" class="gas-line"/>
+                <rect x="1090" y="668" width="90" height="22" class="value-box"/>
+                <text x="1135" y="684" text-anchor="middle" class="txt-box-val" id="t_value_svg">0</text>
+                <text x="1135" y="704" text-anchor="middle" class="txt-tages" id="flow_t_value_tages">87</text>
+                <text x="1190" y="684" class="txt-key">U</text>
+
+                <!-- Abgleichdifferenz bottom: 160 (bold) above, "Abgleichdifferenz" label below,
+                     small italic "0" to the right — Excel convention. -->
+                <text x="1320" y="895" text-anchor="middle" class="txt-flow-sm" id="abgleichdifferenz_value">160</text>
+                <text x="1360" y="897" class="txt-tages">0</text>
+                <text x="1320" y="918" text-anchor="middle" class="txt-src-sub">Abgleichdifferenz</text>
+                <text x="1320" y="938" text-anchor="middle" class="txt-tages" id="abgleichdifferenz_tages">80</text>
+
+                <!-- ============================================================
+                     Legend bottom-left + footer right
+                     ============================================================ -->
+                <rect x="30" y="835" width="280" height="125" rx="4" class="badge-bg"/>
+                <text x="42" y="855" class="txt-label">Legende:</text>
+                <text x="50" y="876" class="txt-box-val">31.799</text>
+                <text x="120" y="876" class="txt-src-sub">Wert in GWh/a</text>
+                <text x="55" y="894" class="txt-tages">146</text>
+                <text x="120" y="894" class="txt-src-sub">Wert in Ø Tagesladungen</text>
+                <text x="53" y="912" class="txt-key">K</text>
+                <text x="120" y="912" class="txt-src-sub">Zeitreihenkennung</text>
+                <line x1="50" y1="925" x2="105" y2="925" style="stroke:#f4b942;stroke-width:3" marker-end="url(#arrow)"/>
+                <text x="120" y="929" class="txt-src-sub">Strom</text>
+                <line x1="50" y1="945" x2="105" y2="945" style="stroke:#2b7bd6;stroke-width:3" marker-end="url(#arrow-gas)"/>
+                <text x="120" y="949" class="txt-src-sub">Gas</text>
+
+                <text x="1620" y="968" text-anchor="end" class="txt-src-sub">100prosim Web · {{ diagram_generated_on }}</text>
+            </svg>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-table me-2"></i>365 Tage Daten
+                    </h5>
+                    <div>
+                        <span class="badge bg-secondary me-2">{{ daily_data|length }} Tage</span>
+                        <button class="btn btn-sm btn-outline-primary" id="exportCsvBtn">
+                            <i class="fas fa-download me-1"></i>CSV Export
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                        <table class="table table-bordered table-hover table-sm mb-0" id="ws365Table">
+                            <thead class="sticky-top ws-main-header">
+                                <tr>
+                                    {% for col in ws_columns %}
+                                    <th class="{{ col.header_class }}" style="min-width: {{ col.min_width }}px;">{{ col.label }}</th>
+                                    {% endfor %}
+                                </tr>
+                                <tr class="table-secondary ws-summary-row">
+                                    {% for cell in ws_min_cells %}
+                                    <td class="{{ cell.classes }}">
+                                        {% if cell.is_label %}
+                                            {{ cell.label }}
+                                        {% else %}
+                                            {{ cell.value|floatformat:1 }}
+                                        {% endif %}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                                <tr class="table-secondary ws-summary-row">
+                                    {% for cell in ws_max_cells %}
+                                    <td class="{{ cell.classes }}">
+                                        {% if cell.is_label %}
+                                            {{ cell.label }}
+                                        {% else %}
+                                            {{ cell.value|floatformat:1 }}
+                                        {% endif %}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody id="ws365TableBody">
+                                {% for row in ws_table_rows %}
+                                <tr>
+                                    {% for cell in row %}
+                                    <td class="{{ cell.classes }}">
+                                        {% if cell.is_day %}
+                                            {{ cell.value|floatformat:0 }}
+                                        {% else %}
+                                            {{ cell.value|floatformat:1 }}
+                                        {% endif %}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const vals = {
+            bio: {{ bio|default:0|unlocalize }},
+            pv: {{ pv|default:0|unlocalize }},
+            wind: {{ wind|default:0|unlocalize }},
+            hydro: {{ hydro|default:0|unlocalize }},
+            m_total: {{ m_total|default:0|unlocalize }},
+            ely_branch_value: {{ ely_branch_value|default:0|unlocalize }},
+            n_value: {{ n_value|default:0|unlocalize }},
+            n_output_branch: {{ n_output_branch|default:0|unlocalize }},
+            q_abregelung: {{ q_abregelung|default:0|unlocalize }},
+            n_to_right: {{ n_to_right|default:0|unlocalize }},
+            gasspeicher_direkt: {{ gasspeicher_direkt|default:0|unlocalize }},
+            ely_offer: {{ ely_offer|default:0|unlocalize }},
+            ely_surplus: {{ ely_surplus|default:0|unlocalize }},
+            h2_offer: {{ h2_offer|default:0|unlocalize }},
+            h2_surplus: {{ h2_surplus|default:0|unlocalize }},
+            gas_storage: {{ gas_storage|default:0|unlocalize }},
+            storage_capacity: {{ storage_capacity|default:0|unlocalize }},
+            eta_ely_pct: {{ eta_ely_pct|default:0|unlocalize }},
+            eta_es_pct: {{ eta_es_pct|default:0|unlocalize }},
+            eta_rs_pct: {{ eta_rs_pct|default:0|unlocalize }},
+            eta_storage_pct: {{ eta_storage_pct|default:0|unlocalize }},
+            t_value: {{ t_value|default:0|unlocalize }},
+            reconversion: {{ reconversion|default:0|unlocalize }},
+            final_stromnetz: {{ final_stromnetz|default:0|unlocalize }},
+            // T54 D1 source Tagesladungen
+            pv_tages: {{ pv_tages|default:397|unlocalize }},
+            wind_tages: {{ wind_tages|default:186|unlocalize }},
+            hydro_tages: {{ hydro_tages|default:5|unlocalize }},
+            bio_tages: {{ bio_tages|default:1|unlocalize }},
+            // T54 D2 flow Tagesladungen
+            flow_n_value_tages: {{ flow_n_value_tages|default:509|unlocalize }},
+            flow_q_abregelung_tages: {{ flow_q_abregelung_tages|default:62|unlocalize }},
+            flow_n_to_right_tages: {{ flow_n_to_right_tages|default:313|unlocalize }},
+            flow_final_tages: {{ flow_final_tages|default:365|unlocalize }},
+            flow_n_output_branch_tages: {{ flow_n_output_branch_tages|default:134|unlocalize }},
+            flow_gasspeicher_direkt_tages: {{ flow_gasspeicher_direkt_tages|default:87|unlocalize }},
+            flow_gas_storage_tages: {{ flow_gas_storage_tages|default:87|unlocalize }},
+            flow_t_value_tages: {{ flow_t_value_tages|default:87|unlocalize }},
+            flow_reconversion_tages: {{ flow_reconversion_tages|default:51|unlocalize }},
+            flow_storage_capacity_tages: {{ flow_storage_capacity_tages|default:80|unlocalize }},
+            // T54 D3 percent shares
+            pv_pct: {{ pv_pct|default:62.2|unlocalize }},
+            wind_pct: {{ wind_pct|default:29.2|unlocalize }},
+            hydro_pct: {{ hydro_pct|default:0.8|unlocalize }},
+            bio_pct: {{ bio_pct|default:0.2|unlocalize }},
+            // T54 D4c Abgleichdifferenz
+            abgleichdifferenz: {{ abgleichdifferenz|default:160|unlocalize }},
+            abgleichdifferenz_tages: {{ abgleichdifferenz_tages|default:0|unlocalize }},
+            pmax_ely_gw: {{ pmax_ely_gw|default:194|unlocalize }},
+            pmax_rv_gw: {{ pmax_rv_gw|default:261|unlocalize }}
+        };
+
+        function formatNumber(v) {
+            return Math.round(Number(v || 0)).toLocaleString('de-DE');
+        }
+
+        function setText(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = formatNumber(value);
+        }
+
+        function setTextWithSuffix(id, value, suffix) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = `${formatNumber(value)} ${suffix}`;
+        }
+
+        function setPercentText(id, value, label, decimals = 0) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const num = Number(value || 0);
+            const formatted = decimals > 0 ? num.toFixed(decimals) : Math.round(num).toString();
+            el.textContent = label ? `${formatted}% ${label}` : `${formatted}%`;
+        }
+
+        setText('bio_value', vals.bio);
+        setText('pv_value', vals.pv);
+        setText('wind_value', vals.wind);
+        setText('hydro_value', vals.hydro);
+        setText('m_value', vals.m_total);
+        setText('ely_branch_value', vals.ely_branch_value);
+        setText('n_output_branch_value', vals.n_output_branch);
+        setText('q_value', vals.q_abregelung);
+        setText('ely_offer_value', vals.ely_offer);
+        setText('h2_offer_value', vals.h2_offer);
+        setText('ely_surplus_value', vals.ely_surplus);
+        setText('h2_surplus_value', vals.h2_surplus);
+        setText('gas_storage_arrow_value', vals.gas_storage);
+        setTextWithSuffix('storage_capacity_value', vals.storage_capacity, 'GWh');
+        // Eta labels are now separate static "Eta Ely./Eta ES/Eta RS" texts placed
+        // next to the percentage elements. So we only set the percentage itself.
+        setPercentText('eta_ely_value', vals.eta_ely_pct, '');
+        setPercentText('eta_es_value', vals.eta_es_pct, '');
+        setPercentText('eta_rs_value', vals.eta_rs_pct, '');
+        // Excel page 10 parity: eta_storage displayed as "XX,Y" (no trailing %)
+        {
+          const el = document.getElementById('eta_storage_value');
+          if (el) el.textContent = Number(vals.eta_storage_pct || 0).toFixed(1).replace('.', ',');
+        }
+        // 13.9% reconversion share = t_output / final_stromnetz * 100 (Excel page 10)
+        {
+          const el = document.getElementById('reconversion_share');
+          if (el) {
+            const share = vals.final_stromnetz > 0 ? (vals.reconversion / vals.final_stromnetz * 100) : 0;
+            el.textContent = share.toFixed(1).replace('.', ',') + '%';
+          }
+        }
+        setText('gasspeicher_direkt_value', vals.gasspeicher_direkt);
+        setText('t_value_svg', vals.t_value);
+        setText('reconversion_value', vals.reconversion);
+        // M→N arrow shows n_value (Excel 1,541,442); N→S arrow shows n_to_right (Excel 947,106);
+        // S→Stromnetz arrow shows final_stromnetz (Excel 1,105,556).
+        setText('o_value_svg', vals.n_value);
+        setText('bio_rejoin_value', vals.n_to_right);
+        setText('final_value', vals.final_stromnetz);
+
+        // T54 D1 — source Tagesladungen (integer, de-DE formatted)
+        setText('bio_tages', vals.bio_tages);
+        setText('pv_tages', vals.pv_tages);
+        setText('wind_tages', vals.wind_tages);
+        setText('hydro_tages', vals.hydro_tages);
+
+        // T54 D2 — flow Tagesladungen
+        setText('flow_n_value_tages', vals.flow_n_value_tages);
+        setText('flow_q_abregelung_tages', vals.flow_q_abregelung_tages);
+        setText('flow_n_to_right_tages', vals.flow_n_to_right_tages);
+        setText('flow_final_tages', vals.flow_final_tages);
+        setText('flow_n_output_branch_tages', vals.flow_n_output_branch_tages);
+        setText('flow_gasspeicher_direkt_tages', vals.flow_gasspeicher_direkt_tages);
+        setText('flow_gas_storage_tages', vals.flow_gas_storage_tages);
+        setText('flow_t_value_tages', vals.flow_t_value_tages);
+        setText('flow_reconversion_tages', vals.flow_reconversion_tages);
+        setText('flow_storage_capacity_tages', vals.flow_storage_capacity_tages);
+
+        // T54 D3 — percent shares (German format: comma decimal, 1 digit)
+        function setPct(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = Number(val || 0).toFixed(1).replace('.', ',') + '%';
+        }
+        setPct('bio_pct', vals.bio_pct);
+        setPct('pv_pct', vals.pv_pct);
+        setPct('wind_pct', vals.wind_pct);
+        setPct('hydro_pct', vals.hydro_pct);
+
+        // T54 D4c — Abgleichdifferenz (integer GWh, integer Tagesladungen)
+        setText('abgleichdifferenz_value', vals.abgleichdifferenz);
+        setText('abgleichdifferenz_tages', vals.abgleichdifferenz_tages);
+        // T54 D4a / D4b — installed-power region constants (Phase B SR-004).
+        setTextWithSuffix('pmax_ely_value', vals.pmax_ely_gw, 'GW');
+        setTextWithSuffix('pmax_rv_value', vals.pmax_rv_gw, 'GW (elekt.)');
+
+        const exportCsvBtn = document.getElementById('exportCsvBtn');
+        if (exportCsvBtn) {
+            exportCsvBtn.addEventListener('click', function () {
+                const table = document.getElementById('ws365Table');
+                let csv = [];
+
+                const headers = [];
+                table.querySelectorAll('thead th').forEach(th => {
+                    headers.push('"' + th.textContent.trim() + '"');
+                });
+                csv.push(headers.join(','));
+
+                table.querySelectorAll('tbody tr').forEach(tr => {
+                    const row = [];
+                    tr.querySelectorAll('td').forEach(td => {
+                        row.push('"' + td.textContent.trim() + '"');
+                    });
+                    csv.push(row.join(','));
+                });
+
+                const blob = new Blob([csv.join('\n')], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'jahresstrom_365_tage_' + new Date().toISOString().split('T')[0] + '.csv';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            });
+        }
+
+        // Phase 5-C (T55): zoom controls for the SVG flow diagram.
+        const svg = document.querySelector('.ws1-svg');
+        const zoomButtons = document.querySelectorAll('.ws1-svg-zoom-controls button[data-zoom]');
+        zoomButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const z = parseFloat(btn.dataset.zoom) || 1;
+                if (svg) {
+                    svg.style.transform = `scale(${z})`;
+                    // Reserve layout space proportional to scale so scrollbars work.
+                    const baseWidth = svg.getAttribute('viewBox').split(' ')[2] || 1650;
+                    const baseHeight = svg.getAttribute('viewBox').split(' ')[3] || 980;
+                    svg.style.width = (baseWidth * z) + 'px';
+                    svg.style.height = (baseHeight * z) + 'px';
+                }
+                zoomButtons.forEach(b => b.classList.toggle('active', b === btn));
+            });
+        });
+    });
+    </script>
+{% endblock %}

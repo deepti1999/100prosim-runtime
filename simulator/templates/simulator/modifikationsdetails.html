@@ -1,0 +1,102 @@
+{% extends 'simulator/base.html' %}
+
+{% block title %}Modifikationsdetails{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {% include 'simulator/partials/sidebar_nav.html' with active_section='modifikationsdetails' %}
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2"><i class="fas fa-chart-bar me-2"></i>Modifikationsdetails</h1>
+            </div>
+
+            <div class="alert alert-info" role="alert">
+                <strong>Hinweis:</strong> Diese Seite zeigt die fünf Variantenvergleiche aus 100prosim-Excel
+                (AH Cockpit2) in Web-Form. Jedes Diagramm vergleicht vier Serien:
+                <em>Status</em>, <em>Basisszenario</em>, <em>Vorzustand</em> und <em>Aktueller Zustand</em>.
+                <br>
+                <small class="text-muted">
+                    Vorzustand-Quelle: {{ vorzustand_source }}.
+                    {% if not admin_baseline_available %}
+                        Hinweis: Noch kein Basisszenario vom Administrator erstellt — die Serie &quot;Basisszenario&quot; bleibt leer.
+                    {% endif %}
+                </small>
+            </div>
+
+            {% for chart in charts %}
+            <div class="card mb-4" id="{{ chart.id }}-card">
+                <div class="card-header">
+                    <strong>{{ chart.title }}</strong>
+                    <span class="ms-2 small text-muted">Einheit: {{ chart.unit }}</span>
+                </div>
+                <div class="card-body">
+                    <div style="height: 360px;">
+                        <canvas id="{{ chart.id }}"></canvas>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </main>
+    </div>
+</div>
+
+{{ charts|json_script:"modifikationsdetails-data" }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const data = JSON.parse(document.getElementById('modifikationsdetails-data').textContent || '[]');
+    const colors = {
+        status:        '#64748b',   // slate
+        basisszenario: '#3b82f6',   // blue
+        vorzustand:    '#f59e0b',   // amber
+        aktuell:       '#10b981',   // emerald
+    };
+    const formatN = (n) => (n === null || n === undefined)
+        ? '—'
+        : Number(n).toLocaleString('de-DE', { maximumFractionDigits: 1 });
+
+    data.forEach(cfg => {
+        const ctx = document.getElementById(cfg.id);
+        if (!ctx) return;
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: cfg.labels,
+                datasets: [
+                    { label: 'Status',            data: cfg.series.status,        backgroundColor: colors.status },
+                    { label: 'Basisszenario',     data: cfg.series.basisszenario, backgroundColor: colors.basisszenario },
+                    { label: 'Vorzustand',        data: cfg.series.vorzustand,    backgroundColor: colors.vorzustand },
+                    { label: 'Aktueller Zustand', data: cfg.series.aktuell,       backgroundColor: colors.aktuell },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: c => c.dataset.label + ': ' + formatN(c.parsed.y) + ' ' + cfg.unit,
+                        },
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: cfg.unit },
+                        ticks: {
+                            callback: (v) => Number(v).toLocaleString('de-DE', { maximumFractionDigits: 1 }),
+                        },
+                    },
+                    x: {
+                        ticks: { font: { size: 12 } },
+                    },
+                },
+            },
+        });
+    });
+});
+</script>
+{% endblock %}

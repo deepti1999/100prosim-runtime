@@ -1,0 +1,85 @@
+x-app-env: &app-env
+  USE_LOCAL_POSTGRES: "true"
+  LOCAL_POSTGRES_URL: "postgresql://postgres:postgres@db:5432/finalthesis3"
+  ALLOW_DOCKER_POSTGRES_HOST: "true"
+  DJANGO_DEBUG: "false"
+  SIMULATOR_VERBOSE_PRINTS: "false"
+  DJANGO_LOG_LEVEL: "WARNING"
+  DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,0.0.0.0"
+
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: finalthesis3
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # Exposed to host so `manage.py test` can run from the host with
+    # LOCAL_POSTGRES_URL=postgresql://postgres:postgres@localhost:5432/finalthesis3
+    # (the UI e2e tests in simulator/test_e2e_ui_*.py require Postgres, not SQLite).
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d finalthesis3"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # One-shot: migrate + seed-if-empty. web/worker wait for it to complete.
+  # Makes `docker compose up -d` self-healing on a fresh DB volume.
+  init:
+    build: .
+    environment:
+      <<: *app-env
+      DISABLE_SIMULATOR_SIGNALS: "true"
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "[init] running migrations"
+        python manage.py migrate --noinput
+        if python manage.py shell -c "from simulator.models import LandUse; import sys; sys.exit(0 if LandUse.objects.exists() else 1)"; then
+          echo "[init] data present, skipping seed"
+        else
+          echo "[init] loading seed fixture"
+          python manage.py loaddata seed/sqlite_seed.json
+        fi
+        echo "[init] done"
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8001 --noreload
+    environment: *app-env
+    volumes:
+      - .:/app
+    ports:
+      - "${APP_PORT:-8001}:8001"
+    depends_on:
+      db:
+        condition: service_healthy
+      init:
+        condition: service_completed_successfully
+
+  worker:
+    build: .
+    command: python manage.py run_balance_worker --sleep 0.2
+    environment: *app-env
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      init:
+        condition: service_completed_successfully
+
+volumes:
+  postgres_data:
