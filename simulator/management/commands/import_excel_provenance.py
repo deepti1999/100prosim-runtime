@@ -2,7 +2,7 @@
 assumption text + origin)
 from D.xlsx into the 4 parameter-bearing models.
 
-Strict invariants enforced (per CLAUDE.md + DATA_MODEL_IMPORT_AUDIT.md):
+Strict invariants enforced by the data import contract:
   - SR-005: per-user workspace rows (owner != NULL) NEVER touched.
   - SR-007: no `code` field rename; ONLY source_url, source_refs,
             notes_assumption, origin are written.

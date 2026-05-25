@@ -18,7 +18,7 @@ This is a clean handoff package for the 100ProSim Django web application.
 - local database files
 - PDFs and Excel workbooks
 - screenshots and verification reports
-- Codex/Claude/chat/tool artifacts
+- local development assistant/tool artifacts
 - Python cache files
 - test files and audit outputs
 
