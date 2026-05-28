@@ -61,7 +61,10 @@ else
   docker compose run --rm --no-deps -e DISABLE_SIMULATOR_SIGNALS=true web python manage.py loaddata seed/sqlite_seed.json
 fi
 
-echo "[5/5] Starting web and worker processes"
+echo "[5/6] Collecting static files"
+docker compose run --rm --no-deps web python manage.py collectstatic --noinput --verbosity 0
+
+echo "[6/6] Starting web and worker processes"
 docker compose up -d web worker
 
 echo
