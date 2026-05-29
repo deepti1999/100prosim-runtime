@@ -17,4 +17,4 @@ Default login:
 
 Included: application code, migrations, templates/static assets, Docker startup files, and current seed data.
 
-Excluded: Git history, local database files, PDFs, screenshots, verification reports, workbooks, chat/tool artifacts, caches, and tests.
+Excluded: Git history, local database files, PDFs, screenshots, verification reports, workbooks, local development artifacts, caches, and tests.

@@ -176,7 +176,7 @@ def compute_ws_diagram_reference(use_ws_overrides: bool = True):
     # where L36 is the actual gas-tank throughput (solver-simulated einspeich_sum
     # post-efficiency = our gas_storage). The prior basis (ely_branch_value scenario
     # target × ETA_STROM_GAS) under-shot by the scenario-target-vs-solver-actual drift
-    # (produced 83 instead of 87 on DE seed). Aligned 2026-04-24 per Pascal approval;
+    # (produced 83 instead of 87 on DE seed). Aligned 2026-04-24 after review;
     # Excel L37 formula confirmed authoritative in SOURCE_GROUNDED_ANSWERS.md Q4.
     flow_gasspeicher_direkt_tages = gas_storage * tl_factor
     flow_gas_storage_tages = gas_storage * tl_factor

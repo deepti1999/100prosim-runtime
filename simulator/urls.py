@@ -88,7 +88,7 @@ urlpatterns = [
     path('verbrauch/', verbrauch_view, name='verbrauch'),
     # §2.3 Phase A (T64): expose the existing GebaeudewaermeData view that was
     # previously dead code so the provenance popover ships on all 4 parameter
-    # pages per Pascal's deliverable spec. The view itself is unchanged.
+    # pages according to the project deliverable spec. The view itself is unchanged.
     path('gebaeudewarme/', gebaeudewaerme_view, name='gebaeudewaerme'),
     path('ws/', ws_view, name='ws'),  # NEW: WS 365 Days
     path('cockpit/', cockpit_view, name='cockpit'),
