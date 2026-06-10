@@ -23,6 +23,7 @@ db.sqlite3
 db.sqlite3-journal
 *.log
 staticfiles/
+database_backups/
 
 # OS / editors
 .DS_Store

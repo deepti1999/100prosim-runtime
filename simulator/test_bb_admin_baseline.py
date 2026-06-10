@@ -4,10 +4,12 @@ Per PDF §2.4.2, there is exactly one shared admin baseline. Regular users
 cannot create or overwrite it; they can only reset their workspace to it.
 """
 from django.contrib.auth import get_user_model
+from django.core.cache import cache as django_cache
 from django.test import TestCase
 from django.urls import reverse
 
-from simulator.models import BaselineSnapshot, LandUse
+from simulator import recalc_cache
+from simulator.models import BaselineSnapshot, CalculationRun, LandUse
 
 
 class AdminBaselineContractTests(TestCase):
@@ -76,10 +78,17 @@ class AdminBaselineContractTests(TestCase):
         landuse.save(skip_cascade=True)
 
         # Regular user hits Reset to Baseline.
+        recalc_cache._cache["stale-test"] = (1, {"old": True})
+        django_cache.set("stale-bilanz-test", {"old": True}, timeout=60)
         self.client.logout()
         self.client.force_login(self.user)
         response = self.client.post(reverse("simulator:restore_baseline"))
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(recalc_cache._cache, {})
+        self.assertIsNone(django_cache.get("stale-bilanz-test"))
+        run = CalculationRun.objects.latest("id")
+        self.assertEqual(run.summary["scope"], "snapshot_restore")
+        self.assertEqual(run.summary["restore_type"], "baseline")
 
         # User's workspace now has LU_2.1 at 7% (the admin-captured value),
         # independent of the admin's current state.

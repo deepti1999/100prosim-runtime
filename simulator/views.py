@@ -14,6 +14,8 @@ from simulator.input_api import (
     _get_landuse_current_percent,
     update_landuse_percent,
 )
+from simulator.admin_roles import user_can_edit_workspace_values
+from simulator.display_state import mark_display_state_changed
 from simulator.recalc_service import unified_recalc_all
 from simulator.ws_queue_api import _queue_or_reuse_balance_job
 
@@ -24,6 +26,12 @@ if not _SIMULATOR_VERBOSE_PRINTS:
 
 def update_user_percent(request):
     """API endpoint to save user percentage input for land use data"""
+    if not user_can_edit_workspace_values(request.user):
+        return JsonResponse(
+            {'success': False, 'error': 'Keine Berechtigung zum Bearbeiten von Werten.'},
+            status=403,
+        )
+
     try:
         data = json.loads(request.body)
         code = data.get('code')
@@ -73,6 +81,11 @@ def update_user_percent(request):
             landuse.user_percent = percent_val
 
         landuse.save()
+        mark_display_state_changed(
+            scope="landuse_user_percent",
+            triggered_by=getattr(request.user, "username", "unknown"),
+            code=code,
+        )
 
         # Phase 6-A (T61): log user-initiated modification.
         try:
@@ -113,6 +126,12 @@ def save_all_user_inputs(request):
     Only the LAST save triggers the full cascade to avoid redundant recalcs.
     NOW TRACKS: old → new values for frontend display
     """
+    if not user_can_edit_workspace_values(request.user):
+        return JsonResponse(
+            {'success': False, 'error': 'Keine Berechtigung zum Bearbeiten von Werten.'},
+            status=403,
+        )
+
     try:
         data = json.loads(request.body)
         user_inputs = data.get('user_inputs', {}) or {}
@@ -211,9 +230,15 @@ def save_all_user_inputs(request):
 
         if inline_recalc and items_to_save:
             summary = unified_recalc_all()
+            run = mark_display_state_changed(
+                scope="landuse_bulk_user_percent",
+                triggered_by=getattr(request.user, "username", "unknown"),
+                updated_count=saved_count,
+            )
             return JsonResponse({
                 'success': True,
                 'queued': False,
+                'run_id': run.id,
                 'saved_count': saved_count,
                 'skipped_locked': skipped_locked,
                 'errors': errors,
@@ -335,6 +360,11 @@ def update_user_percent_by_code(request, code):
 
         # Use master update function
         update_node(node, new_percent, total_area)
+        mark_display_state_changed(
+            scope="landuse_code_user_percent",
+            triggered_by=getattr(request.user, "username", "unknown"),
+            code=code,
+        )
         
         # Determine message based on node type
         if node.children.exists():
@@ -364,18 +394,21 @@ def verbrauch_view(request):
     """Energy Consumption Data (Verbrauch) - FRESH calculated values from database"""
     from .models import VerbrauchData, RenewableData, LandUse
     from django.db import connection
+    from .ui_provenance_service import load_ui_provenance_override_map, payload_for_row
     
     # Force fresh database read (clear any Django query cache)
     connection.queries_log.clear() if hasattr(connection, 'queries_log') else None
     
     # Get all verbrauch data from database - force fresh query
-    verbrauch_data = VerbrauchData.objects.all().order_by('code')
+    verbrauch_data = list(VerbrauchData.objects.all().order_by('code'))
+    provenance_map = load_ui_provenance_override_map("verbrauch", verbrauch_data)
     
     # Convert to list of dictionaries with natural sorting
     temp_data = []
     for item in verbrauch_data:
         # Force refresh from database
         item.refresh_from_db()
+        provenance = payload_for_row(item, "verbrauch", provenance_map)
         
         display_status = item.status
         display_ziel = item.ziel
@@ -395,6 +428,7 @@ def verbrauch_view(request):
         temp_data.append({
             'code': item.code,
             'category': item.category,
+            'region_id': item.region_id,
             'unit': item.unit,
             'status': display_status,
             'ziel': display_ziel,
@@ -402,9 +436,11 @@ def verbrauch_view(request):
             'is_calculated': item.is_calculated,
             'user_editable': is_user_editable,  # Never editable if calculated
             # §2.3 Phase A provenance fields
-            'source_url': item.source_url,
-            'notes_assumption': item.notes_assumption,
-            'origin': item.origin,
+            'source_url': provenance['source_url'],
+            'notes_assumption': provenance['notes_assumption'],
+            'source_refs': provenance['source_refs'],
+            'origin': provenance['origin'],
+            'provenance_override_active': provenance['provenance_override_active'],
         })
     
     # Apply natural sorting (same as renewable energy)
@@ -464,9 +500,11 @@ def verbrauch_view(request):
 def gebaeudewaerme_view(request):
     """Building Heat Data (Gebäudewärme) - Load from database"""
     from .models import GebaeudewaermeData
+    from .ui_provenance_service import load_ui_provenance_override_map, payload_for_row
     
     # Get all building heat data from database
-    gebaeudewaerme_data = GebaeudewaermeData.objects.all()
+    gebaeudewaerme_data = list(GebaeudewaermeData.objects.all())
+    provenance_map = load_ui_provenance_override_map("gebaeudewaerme", gebaeudewaerme_data)
     
     # Convert to list of dictionaries with natural sorting
     data = []
@@ -478,6 +516,7 @@ def gebaeudewaerme_view(request):
             # For fixed items, show database values
             display_status = item.status
             display_ziel = item.ziel
+        provenance = payload_for_row(item, "gebaeudewaerme", provenance_map)
         
         if "Alternativ zur" in item.category and "Brennstoffzellen (FC)" in item.category:
             from django.utils.safestring import mark_safe
@@ -489,6 +528,7 @@ def gebaeudewaerme_view(request):
         data.append({
             'code': item.code,
             'category': item.category,
+            'region_id': item.region_id,
             'unit': item.unit,
             'status': display_status,
             'ziel': display_ziel,
@@ -496,9 +536,11 @@ def gebaeudewaerme_view(request):
             'user_percent': item.user_percent,
             'is_calculated': item.is_calculated,
             # §2.3 Phase A provenance fields
-            'source_url': item.source_url,
-            'notes_assumption': item.notes_assumption,
-            'origin': item.origin,
+            'source_url': provenance['source_url'],
+            'notes_assumption': provenance['notes_assumption'],
+            'source_refs': provenance['source_refs'],
+            'origin': provenance['origin'],
+            'provenance_override_active': provenance['provenance_override_active'],
         })
     
     # Apply natural sorting (same as other modules)

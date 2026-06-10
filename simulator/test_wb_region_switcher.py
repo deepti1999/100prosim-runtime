@@ -92,6 +92,38 @@ class RegionContextProcessorTests(TestCase):
         request = RequestFactory().get("/")
         ctx = region_context(request)
         self.assertEqual(ctx["active_region_code"], "DE")
+        self.assertEqual(ctx["active_region_name"], "Deutschland")
+        self.assertEqual(ctx["active_status_year"], 2023)
+        self.assertEqual(ctx["active_target_year"], 2045)
+
+    def test_active_region_configuration_from_selected_region(self):
+        from simulator.context_processors import region_context
+        from simulator.models import Region
+        from simulator.region_scope import region_scope
+        from django.test import RequestFactory
+
+        Region.objects.create(
+            code="AT",
+            display_name="Österreich",
+            active=True,
+            locale_code="de-AT",
+            status_year=2024,
+            target_year=2040,
+            goal_description="Klimaneutralität",
+            data_source_label="Test-Zeitreihen Österreich 2024",
+            total_area_ha=8387900.0,
+        )
+
+        request = RequestFactory().get("/")
+        with region_scope("AT"):
+            ctx = region_context(request)
+
+        self.assertEqual(ctx["active_region_code"], "AT")
+        self.assertEqual(ctx["active_region_name"], "Österreich")
+        self.assertEqual(ctx["active_status_year"], 2024)
+        self.assertEqual(ctx["active_target_year"], 2040)
+        self.assertEqual(ctx["active_goal_description"], "Klimaneutralität")
+        self.assertEqual(ctx["active_data_source_label"], "Test-Zeitreihen Österreich 2024")
 
 
 class RegionDropdownRenderingTests(TestCase):
@@ -115,6 +147,35 @@ class RegionDropdownRenderingTests(TestCase):
         url = reverse("simulator:landuse_list")
         resp = self.client.get(url)
         self.assertContains(resp, "Deutschland")
+
+    def test_country_configuration_renders_on_static_pages(self):
+        from simulator.models import Region
+
+        Region.objects.create(
+            code="AT",
+            display_name="Österreich",
+            active=True,
+            status_year=2024,
+            target_year=2040,
+            goal_description="Klimaneutralität",
+            data_source_label="Test-Zeitreihen Österreich 2024",
+        )
+        self.client.post(
+            reverse("simulator:set_active_region"),
+            {"region_code": "AT"},
+            HTTP_REFERER="/",
+        )
+
+        landing = self.client.get(reverse("simulator:landing_page"))
+        self.assertEqual(landing.status_code, 200)
+        self.assertContains(landing, "Österreich")
+        self.assertContains(landing, "Klimaneutralität")
+        self.assertContains(landing, "2040")
+
+        manual = self.client.get(reverse("simulator:user_manual"))
+        self.assertEqual(manual.status_code, 200)
+        self.assertContains(manual, "2024")
+        self.assertContains(manual, "2040")
 
     def test_dropdown_hidden_for_anonymous_user(self):
         self.client.logout()

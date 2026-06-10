@@ -44,6 +44,50 @@
             text-align: right;
         }
 
+        .provenance-code-trigger {
+            text-decoration: none;
+        }
+
+        .provenance-code-trigger .badge {
+            cursor: pointer;
+            box-shadow: 0 0 0 1px rgba(13, 110, 253, 0.18);
+        }
+
+        .provenance-code-trigger:hover .badge {
+            filter: brightness(0.95);
+            box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.28);
+        }
+
+        .provenance-code-cell {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            flex-wrap: wrap;
+        }
+
+        .provenance-edit-link {
+            border: 1px solid #b6d4fe;
+            background: #eef6ff;
+            color: #0b5ed7;
+            border-radius: 999px;
+            padding: 0.05rem 0.45rem;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .provenance-edit-link:hover {
+            background: #dbeafe;
+            color: #084298;
+            text-decoration: none;
+        }
+
+        .provenance-editor-hint {
+            border-left: 4px solid #0d6efd;
+            background: #f4f8ff;
+        }
+
         .footer {
             background-color: #f8f9fa;
             padding: 20px 0;
@@ -138,11 +182,19 @@
                             <i class="fas fa-bookmark me-1"></i>Szenarien
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" style="min-width: 460px;">
+                            {% if can_manage_workspace_scenarios %}
                             <li>
                                 <a class="dropdown-item" href="#" id="createScenarioBtn">
                                     <i class="fas fa-save me-2"></i>Aktuelles Szenario speichern
                                 </a>
                             </li>
+                            {% else %}
+                            <li>
+                                <span class="dropdown-item-text text-muted small">
+                                    <i class="fas fa-lock me-1"></i>Nur ansehen: Szenarien können mit dieser Rolle nicht geändert werden.
+                                </span>
+                            </li>
+                            {% endif %}
                             <li>
                                 <a class="dropdown-item" href="#" id="refreshScenarioListBtn">
                                     <i class="fas fa-rotate me-2"></i>Szenario-Liste aktualisieren
@@ -221,6 +273,8 @@
 
     <!-- Baseline Backup Functions -->
     <script>
+        window.CAN_MANAGE_WORKSPACE_SCENARIOS = {{ can_manage_workspace_scenarios|yesno:"true,false" }};
+
         document.addEventListener('DOMContentLoaded', function () {
             var infoEl = document.getElementById('baselineInfo');
             if (infoEl) {
@@ -399,6 +453,10 @@
         }
 
         function createScenario() {
+            if (!window.CAN_MANAGE_WORKSPACE_SCENARIOS) {
+                alert('Ihre Rolle erlaubt kein Speichern von Szenarien.');
+                return;
+            }
             var suggested = defaultScenarioName();
             var name = prompt('Szenario-Name:', suggested);
             if (name === null) return;
@@ -478,18 +536,33 @@
                     + '      <div class="small text-muted">Aktualisiert: ' + escapeHtml(item.updated_at || '') + ' • ' + escapeHtml(String(item.size_mb || 0)) + ' MB</div>'
                     +        safeNote
                     + '    </div>'
-                    + '    <div class="btn-group btn-group-sm" role="group">'
-                    + '      <button type="button" class="btn btn-outline-primary scenario-action-btn" data-action="restore" data-id="' + item.id + '" data-name="' + encodedName + '">Wiederherstellen</button>'
-                    + '      <button type="button" class="btn btn-outline-secondary scenario-action-btn" data-action="rename" data-id="' + item.id + '" data-name="' + encodedName + '">Umbenennen</button>'
-                    + '      <button type="button" class="btn btn-outline-danger scenario-action-btn" data-action="delete" data-id="' + item.id + '" data-name="' + encodedName + '">Löschen</button>'
-                    + '    </div>'
+                    + (window.CAN_MANAGE_WORKSPACE_SCENARIOS
+                        ? '    <div class="btn-group btn-group-sm" role="group">'
+                        + '      <button type="button" class="btn btn-outline-primary scenario-action-btn" data-action="restore" data-id="' + item.id + '" data-name="' + encodedName + '">Wiederherstellen</button>'
+                        + '      <button type="button" class="btn btn-outline-secondary scenario-action-btn" data-action="rename" data-id="' + item.id + '" data-name="' + encodedName + '">Umbenennen</button>'
+                        + '      <button type="button" class="btn btn-outline-danger scenario-action-btn" data-action="delete" data-id="' + item.id + '" data-name="' + encodedName + '">Löschen</button>'
+                        + '    </div>'
+                        : '    <span class="badge text-bg-secondary">Nur ansehen</span>')
                     + '  </div>'
                     + '</div>';
             });
             container.innerHTML = html;
         }
 
+        function openScenarioMenu() {
+            var dropdown = document.getElementById('scenarioDropdown');
+            if (dropdown) {
+                loadScenarioList();
+                var instance = bootstrap.Dropdown.getOrCreateInstance(dropdown);
+                instance.show();
+            }
+        }
+
         function restoreScenario(id, name) {
+            if (!window.CAN_MANAGE_WORKSPACE_SCENARIOS) {
+                alert('Ihre Rolle erlaubt kein Wiederherstellen von Szenarien.');
+                return;
+            }
             if (!confirm('Szenario "' + name + '" wiederherstellen?\n\nDie aktuellen Werte des Arbeits-Szenarios werden ersetzt.')) {
                 return;
             }
@@ -516,6 +589,10 @@
         }
 
         function renameScenario(id, currentName) {
+            if (!window.CAN_MANAGE_WORKSPACE_SCENARIOS) {
+                alert('Ihre Rolle erlaubt kein Umbenennen von Szenarien.');
+                return;
+            }
             var nextName = prompt('Neuer Szenario-Name:', currentName);
             if (nextName === null) return;
             if (!nextName.trim()) {
@@ -545,6 +622,10 @@
         }
 
         function deleteScenario(id, name) {
+            if (!window.CAN_MANAGE_WORKSPACE_SCENARIOS) {
+                alert('Ihre Rolle erlaubt kein Löschen von Szenarien.');
+                return;
+            }
             if (!confirm('Szenario "' + name + '" löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden.')) {
                 return;
             }

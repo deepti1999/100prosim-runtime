@@ -11,6 +11,8 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
     <h3>Verbrauch – Datenübersicht</h3>
     <p class="text-muted mb-2">KLIK (Kraft, Licht, Information, Kommunikation, Kälte) + Gebäudewärme</p>
+    {% include "simulator/_provenance_editor_hint.html" %}
+    {% include "simulator/_workspace_scenario_toolbar.html" %}
     <div class="alert alert-success py-2 mb-3" role="alert">
         <strong>Hinweis:</strong> Änderungen auf dieser Seite werden automatisch gespeichert und an abhängige Berechnungen weitergegeben – ein manuelles Neuberechnen der Erneuerbaren ist nicht mehr nötig.
     </div>
@@ -39,7 +41,6 @@
                 <th style="width: 12%;">Ziel</th>
                 <th style="width: 12%;">Benutzer %</th>
                 <th style="width: 8%;">Aktionen</th>
-                <th style="width: 30px;" title="Datenquelle (§2.3)">Q</th>
             </tr>
         </thead>
         <tbody>
@@ -47,7 +48,7 @@
             {% if row.is_section_header %}
             <!-- Section Header Row -->
             <tr class="table-secondary">
-                <td colspan="8" class="text-center fw-bold py-2">
+                <td colspan="7" class="text-center fw-bold py-2">
                     <h6 class="mb-0 text-primary">{{ row.category }}</h6>
                 </td>
             </tr>
@@ -63,12 +64,13 @@
                         <i class="fas fa-folder-open"></i>
                     </button>
                 </td>
-                <td></td>
             </tr>
             {% else %}
             <!-- Data Row -->
             <tr>
-                <td class="fw-bold">{{ row.code }}</td>
+                <td class="fw-bold">
+                    {% include "simulator/_provenance_code.html" with trigger_label=row.code badge_class="bg-secondary" source_url=row.source_url notes_assumption=row.notes_assumption source_refs=row.source_refs origin=row.origin provenance_override_active=row.provenance_override_active provenance_domain="verbrauch" row_code=row.code row_label=row.category region_id=row.region_id %}
+                </td>
                 <td
                     style="padding-left: {% if row.code|length > 3 %}50px{% elif '.' in row.code %}30px{% else %}10px{% endif %};">
                     <span class="{% if '.' in row.code %}text-muted{% else %}fw-bold{% endif %}">
@@ -100,7 +102,7 @@
                     <span class="text-muted">-</span>
                     {% endif %}
                 </td>
-                {% if row.user_editable %}
+                {% if row.user_editable and can_edit_workspace_values %}
                 {# T14/T15 (PDF §2.4.1): when user_percent is empty, placeholder #}
                 {# shows the base Ziel value so clearing reveals the fallback. #}
                 <td contenteditable="true" class="text-center editable-user-input editable-highlight"
@@ -112,18 +114,23 @@
                     {% if row.user_percent %}{{ row.user_percent|floatformat:1 }}{% else %}<span
                         class="placeholder-text">{% if row.ziel %}{{ row.ziel|floatformat:1 }} (Basis){% else %}Zum Bearbeiten klicken ...{% endif %}</span>{% endif %}
                 </td>
+                {% elif row.user_editable %}
+                <td class="text-center text-muted non-editable-cell" title="Nur mit Bearbeitungsrolle änderbar">
+                    {% if row.user_percent %}{{ row.user_percent|floatformat:1 }}{% else %}-{% endif %}
+                </td>
                 {% else %}
                 <td class="text-center text-muted non-editable-cell" title="Dieses Feld ist nicht bearbeitbar">
                     {% if row.user_percent %}{{ row.user_percent|floatformat:1 }}{% else %}-{% endif %}
                 </td>
                 {% endif %}
                 <td class="text-center">
+                    {% if can_edit_workspace_values %}
                     <button class="btn btn-sm btn-outline-primary" onclick="editRow('{{ row.code }}')">
                         <i class="fas fa-edit"></i>
                     </button>
-                </td>
-                <td class="text-center align-middle">
-                    {% include "simulator/_provenance_icon.html" with source_url=row.source_url notes_assumption=row.notes_assumption origin=row.origin %}
+                    {% else %}
+                    <span class="text-muted">-</span>
+                    {% endif %}
                 </td>
             </tr>
             {% endif %}

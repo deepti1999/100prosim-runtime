@@ -35,6 +35,9 @@ ADMIN_BASELINE_KEY = "global"
 #   codes   — list of {code, label} — the x-axis rows to pull.
 #
 # Codes are stakeholder-contract names (never translated, per PDF §2.3).
+# Some chart values intentionally use a display transform. Example:
+# Renewable rows are stored in GWh/a, while the Cockpit chart is labelled
+# TWh/a, so those values are divided by 1000 for display only.
 
 CHARTS = [
     {
@@ -44,9 +47,9 @@ CHARTS = [
         "source": "verbrauch",
         "codes": [
             {"code": "1", "label": "KLIK"},
-            {"code": "2", "label": "Gebäudewärme"},
-            {"code": "3", "label": "Prozesswärme"},
-            {"code": "6", "label": "Mobile Anwendungen"},
+            {"code": "2.10", "label": "Gebäudewärme"},
+            {"code": "3.7", "label": "Prozesswärme"},
+            {"code": "6.0", "label": "Mobile Anwendungen"},
         ],
     },
     {
@@ -56,10 +59,11 @@ CHARTS = [
         "source": "verbrauch",
         "codes": [
             {"code": "1.1.2", "label": "Stromanwend.-Effizienz Haushalte"},
-            {"code": "1.1.3", "label": "Stromanw.-Effiz. Handel/Dienstl."},
-            {"code": "1.1.4", "label": "Stromanw.-Effiz. Gewerbe/Industrie"},
-            {"code": "2.4", "label": "Energet. Sanierung Gebäudebestand"},
-            {"code": "2.8", "label": "Wärmepumpenant. an Gebäudew."},
+            {"code": "1.2.4", "label": "Stromanw.-Effiz. Handel/Dienstl."},
+            {"code": "1.3.4", "label": "Stromanw.-Effiz. Gewerbe/Industrie"},
+            {"code": "2.5.1", "label": "Warmwasser-Effizienz Gebäudewärme"},
+            {"code": "3.1.1", "label": "Prozesswärme Haushalte"},
+            {"code": "3.2.2", "label": "Prozesswärme Industrie/GHD"},
         ],
     },
     {
@@ -67,12 +71,13 @@ CHARTS = [
         "title": "Endenergie-Verbrauch nach Anwendungsbereichen inkl. Grundstoffe",
         "unit": "TWh/a",
         "source": "verbrauch",
+        "scale": 0.001,
         "codes": [
             {"code": "1", "label": "KLIK"},
-            {"code": "2", "label": "Gebäudewärme"},
-            {"code": "3", "label": "Prozesswärme"},
-            {"code": "6", "label": "Mobile Anwendungen"},
-            {"code": "5", "label": "Grundstoffe"},
+            {"code": "2.10", "label": "Gebäudewärme"},
+            {"code": "3.7", "label": "Prozesswärme"},
+            {"code": "6.0", "label": "Mobile Anwendungen"},
+            {"code": "9.1.4", "label": "Grundstoffe"},
         ],
     },
     {
@@ -80,6 +85,7 @@ CHARTS = [
         "title": "Primärenergie-Beiträge nach Quellen",
         "unit": "TWh/a",
         "source": "renewable",
+        "scale": 0.001,
         "codes": [
             {"code": "9.1.1", "label": "Wind onshore"},
             {"code": "9.1.2", "label": "Solar Freiflächen"},
@@ -92,12 +98,42 @@ CHARTS = [
         "title": "Ausbau der Erneuerbaren Energiequellen",
         "unit": "%",
         "source": "landuse",
+        "value_mode": "landuse_parent_percent",
         "codes": [
             {"code": "LU_2.1", "label": "Solar Freiflächen"},
             {"code": "LU_6", "label": "Wind onshore"},
         ],
     },
 ]
+
+
+def _to_float(value):
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _scale(value, factor):
+    number = _to_float(value)
+    if number is None:
+        return None
+    return number * factor
+
+
+def _snapshot_bucket(payload, source):
+    if not payload:
+        return []
+    bucket = {
+        "verbrauch": "verbrauch",
+        "renewable": "renewable",
+        "landuse": "landuse",
+    }.get(source)
+    if not bucket:
+        return []
+    return payload.get(bucket, []) or []
 
 
 def _snapshot_lookup(payload, source, code, pick):
@@ -107,19 +143,32 @@ def _snapshot_lookup(payload, source, code, pick):
     which was produced by baseline_api._snapshot_payload_for_owner.
     ``pick`` tells us which field to pull (status or target side).
     """
-    if not payload:
-        return None
-    bucket = {
-        "verbrauch": "verbrauch",
-        "renewable": "renewable",
-        "landuse": "landuse",
-    }.get(source)
-    if not bucket:
-        return None
-    for row in payload.get(bucket, []) or []:
+    for row in _snapshot_bucket(payload, source):
         if row.get("code") == code:
             return row.get(pick)
     return None
+
+
+def _snapshot_landuse_parent_percent(payload, code, pick):
+    """Return the same child/parent percentage shown on the land-use page."""
+    by_code = {
+        row.get("code"): row
+        for row in _snapshot_bucket(payload, "landuse")
+        if row.get("code")
+    }
+    child = by_code.get(code)
+    if not child:
+        return None
+    parent_code = child.get("parent_code")
+    parent = by_code.get(parent_code)
+    if not parent:
+        return None
+
+    child_value = _to_float(child.get(pick))
+    parent_value = _to_float(parent.get(pick))
+    if child_value is None or not parent_value:
+        return None
+    return (child_value / parent_value) * 100.0
 
 
 def _live_value(source, code, pick):
@@ -143,6 +192,33 @@ def _live_value(source, code, pick):
     except Exception:
         return None
     return None
+
+
+def _live_landuse_parent_percent(code, pick):
+    """Return child/parent land-use percentage from live rows."""
+    try:
+        row = LandUse.objects.select_related("parent").filter(code=code).first()
+    except Exception:
+        return None
+    if not row or not row.parent:
+        return None
+    child_value = _to_float(getattr(row, pick, None))
+    parent_value = _to_float(getattr(row.parent, pick, None))
+    if child_value is None or not parent_value:
+        return None
+    return (child_value / parent_value) * 100.0
+
+
+def _chart_live_value(chart, code, pick):
+    if chart.get("value_mode") == "landuse_parent_percent":
+        return _live_landuse_parent_percent(code, pick)
+    return _scale(_live_value(chart["source"], code, pick), chart.get("scale", 1.0))
+
+
+def _chart_snapshot_value(chart, payload, code, pick):
+    if chart.get("value_mode") == "landuse_parent_percent":
+        return _snapshot_landuse_parent_percent(payload, code, pick)
+    return _scale(_snapshot_lookup(payload, chart["source"], code, pick), chart.get("scale", 1.0))
 
 
 @login_required
@@ -178,10 +254,10 @@ def modifikationsdetails_view(request):
 
         for entry in chart["codes"]:
             code = entry["code"]
-            status.append(_live_value(chart["source"], code, status_field))
-            basis.append(_snapshot_lookup(admin_payload, chart["source"], code, target_field))
-            vor.append(_snapshot_lookup(vorzustand_payload, chart["source"], code, target_field))
-            current.append(_live_value(chart["source"], code, target_field))
+            status.append(_chart_live_value(chart, code, status_field))
+            basis.append(_chart_snapshot_value(chart, admin_payload, code, target_field))
+            vor.append(_chart_snapshot_value(chart, vorzustand_payload, code, target_field))
+            current.append(_chart_live_value(chart, code, target_field))
 
         charts_payload.append({
             "id": chart["id"],

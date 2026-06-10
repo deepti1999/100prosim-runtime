@@ -38,6 +38,16 @@ class RegionModelSchemaTests(TestCase):
         self.assertIsInstance(field, django_models.BooleanField)
         self.assertTrue(field.default, "Region.active should default True")
 
+    def test_region_has_country_configuration_fields(self):
+        from simulator.models import Region
+
+        self.assertIsInstance(Region._meta.get_field("locale_code"), django_models.CharField)
+        self.assertIsInstance(Region._meta.get_field("status_year"), django_models.PositiveIntegerField)
+        self.assertIsInstance(Region._meta.get_field("target_year"), django_models.PositiveIntegerField)
+        self.assertIsInstance(Region._meta.get_field("goal_description"), django_models.CharField)
+        self.assertIsInstance(Region._meta.get_field("data_source_label"), django_models.CharField)
+        self.assertIsInstance(Region._meta.get_field("total_area_ha"), django_models.FloatField)
+
     def test_region_has_datenmodell_excel_hash(self):
         """Per SR-004: hash of the source Datenmodell Excel for change detection."""
         from simulator.models import Region
@@ -77,6 +87,12 @@ class RegionDefaultSeedTests(TestCase):
         de = Region.objects.get(code="DE")
         self.assertEqual(de.display_name, "Deutschland")
         self.assertTrue(de.active)
+        self.assertEqual(de.locale_code, "de-DE")
+        self.assertEqual(de.status_year, 2023)
+        self.assertEqual(de.target_year, 2045)
+        self.assertEqual(de.goal_description, "100 % Erneuerbare Energien")
+        self.assertEqual(de.data_source_label, "Anlagenpark Deutschland 2023 [SMARD]")
+        self.assertEqual(de.total_area_ha, 35759529.0)
 
     def test_DE_seed_has_installed_pmax_ely_194(self):
         """D4a: 194 GW (Pmax-Ely-ES) for Germany 2026 — sourced from D.xlsx I_Basisdaten."""

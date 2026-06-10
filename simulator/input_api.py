@@ -8,6 +8,8 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
+from simulator.admin_roles import user_can_edit_workspace_values
+from simulator.display_state import mark_display_state_changed
 from simulator.verbrauch_recalculator import recalc_all_verbrauch
 from .models import LandUse, ModificationHistoryEntry, RenewableData, VerbrauchData
 
@@ -146,6 +148,14 @@ def save_and_recalculate_verbrauch(request):
             payload = _run_verbrauch_recalc_passes(
                 triggered_by=getattr(request.user, "username", "debug"),
             )
+            run = mark_display_state_changed(
+                scope="verbrauch_recalc_inline",
+                triggered_by=getattr(request.user, "username", "debug"),
+                duration_ms=0,
+                updated_count=payload.get("updated_count", 0),
+                passes=payload.get("passes", 0),
+            )
+            payload["run_id"] = run.id
             return JsonResponse(payload)
 
         from simulator.models import BalanceJob
@@ -181,6 +191,11 @@ def update_landuse_percent(request, pk):
     """
     if request.method != "POST":
         return JsonResponse({"status": "error", "message": "POST method required"}, status=400)
+    if not user_can_edit_workspace_values(request.user):
+        return JsonResponse(
+            {"status": "error", "message": "Keine Berechtigung zum Bearbeiten von Werten."},
+            status=403,
+        )
 
     try:
         data = json.loads(request.body)
@@ -241,6 +256,11 @@ def update_landuse_percent(request, pk):
         landuse.user_percent = new_percent
         landuse.target_ha = new_target_ha
         landuse.save()
+        mark_display_state_changed(
+            scope="landuse_user_percent",
+            triggered_by=getattr(request.user, "username", "unknown"),
+            code=landuse.code,
+        )
 
         target_percent = (new_target_ha / parent_target * 100) if parent_target else 0
         change_ha = new_target_ha - (old_target_ha or 0)
@@ -277,6 +297,11 @@ def update_verbrauch_bulk(request):
     """
     if request.method != 'POST':
         return JsonResponse({'status': 'error', 'error': 'POST required'}, status=405)
+    if not user_can_edit_workspace_values(request.user):
+        return JsonResponse(
+            {'status': 'error', 'error': 'Keine Berechtigung zum Bearbeiten von Werten.'},
+            status=403,
+        )
 
     try:
         data = json.loads(request.body)
@@ -295,6 +320,13 @@ def update_verbrauch_bulk(request):
                     updated_count += 1
                 except VerbrauchData.DoesNotExist:
                     pass
+
+        if updated_count:
+            mark_display_state_changed(
+                scope="verbrauch_bulk_user_percent",
+                triggered_by=getattr(request.user, "username", "unknown"),
+                updated_count=updated_count,
+            )
 
         return JsonResponse({
             'status': 'ok',
@@ -316,6 +348,12 @@ def save_verbrauch_user_input(request):
 
     Returns which percentage siblings were auto-rebalanced for UI highlighting.
     """
+    if not user_can_edit_workspace_values(request.user):
+        return JsonResponse(
+            {'success': False, 'error': 'Keine Berechtigung zum Bearbeiten von Werten.'},
+            status=403,
+        )
+
     try:
         data = json.loads(request.body)
         code = data.get('code')
@@ -401,6 +439,12 @@ def save_renewable_user_input(request):
     """
     Save one renewable user input and mirror it to target value for frontend-editable rows.
     """
+    if not user_can_edit_workspace_values(request.user):
+        return JsonResponse(
+            {'success': False, 'error': 'Keine Berechtigung zum Bearbeiten von Werten.'},
+            status=403,
+        )
+
     try:
         data = json.loads(request.body)
         code = data.get('code')
@@ -433,6 +477,11 @@ def save_renewable_user_input(request):
 
         # Re-read after save so target_value reflects any cascade-updated state.
         item.refresh_from_db()
+        mark_display_state_changed(
+            scope="renewable_user_input",
+            triggered_by=getattr(request.user, "username", "unknown"),
+            code=code,
+        )
 
         # Phase 6-A (T61): log user-initiated modification.
         _log_modification(

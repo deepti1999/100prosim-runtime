@@ -7,6 +7,7 @@ DATA_MODEL_IMPORT_AUDIT.md §9 D1:
   - source_url       URL to the D.xlsx 9.Quellen citation
   - notes_assumption Assumption text from D.xlsx 1. cell comments
   - origin           Enum {'d_xlsx', 'derived', 'internal'}, default 'internal'
+  - source_refs      Structured cited 9.Quellen refs with description + URL
 
 These fields MUST be additive (nullable / default-set) so existing
 seed rows stay unaffected and SR-005 (per-user overrides) holds.
@@ -24,7 +25,7 @@ from simulator.models import (
 
 
 PARAM_MODELS = [LandUse, RenewableData, VerbrauchData, GebaeudewaermeData]
-NEW_FIELDS = ("source_url", "notes_assumption", "origin")
+NEW_FIELDS = ("source_url", "notes_assumption", "origin", "source_refs")
 ORIGIN_CHOICES = {"d_xlsx", "derived", "internal"}
 
 
@@ -57,6 +58,13 @@ class TestProvenanceSchemaFields(TestCase):
                     f"{model.__name__}.origin choices must be {ORIGIN_CHOICES}, got {choice_codes}",
                 )
 
+    def test_every_model_has_source_refs_json_field(self):
+        for model in PARAM_MODELS:
+            with self.subTest(model=model.__name__):
+                field = model._meta.get_field("source_refs")
+                self.assertTrue(field.null, f"{model.__name__}.source_refs must be nullable")
+                self.assertTrue(field.blank, f"{model.__name__}.source_refs must allow blank")
+
 
 class TestProvenanceFieldsAreAdditiveOnly(TestCase):
     """SR-007 + SR-008: existing fields keep their semantics; new fields don't break create/save."""
@@ -88,10 +96,12 @@ class TestProvenanceFieldsAreAdditiveOnly(TestCase):
             target_ha=1.0,
             source_url="https://example.com/source.pdf",
             notes_assumption="Assumption text under test",
+            source_refs=[{"code": "9.224", "description": "GENESIS source", "url": "https://example.com/source.pdf"}],
             origin="d_xlsx",
         )
         self.assertEqual(row.source_url, "https://example.com/source.pdf")
         self.assertEqual(row.notes_assumption, "Assumption text under test")
+        self.assertEqual(row.source_refs[0]["code"], "9.224")
         self.assertEqual(row.origin, "d_xlsx")
 
     def test_can_create_renewabledata_with_new_provenance_fields(self):
@@ -101,6 +111,7 @@ class TestProvenanceFieldsAreAdditiveOnly(TestCase):
             unit="-",
             source_url="https://example.com/r.pdf",
             notes_assumption="r-notes",
+            source_refs=[{"code": "9.1", "description": "renewable source", "url": "https://example.com/r.pdf"}],
             origin="derived",
         )
         self.assertEqual(row.origin, "derived")
@@ -112,6 +123,7 @@ class TestProvenanceFieldsAreAdditiveOnly(TestCase):
             unit="GWh/a",
             source_url="https://example.com/v.pdf",
             notes_assumption="v-notes",
+            source_refs=[{"code": "9.2", "description": "verbrauch source", "url": "https://example.com/v.pdf"}],
             origin="internal",
         )
         self.assertEqual(row.origin, "internal")
@@ -123,6 +135,7 @@ class TestProvenanceFieldsAreAdditiveOnly(TestCase):
             unit="GWh/a",
             source_url="https://example.com/g.pdf",
             notes_assumption="g-notes",
+            source_refs=[{"code": "9.3", "description": "gw source", "url": "https://example.com/g.pdf"}],
             origin="d_xlsx",
         )
         self.assertEqual(row.origin, "d_xlsx")

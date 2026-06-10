@@ -1,0 +1,82 @@
+{% extends "simulator/admin_versions/base.html" %}
+
+{% block title %}Rolle zuweisen{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h2>Person auswählen und Rolle geben</h2>
+  <p>
+    Eine Person wählt ihre Rolle nicht selbst. Eine berechtigte Admin-Person
+    weist die Rolle hier zu.
+  </p>
+  <p class="muted">
+    Nach dem Speichern setzt diese Seite den Nutzer automatisch auf aktiv und
+    Mitarbeiter-Status. Das Passwort kann unten über "Passwort setzen" vergeben
+    oder geändert werden.
+  </p>
+
+  <form method="post">
+    {% csrf_token %}
+    <label for="user">Person</label>
+    <select id="user" name="user" required>
+      <option value="">Bitte auswählen</option>
+      {% for user in users %}
+        <option value="{{ user.id }}">{{ user.get_username }}{% if user.email %} - {{ user.email }}{% endif %}</option>
+      {% endfor %}
+    </select>
+
+    <label for="role">Rolle</label>
+    <select id="role" name="role" required>
+      <option value="">Bitte auswählen</option>
+      {% for role in roles %}
+        <option value="{{ role.name }}">{{ role.label }} - {{ role.summary }}</option>
+      {% endfor %}
+    </select>
+
+    <div class="actions" style="margin-top:18px;">
+      <button type="submit" class="secondary">Rolle speichern</button>
+      <a class="button light" href="{% url 'simulator:admin_roles_dashboard' %}">Abbrechen</a>
+    </div>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Aktuelle 100ProSim-Rollen</h2>
+  {% if user_rows %}
+    <table>
+      <thead>
+        <tr>
+          <th>Person</th>
+          <th>Aktuelle Rolle</th>
+          <th>Admin-Zugang</th>
+          <th>Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in user_rows %}
+          <tr>
+            <td>
+              <strong>{{ row.user.get_username }}</strong>
+              <br><span class="muted">Login-Name exakt so verwenden.</span>
+              {% if row.user.email %}<br><span class="muted">{{ row.user.email }}</span>{% endif %}
+            </td>
+            <td><span class="badge">{{ row.role }}</span></td>
+            <td>
+              {% if row.admin_ready %}
+                <span class="badge">bereit</span>
+              {% else %}
+                <span class="badge">Passwort/Status prüfen</span>
+              {% endif %}
+            </td>
+            <td>
+              <a class="button secondary" href="{{ row.password_url }}">Passwort setzen</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Noch keine normalen Admin-Nutzer vorhanden. Superuser haben automatisch Vollzugriff.</p>
+  {% endif %}
+</section>
+{% endblock %}

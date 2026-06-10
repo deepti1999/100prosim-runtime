@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin-Szenarien</title>
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --card: #fffdf8;
+      --ink: #202124;
+      --muted: #6b675f;
+      --line: #ded5c7;
+      --blue: #1f5f8b;
+      --green: #2f6f4e;
+      --red: #9b2c2c;
+      --gold: #b2762b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #f8f4ea 0%, #ece2d2 100%);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.45;
+    }
+    .page { max-width: 1180px; margin: 0 auto; padding: 32px 24px 56px; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .eyebrow {
+      color: var(--muted);
+      font-size: 14px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin: 0 0 6px;
+    }
+    h1 { font-size: 42px; line-height: 1.05; margin: 0; }
+    h2 { margin: 0 0 14px; font-size: 24px; }
+    p { margin: 0 0 12px; }
+    a { color: var(--blue); }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(88, 68, 39, .08);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      background: #fffaf0;
+    }
+    .step strong { display: block; font-size: 18px; margin-bottom: 8px; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .button, button {
+      display: inline-block;
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 700;
+      text-decoration: none;
+      color: white;
+      background: var(--blue);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 15px;
+    }
+    .button.secondary { background: var(--green); }
+    .button.warning, button.warning { background: var(--gold); }
+    .button.danger, button.danger { background: var(--red); }
+    .button.light { background: #e7dfd1; color: var(--ink); }
+    .messages { margin-bottom: 18px; }
+    .message {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #e8f2ea;
+      border: 1px solid #b6d5bc;
+      margin-bottom: 8px;
+    }
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 14px; overflow: hidden; }
+    th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { background: #eee5d7; font-size: 14px; }
+    tr:last-child td { border-bottom: 0; }
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: #e8e0d2;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .muted { color: var(--muted); }
+    label { display: block; font-weight: 700; margin: 14px 0 6px; }
+    input[type="text"], textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px 12px;
+      font: inherit;
+      background: white;
+    }
+    textarea { min-height: 110px; }
+    .danger-box {
+      border: 1px solid #d7aaa6;
+      background: #fff4f2;
+      border-radius: 14px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+    @media (max-width: 850px) {
+      .grid { grid-template-columns: 1fr; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      h1 { font-size: 34px; }
+      table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topbar">
+      <div>
+        <p class="eyebrow">100ProSim Verwaltung</p>
+        <h1>{% block title %}Admin-Szenarien{% endblock %}</h1>
+      </div>
+      <div class="actions">
+        <a class="button light" href="{% url 'admin:index' %}">Zur Django-Verwaltung</a>
+        <a class="button light" href="{% url 'simulator:main_simulation' %}">Zur Webapp</a>
+      </div>
+    </div>
+
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="message">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

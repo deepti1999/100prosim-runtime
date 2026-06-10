@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """Idempotency short-circuit for expensive recalc functions.
 
 The two big recalc functions (recalc_all_renewables_full, recalc_all_verbrauch)

@@ -26,16 +26,17 @@ class ModifikationsdetailsPageTests(TestCase):
 
         # Minimal seed so the 5 charts have rows to pull.
         for code, category, unit, status, ziel in [
-            ("1",    "KLIK",              "GWh/a", 300.0, 280.0),
-            ("2",    "Gebäudewärme",      "GWh/a", 500.0, 400.0),
-            ("3",    "Prozesswärme",      "GWh/a", 350.0, 320.0),
-            ("6",    "Mobile Anwendungen","GWh/a", 450.0, 330.0),
-            ("5",    "Grundstoffe",       "TWh/a",  90.0,  80.0),
+            ("1",     "KLIK",                 "GWh/a", 300000.0, 280000.0),
+            ("2.10",  "Gebäudewärme",         "GWh/a", 500000.0, 400000.0),
+            ("3.7",   "Prozesswärme",         "GWh/a", 350000.0, 320000.0),
+            ("6.0",   "Mobile Anwendungen",   "GWh/a", 450000.0, 330000.0),
+            ("9.1.4", "Grundstoffe",          "GWh/a",  90000.0,  80000.0),
             ("1.1.2","Strom-Eff. Haush.", "%",     100.0,  95.0),
-            ("1.1.3","Strom-Eff. HDL",    "%",     100.0,  95.0),
-            ("1.1.4","Strom-Eff. GI",     "%",     100.0,  95.0),
-            ("2.4", "Energet. Sanierung","%",       0.0,  85.0),
-            ("2.8", "Wärmepumpen",       "%",       0.0, 2030.0),
+            ("1.2.4","Strom-Eff. HDL",    "%",     100.0,  95.0),
+            ("1.3.4","Strom-Eff. GI",     "%",     100.0,  95.0),
+            ("2.5.1","Warmwasser-Eff.",   "%",     100.0,  70.0),
+            ("3.1.1","PW Haushalte",      "%",     100.0,  95.0),
+            ("3.2.2","PW Industrie/GHD",  "%",     100.0,  89.0),
         ]:
             VerbrauchData.objects.get_or_create(
                 code=code, defaults={
@@ -45,10 +46,10 @@ class ModifikationsdetailsPageTests(TestCase):
             )
 
         for code, name, sv, tv in [
-            ("9.1.1", "Wind onshore", 100.0, 700.0),
-            ("9.1.2", "Solar Freiflächen", 30.0, 1200.0),
-            ("9.1.3", "Wasserkraft+Geothermie", 19.0, 25.0),
-            ("9.1.4", "Biobrennstoffe", 5.0, 4.5),
+            ("9.1.1", "Wind onshore", 100000.0, 700000.0),
+            ("9.1.2", "Solar Freiflächen", 30000.0, 1200000.0),
+            ("9.1.3", "Wasserkraft+Geothermie", 19000.0, 25000.0),
+            ("9.1.4", "Biobrennstoffe", 5000.0, 4500.0),
         ]:
             RenewableData.objects.get_or_create(
                 code=code, defaults={
@@ -106,6 +107,36 @@ class ModifikationsdetailsPageTests(TestCase):
         ]:
             self.assertContains(response, f'id="{canvas_id}"')
 
+    def _extract_chart_payload(self, response):
+        body = response.content.decode()
+        match = re.search(
+            r'<script id="modifikationsdetails-data" type="application/json">(.*?)</script>',
+            body, re.DOTALL,
+        )
+        self.assertIsNotNone(match, "json_script payload not found in response")
+        return json.loads(match.group(1))
+
+    def test_chart_payload_uses_correct_units_and_complete_rows(self):
+        response = self.client.get(reverse("simulator:modifikationsdetails"))
+        charts = {chart["id"]: chart for chart in self._extract_chart_payload(response)}
+
+        nachfrage = charts["chart_nachfrage_einfluesse"]
+        self.assertEqual(nachfrage["series"]["status"], [300000.0, 500000.0, 350000.0, 450000.0])
+        self.assertTrue(all(v is not None for v in nachfrage["series"]["aktuell"]))
+
+        endenergie = charts["chart_endenergie_anwendungen"]
+        self.assertEqual(endenergie["unit"], "TWh/a")
+        self.assertEqual(endenergie["series"]["status"], [300.0, 500.0, 350.0, 450.0, 90.0])
+
+        primaerenergie = charts["chart_primaerenergie_quellen"]
+        self.assertEqual(primaerenergie["unit"], "TWh/a")
+        self.assertEqual(primaerenergie["series"]["status"], [100.0, 30.0, 19.0, 5.0])
+
+        ausbau = charts["chart_ausbau_erneuerbare"]
+        self.assertEqual(ausbau["unit"], "%")
+        self.assertEqual(ausbau["series"]["status"], [10.0, 10.0])
+        self.assertEqual(ausbau["series"]["aktuell"], [30.0, 30.0])
+
 
 class ModifikationsdetailsPopulatedStateTests(TestCase):
     """Exercises the full data path: admin baseline + scenario snapshot
@@ -123,16 +154,17 @@ class ModifikationsdetailsPopulatedStateTests(TestCase):
         # Same domain seed as the main test class — owner=None so both the
         # admin workspace AND the user's workspace see these initial rows.
         for code, category, unit, status, ziel in [
-            ("1",    "KLIK",              "GWh/a", 300.0, 280.0),
-            ("2",    "Gebäudewärme",      "GWh/a", 500.0, 400.0),
-            ("3",    "Prozesswärme",      "GWh/a", 350.0, 320.0),
-            ("6",    "Mobile Anwendungen","GWh/a", 450.0, 330.0),
-            ("5",    "Grundstoffe",       "TWh/a",  90.0,  80.0),
+            ("1",     "KLIK",                 "GWh/a", 300000.0, 280000.0),
+            ("2.10",  "Gebäudewärme",         "GWh/a", 500000.0, 400000.0),
+            ("3.7",   "Prozesswärme",         "GWh/a", 350000.0, 320000.0),
+            ("6.0",   "Mobile Anwendungen",   "GWh/a", 450000.0, 330000.0),
+            ("9.1.4", "Grundstoffe",          "GWh/a",  90000.0,  80000.0),
             ("1.1.2","Strom-Eff. Haush.", "%",     100.0,  95.0),
-            ("1.1.3","Strom-Eff. HDL",    "%",     100.0,  95.0),
-            ("1.1.4","Strom-Eff. GI",     "%",     100.0,  95.0),
-            ("2.4", "Energet. Sanierung","%",       0.0,  85.0),
-            ("2.8", "Wärmepumpen",       "%",       0.0, 2030.0),
+            ("1.2.4","Strom-Eff. HDL",    "%",     100.0,  95.0),
+            ("1.3.4","Strom-Eff. GI",     "%",     100.0,  95.0),
+            ("2.5.1","Warmwasser-Eff.",   "%",     100.0,  70.0),
+            ("3.1.1","PW Haushalte",      "%",     100.0,  95.0),
+            ("3.2.2","PW Industrie/GHD",  "%",     100.0,  89.0),
         ]:
             VerbrauchData.objects.get_or_create(
                 code=code, defaults={
@@ -141,10 +173,10 @@ class ModifikationsdetailsPopulatedStateTests(TestCase):
                 },
             )
         for code, name, sv, tv in [
-            ("9.1.1", "Wind onshore", 100.0, 700.0),
-            ("9.1.2", "Solar Freiflächen", 30.0, 1200.0),
-            ("9.1.3", "Wasserkraft+Geothermie", 19.0, 25.0),
-            ("9.1.4", "Biobrennstoffe", 5.0, 4.5),
+            ("9.1.1", "Wind onshore", 100000.0, 700000.0),
+            ("9.1.2", "Solar Freiflächen", 30000.0, 1200000.0),
+            ("9.1.3", "Wasserkraft+Geothermie", 19000.0, 25000.0),
+            ("9.1.4", "Biobrennstoffe", 5000.0, 4500.0),
         ]:
             RenewableData.objects.get_or_create(
                 code=code, defaults={

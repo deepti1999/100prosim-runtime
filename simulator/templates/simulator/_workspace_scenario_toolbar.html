@@ -1,0 +1,6 @@
+{% if user.is_staff and not can_manage_workspace_scenarios %}
+<div class="alert alert-secondary py-2 mb-3" role="alert">
+    <i class="fas fa-lock me-1"></i>
+    Dieser Admin-Zugang ist nur zum Ansehen freigegeben. Werte und Szenarien können nicht geändert werden.
+</div>
+{% endif %}

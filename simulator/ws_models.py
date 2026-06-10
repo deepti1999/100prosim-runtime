@@ -15,8 +15,8 @@ def _ws_default_region_pk():
     from simulator.models import Region
 
     try:
-        return Region.objects.get(code="DE").pk
-    except Region.DoesNotExist:
+        return Region.objects.filter(code="DE").values_list("pk", flat=True).first()
+    except Exception:
         return None
 
 

@@ -1,0 +1,34 @@
+{% extends "simulator/admin_versions/base.html" %}
+
+{% block title %}Admin-Szenario wiederherstellen{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h2>{{ version.name }}</h2>
+  <p>
+    Sie stellen dieses gespeicherte Admin-Szenario für
+    <strong>{{ version.region }}</strong> wieder her.
+  </p>
+
+  <div class="danger-box">
+    <strong>Wichtig:</strong>
+    Der aktuelle Admin-Datenstand wird durch dieses gespeicherte Szenario ersetzt.
+    Wenn Sie den aktuellen Stand behalten möchten, speichern Sie ihn vorher als neues Admin-Szenario.
+  </div>
+
+  <p>Größe: {{ payload_size }} MB</p>
+  <ul>
+    {% for key, value in counts.items %}
+      <li>{{ key }}: {{ value }}</li>
+    {% endfor %}
+  </ul>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="actions">
+      <button type="submit" class="danger">Ja, dieses Admin-Szenario wiederherstellen</button>
+      <a class="button light" href="{% url 'simulator:admin_versions_dashboard' %}">Abbrechen</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

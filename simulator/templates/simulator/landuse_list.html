@@ -1,4 +1,5 @@
 {% extends 'simulator/base.html' %}
+{% load l10n %}
 
 {% block title %}Flächennutzung – Datenübersicht{% endblock %}
 
@@ -16,7 +17,8 @@
                 <h1 class="h2">Flächennutzung – Übersicht</h1>
             </div>
 
-
+            {% include "simulator/_provenance_editor_hint.html" %}
+            {% include "simulator/_workspace_scenario_toolbar.html" %}
 
             <!-- Data Table -->
             <div class="card">
@@ -38,14 +40,16 @@
                                     <th class="number-column">Ziel (ha)</th>
                                     <th class="number-column">Ziel (%)</th>
                                     <th class="number-column">Benutzer (%)</th>
-                                    <th style="width: 30px;" title="Datenquelle (§2.3)">Q</th>
+                                    {% if can_edit_landuse_master_data %}
+                                    <th class="text-center">Stammdaten</th>
+                                    {% endif %}
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for data in landuse_data %}
                                 <tr>
                                     <td class="code-column">
-                                        <span class="badge bg-secondary">{{ data.landuse.code }}</span>
+                                        {% include "simulator/_provenance_code.html" with trigger_label=data.landuse.code badge_class="bg-secondary" quelle=data.landuse.quelle source_url=data.landuse.source_url notes_assumption=data.landuse.notes_assumption source_refs=data.landuse.source_refs origin=data.landuse.origin provenance_override_active=data.landuse.provenance_override_active provenance_domain="landuse" row_code=data.landuse.code row_label=data.landuse.name region_id=data.landuse.region_id %}
                                     </td>
                                     <td>
                                         <strong>{{ data.landuse.name }}</strong>
@@ -64,14 +68,14 @@
                                         <span class="text-muted">-</span>
                                         {% endif %}
                                     </td>
-                                    <td class="number-column" id="target_ha_{{ data.landuse.id }}">
+                                    <td class="number-column" id="target_ha_{{ data.landuse.id|unlocalize }}">
                                         {% if data.landuse.target_ha %}
                                         {{ data.landuse.target_ha|floatformat:0 }}
                                         {% else %}
                                         <span class="text-muted">-</span>
                                         {% endif %}
                                     </td>
-                                    <td class="number-column" id="target_percent_{{ data.landuse.id }}">
+                                    <td class="number-column" id="target_percent_{{ data.landuse.id|unlocalize }}">
                                         {% if data.target_percent %}
                                         {{ data.target_percent }}%
                                         {% else %}
@@ -79,32 +83,43 @@
                                         {% endif %}
                                     </td>
                                     <td class="number-column">
-                                        {% if data.landuse.parent %}
+                                        {% if data.landuse.parent and can_edit_workspace_values %}
                                         {# T14/T15 (PDF §2.4.1): when user input is empty, the #}
                                         {# placeholder shows the current base value (status_percent) #}
                                         {# so clearing the override visually falls back to the base. #}
-                                        <input type="number" id="user_percent_{{ data.landuse.id }}" step="0.1" min="0"
+                                        <input type="number" id="user_percent_{{ data.landuse.id|unlocalize }}" step="0.1" min="0"
                                             max="100" class="form-control form-control-sm user-percent-input"
                                             value="{{ data.landuse.user_percent|default:'' }}"
                                             data-code="{{ data.landuse.code }}"
                                             data-parent="{{ data.landuse.parent.code }}"
                                             data-parent-status="{{ data.landuse.parent.status_ha }}"
                                             data-base-value="{{ data.status_percent|default:'' }}"
-                                            data-pk="{{ data.landuse.id }}"
+                                            data-pk="{{ data.landuse.id|unlocalize }}"
                                             placeholder="{% if data.status_percent %}{{ data.status_percent }}{% else %}% eingeben{% endif %}"
                                             title="{% if data.status_percent %}Leer lassen für Basis-Wert {{ data.status_percent }}%{% else %}Prozentwert eingeben{% endif %}"
                                             style="width: 90px;">
+                                        {% elif data.landuse.parent %}
+                                        <span class="text-muted" title="Nur mit Bearbeitungsrolle änderbar">
+                                            {% if data.landuse.user_percent %}{{ data.landuse.user_percent|floatformat:1 }}{% elif data.status_percent %}{{ data.status_percent }}{% else %}-{% endif %}
+                                        </span>
                                         {% else %}
                                         <span class="text-muted">-</span>
                                         {% endif %}
                                     </td>
-                                    <td class="text-center align-middle">
-                                        {% include "simulator/_provenance_icon.html" with source_url=data.landuse.source_url notes_assumption=data.landuse.notes_assumption origin=data.landuse.origin %}
+                                    {% if can_edit_landuse_master_data %}
+                                    <td class="text-center">
+                                        <a class="btn btn-sm btn-outline-warning"
+                                           href="{% url 'simulator:landuse_master_edit' data.landuse.id %}?return_url={{ request.path|urlencode }}"
+                                           title="Status, Ziel und Formel-Schlüssel bearbeiten">
+                                            <i class="fas fa-pen-to-square me-1"></i>
+                                            <span class="d-none d-xl-inline">Werte/Formel</span>
+                                        </a>
                                     </td>
+                                    {% endif %}
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="8" class="text-center text-muted py-5">
+                                    <td colspan="{% if can_edit_landuse_master_data %}8{% else %}7{% endif %}" class="text-center text-muted py-5">
                                         <h5>Keine Daten verfügbar</h5>
                                         <p>Importieren Sie CSV-Daten, um zu beginnen.</p>
                                     </td>
@@ -122,7 +137,7 @@
                     <div class="alert alert-info">
                         <h6 class="alert-heading">Hinweise zu den Daten</h6>
                         <p class="mb-0">
-                            Diese Seite zeigt Flächennutzungs-Kategorien und Energieverwendung für Deutschland,
+                            Diese Seite zeigt Flächennutzungs-Kategorien und Energieverwendung für {{ active_region_name|default:"Deutschland" }},
                             einschließlich des aktuellen Status und der Ziel-Werte für das Szenario.
                             Das Veränderungsverhältnis beschreibt das Verhältnis zwischen Ziel und Status.
                         </p>

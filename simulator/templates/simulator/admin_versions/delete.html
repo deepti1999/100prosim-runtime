@@ -1,0 +1,27 @@
+{% extends "simulator/admin_versions/base.html" %}
+
+{% block title %}Admin-Szenario löschen{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h2>{{ version.name }}</h2>
+  <p>
+    Dieses Admin-Szenario wird aus der Liste gelöscht. Die aktuellen Admin-Daten
+    in der Webapp werden dadurch nicht verändert.
+  </p>
+
+  <div class="danger-box">
+    <strong>Wichtig:</strong>
+    Danach kann dieses gespeicherte Szenario nicht mehr wiederhergestellt werden.
+    Geschützte Szenarien können nicht gelöscht werden.
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="actions">
+      <button type="submit" class="danger">Ja, dieses Admin-Szenario löschen</button>
+      <a class="button light" href="{% url 'simulator:admin_versions_dashboard' %}">Abbrechen</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

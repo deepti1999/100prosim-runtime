@@ -6,7 +6,17 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 
-from .models import BaselineSnapshot, LandUse, RenewableData, Region, ScenarioSnapshot, VerbrauchData
+from simulator.admin_roles import user_can_manage_workspace_scenarios
+from simulator.display_state import mark_display_state_changed
+from .models import (
+    BaselineSnapshot,
+    GebaeudewaermeData,
+    LandUse,
+    RenewableData,
+    Region,
+    ScenarioSnapshot,
+    VerbrauchData,
+)
 from .ws_models import WSData
 
 MAX_SCENARIOS_PER_SCOPE = 30
@@ -25,6 +35,9 @@ def _baseline_scope(request):
 
 def _scope_filter(owner):
     return {"owner__isnull": True} if owner is None else {"owner": owner}
+
+def _model_has_field(model, field_name):
+    return any(f.name == field_name for f in model._meta.concrete_fields)
 
 def _set_active_scenario_session(request, scope_key, scenario):
     request.session[ACTIVE_SCENARIO_SCOPE_KEY] = scope_key
@@ -54,7 +67,9 @@ def _serialize_model_rows(model, owner, region=None, exclude_fields=None):
         # can re-bind rows to the saved region.
         if f.name not in {"id", "owner", "region", "created_at", "updated_at"} and f.name not in exclude
     ]
-    qs = model.all_objects.filter(**_scope_filter(owner))
+    qs = model.all_objects.all()
+    if _model_has_field(model, "owner"):
+        qs = qs.filter(**_scope_filter(owner))
     if region is not None and any(f.name == "region" for f in model._meta.concrete_fields):
         qs = qs.filter(region=region)
     rows = qs.order_by("id")
@@ -86,10 +101,11 @@ def _serialize_landuse_rows(owner, region=None):
     return serialized
 
 def _restore_model_rows(model, owner, rows, region=None):
-    has_region = region is not None and any(
-        f.name == "region" for f in model._meta.concrete_fields
-    )
-    existing_qs = model.all_objects.filter(**_scope_filter(owner))
+    has_owner = _model_has_field(model, "owner")
+    has_region = region is not None and _model_has_field(model, "region")
+    existing_qs = model.all_objects.all()
+    if has_owner:
+        existing_qs = existing_qs.filter(**_scope_filter(owner))
     if has_region:
         existing_qs = existing_qs.filter(region=region)
     if existing_qs.exists():
@@ -106,7 +122,8 @@ def _restore_model_rows(model, owner, rows, region=None):
     to_create = []
     for row in rows:
         payload = {k: v for k, v in row.items() if k in allowed_fields}
-        payload["owner"] = owner
+        if has_owner:
+            payload["owner"] = owner
         if has_region:
             payload["region"] = region
         to_create.append(model(**payload))
@@ -199,6 +216,7 @@ def _snapshot_payload_for_owner(owner, region_code=None):
         "landuse": _serialize_landuse_rows(owner, region),
         "renewable": _serialize_model_rows(RenewableData, owner, region),
         "verbrauch": _serialize_model_rows(VerbrauchData, owner, region),
+        "gebaeudewaerme": _serialize_model_rows(GebaeudewaermeData, owner, region),
         # WSData has no region FK in Phase C step 2; step 4 adds it. The
         # serializer is region-aware via the optional `region` arg, so
         # passing region here is harmless either way.
@@ -216,7 +234,20 @@ def _restore_snapshot_payload(owner, payload):
         _restore_landuse_rows(owner, payload.get("landuse", []), region=region)
         _restore_model_rows(RenewableData, owner, payload.get("renewable", []), region=region)
         _restore_model_rows(VerbrauchData, owner, payload.get("verbrauch", []), region=region)
+        _restore_model_rows(GebaeudewaermeData, owner, payload.get("gebaeudewaerme", []), region=region)
         _restore_model_rows(WSData, owner, payload.get("ws", []), region=region)
+
+def _invalidate_after_snapshot_restore(*, owner, payload, triggered_by, restore_type, snapshot_name=None):
+    """Bulk snapshot restore bypasses model signals, so clear calculation caches explicitly."""
+    payload = payload or {}
+    mark_display_state_changed(
+        scope="snapshot_restore",
+        triggered_by=triggered_by,
+        restore_type=restore_type,
+        snapshot_name=snapshot_name or "",
+        owner=getattr(owner, "username", None) if owner is not None else "global",
+        region_code=payload.get("region_code") or "DE",
+    )
 
 def _scenario_scope_filter(owner):
     return {"owner__isnull": True} if owner is None else {"owner": owner}
@@ -297,6 +328,13 @@ def restore_baseline(request):
         user = request.user
         target_owner = None if (user.is_authenticated and user.is_staff) else user
         _restore_snapshot_payload(target_owner, snapshot.payload)
+        _invalidate_after_snapshot_restore(
+            owner=target_owner,
+            payload=snapshot.payload,
+            triggered_by=user.username,
+            restore_type="baseline",
+            snapshot_name="admin-baseline",
+        )
 
         scope = _baseline_scope(request)
         _clear_active_scenario_session(request, scope["key"])
@@ -342,6 +380,11 @@ def create_scenario(request):
     """Create a named scenario snapshot for current scope."""
     if request.method != 'POST':
         return JsonResponse({'status': 'error', 'error': 'POST required'}, status=405)
+    if not user_can_manage_workspace_scenarios(request.user):
+        return JsonResponse(
+            {'status': 'error', 'error': 'Keine Berechtigung zum Speichern von Szenarien.'},
+            status=403,
+        )
 
     try:
         scope = _baseline_scope(request)
@@ -422,6 +465,11 @@ def restore_scenario(request, scenario_id):
     """Restore one named scenario for current scope."""
     if request.method != 'POST':
         return JsonResponse({'status': 'error', 'error': 'POST required'}, status=405)
+    if not user_can_manage_workspace_scenarios(request.user):
+        return JsonResponse(
+            {'status': 'error', 'error': 'Keine Berechtigung zum Wiederherstellen von Szenarien.'},
+            status=403,
+        )
 
     try:
         scope = _baseline_scope(request)
@@ -434,6 +482,13 @@ def restore_scenario(request, scenario_id):
             return JsonResponse({'status': 'error', 'error': 'Scenario not found.'}, status=404)
 
         _restore_snapshot_payload(owner, scenario.payload)
+        _invalidate_after_snapshot_restore(
+            owner=owner,
+            payload=scenario.payload,
+            triggered_by=request.user.username,
+            restore_type="scenario",
+            snapshot_name=scenario.name,
+        )
         _set_active_scenario_session(request, scope["key"], scenario)
         return JsonResponse({
             'status': 'ok',
@@ -449,6 +504,11 @@ def rename_scenario(request, scenario_id):
     """Rename a scenario in current scope."""
     if request.method != 'POST':
         return JsonResponse({'status': 'error', 'error': 'POST required'}, status=405)
+    if not user_can_manage_workspace_scenarios(request.user):
+        return JsonResponse(
+            {'status': 'error', 'error': 'Keine Berechtigung zum Umbenennen von Szenarien.'},
+            status=403,
+        )
 
     try:
         scope = _baseline_scope(request)
@@ -493,6 +553,11 @@ def delete_scenario(request, scenario_id):
     """Delete a scenario in current scope."""
     if request.method != 'POST':
         return JsonResponse({'status': 'error', 'error': 'POST required'}, status=405)
+    if not user_can_manage_workspace_scenarios(request.user):
+        return JsonResponse(
+            {'status': 'error', 'error': 'Keine Berechtigung zum Löschen von Szenarien.'},
+            status=403,
+        )
 
     try:
         scope = _baseline_scope(request)

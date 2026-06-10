@@ -125,6 +125,21 @@ class WhiteBoxScenarioStateTests(TestCase):
         self.assertNotIn("active_scenario_scope", session)
         self.assertFalse(ScenarioSnapshot.objects.filter(id=scenario.id).exists())
 
+    def test_deleting_user_deletes_personal_scenarios_without_global_collision(self):
+        user_to_delete = get_user_model().objects.create_user(
+            username="scenario_delete_owner",
+            password="test-pass-123",
+        )
+        ScenarioSnapshot.objects.create(owner=None, name="verbrauch", payload={})
+        ScenarioSnapshot.objects.create(owner=user_to_delete, name="verbrauch", payload={})
+
+        user_to_delete.delete()
+
+        self.assertEqual(
+            list(ScenarioSnapshot.objects.values_list("owner_id", "name")),
+            [(None, "verbrauch")],
+        )
+
     def test_restore_baseline_clears_active_session_for_current_scope(self):
         session = self.client.session
         session["active_scenario_scope"] = f"user:{self.user.id}"

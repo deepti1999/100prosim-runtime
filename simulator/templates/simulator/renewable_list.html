@@ -32,7 +32,8 @@
                 {% endif %}
             </div>
 
-
+            {% include "simulator/_provenance_editor_hint.html" %}
+            {% include "simulator/_workspace_scenario_toolbar.html" %}
 
             <!-- Hierarchical Solar Energy Data -->
             <div class="card mb-4">
@@ -58,7 +59,9 @@
                                     <th class="text-center" style="width: 100px;">Status</th>
                                     <th class="text-center" style="width: 100px;">Ziel</th>
                                     <th class="text-center" style="width: 100px;">Benutzereingabe</th>
-                                    <th style="width: 30px;" title="Datenquelle (§2.3)">Q</th>
+                                    {% if can_edit_renewable_master_data %}
+                                    <th class="text-center" style="width: 130px;">Stammdaten</th>
+                                    {% endif %}
                                 </tr>
                             </thead>
                             <tbody>
@@ -66,10 +69,13 @@
                                 <tr
                                     class="hierarchy-level-{{ item.hierarchy_level }} {% if item.formula %}calculated-row{% endif %} {% if item.code|slice:':2' != '10' %}detailed-section{% endif %}">
                                     <td>
-                                        <span
-                                            class="badge bg-{% if item.hierarchy_level == 1 %}dark{% elif item.hierarchy_level == 2 %}secondary{% else %}light text-dark{% endif %}">
-                                            {{ item.code }}
-                                        </span>
+                                        {% if item.hierarchy_level == 1 %}
+                                            {% include "simulator/_provenance_code.html" with trigger_label=item.code badge_class="bg-dark" source_url=item.source_url notes_assumption=item.notes_assumption source_refs=item.source_refs origin=item.origin provenance_override_active=item.provenance_override_active provenance_domain="renewable" row_code=item.code row_label=item.name region_id=item.region_id %}
+                                        {% elif item.hierarchy_level == 2 %}
+                                            {% include "simulator/_provenance_code.html" with trigger_label=item.code badge_class="bg-secondary" source_url=item.source_url notes_assumption=item.notes_assumption source_refs=item.source_refs origin=item.origin provenance_override_active=item.provenance_override_active provenance_domain="renewable" row_code=item.code row_label=item.name region_id=item.region_id %}
+                                        {% else %}
+                                            {% include "simulator/_provenance_code.html" with trigger_label=item.code badge_class="bg-light text-dark" source_url=item.source_url notes_assumption=item.notes_assumption source_refs=item.source_refs origin=item.origin provenance_override_active=item.provenance_override_active provenance_domain="renewable" row_code=item.code row_label=item.name region_id=item.region_id %}
+                                        {% endif %}
                                     </td>
                                     <td class="hierarchy-cell">
                                         <div class="hierarchy-indent-{{ item.hierarchy_level }}">
@@ -107,7 +113,7 @@
                                         {% endif %}
                                     </td>
                                     <td class="text-center">
-                                        {% if item.user_editable %}
+                                        {% if item.user_editable and can_edit_workspace_values %}
                                         {# T14/T15 (PDF §2.4.1): placeholder shows the base target so #}
                                         {# clearing the override visually falls back to the base value. #}
                                         <div contenteditable="true"
@@ -122,13 +128,24 @@
                                             <span class="placeholder-text">{% if item.display_target is not None %}{{ item.display_target|floatformat:1 }} (Basis){% else %}Zum Bearbeiten klicken ...{% endif %}</span>
                                             {% endif %}
                                         </div>
+                                        {% elif item.user_editable %}
+                                        <span class="text-muted" title="Nur mit Bearbeitungsrolle änderbar">
+                                            {% if item.user_input_value is not None %}{{ item.user_input_value|floatformat:1 }}{% else %}-{% endif %}
+                                        </span>
                                         {% else %}
                                         <span class="text-muted">-</span>
                                         {% endif %}
                                     </td>
-                                    <td class="text-center align-middle">
-                                        {% include "simulator/_provenance_icon.html" with source_url=item.source_url notes_assumption=item.notes_assumption origin=item.origin %}
+                                    {% if can_edit_renewable_master_data %}
+                                    <td class="text-center">
+                                        <a class="btn btn-sm btn-outline-warning"
+                                           href="{% url 'simulator:renewable_master_edit' item.id %}?return_url={{ request.path|urlencode }}"
+                                           title="Status, Ziel und Formel bearbeiten">
+                                            <i class="fas fa-pen-to-square me-1"></i>
+                                            <span class="d-none d-xl-inline">Werte/Formel</span>
+                                        </a>
                                     </td>
+                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -143,7 +160,7 @@
                     <div class="alert alert-secondary">
                         <h6 class="alert-heading"> Hinweise zu Erneuerbaren Energien</h6>
                         <p class="mb-0">
-                            Diese Seite zeigt Parameter der Erneuerbaren Energien für Deutschland mit dem Schwerpunkt
+                            Diese Seite zeigt Parameter der Erneuerbaren Energien für {{ active_region_name|default:"Deutschland" }} mit dem Schwerpunkt
                             Solarenergie. Enthalten sind Flächennutzung für Photovoltaik (Dachflächen/Freiflächen),
                             Energieerträge und Effizienzberechnungen. Formeln berechnen abgeleitete Werte automatisch
                             auf Basis Ihrer Eingaben.

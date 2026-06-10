@@ -31,8 +31,58 @@ def _json_safe(value: Any) -> Any:
         return [_json_safe(v) for v in value]
     return value
 
+
+def _record_balance_calculation_run(job: BalanceJob, result: Dict[str, Any], duration_ms: int) -> Dict[str, Any]:
+    """Create the cache-busting CalculationRun for balance jobs.
+
+    Bilanz/Cockpit cache their computed payload by latest CalculationRun.id.
+    WS/sector balance jobs used to mutate LandUse/Renewable/Verbrauch rows
+    without creating a CalculationRun, so those pages could keep serving the
+    old cached bilanz payload until another recalc happened.
+    """
+    if result.get("run_id"):
+        return result
+
+    summary = {
+        "duration_ms": duration_ms,
+        "job_type": job.job_type,
+        "scope": "balance_job",
+        "success": bool(result.get("success")),
+        "early_exit": bool(result.get("early_exit")),
+    }
+    for key in (
+        "storage_drift",
+        "annual_electricity",
+        "landuse_code",
+        "old_landuse",
+        "new_landuse",
+        "old_landuse_percent",
+        "new_landuse_percent",
+        "sector_balance_ok",
+        "drift_ok",
+        "overall_balanced",
+    ):
+        if key in result:
+            summary[key] = result.get(key)
+
+    run = CalculationRun.objects.create(
+        duration_ms=max(0, int(duration_ms or 0)),
+        summary=_json_safe(summary),
+        triggered_by=(job.created_by.username if job.created_by else "worker"),
+    )
+    result = dict(result)
+    result.update({
+        "run_id": run.id,
+        "duration_ms": duration_ms,
+        "summary": summary,
+        "created_at": run.created_at.isoformat(),
+    })
+    return result
+
+
 def run_balance_job(job: BalanceJob) -> Dict[str, Any]:
     """Execute one queued balance job and return JSON-safe result payload."""
+    start = time.perf_counter()
     user = job.created_by
     # Phase C (T66): payload carries region_code so the worker (a
     # separate process) runs the dispatch under the user's active
@@ -157,6 +207,14 @@ def run_balance_job(job: BalanceJob) -> Dict[str, Any]:
             }
         else:
             raise ValueError(f"Unsupported balance job type: {job.job_type}")
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    result = _record_balance_calculation_run(job, result or {}, duration_ms)
+    try:
+        from simulator.display_state import invalidate_runtime_caches
+
+        invalidate_runtime_caches()
+    except Exception:
+        pass
     return _json_safe(result)
 
 def claim_next_job() -> Optional[BalanceJob]:

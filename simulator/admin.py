@@ -1,15 +1,31 @@
 from django.contrib import admin
+from django import forms
 from django.contrib.admin import SimpleListFilter
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.template.response import TemplateResponse
 from django.utils.html import format_html
+from django.urls import path, reverse
+from django.utils.http import urlencode
 from .models import (
+    AdminDataVersion,
     Formula,
     FormulaVariable,
+    GebaeudewaermeData,
     LandUse,
+    Region,
     RenewableData,
+    UIProvenanceOverride,
+    UIProvenanceSource,
     VerbrauchData,
     WSData,
     WS365Formula,
     BalanceJob,
+)
+from .admin_versioning import (
+    capture_admin_version_payload,
+    payload_size_mb,
+    restore_admin_version_payload,
 )
 
 class DataTypeFilter(SimpleListFilter):
@@ -42,6 +58,471 @@ class DataTypeFilter(SimpleListFilter):
             return queryset.filter(code='6')
         elif self.value() == 'other':
             return queryset.exclude(code__regex=r'^[1-6]')
+
+
+@admin.register(Region)
+class RegionAdmin(admin.ModelAdmin):
+    list_display = [
+        "code",
+        "display_name",
+        "active",
+        "status_year",
+        "target_year",
+        "locale_code",
+        "total_area_ha",
+    ]
+    list_filter = ["active", "target_year", "status_year"]
+    search_fields = ["code", "display_name", "goal_description", "data_source_label"]
+    ordering = ["code"]
+    fieldsets = (
+        ("Land / Region", {
+            "fields": ("code", "display_name", "active", "locale_code"),
+            "description": (
+                "Hier werden Länder oder Regionen verwaltet. Neue Länder können "
+                "sichtbar gemacht werden, ohne das Seitenlayout zu ändern."
+            ),
+        }),
+        ("Planungsrahmen", {
+            "fields": ("status_year", "target_year", "goal_description", "total_area_ha"),
+            "description": (
+                "Diese Werte steuern Beschriftungen wie Status-Jahr, Ziel-Jahr "
+                "und Hauptziel in der Weboberfläche. Sie ändern keine Formeln."
+            ),
+        }),
+        ("Datenquellen / Import", {
+            "fields": ("data_source_label", "datenmodell_excel_hash"),
+            "description": (
+                "Technische Orientierung für importierte Daten und Anzeige im "
+                "Jahresstrom-Diagramm."
+            ),
+        }),
+        ("Jahresstrom-Konstanten", {
+            "fields": ("installed_pmax_ely_gw", "installed_pmax_rv_gw"),
+            "description": (
+                "Regionsspezifische Diagrammwerte. Nur ändern, wenn die "
+                "Datenbasis für diese Region geprüft wurde."
+            ),
+        }),
+    )
+
+
+class UIProvenanceOverrideAdminForm(forms.ModelForm):
+    class Meta:
+        model = UIProvenanceOverride
+        fields = "__all__"
+        labels = {
+            "domain": "Bereich",
+            "row_code": "Zeilen-Code",
+            "row_label": "Zeilenname",
+            "region": "Region",
+            "is_active": "Aktiv anzeigen",
+            "general_information": "Zusätzliche Information für Nutzer",
+            "status_information": "Status-Erklärung",
+            "ziel_information": "Ziel-Erklärung",
+        }
+        help_texts = {
+            "domain": "Auf welcher Seite diese Zusatzinformation erscheinen soll.",
+            "row_code": "Zum Beispiel LU_1.1, 9.4.1 oder 2.9.2.",
+            "row_label": "Nur zur leichteren Orientierung im Admin.",
+            "general_information": "Optionaler Einleitungstext, der oberhalb von Status/Ziel erscheint.",
+            "status_information": "Kurze, klare Erklärung für den Status-Wert.",
+            "ziel_information": "Kurze, klare Erklärung für den Ziel-Wert.",
+            "is_active": "Nur aktive Einträge überschreiben die importierten Excel-Informationen.",
+        }
+
+
+class UIProvenanceSourceInlineForm(forms.ModelForm):
+    class Meta:
+        model = UIProvenanceSource
+        fields = "__all__"
+        labels = {
+            "section": "Bereich",
+            "label": "Kurztitel",
+            "description": "Quellenbeschreibung",
+            "url": "Link",
+            "sort_order": "Reihenfolge",
+        }
+        help_texts = {
+            "section": "Ob die Quelle zu Status, Ziel oder allgemein gehört.",
+            "label": "Kurzer Titel wie GENESIS, DESTATIS oder Solarthermie Kollektorfläche.",
+            "description": "Vollständige Beschreibung, die Nutzer im Popover sehen.",
+            "url": "Externer Link, der bei 'Quelle öffnen' verwendet wird.",
+            "sort_order": "Kleinere Zahlen erscheinen zuerst.",
+        }
+
+
+class UIProvenanceSourceInline(admin.TabularInline):
+    model = UIProvenanceSource
+    form = UIProvenanceSourceInlineForm
+    extra = 1
+    fields = ("section", "label", "description", "url", "sort_order")
+
+
+@admin.register(AdminDataVersion)
+class AdminDataVersionAdmin(admin.ModelAdmin):
+    list_display = [
+        "name",
+        "region",
+        "status",
+        "is_protected",
+        "created_by",
+        "captured_at",
+        "payload_size",
+        "payload_counts",
+        "restore_button",
+        "refresh_button",
+    ]
+    list_filter = ["region", "status", "is_protected", "created_by"]
+    search_fields = ["name", "note"]
+    ordering = ["-captured_at", "-updated_at"]
+    list_per_page = 50
+    readonly_fields = [
+        "created_by",
+        "captured_at",
+        "created_at",
+        "updated_at",
+        "payload_summary",
+        "payload",
+    ]
+    actions = ["restore_selected_version", "refresh_selected_versions"]
+
+    fieldsets = (
+        ("Admin-Szenario", {
+            "fields": ("name", "region", "status", "is_protected", "note"),
+            "description": (
+                "Speichert den aktuellen globalen Admin-Datenstand als Admin-Szenario. "
+                "Das ändert keine Formeln oder Werte direkt, sondern legt einen "
+                "Wiederherstellungspunkt an."
+            ),
+        }),
+        ("Gespeicherter Stand", {
+            "fields": ("payload_summary", "captured_at", "created_by"),
+            "description": (
+                "Beim ersten Speichern wird automatisch der aktuelle Datenstand "
+                "dieser Region erfasst. Über die Aktion 'ausgewähltes Szenario "
+                "wiederherstellen' kann dieser Stand zurückgespielt werden."
+            ),
+        }),
+        ("Technische Daten", {
+            "fields": ("payload", "created_at", "updated_at"),
+            "classes": ("collapse",),
+        }),
+    )
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "<int:object_id>/restore/",
+                self.admin_site.admin_view(self.restore_version_view),
+                name="simulator_admindataversion_restore",
+            ),
+            path(
+                "<int:object_id>/refresh/",
+                self.admin_site.admin_view(self.refresh_version_view),
+                name="simulator_admindataversion_refresh",
+            ),
+        ]
+        return custom_urls + urls
+
+    def has_restore_permission(self, request):
+        return request.user.has_perm("simulator.restore_admin_data_version")
+
+    def has_refresh_permission(self, request):
+        return request.user.has_perm("simulator.refresh_admin_data_version")
+
+    def has_protect_permission(self, request):
+        return request.user.has_perm("simulator.protect_admin_data_version")
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if not self.has_restore_permission(request):
+            actions.pop("restore_selected_version", None)
+        if not self.has_refresh_permission(request):
+            actions.pop("refresh_selected_versions", None)
+        return actions
+
+    def get_readonly_fields(self, request, obj=None):
+        readonly = list(super().get_readonly_fields(request, obj))
+        if not self.has_protect_permission(request) and "is_protected" not in readonly:
+            readonly.append("is_protected")
+        return readonly
+
+    def save_model(self, request, obj, form, change):
+        if not obj.created_by_id:
+            obj.created_by = request.user
+        if not obj.payload:
+            obj.payload = capture_admin_version_payload(obj.region.code)
+            from django.utils import timezone
+
+            obj.captured_at = timezone.now()
+        super().save_model(request, obj, form, change)
+
+    def delete_model(self, request, obj):
+        if obj.is_protected:
+            self.message_user(
+                request,
+                "Dieses Admin-Szenario ist geschützt und wurde nicht gelöscht.",
+                level=messages.ERROR,
+            )
+            return
+        super().delete_model(request, obj)
+
+    def delete_queryset(self, request, queryset):
+        protected = queryset.filter(is_protected=True).count()
+        queryset = queryset.filter(is_protected=False)
+        count = queryset.count()
+        if count:
+            super().delete_queryset(request, queryset)
+        if protected:
+            self.message_user(
+                request,
+                f"{protected} geschützte Admin-Szenario(s) wurden nicht gelöscht.",
+                level=messages.WARNING,
+            )
+
+    def payload_size(self, obj):
+        return f"{payload_size_mb(obj.payload)} MB"
+    payload_size.short_description = "Größe"
+
+    def payload_counts(self, obj):
+        counts = (obj.payload or {}).get("counts") or {}
+        if not counts:
+            return "-"
+        important = ["landuse", "renewable", "verbrauch", "formulas", "ui_provenance"]
+        return ", ".join(f"{key}: {counts.get(key, 0)}" for key in important)
+    payload_counts.short_description = "Inhalt"
+
+    def payload_summary(self, obj):
+        if not obj or not obj.payload:
+            return "Noch kein Datenstand gespeichert. Beim Speichern wird automatisch ein Snapshot erzeugt."
+        counts = (obj.payload or {}).get("counts") or {}
+        lines = [
+            f"Region: {(obj.payload or {}).get('region_code', '-')}",
+            f"Größe: {payload_size_mb(obj.payload)} MB",
+        ]
+        for key in sorted(counts):
+            lines.append(f"{key}: {counts[key]}")
+        return format_html("<br>".join(lines))
+    payload_summary.short_description = "Zusammenfassung"
+
+    def restore_button(self, obj):
+        url = reverse("admin:simulator_admindataversion_restore", args=[obj.pk])
+        return format_html(
+            '<a class="button" style="white-space:nowrap;" href="{}">Wiederherstellen</a>',
+            url,
+        )
+    restore_button.short_description = "Wiederherstellen"
+
+    def refresh_button(self, obj):
+        if obj.is_protected:
+            return format_html('<span style="color:#777;">geschützt</span>')
+        url = reverse("admin:simulator_admindataversion_refresh", args=[obj.pk])
+        return format_html(
+            '<a class="button" style="white-space:nowrap;" href="{}">Mit aktuellem Stand überschreiben</a>',
+            url,
+        )
+    refresh_button.short_description = "Aktueller Stand"
+
+    def restore_version_view(self, request, object_id):
+        if not self.has_restore_permission(request):
+            self.message_user(
+                request,
+                "Sie haben keine Berechtigung, Admin-Szenarien wiederherzustellen.",
+                level=messages.ERROR,
+            )
+            return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
+
+        version = self.get_object(request, object_id)
+        if version is None:
+            self.message_user(request, "Admin-Szenario nicht gefunden.", level=messages.ERROR)
+            return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
+
+        if request.method == "POST":
+            restored = restore_admin_version_payload(version.payload)
+            details = ", ".join(f"{key}: {value}" for key, value in restored.items())
+            self.message_user(
+                request,
+                f'Admin-Szenario "{version.name}" wurde wiederhergestellt. {details}',
+                level=messages.SUCCESS,
+            )
+            return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
+
+        context = {
+            **self.admin_site.each_context(request),
+            "title": "Admin-Szenario wiederherstellen",
+            "version": version,
+            "payload_counts": (version.payload or {}).get("counts") or {},
+            "payload_size": payload_size_mb(version.payload),
+            "opts": self.model._meta,
+        }
+        return TemplateResponse(
+            request,
+            "admin/simulator/admindataversion/confirm_restore.html",
+            context,
+        )
+
+    def refresh_version_view(self, request, object_id):
+        if not self.has_refresh_permission(request):
+            self.message_user(
+                request,
+                "Sie haben keine Berechtigung, Admin-Szenarien neu zu speichern.",
+                level=messages.ERROR,
+            )
+            return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
+
+        version = self.get_object(request, object_id)
+        if version is None:
+            self.message_user(request, "Admin-Szenario nicht gefunden.", level=messages.ERROR)
+            return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
+        if version.is_protected:
+            self.message_user(
+                request,
+                "Geschützte Admin-Szenarien können nicht überschrieben werden.",
+                level=messages.ERROR,
+            )
+            return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
+
+        if request.method == "POST":
+            from django.utils import timezone
+
+            version.payload = capture_admin_version_payload(version.region.code)
+            version.captured_at = timezone.now()
+            version.save(update_fields=["payload", "captured_at", "updated_at"])
+            self.message_user(
+                request,
+                f'Admin-Szenario "{version.name}" wurde mit dem aktuellen Admin-Datenstand neu gespeichert.',
+                level=messages.SUCCESS,
+            )
+            return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
+
+        context = {
+            **self.admin_site.each_context(request),
+            "title": "Admin-Szenario überschreiben",
+            "version": version,
+            "opts": self.model._meta,
+        }
+        return TemplateResponse(
+            request,
+            "admin/simulator/admindataversion/confirm_refresh.html",
+            context,
+        )
+
+    def restore_selected_version(self, request, queryset):
+        if queryset.count() != 1:
+            self.message_user(
+                request,
+                "Bitte genau ein Admin-Szenario auswählen, das wiederhergestellt werden soll.",
+                level=messages.ERROR,
+            )
+            return
+        version = queryset.first()
+        restored = restore_admin_version_payload(version.payload)
+        details = ", ".join(f"{key}: {value}" for key, value in restored.items())
+        self.message_user(
+            request,
+            f'Admin-Szenario "{version.name}" wurde wiederhergestellt. {details}',
+            level=messages.SUCCESS,
+        )
+    restore_selected_version.short_description = "Ausgewähltes Admin-Szenario wiederherstellen"
+
+    def refresh_selected_versions(self, request, queryset):
+        refreshed = 0
+        skipped = 0
+        from django.utils import timezone
+
+        for version in queryset:
+            if version.is_protected:
+                skipped += 1
+                continue
+            version.payload = capture_admin_version_payload(version.region.code)
+            version.captured_at = timezone.now()
+            version.save(update_fields=["payload", "captured_at", "updated_at"])
+            refreshed += 1
+        self.message_user(
+            request,
+            f"{refreshed} Admin-Szenario(s) neu gespeichert. {skipped} geschützte Admin-Szenario(s) übersprungen.",
+            level=messages.SUCCESS if refreshed else messages.WARNING,
+        )
+    refresh_selected_versions.short_description = "Ausgewählte Admin-Szenarien mit aktuellem Stand überschreiben"
+
+
+@admin.register(UIProvenanceOverride)
+class UIProvenanceOverrideAdmin(admin.ModelAdmin):
+    form = UIProvenanceOverrideAdminForm
+    list_display = [
+        "domain",
+        "row_code",
+        "row_label",
+        "region",
+        "is_active",
+        "updated_at",
+    ]
+    list_filter = ["domain", "region", "is_active"]
+    search_fields = ["row_code", "row_label", "general_information", "status_information", "ziel_information"]
+    ordering = ["domain", "row_code"]
+    list_per_page = 50
+    inlines = [UIProvenanceSourceInline]
+    fieldsets = (
+        ("Zeilen-Zuordnung", {
+            "fields": ("domain", "row_code", "row_label", "region", "is_active"),
+            "description": (
+                "Diese Angaben sind nur für die Nutzeransicht gedacht. "
+                "Sie ändern keine Formeln, Werte, Worker-Jobs oder Berechnungen."
+            ),
+        }),
+        ("Informationstext", {
+            "fields": ("general_information", "status_information", "ziel_information"),
+            "description": (
+                "Hier kann die benutzerfreundliche Erklärung gepflegt werden. "
+                "Status und Ziel erscheinen im Popover getrennt."
+            ),
+        }),
+    )
+
+    def get_changeform_initial_data(self, request):
+        initial = super().get_changeform_initial_data(request)
+        for key in ("domain", "row_code", "row_label", "region"):
+            value = request.GET.get(key)
+            if value:
+                initial[key] = value
+        return initial
+
+
+class UIProvenanceLinkMixin:
+    ui_provenance_domain = None
+
+    def get_readonly_fields(self, request, obj=None):
+        base = list(super().get_readonly_fields(request, obj))
+        if "ui_provenance_link" not in base:
+            base.append("ui_provenance_link")
+        return base
+
+    def ui_provenance_link(self, obj):
+        if not obj or not self.ui_provenance_domain or not getattr(obj, "code", None) or not getattr(obj, "region_id", None):
+            return "-"
+        existing = UIProvenanceOverride.objects.filter(
+            domain=self.ui_provenance_domain,
+            row_code=obj.code,
+            region_id=obj.region_id,
+        ).first()
+        if existing:
+            url = reverse("admin:simulator_uiprovenanceoverride_change", args=[existing.pk])
+            label = "UI-Info bearbeiten"
+        else:
+            params = urlencode(
+                {
+                    "domain": self.ui_provenance_domain,
+                    "row_code": obj.code,
+                    "row_label": getattr(obj, "name", None) or getattr(obj, "category", None) or "",
+                    "region": obj.region_id,
+                }
+            )
+            url = f"{reverse('admin:simulator_uiprovenanceoverride_add')}?{params}"
+            label = "UI-Info anlegen"
+        return format_html('<a href="{}">{}</a>', url, label)
+
+    ui_provenance_link.short_description = "UI-Info"
 
 class FormulaVariableInline(admin.TabularInline):
     model = FormulaVariable
@@ -282,8 +763,9 @@ class FormulaAdmin(admin.ModelAdmin):
         self.message_user(request, f"Formula {key} deleted - dependent values will auto-recalculate!")
 
 @admin.register(LandUse)
-class LandUseAdmin(admin.ModelAdmin):
-    list_display = ['code', 'name', 'status_ha', 'target_ha', 'parent', 'quelle']
+class LandUseAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
+    ui_provenance_domain = "landuse"
+    list_display = ['code', 'name', 'status_ha', 'target_ha', 'parent', 'quelle', 'ui_provenance_link']
     list_filter = ['quelle', 'parent']
     search_fields = ['code', 'name']
     ordering = ['code']
@@ -300,6 +782,10 @@ class LandUseAdmin(admin.ModelAdmin):
         ('Data (Editable)', {
             'fields': ('status_ha', 'target_ha', 'user_percent', 'target_locked'),
             'description': 'IMPORTANT: After changing status_ha or target_ha, click SAVE to trigger cascade updates to dependent Renewable records.'
+        }),
+        ('UI-Zusatzinformation', {
+            'fields': ('ui_provenance_link',),
+            'description': 'Benutzerfreundliche Information + Quellen für die Popover. UI-only, ohne Einfluss auf Berechnung oder Formeln.'
         }),
         ('Formulas (Optional)', {
             'fields': ('status_formula_key', 'target_formula_key'),
@@ -348,9 +834,10 @@ class LandUseAdmin(admin.ModelAdmin):
         )
 
 @admin.register(RenewableData)
-class RenewableDataAdmin(admin.ModelAdmin):
+class RenewableDataAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
+    ui_provenance_domain = "renewable"
     # Show all entries with values only for fixed items
-    list_display = ['code', 'name', 'category', 'subcategory', 'unit', 'status_display', 'target_display', 'is_fixed', 'user_editable', 'parent_code']
+    list_display = ['code', 'name', 'category', 'subcategory', 'unit', 'status_display', 'target_display', 'is_fixed', 'user_editable', 'parent_code', 'ui_provenance_link']
     list_filter = ['category', 'subcategory', 'is_fixed', 'user_editable', 'created_at']
     search_fields = ['code', 'name', 'category', 'subcategory']
     ordering = ['code']
@@ -400,24 +887,37 @@ class RenewableDataAdmin(admin.ModelAdmin):
             'fields': ('source', 'notes'),
             'classes': ('collapse',)
         }),
+        ('UI-Zusatzinformation', {
+            'fields': ('ui_provenance_link',),
+            'description': 'Benutzerfreundliche Information + Quellen für die Popover. UI-only, ohne Einfluss auf Berechnung oder Formeln.'
+        }),
     )
     
     def get_readonly_fields(self, request, obj=None):
         """Make value fields readonly for calculated items, editable for fixed items"""
         if not obj:
-            return ['formula']
+            readonly = list(super().get_readonly_fields(request, obj))
+            if 'formula' not in readonly:
+                readonly.append('formula')
+            return readonly
         
-        readonly = ['code', 'created_at', 'updated_at', 'formula']
+        readonly = list(super().get_readonly_fields(request, obj))
+        for field in ['code', 'created_at', 'updated_at', 'formula']:
+            if field not in readonly:
+                readonly.append(field)
         
         if not obj.is_fixed:
-            readonly.extend(['status_value', 'target_value', 'user_input', 'user_editable'])
+            for field in ['status_value', 'target_value', 'user_input', 'user_editable']:
+                if field not in readonly:
+                    readonly.append(field)
         
         return readonly
     
 
 @admin.register(VerbrauchData)
-class VerbrauchDataAdmin(admin.ModelAdmin):
-    list_display = ['code', 'category_display', 'unit', 'status_display', 'ziel_display', 'user_percent_display', 'is_calculated', 'user_editable', 'data_type']
+class VerbrauchDataAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
+    ui_provenance_domain = "verbrauch"
+    list_display = ['code', 'category_display', 'unit', 'status_display', 'ziel_display', 'user_percent_display', 'is_calculated', 'user_editable', 'data_type', 'ui_provenance_link']
     list_filter = [DataTypeFilter, 'is_calculated', 'user_editable', 'unit', 'created_at']
     search_fields = ['code', 'category']
     ordering = ['code']
@@ -441,6 +941,10 @@ class VerbrauchDataAdmin(admin.ModelAdmin):
             'fields': ('is_calculated',),
             'description': 'Whether this value should be calculated via formula. Formulas are managed in the Formula admin page.'
         }),
+        ('UI-Zusatzinformation', {
+            'fields': ('ui_provenance_link',),
+            'description': 'Benutzerfreundliche Information + Quellen für die Popover. UI-only, ohne Einfluss auf Berechnung oder Formeln.'
+        }),
         ('Metadata', {
             'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)
@@ -449,9 +953,11 @@ class VerbrauchDataAdmin(admin.ModelAdmin):
     
     def get_readonly_fields(self, request, obj=None):
         """Make status/ziel readonly for calculated items"""
-        readonly = list(self.readonly_fields)
+        readonly = list(super().get_readonly_fields(request, obj))
         if obj and obj.is_calculated:
-            readonly.extend(['status', 'ziel', 'user_percent'])
+            for field in ['status', 'ziel', 'user_percent']:
+                if field not in readonly:
+                    readonly.append(field)
         return readonly
     
     readonly_fields = ['created_at', 'updated_at']
@@ -566,6 +1072,35 @@ class VerbrauchDataAdmin(admin.ModelAdmin):
         else:
             return "Other"
     data_type.short_description = 'Type'
+
+
+@admin.register(GebaeudewaermeData)
+class GebaeudewaermeDataAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
+    ui_provenance_domain = "gebaeudewaerme"
+    list_display = ["code", "category", "unit", "status", "ziel", "is_calculated", "ui_provenance_link"]
+    list_filter = ["is_calculated", "unit", "created_at"]
+    search_fields = ["code", "category"]
+    ordering = ["code"]
+    readonly_fields = ["created_at", "updated_at"]
+    fieldsets = (
+        ("Identification", {
+            "fields": ("code", "category"),
+        }),
+        ("Data Values", {
+            "fields": ("unit", "status", "ziel", "user_percent"),
+        }),
+        ("Calculation", {
+            "fields": ("formula", "is_calculated", "status_calculated", "ziel_calculated"),
+        }),
+        ("UI-Zusatzinformation", {
+            "fields": ("ui_provenance_link",),
+            "description": "Benutzerfreundliche Information + Quellen für die Popover. UI-only, ohne Einfluss auf Berechnung oder Formeln.",
+        }),
+        ("Metadata", {
+            "fields": ("created_at", "updated_at"),
+            "classes": ("collapse",),
+        }),
+    )
 
 @admin.register(WSData)
 class WSDataAdmin(admin.ModelAdmin):

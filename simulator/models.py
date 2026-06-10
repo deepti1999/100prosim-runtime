@@ -16,6 +16,19 @@ PROVENANCE_ORIGIN_CHOICES = [
     ("internal", "Internal (no Datenmodell counterpart)"),
 ]
 
+UI_PROVENANCE_DOMAIN_CHOICES = [
+    ("landuse", "Flächennutzung"),
+    ("renewable", "Erneuerbare Energien"),
+    ("verbrauch", "Verbrauch"),
+    ("gebaeudewaerme", "Gebäudewärme"),
+]
+
+UI_PROVENANCE_SECTION_CHOICES = [
+    ("general", "Allgemein"),
+    ("status", "Status"),
+    ("ziel", "Ziel"),
+]
+
 
 class Region(models.Model):
     """
@@ -35,6 +48,20 @@ class Region(models.Model):
     code = models.CharField(max_length=16, unique=True)
     display_name = models.CharField(max_length=100)
     active = models.BooleanField(default=True)
+    locale_code = models.CharField(max_length=16, blank=True, default="de-DE")
+    status_year = models.PositiveIntegerField(default=2023)
+    target_year = models.PositiveIntegerField(default=2045)
+    goal_description = models.CharField(
+        max_length=255,
+        blank=True,
+        default="100 % Erneuerbare Energien",
+    )
+    data_source_label = models.CharField(
+        max_length=255,
+        blank=True,
+        default="Anlagenpark Deutschland 2023 [SMARD]",
+    )
+    total_area_ha = models.FloatField(default=35759529.0)
     datenmodell_excel_hash = models.CharField(max_length=64, blank=True, default="")
     installed_pmax_ely_gw = models.FloatField(default=0.0)
     installed_pmax_rv_gw = models.FloatField(default=0.0)
@@ -57,8 +84,8 @@ def get_default_region_pk():
     until after the backfill RunPython, so None is acceptable then.
     """
     try:
-        return Region.objects.get(code="DE").pk
-    except Region.DoesNotExist:
+        return Region.objects.filter(code="DE").values_list("pk", flat=True).first()
+    except Exception:
         return None
 
 # Thread-local storage to prevent infinite cascade loops
@@ -144,6 +171,176 @@ class CategoryDisplayName(models.Model):
                 'bilanz_constant': 'Bilanz Constants',
             }
             return defaults.get(category_code, category_code.title())
+
+
+class UIProvenanceOverride(models.Model):
+    """Shared UI-only documentation/source override for a row.
+
+    This is intentionally separate from the calculation-bearing models:
+    changing these fields must never affect status/ziel logic, formulas,
+    cascades, or worker behavior. Views may overlay this metadata onto the
+    popover UI when present.
+    """
+
+    region = models.ForeignKey(
+        Region,
+        on_delete=models.PROTECT,
+        default=get_default_region_pk,
+        related_name="ui_provenance_overrides",
+    )
+    domain = models.CharField(max_length=32, choices=UI_PROVENANCE_DOMAIN_CHOICES)
+    row_code = models.CharField(max_length=50)
+    row_label = models.CharField(max_length=255, blank=True)
+    general_information = models.TextField(blank=True)
+    status_information = models.TextField(blank=True)
+    ziel_information = models.TextField(blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["domain", "row_code"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["region", "domain", "row_code"],
+                name="ui_provenance_override_region_domain_code_uniq",
+            )
+        ]
+        indexes = [
+            models.Index(fields=["region", "domain", "row_code"]),
+        ]
+        verbose_name = "UI Provenance Override"
+        verbose_name_plural = "UI Provenance Overrides"
+
+    def __str__(self):
+        return f"{self.get_domain_display()} {self.row_code} ({self.region.code})"
+
+    @staticmethod
+    def _normalize_section_text(text: str, prefix: str) -> str:
+        cleaned = (text or "").strip()
+        if not cleaned:
+            return ""
+        if cleaned.lower().startswith(prefix.lower()):
+            return cleaned
+        return f"{prefix} {cleaned}"
+
+    def build_notes_assumption(self) -> str:
+        parts = []
+        general = (self.general_information or "").strip()
+        if general:
+            parts.append(general)
+        status = self._normalize_section_text(self.status_information, "- STATUS-Ansatz:")
+        if status:
+            parts.append(status)
+        ziel = self._normalize_section_text(self.ziel_information, "- ZIEL-Ansatz:")
+        if ziel:
+            parts.append(ziel)
+        return "\n\n".join(parts)
+
+    def build_source_refs(self):
+        refs = []
+        for source in self.sources.order_by("section", "sort_order", "id"):
+            refs.append(
+                {
+                    "section": source.section,
+                    "label": source.label or None,
+                    "description": source.description or None,
+                    "url": source.url or None,
+                }
+            )
+        return refs
+
+    def primary_source_url(self):
+        source = self.sources.exclude(url="").exclude(url__isnull=True).order_by("sort_order", "id").first()
+        return source.url if source else None
+
+
+class UIProvenanceSource(models.Model):
+    override = models.ForeignKey(
+        UIProvenanceOverride,
+        on_delete=models.CASCADE,
+        related_name="sources",
+    )
+    section = models.CharField(max_length=16, choices=UI_PROVENANCE_SECTION_CHOICES, default="general")
+    label = models.CharField(max_length=255, blank=True)
+    description = models.TextField(blank=True)
+    url = models.URLField(blank=True, max_length=500)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["section", "sort_order", "id"]
+        verbose_name = "UI Provenance Source"
+        verbose_name_plural = "UI Provenance Sources"
+
+    def __str__(self):
+        base = self.label or self.description or self.url or "Quelle"
+        return f"{self.get_section_display()}: {base[:80]}"
+
+
+class AdminDataVersion(models.Model):
+    """Named admin-side snapshot of the shared/global model data.
+
+    This is deliberately separate from the calculation-bearing tables. It
+    gives staff a safe restore point before or after admin edits without
+    changing the calculation engine itself.
+    """
+
+    STATUS_DRAFT = "draft"
+    STATUS_APPROVED = "approved"
+    STATUS_ARCHIVED = "archived"
+    STATUS_CHOICES = [
+        (STATUS_DRAFT, "Entwurf"),
+        (STATUS_APPROVED, "Freigegeben"),
+        (STATUS_ARCHIVED, "Archiviert"),
+    ]
+
+    region = models.ForeignKey(
+        Region,
+        on_delete=models.PROTECT,
+        default=get_default_region_pk,
+        related_name="admin_data_versions",
+    )
+    name = models.CharField(max_length=160)
+    note = models.TextField(blank=True)
+    status = models.CharField(max_length=16, choices=STATUS_CHOICES, default=STATUS_DRAFT)
+    is_protected = models.BooleanField(
+        default=False,
+        help_text="Protected versions cannot be deleted accidentally.",
+    )
+    payload = models.JSONField(default=dict, blank=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="admin_data_versions",
+    )
+    captured_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-captured_at", "-updated_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["region", "name"],
+                name="admin_data_version_region_name_uniq",
+            )
+        ]
+        indexes = [
+            models.Index(fields=["region", "status"]),
+            models.Index(fields=["captured_at"]),
+        ]
+        verbose_name = "Admin-Szenario"
+        verbose_name_plural = "Admin-Szenarien"
+        permissions = [
+            ("restore_admin_data_version", "Can restore admin data versions"),
+            ("refresh_admin_data_version", "Can refresh admin data versions"),
+            ("protect_admin_data_version", "Can protect admin data versions"),
+        ]
+
+    def __str__(self):
+        return f"{self.name} ({self.region.code})"
 
 class Formula(models.Model):
     """
@@ -512,6 +709,7 @@ class LandUse(models.Model):
     # Phase A §2.3 provenance (D1: additive, leaves quelle untouched).
     source_url = models.URLField(null=True, blank=True, max_length=500)
     notes_assumption = models.TextField(null=True, blank=True)
+    source_refs = models.JSONField(null=True, blank=True, default=list)
     origin = models.CharField(max_length=16, choices=PROVENANCE_ORIGIN_CHOICES, default="internal")
 
     # Phase B §2.3 region FK — default DE so existing single-region
@@ -759,6 +957,7 @@ class RenewableData(models.Model):
     # Phase A §2.3 provenance (D1: additive, leaves source/notes untouched).
     source_url = models.URLField(null=True, blank=True, max_length=500)
     notes_assumption = models.TextField(null=True, blank=True)
+    source_refs = models.JSONField(null=True, blank=True, default=list)
     origin = models.CharField(max_length=16, choices=PROVENANCE_ORIGIN_CHOICES, default="internal")
 
     # Phase B §2.3 region FK.
@@ -1112,6 +1311,7 @@ class VerbrauchData(models.Model):
     # Phase A §2.3 provenance (D1: additive).
     source_url = models.URLField(null=True, blank=True, max_length=500)
     notes_assumption = models.TextField(null=True, blank=True)
+    source_refs = models.JSONField(null=True, blank=True, default=list)
     origin = models.CharField(max_length=16, choices=PROVENANCE_ORIGIN_CHOICES, default="internal")
 
     # Phase B §2.3 region FK.
@@ -1534,6 +1734,7 @@ class GebaeudewaermeData(models.Model):
     # Phase A §2.3 provenance (D1: additive).
     source_url = models.URLField(null=True, blank=True, max_length=500)
     notes_assumption = models.TextField(null=True, blank=True)
+    source_refs = models.JSONField(null=True, blank=True, default=list)
     origin = models.CharField(max_length=16, choices=PROVENANCE_ORIGIN_CHOICES, default="internal")
 
     # Phase B §2.3 region FK; Phase C (T66) tightens uniqueness to
@@ -1660,7 +1861,7 @@ class ScenarioSnapshot(models.Model):
     """
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name="scenario_snapshots",

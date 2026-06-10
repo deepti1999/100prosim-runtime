@@ -1,0 +1,133 @@
+{% extends 'simulator/base.html' %}
+
+{% block title %}Quelleninformation bearbeiten{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    {% include 'simulator/partials/sidebar_nav.html' with active_section='data_sources' %}
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+        <div>
+          <h1 class="h3 mb-1">Quelleninformation bearbeiten</h1>
+          <p class="text-muted mb-0">
+            {{ domain_label }} · <strong>{{ row_code }}</strong> · {{ row_label }} · {{ region.display_name }}
+          </p>
+        </div>
+        <a href="{{ return_url }}" class="btn btn-outline-secondary">Zurück</a>
+      </div>
+
+      <div class="alert alert-info">
+        Diese Seite ändert nur die Erklärung und Quellenanzeige in der Webapp.
+        Formeln, Werte, Bilanz, Worker und Berechnungslogik werden nicht verändert.
+      </div>
+
+      <form method="post" class="card shadow-sm mb-4">
+        {% csrf_token %}
+        <input type="hidden" name="domain" value="{{ domain }}">
+        <input type="hidden" name="row_code" value="{{ row_code }}">
+        <input type="hidden" name="region_id" value="{{ region.id }}">
+        <input type="hidden" name="return_url" value="{{ return_url }}">
+
+        <div class="card-header bg-light">
+          <strong>Informationstext</strong>
+        </div>
+        <div class="card-body">
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+          {% endif %}
+
+          <div class="form-check form-switch mb-3">
+            {{ form.is_active }}
+            <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+              {{ form.is_active.label }}
+            </label>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="{{ form.general_information.id_for_label }}">
+              {{ form.general_information.label }}
+            </label>
+            {{ form.general_information }}
+            {{ form.general_information.errors }}
+          </div>
+
+          <div class="row">
+            <div class="col-lg-6 mb-3">
+              <label class="form-label" for="{{ form.status_information.id_for_label }}">
+                {{ form.status_information.label }}
+              </label>
+              {{ form.status_information }}
+              {{ form.status_information.errors }}
+            </div>
+            <div class="col-lg-6 mb-3">
+              <label class="form-label" for="{{ form.ziel_information.id_for_label }}">
+                {{ form.ziel_information.label }}
+              </label>
+              {{ form.ziel_information }}
+              {{ form.ziel_information.errors }}
+            </div>
+          </div>
+        </div>
+
+        <div class="card-header bg-light border-top">
+          <strong>Quellen</strong>
+          <span class="text-muted small ms-2">Leere Zeilen werden ignoriert.</span>
+        </div>
+        <div class="card-body">
+          {{ source_formset.management_form }}
+          {% if source_formset.non_form_errors %}
+            <div class="alert alert-danger">{{ source_formset.non_form_errors }}</div>
+          {% endif %}
+
+          {% for source_form in source_formset %}
+            <div class="border rounded p-3 mb-3">
+              <div class="row g-3">
+                <div class="col-md-2">
+                  <label class="form-label">{{ source_form.section.label }}</label>
+                  {{ source_form.section }}
+                  {{ source_form.section.errors }}
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">{{ source_form.label.label }}</label>
+                  {{ source_form.label }}
+                  {{ source_form.label.errors }}
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">{{ source_form.sort_order.label }}</label>
+                  {{ source_form.sort_order }}
+                  {{ source_form.sort_order.errors }}
+                </div>
+                <div class="col-md-5">
+                  <label class="form-label">{{ source_form.url.label }}</label>
+                  {{ source_form.url }}
+                  {{ source_form.url.errors }}
+                </div>
+                <div class="col-12">
+                  <label class="form-label">{{ source_form.description.label }}</label>
+                  {{ source_form.description }}
+                  {{ source_form.description.errors }}
+                </div>
+                <div class="col-12">
+                  <div class="form-check">
+                    {{ source_form.DELETE }}
+                    <label class="form-check-label" for="{{ source_form.DELETE.id_for_label }}">
+                      Diese Quelle löschen
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="card-footer d-flex justify-content-end gap-2">
+          <a href="{{ return_url }}" class="btn btn-outline-secondary">Abbrechen</a>
+          <button type="submit" class="btn btn-primary">Speichern</button>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>
+{% endblock %}

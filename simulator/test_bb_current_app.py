@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from simulator.models import RenewableData
+from simulator.models import LandUse, RenewableData, UIProvenanceOverride, UIProvenanceSource
 
 def _annual_diagram_stub():
     return {
@@ -69,6 +69,23 @@ class BlackBoxCurrentAppTests(TestCase):
             username="bb_current_user",
             password="test-pass-123",
         )
+        LandUse.objects.create(
+            code="LU_0",
+            name="Bodenfläche gesamt",
+            status_ha=35759529.0,
+            target_ha=35759529.0,
+            quelle="D.1.64",
+            source_url="https://example.com/quelle",
+            notes_assumption="Gemäß GENESIS basiert der Ausgangswert auf der amtlichen Flächenstatistik.",
+            source_refs=[
+                {
+                    "code": "9.224",
+                    "description": 'STATISTISCHE ÄMTER DES BUNDES UND DER LÄNDER: "Regionaldatenbank Deutschland"; Online-Angebot GENESIS.',
+                    "url": "https://example.com/quelle",
+                }
+            ],
+            origin="d_xlsx",
+        )
         RenewableData.objects.create(
             owner=cls.user,
             code="9.4.1",
@@ -112,6 +129,88 @@ class BlackBoxCurrentAppTests(TestCase):
         self.assertContains(response, "Benutzerhandbuch")
         self.assertNotContains(response, "WS (365 Tage)")
         self.assertNotContains(response, "Verbrauch (KLIK + Gebäudewärme)")
+
+    def test_landuse_page_shows_excel_reference_code_and_provenance_details(self):
+        response = self.client.get(reverse("simulator:landuse_list"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Gemäß GENESIS basiert der Ausgangswert")
+        self.assertContains(response, "Regionaldatenbank Deutschland")
+        self.assertContains(response, "Quelle öffnen")
+        self.assertNotContains(response, "GENESIS [9.224]")
+        self.assertNotContains(response, "[D.1.64]")
+        self.assertNotContains(response, "d_xlsx")
+
+    def test_landuse_page_prefers_ui_provenance_override_when_present(self):
+        row = LandUse.objects.get(code="LU_0")
+        override = UIProvenanceOverride.objects.create(
+            domain="landuse",
+            row_code=row.code,
+            row_label=row.name,
+            region=row.region,
+            general_information="Klarer Admin-Text fuer die UI.",
+            status_information="Dieser Wert wurde manuell fuer die Benutzeransicht erklaert.",
+            ziel_information="Das Ziel bleibt hier identisch zum Status.",
+        )
+        UIProvenanceSource.objects.create(
+            override=override,
+            section="status",
+            label="Amtliche Statistik",
+            description="Benutzerfreundliche Quellenbeschreibung aus dem Admin.",
+            url="https://example.com/admin-source",
+            sort_order=1,
+        )
+
+        response = self.client.get(reverse("simulator:landuse_list"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Klarer Admin-Text fuer die UI.")
+        self.assertContains(response, "Benutzerfreundliche Quellenbeschreibung aus dem Admin.")
+        self.assertContains(response, "https://example.com/admin-source")
+        self.assertNotContains(response, "Gemäß GENESIS basiert der Ausgangswert")
+
+    def test_landuse_page_shows_override_text_exactly_as_written(self):
+        row = LandUse.objects.get(code="LU_0")
+        override = UIProvenanceOverride.objects.create(
+            domain="landuse",
+            row_code=row.code,
+            row_label=row.name,
+            region=row.region,
+            status_information="Admin-Text mit [9.224] bleibt exakt so stehen.",
+        )
+        UIProvenanceSource.objects.create(
+            override=override,
+            section="status",
+            label="Adminquelle",
+            description="Quelle aus dem Admin.",
+            url="https://example.com/admin-source-exact",
+            sort_order=1,
+        )
+
+        response = self.client.get(reverse("simulator:landuse_list"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Admin-Text mit [9.224] bleibt exakt so stehen.")
+        self.assertNotContains(response, "Gemäß GENESIS basiert der Ausgangswert")
+
+    def test_landuse_page_empty_active_override_suppresses_fallback_provenance(self):
+        row = LandUse.objects.get(code="LU_0")
+        UIProvenanceOverride.objects.create(
+            domain="landuse",
+            row_code=row.code,
+            row_label=row.name,
+            region=row.region,
+            general_information="",
+            status_information="",
+            ziel_information="",
+            is_active=True,
+        )
+
+        response = self.client.get(reverse("simulator:landuse_list"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "Gemäß GENESIS basiert der Ausgangswert")
+        self.assertNotContains(response, "Regionaldatenbank Deutschland")
 
     @patch("simulator.ws_api._build_ws_summary_context")
     def test_ws_page_shows_current_controls_and_annual_flow_link(self, mock_summary):

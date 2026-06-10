@@ -1,28 +1,28 @@
 {
   "import_tool_version": "1.0.0",
-  "import_date": "2026-04-23T20:35:05.256938+00:00",
+  "import_date": "2026-05-19T14:10:00.499837+00:00",
   "files": [
     {
-      "path": "D.xlsx",
-      "file_hash": "sha256:cbda63fc308da24d3e55355d1a10894de93bb0b98bb8503c6bcaff5cdef48f0c",
+      "path": "D.xlsm",
+      "file_hash": "sha256:69fe14a3a4e0c13d96154e1787e4f83008a024209b41fcb05c39ec0045e006c0",
       "sheet_hashes": {
-        "1.": "sha256:a5c382fda58d948541aebf36c4226cf1ba9238923cf817c4ccc306781aff8362",
-        "9.Quellen": "sha256:d2d53a9020430749e882dbdbbb36ddc55bc211e62ffe94ced154ce9c9c0eac1a"
+        "1.": "sha256:c2e18d4298a2549ba31bacd4b8a01333c886861d8cf7bf03976518ac0866ed80",
+        "9.Quellen": "sha256:3877f99f7c147395f1102720bfaf5a583a4522b90e903a45cc939bebb5d2f295"
       },
       "region_code": "DE",
       "rows_imported": 420,
-      "rows_matched_d_xlsx": 178,
-      "rows_matched_derived": 87,
+      "rows_matched_d_xlsx": 179,
+      "rows_matched_derived": 86,
       "rows_unmatched_internal": 155,
-      "rows_changed": 0,
+      "rows_changed": 1,
       "per_model": [
         {
           "model": "LandUse",
           "total": 20,
-          "d_xlsx": 15,
-          "derived": 5,
+          "d_xlsx": 16,
+          "derived": 4,
           "internal": 0,
-          "changed": 0
+          "changed": 1
         },
         {
           "model": "RenewableData",

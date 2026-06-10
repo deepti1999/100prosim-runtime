@@ -14,6 +14,7 @@ from simulator.ws_api import (
     _build_ws_row_cells,
     _build_ws_summary_cells,
 )
+from simulator.ui_provenance_service import load_ui_provenance_override_map, payload_for_row
 
 from .models import CalculationRun, CategoryDisplayName, Formula, RenewableData
 
@@ -31,6 +32,7 @@ def renewable_list(request):
     renewables = list(RenewableData.objects.all())
     latest_run = CalculationRun.objects.first()
     run_id = request.GET.get("run_id")
+    provenance_map = load_ui_provenance_override_map("renewable", renewables)
 
     renewables.sort(key=lambda x: natural_sort_key(x.code))
 
@@ -55,10 +57,13 @@ def renewable_list(request):
 
         display_value = renewable.status_value
         display_target = renewable.target_value
+        provenance = payload_for_row(renewable, "renewable", provenance_map)
 
         item = {
+            'id': renewable.id,
             'code': renewable.code,
             'name': renewable.name,
+            'region_id': renewable.region_id,
             'unit': renewable.unit,
             'hierarchy_level': hierarchy_level,
             'display_value': display_value,
@@ -70,11 +75,14 @@ def renewable_list(request):
             'landuse_source': renewable.landuse_code if hasattr(renewable, 'landuse_code') else None,
             'landuse_code': renewable.landuse_code if hasattr(renewable, 'landuse_code') else None,
             'user_editable': renewable.user_editable,
+            'is_fixed': renewable.is_fixed,
             'user_input_value': renewable.user_input if renewable.user_input is not None else renewable.target_value,
             # §2.3 Phase A provenance fields
-            'source_url': renewable.source_url,
-            'notes_assumption': renewable.notes_assumption,
-            'origin': renewable.origin,
+            'source_url': provenance['source_url'],
+            'notes_assumption': provenance['notes_assumption'],
+            'source_refs': provenance['source_refs'],
+            'origin': provenance['origin'],
+            'provenance_override_active': provenance['provenance_override_active'],
         }
         hierarchical_data.append(item)
 

@@ -1,0 +1,53 @@
+{% load provenance_filters %}
+{% comment %}
+  Clickable row-code provenance trigger.
+
+  This shows the same provenance popover as the Q info icon, but attached to
+  the row code badge so users can click the code itself.
+{% endcomment %}
+<span class="provenance-code-cell">
+{% if provenance_override_active %}
+  {% if source_url or notes_assumption or source_refs %}
+    <button type="button"
+            class="btn btn-link btn-sm p-0 provenance-code-trigger"
+            data-bs-toggle="popover"
+            data-bs-trigger="click"
+            data-bs-html="true"
+            data-bs-placement="right"
+            data-bs-title="Datenquelle (§2.3)"
+            data-bs-content="<div class='small'>{% if notes_assumption %}<div><strong>Information:</strong><br><em>{{ notes_assumption|linebreaksbr }}</em></div>{% endif %}{% if source_refs %}<div class='mt-2'><strong>Quellen:</strong>{% for ref in source_refs %}<div class='mt-2 border-top pt-2'>{% if ref.section == 'status' %}<div class='text-muted small'>Status</div>{% elif ref.section == 'ziel' %}<div class='text-muted small'>Ziel</div>{% endif %}{% if ref.label %}<div><strong>{{ ref.label|escape }}</strong></div>{% endif %}{% if ref.description %}<div>{{ ref.description|escape }}</div>{% endif %}{% if ref.url %}<div class='mt-1'><a href='{{ ref.url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>{% endfor %}</div>{% elif source_url %}<div class='mt-2'><strong>Quelle:</strong> <a href='{{ source_url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>"
+            aria-label="Datenquelle für {{ trigger_label }} anzeigen"
+            title="Klicken für Quellen-Information">
+      <span class="badge {{ badge_class|default:'bg-secondary' }}">{{ trigger_label }}</span>
+    </button>
+  {% else %}
+    <span class="badge {{ badge_class|default:'bg-secondary' }}">{{ trigger_label }}</span>
+  {% endif %}
+{% else %}
+  {% if source_url or notes_assumption or source_refs or origin == 'd_xlsx' or origin == 'derived' %}
+    <button type="button"
+            class="btn btn-link btn-sm p-0 provenance-code-trigger"
+            data-bs-toggle="popover"
+            data-bs-trigger="click"
+            data-bs-html="true"
+            data-bs-placement="right"
+            data-bs-title="Datenquelle (§2.3)"
+            data-bs-content="<div class='small'>{% if notes_assumption %}<div><strong>Information:</strong><br><em>{{ notes_assumption|render_provenance_note:source_refs }}</em></div>{% endif %}{% if source_refs %}<div class='mt-2'><strong>Quellen:</strong>{% for ref in source_refs %}<div class='mt-2 border-top pt-2'>{% if ref.section == 'status' %}<div class='text-muted small'>Status</div>{% elif ref.section == 'ziel' %}<div class='text-muted small'>Ziel</div>{% endif %}{% if ref.label %}<div><strong>{{ ref.label|escape }}</strong></div>{% endif %}{% if ref.description %}<div>{{ ref.description|escape }}</div>{% endif %}{% if ref.url %}<div class='mt-1'><a href='{{ ref.url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>{% endfor %}</div>{% elif source_url %}<div class='mt-2'><strong>Quelle:</strong> <a href='{{ source_url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>"
+            aria-label="Datenquelle für {{ trigger_label }} anzeigen"
+            title="Klicken für Quellen-Information">
+      <span class="badge {{ badge_class|default:'bg-secondary' }}">{{ trigger_label }}</span>
+    </button>
+  {% else %}
+    <span class="badge {{ badge_class|default:'bg-secondary' }}">{{ trigger_label }}</span>
+  {% endif %}
+{% endif %}
+
+{% if perms.simulator.change_uiprovenanceoverride and provenance_domain and row_code and region_id %}
+  <a class="provenance-edit-link"
+     href="{% url 'simulator:ui_provenance_edit' %}?domain={{ provenance_domain|urlencode }}&row_code={{ row_code|urlencode }}&row_label={{ row_label|default:''|urlencode }}&region_id={{ region_id }}&return_url={{ request.path|urlencode }}"
+     title="Quelleninformation bearbeiten"
+     aria-label="Quelleninformation für {{ trigger_label }} bearbeiten">
+    <i class="fas fa-pen-to-square me-1"></i><span class="d-none d-xl-inline">Bearbeiten</span>
+  </a>
+{% endif %}
+</span>

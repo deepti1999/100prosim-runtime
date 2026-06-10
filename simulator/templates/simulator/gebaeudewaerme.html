@@ -11,6 +11,8 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-4">
     <h3>Gebäudewärme – Datenübersicht</h3>
     <p class="text-muted mb-4">Nachgebildet nach Excel-Tabellenblatt S.5 "Gebäudewärme"</p>
+    {% include "simulator/_provenance_editor_hint.html" %}
+    {% include "simulator/_workspace_scenario_toolbar.html" %}
 
     <div class="row text-center mb-4">
         <div class="col-md-3"><h6>Datensätze gesamt</h6><p>{{ data|length }}</p></div>
@@ -30,13 +32,14 @@
                 <th style="width: 12%;">Formel</th>
                 <th style="width: 8%;">Benutzer %</th>
                 <th style="width: 8%;">Aktionen</th>
-                <th style="width: 30px;" title="Datenquelle (§2.3)">Q</th>
             </tr>
         </thead>
         <tbody>
             {% for row in data %}
             <tr>
-                <td class="fw-bold">{{ row.code }}</td>
+                <td class="fw-bold">
+                    {% include "simulator/_provenance_code.html" with trigger_label=row.code badge_class="bg-secondary" source_url=row.source_url notes_assumption=row.notes_assumption source_refs=row.source_refs origin=row.origin provenance_override_active=row.provenance_override_active provenance_domain="gebaeudewaerme" row_code=row.code row_label=row.category region_id=row.region_id %}
+                </td>
                 <td style="padding-left: {% if '.' in row.code %}30px{% else %}10px{% endif %};">
                     <span class="{% if '.' in row.code %}text-muted{% else %}fw-bold{% endif %}">
                         {{ row.category }}
@@ -64,16 +67,23 @@
                         <span class="text-muted">-</span>
                     {% endif %}
                 </td>
+                {% if can_edit_workspace_values %}
                 <td contenteditable="true" class="bg-light text-center" data-field="user_percent" data-code="{{ row.code }}">
                     {% if row.user_percent %}{{ row.user_percent|floatformat:1 }}{% else %}% eingeben ...{% endif %}
                 </td>
+                {% else %}
+                <td class="text-center text-muted" title="Nur mit Bearbeitungsrolle änderbar">
+                    {% if row.user_percent %}{{ row.user_percent|floatformat:1 }}{% else %}-{% endif %}
+                </td>
+                {% endif %}
                 <td class="text-center">
+                    {% if can_edit_workspace_values %}
                     <button class="btn btn-sm btn-outline-primary" onclick="editRow('{{ row.code }}')">
                         <i class="fas fa-edit"></i>
                     </button>
-                </td>
-                <td class="text-center align-middle">
-                    {% include "simulator/_provenance_icon.html" with source_url=row.source_url notes_assumption=row.notes_assumption origin=row.origin %}
+                    {% else %}
+                    <span class="text-muted">-</span>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

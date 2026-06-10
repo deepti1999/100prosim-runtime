@@ -1,0 +1,36 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div id="content-main">
+  <h1>Admin-Szenario wiederherstellen</h1>
+  <p>
+    Diese Aktion ersetzt den aktuellen globalen Admin-Datenstand der Region
+    <strong>{{ version.region }}</strong> durch dieses gespeicherte Admin-Szenario:
+  </p>
+  <p>
+    <strong>{{ version.name }}</strong><br>
+    Status: {{ version.get_status_display }}<br>
+    Größe: {{ payload_size }} MB
+  </p>
+
+  <h2>Enthaltene Daten</h2>
+  <ul>
+    {% for key, value in payload_counts.items %}
+      <li>{{ key }}: {{ value }}</li>
+    {% empty %}
+      <li>Keine Zusammenfassung vorhanden.</li>
+    {% endfor %}
+  </ul>
+
+  <p style="color:#8a4b00;">
+    Wichtig: Diese Aktion ist für Rollback gedacht. Wenn Sie den aktuellen
+    Stand behalten möchten, speichern Sie vorher ein neues Admin-Szenario.
+  </p>
+
+  <form method="post">
+    {% csrf_token %}
+    <input type="submit" class="default" value="Ja, dieses Admin-Szenario wiederherstellen">
+    <a href="{% url 'admin:simulator_admindataversion_changelist' %}" class="button cancel-link">Abbrechen</a>
+  </form>
+</div>
+{% endblock %}

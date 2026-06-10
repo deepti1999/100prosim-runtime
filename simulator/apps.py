@@ -10,3 +10,5 @@ class SimulatorConfig(AppConfig):
         if not os.environ.get('DISABLE_SIGNALS'):
             import simulator.signals  # This will register the signal handlers
             import simulator.workspace_signals  # ensure user workspace clone on login
+        from simulator.admin_roles import connect_admin_role_groups
+        connect_admin_role_groups(self)

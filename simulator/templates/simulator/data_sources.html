@@ -1,0 +1,139 @@
+{% extends 'simulator/base.html' %}
+{% load provenance_filters %}
+
+{% block title %}Datenquellen – Übersicht{% endblock %}
+
+{% block content %}
+<style>
+    .data-source-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .data-source-table tbody tr {
+        border-top: 1px solid #dee2e6;
+    }
+    .data-source-table tbody tr:nth-child(even) {
+        background: #f8fafc;
+    }
+    .data-source-table tbody td {
+        vertical-align: top !important;
+        padding-top: 1.1rem;
+        padding-bottom: 1.1rem;
+    }
+    .data-source-code {
+        white-space: nowrap;
+    }
+    .data-source-label {
+        line-height: 1.35;
+    }
+    .data-source-info,
+    .data-source-refs {
+        border-left: 3px solid #e9ecef;
+        padding-left: 1rem !important;
+    }
+    .data-source-ref-card {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: .5rem;
+        padding: .75rem;
+        margin-bottom: .75rem;
+    }
+    .data-source-ref-card:last-child {
+        margin-bottom: 0;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        {% include 'simulator/partials/sidebar_nav.html' with active_section='data_sources' %}
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <div>
+                    <h1 class="h2">Datenquellen – Übersicht</h1>
+                    <p class="text-muted mb-0">
+                        Diese Seite ist die Webapp-Version des Excel-Datenblatts: alle verfügbaren Informationen,
+                        Status-/Ziel-Erklärungen und Quellenlinks an einem Ort.
+                    </p>
+                </div>
+            </div>
+
+            {% for section in sections %}
+            {% if section.domain == "renewable" %}
+            <div class="mt-5 mb-3 border-bottom pb-2">
+                <h2 class="h4 mb-1">Renewable Energy</h2>
+                <p class="text-muted mb-0">Quellen und Erklärungen für die Erneuerbare-Energien-Daten.</p>
+            </div>
+            {% endif %}
+            <section class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">{{ section.title }}</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if section.items %}
+                    <div class="table-responsive">
+                        <table class="table table-hover data-source-table mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 110px;">Code</th>
+                                    <th style="width: 260px;">Zeile</th>
+                                    <th>Information</th>
+                                    <th style="width: 34%;">Quellen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in section.items %}
+                                <tr id="{{ section.domain }}-{{ item.code|slugify }}">
+                                    <td class="data-source-code">
+                                        <span class="badge bg-secondary">{{ item.code }}</span>
+                                    </td>
+                                    <td class="data-source-label">
+                                        <strong>{{ item.label }}</strong>
+                                    </td>
+                                    <td class="small data-source-info">
+                                        {% if item.notes_assumption %}
+                                            <div>{{ item.notes_assumption|render_provenance_note:item.source_refs }}</div>
+                                        {% else %}
+                                            <span class="text-muted">Keine zusätzliche Information hinterlegt.</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="small data-source-refs">
+                                        {% if item.source_refs %}
+                                            {% for ref in item.source_refs %}
+                                                <div class="data-source-ref-card">
+                                                    {% if ref.section == 'status' %}
+                                                        <div class="text-muted">Status</div>
+                                                    {% elif ref.section == 'ziel' %}
+                                                        <div class="text-muted">Ziel</div>
+                                                    {% endif %}
+                                                    {% if ref.label %}<div><strong>{{ ref.label }}</strong></div>{% endif %}
+                                                    {% if ref.description %}<div>{{ ref.description }}</div>{% endif %}
+                                                    {% if ref.url %}
+                                                        <div class="mt-1">
+                                                            <a href="{{ ref.url }}" target="_blank" rel="noopener noreferrer">Quelle öffnen</a>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        {% elif item.source_url %}
+                                            <a href="{{ item.source_url }}" target="_blank" rel="noopener noreferrer">Quelle öffnen</a>
+                                        {% else %}
+                                            <span class="text-muted">Kein externer Link hinterlegt.</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="p-4 text-muted">
+                        Für diesen Bereich sind aktuell keine Nutzer-Informationen oder Quellen hinterlegt.
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+            {% endfor %}
+        </main>
+    </div>
+</div>
+{% endblock %}

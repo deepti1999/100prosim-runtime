@@ -9,7 +9,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-from simulator.models import BalanceJob, CalculationRun
+from simulator.display_state import mark_display_state_changed
+from simulator.models import BalanceJob
 from simulator.recalc_service import recalc_all_renewables_full, run_full_recalc
 from simulator.ws_queue_api import _queue_or_reuse_balance_job
 
@@ -24,10 +25,13 @@ def run_full_recalc_view(request):
     Intended for the staged “calculate once, read many” flow.
     """
     summary = run_full_recalc()
-    run = CalculationRun.objects.create(
+    summary_for_run = dict(summary)
+    summary_for_run.pop("duration_ms", None)
+    run = mark_display_state_changed(
+        scope="full_recalc",
         duration_ms=summary["duration_ms"],
-        summary=summary,
         triggered_by=request.user.username,
+        **summary_for_run,
     )
     request.session["latest_run_id"] = run.id
     return JsonResponse(
@@ -59,10 +63,11 @@ def run_renewables_recalc_view(request):
                 "renewables_updated": renewables_updated,
                 "scope": "renewables_only",
             }
-            run = CalculationRun.objects.create(
+            run = mark_display_state_changed(
+                scope="renewables_only",
                 duration_ms=duration_ms,
-                summary=summary,
                 triggered_by=request.user.username,
+                renewables_updated=renewables_updated,
             )
             return JsonResponse(
                 {
@@ -187,6 +192,13 @@ def unified_recalc_view(request):
             energy_tolerance=energy_tolerance,
             max_balance_cycles=max_balance_cycles
         )
+        run = mark_display_state_changed(
+            scope="unified_recalc",
+            duration_ms=stats.get("duration_ms", 0),
+            triggered_by=getattr(request.user, "username", "unknown"),
+            balance_after=balance_after,
+            is_balanced=stats.get("is_balanced", False),
+        )
         
         recalc = stats.get('recalc', {})
         balance = stats.get('balance', {})
@@ -211,6 +223,7 @@ def unified_recalc_view(request):
             'ws_updated': recalc.get('ws_updated', 0),
             'output_renewables': recalc.get('output_renewables', 0),
             'duration_ms': stats.get('duration_ms', 0),
+            'run_id': run.id,
             'is_balanced': stats.get('is_balanced', False),
             'balance': balance,
         })
@@ -241,11 +254,18 @@ def recalc_verbrauch_view(request):
         updated_codes = recalc_all_verbrauch()
         
         duration_ms = int((time.time() - start) * 1000)
+        run = mark_display_state_changed(
+            scope="verbrauch_recalc",
+            duration_ms=duration_ms,
+            triggered_by=getattr(request.user, "username", "unknown"),
+            updated_count=len(updated_codes),
+        )
         
         return JsonResponse({
             'status': 'ok',
             'updated': len(updated_codes),
             'duration_ms': duration_ms,
+            'run_id': run.id,
         })
     except Exception as e:
         return JsonResponse({

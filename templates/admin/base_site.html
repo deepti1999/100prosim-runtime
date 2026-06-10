@@ -1,0 +1,62 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | {{ site_title|default:"100ProSim Verwaltung" }}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  .prosim-admin-shortcuts {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    background: #eef7ef;
+    border-bottom: 1px solid #b9d6be;
+  }
+  .prosim-admin-shortcuts strong {
+    color: #245734;
+    margin-right: 4px;
+  }
+  .prosim-admin-shortcuts a {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 7px 12px;
+    background: #2f6f4e;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .prosim-admin-shortcuts a.secondary {
+    background: #1f5f8b;
+  }
+  .prosim-admin-shortcuts span {
+    color: #405246;
+  }
+</style>
+{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+  <a href="{% url 'admin:index' %}">100ProSim Verwaltung</a>
+</div>
+{% endblock %}
+
+{% block nav-global %}
+{% if perms.simulator.add_admindataversion or perms.simulator.view_admindataversion or perms.auth.change_user or user.is_superuser %}
+  <div class="prosim-admin-shortcuts">
+    <strong>Admin-Szenarien:</strong>
+    {% if perms.simulator.add_admindataversion %}
+      <a href="{% url 'simulator:admin_version_create' %}">Aktuellen Admin-Stand speichern</a>
+    {% endif %}
+    {% if perms.simulator.view_admindataversion %}
+      <a class="secondary" href="{% url 'simulator:admin_versions_dashboard' %}">Gespeicherte Szenarien öffnen</a>
+    {% endif %}
+    {% if perms.auth.change_user or user.is_superuser %}
+      <a class="secondary" href="{% url 'simulator:admin_roles_dashboard' %}">Rollen & Zugänge</a>
+      <a class="secondary" href="{% url 'simulator:admin_role_assign' %}">Rolle zuweisen</a>
+    {% endif %}
+    <span>Vor größeren Änderungen speichern, bei Fehlern später wiederherstellen.</span>
+  </div>
+{% endif %}
+{% endblock %}

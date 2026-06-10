@@ -1,0 +1,26 @@
+{% extends "simulator/admin_versions/base.html" %}
+
+{% block title %}Admin-Szenario überschreiben{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h2>{{ version.name }}</h2>
+  <p>
+    Diese Aktion ersetzt das gespeicherte Admin-Szenario mit dem aktuellen
+    Admin-Datenstand.
+  </p>
+
+  <div class="danger-box">
+    Nutzen Sie das nur für Entwürfe oder Tests. Für wichtige Stände ist es
+    besser, ein neues Admin-Szenario zu speichern.
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="actions">
+      <button type="submit" class="warning">Aktuellen Stand in diesem Admin-Szenario speichern</button>
+      <a class="button light" href="{% url 'simulator:admin_versions_dashboard' %}">Abbrechen</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

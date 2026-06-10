@@ -53,6 +53,8 @@ services:
           echo "[init] loading seed fixture"
           python manage.py loaddata seed/sqlite_seed.json
         fi
+        echo "[init] collecting static files"
+        python manage.py collectstatic --noinput --verbosity 0
         echo "[init] done"
 
   web:

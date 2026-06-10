@@ -1,0 +1,61 @@
+{% extends "simulator/admin_versions/base.html" %}
+
+{% block title %}Rollen & Zugänge{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h2>Was bedeutet das?</h2>
+  <p>
+    Jeder Admin-Nutzer kann einer Rolle zugeordnet werden. Die Rolle entscheidet,
+    ob diese Person nur schauen, bearbeiten, Szenarien wiederherstellen oder
+    alles verwalten darf.
+  </p>
+  <p>
+    Wichtig: Ein Nutzer muss zusätzlich <strong>Mitarbeiter-Status</strong> haben,
+    damit er die Django-Verwaltung öffnen kann.
+  </p>
+  <div class="actions" style="margin-top:18px;">
+    <a class="button secondary" href="{{ assign_url }}">Rolle zuweisen</a>
+    <a class="button secondary" href="{{ users_url }}">Benutzer öffnen</a>
+    <a class="button light" href="{{ groups_url }}">Gruppen/Rollen öffnen</a>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Empfohlene Rollen</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Rolle</th>
+        <th>Was darf diese Rolle?</th>
+        <th>Für wen?</th>
+        <th>Gruppenname im Admin</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for role in roles %}
+        <tr>
+          <td><strong>{{ role.label }}</strong></td>
+          <td>{{ role.summary }}</td>
+          <td>{{ role.best_for }}</td>
+          <td><span class="badge">{{ role.name }}</span></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="card">
+  <h2>So gibst du jemandem eine Rolle</h2>
+  <ol>
+    <li>Auf <strong>Rolle zuweisen</strong> klicken.</li>
+    <li>Person auswählen.</li>
+    <li>Passende Rolle auswählen.</li>
+    <li>Speichern.</li>
+  </ol>
+  <p>
+    Die Seite setzt den Mitarbeiter-Status automatisch, damit die Person die
+    Django-Verwaltung öffnen kann.
+  </p>
+</section>
+{% endblock %}

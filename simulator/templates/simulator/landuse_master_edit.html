@@ -1,0 +1,147 @@
+{% extends 'simulator/base.html' %}
+
+{% block title %}Flächennutzung bearbeiten{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="container-fluid">
+    <div class="row">
+        {% include 'simulator/partials/sidebar_nav.html' with active_section='landuse' %}
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <div>
+                    <h1 class="h2">Flächennutzung bearbeiten</h1>
+                    <p class="text-muted mb-0">
+                        {{ landuse.code }} · {{ landuse.name }} · {{ landuse.region.display_name|default:"Deutschland" }}
+                    </p>
+                </div>
+                <a class="btn btn-outline-secondary" href="{{ return_url }}">Zurück</a>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>Wichtig:</strong>
+                Diese Seite ändert die gemeinsamen Flächennutzungs-Stammdaten.
+                Status/Ziel-Werte und Formeln können Berechnungen auf anderen Seiten beeinflussen.
+                Normale Nutzer ohne Bearbeitungsrolle können diese Seite nicht öffnen.
+            </div>
+
+            <form method="post" class="mb-5">
+                {% csrf_token %}
+                <input type="hidden" name="return_url" value="{{ return_url }}">
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <strong>1. Werte</strong>
+                        <span class="text-muted ms-2">Diese Zahlen erscheinen in der Flächennutzungs-Tabelle.</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="status_ha">Status (ha)</label>
+                                <input class="form-control" id="status_ha" name="status_ha" type="text"
+                                       value="{% if landuse.status_ha is not None %}{{ landuse.status_ha|floatformat:0 }}{% endif %}">
+                                <div class="form-text">Aktueller Flächenwert, zum Beispiel 3380079.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="target_ha">Ziel (ha)</label>
+                                <input class="form-control" id="target_ha" name="target_ha" type="text"
+                                       value="{% if landuse.target_ha is not None %}{{ landuse.target_ha|floatformat:0 }}{% endif %}">
+                                <div class="form-text">Ziel-Flächenwert, zum Beispiel 3645799.</div>
+                            </div>
+                        </div>
+                        <div class="form-check form-switch mt-3">
+                            <input class="form-check-input" type="checkbox" role="switch" id="target_locked"
+                                   name="target_locked" {% if landuse.target_locked %}checked{% endif %}>
+                            <label class="form-check-label" for="target_locked">
+                                Zielwert schützen
+                            </label>
+                            <div class="form-text">
+                                Wenn aktiv, bleibt der manuelle Zielwert eher erhalten und wird nicht durch automatische Eltern-Kaskaden überschrieben.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <strong>2. Formel-Schlüssel</strong>
+                        <span class="text-muted ms-2">Diese Schlüssel verbinden die Zeile mit Formeln in der Datenbank.</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="status_formula_key">Status-Formel-Schlüssel</label>
+                                <input class="form-control" id="status_formula_key" name="status_formula_key" type="text"
+                                       value="{{ landuse.status_formula_key|default:'' }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="target_formula_key">Ziel-Formel-Schlüssel</label>
+                                <input class="form-control" id="target_formula_key" name="target_formula_key" type="text"
+                                       value="{{ landuse.target_formula_key|default:'' }}">
+                            </div>
+                        </div>
+                        <div class="form-text mt-2">
+                            Leer lassen bedeutet: diese Zeile nutzt keinen eigenen Formel-Schlüssel.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <strong>3. Formeltext bearbeiten</strong>
+                        <span class="text-muted ms-2">Nur für Personen mit Formel-Berechtigung.</span>
+                    </div>
+                    <div class="card-body">
+                        {% if can_edit_formula_master_data %}
+                            <div class="row g-4">
+                                <div class="col-lg-6">
+                                    <h6>Status-Formel</h6>
+                                    <label class="form-label" for="status_formula_expression">Formel-Ausdruck</label>
+                                    <textarea class="form-control font-monospace" id="status_formula_expression"
+                                              name="status_formula_expression" rows="5">{{ status_formula.expression|default:'' }}</textarea>
+                                    <label class="form-label mt-3" for="status_formula_description">Beschreibung</label>
+                                    <textarea class="form-control" id="status_formula_description"
+                                              name="status_formula_description" rows="3">{{ status_formula.description|default:'' }}</textarea>
+                                    <div class="form-check form-switch mt-3">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                               id="status_formula_is_active" name="status_formula_is_active"
+                                               {% if not status_formula or status_formula.is_active %}checked{% endif %}>
+                                        <label class="form-check-label" for="status_formula_is_active">Status-Formel aktiv</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h6>Ziel-Formel</h6>
+                                    <label class="form-label" for="target_formula_expression">Formel-Ausdruck</label>
+                                    <textarea class="form-control font-monospace" id="target_formula_expression"
+                                              name="target_formula_expression" rows="5">{{ target_formula.expression|default:'' }}</textarea>
+                                    <label class="form-label mt-3" for="target_formula_description">Beschreibung</label>
+                                    <textarea class="form-control" id="target_formula_description"
+                                              name="target_formula_description" rows="3">{{ target_formula.description|default:'' }}</textarea>
+                                    <div class="form-check form-switch mt-3">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                               id="target_formula_is_active" name="target_formula_is_active"
+                                               {% if not target_formula or target_formula.is_active %}checked{% endif %}>
+                                        <label class="form-check-label" for="target_formula_is_active">Ziel-Formel aktiv</label>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-secondary mb-0">
+                                Diese Rolle darf Flächennutzungs-Werte bearbeiten, aber keine Formel-Ausdrücke ändern.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>Speichern
+                    </button>
+                    <a class="btn btn-outline-secondary" href="{{ return_url }}">Abbrechen</a>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>
+{% endblock %}

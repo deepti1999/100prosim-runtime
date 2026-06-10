@@ -54,6 +54,7 @@ def _clone_landuse_for_user(LandUse, user, region):
                 # immediately when a fresh user gets a workspace.
                 source_url=row.source_url,
                 notes_assumption=row.notes_assumption,
+                source_refs=row.source_refs,
                 origin=row.origin,
             )
         )

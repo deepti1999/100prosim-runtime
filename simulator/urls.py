@@ -50,8 +50,20 @@ from .views_recalc import (
 )
 from .views import gebaeudewaerme_view, update_user_percent_by_code
 from .views_region import set_active_region
+from .views_landuse_master import landuse_master_edit
+from .views_renewable_master import renewable_master_edit
+from .views_ui_provenance import ui_provenance_edit
+from .admin_role_views import admin_role_assign, admin_roles_dashboard
+from .admin_version_views import (
+    admin_version_create,
+    admin_version_delete,
+    admin_version_refresh,
+    admin_version_restore,
+    admin_versions_dashboard,
+)
 from .page_historie import historie_view
 from .page_modifikationsdetails import modifikationsdetails_view
+from .page_data_sources import data_sources_view
 from .views_ws import (
     ws_api_apply_balance,
     ws_api_apply_balance_wind,
@@ -73,6 +85,13 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('register/', register_view, name='register'),
     path('logout/', logout_view, name='logout'),
+    path('admin-versionen/', admin_versions_dashboard, name='admin_versions_dashboard'),
+    path('admin-versionen/neu/', admin_version_create, name='admin_version_create'),
+    path('admin-versionen/<int:version_id>/wiederherstellen/', admin_version_restore, name='admin_version_restore'),
+    path('admin-versionen/<int:version_id>/neu-erfassen/', admin_version_refresh, name='admin_version_refresh'),
+    path('admin-versionen/<int:version_id>/loeschen/', admin_version_delete, name='admin_version_delete'),
+    path('admin-rollen/', admin_roles_dashboard, name='admin_roles_dashboard'),
+    path('admin-rollen/zuweisen/', admin_role_assign, name='admin_role_assign'),
     
     # Simulation Pages (Protected)
     path('simulation/', main_simulation, name='main_simulation'),
@@ -81,10 +100,14 @@ urlpatterns = [
     path('historie/', historie_view, name='historie'),
     # Phase 6-B (T48-T52): Variantenvergleich-Charts
     path('modifikationsdetails/', modifikationsdetails_view, name='modifikationsdetails'),
+    path('datenquellen/', data_sources_view, name='data_sources'),
+    path('quelleninfo/bearbeiten/', ui_provenance_edit, name='ui_provenance_edit'),
     path('landuse/', landuse_list, name='landuse_list'),
+    path('landuse/<int:pk>/stammdaten-bearbeiten/', landuse_master_edit, name='landuse_master_edit'),
     path('landuse/<int:pk>/update_percent/', update_landuse_percent, name='update_landuse_percent'),
     path('landuse/<int:pk>/', landuse_detail, name='landuse_detail'),
     path('renewable/', renewable_list, name='renewable_list'),
+    path('renewable/<int:pk>/stammdaten-bearbeiten/', renewable_master_edit, name='renewable_master_edit'),
     path('verbrauch/', verbrauch_view, name='verbrauch'),
     # §2.3 Phase A (T64): expose the existing GebaeudewaermeData view that was
     # previously dead code so the provenance popover ships on all 4 parameter

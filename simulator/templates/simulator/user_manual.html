@@ -78,14 +78,14 @@
 
             <h3>Was diese Webanwendung leistet</h3>
             <div class="step-item">
-                <strong>100ProSim ist ein Simulationswerkzeug zur Planung, wie 100 % Erneuerbare Energien bis 2045 erreicht werden können.</strong>
+                <strong>100ProSim ist ein Simulationswerkzeug zur Planung, wie {{ active_goal_description|default:"100 % Erneuerbare Energien" }} bis {{ active_target_year|stringformat:"d"|default:"2045" }} erreicht werden können.</strong>
             </div>
 
             <p>Diese Webanwendung hilft Ihnen, das Szenario der Energiewende strukturiert zu untersuchen und zu verstehen:</p>
             <ul>
-                <li><strong>Status-Jahr:</strong> bildet die Daten des Jahres 2023 zu Erneuerbarer Erzeugung und Energieverbrauch ab.</li>
-                <li><strong>Ziel-Jahr:</strong> bildet das geplante Szenario für 2045 ab.</li>
-                <li><strong>Hauptziel:</strong> prüfen, wie der Verbrauch 2045 vollständig durch Erneuerbare Energien gedeckt werden kann (100 % Erneuerbare Erzeugung).</li>
+                <li><strong>Status-Jahr:</strong> bildet die Daten des Jahres {{ active_status_year|stringformat:"d"|default:"2023" }} zu Erneuerbarer Erzeugung und Energieverbrauch ab.</li>
+                <li><strong>Ziel-Jahr:</strong> bildet das geplante Szenario für {{ active_target_year|stringformat:"d"|default:"2045" }} ab.</li>
+                <li><strong>Hauptziel:</strong> prüfen, wie der Verbrauch {{ active_target_year|stringformat:"d"|default:"2045" }} vollständig durch Erneuerbare Energien gedeckt werden kann ({{ active_goal_description|default:"100 % Erneuerbare Erzeugung" }}).</li>
                 <li><strong>Vier Verbrauchssektoren:</strong> der Verbrauch wird über die in der App dargestellten Hauptsektoren verwaltet und ausgewertet.</li>
                 <li><strong>Benutzersteuerung:</strong> Sie können Flächennutzung und Verbrauchsannahmen bearbeiten, Neuberechnungen ausführen, den Szenario-Abgleich (Balancing) anwenden und Ergebnisse vergleichen.</li>
                 <li><strong>Entscheidungsunterstützung:</strong> Die Seiten Erneuerbare Energien, Szenario-Abgleich (WS 365 Tage), Bilanz und Cockpit zeigen, ob das System balanciert ist.</li>

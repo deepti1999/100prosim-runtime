@@ -1,10 +1,11 @@
-"""Phase A §2.3 — import provenance (source URL + assumption text + origin)
+"""Phase A §2.3 — import provenance (source URL + cited-source refs +
+assumption text + origin)
 from D.xlsx into the 4 parameter-bearing models.
 
 Strict invariants enforced (per CLAUDE.md + DATA_MODEL_IMPORT_AUDIT.md):
   - SR-005: per-user workspace rows (owner != NULL) NEVER touched.
-  - SR-007: no `code` field rename; ONLY source_url, notes_assumption,
-            origin are written.
+  - SR-007: no `code` field rename; ONLY source_url, source_refs,
+            notes_assumption, origin are written.
   - HARD: no value column (status_ha, target_ha, status, ziel, status_value,
           target_value) is touched. Phase A is provenance-only.
   - D3: fail loud on missing file, non-xlsx, or unrecognised sheet schema.
@@ -49,12 +50,17 @@ REQUIRED_SHEETS = ("1.", "9.Quellen")
 TYPE_COL = 67
 LABEL_COL = 5
 VALUE_COL_W = 23
+ROW_SOURCE_CODE_COL = 16
+ROW_SOURCE_LABEL_COL = 17
 
 PARAMETER_TYPE = "p"
 ASSUMPTION_TYPES = ("e", "s", "z", "h")  # erläuterung / status-Ansatz / ziel-Ansatz / herleitung
 
-# Source URL refs inside assumption text look like [9.123] or [9.123.4]
-SOURCE_REF_RE = re.compile(r"\[(9\.\d+(?:\.\d+)?)\]")
+# Explicit external-source refs inside assumption text look like [9.123],
+# [9.85, S. 21], [9.182 Seite 9], etc. Bare refs like [122] are usually
+# D-sheet internal cross-references and must NOT be treated as 9.Quellen refs.
+SOURCE_REF_RE = re.compile(r"\[(?:[^\]]*?)(9\.\d+(?:\.\d+)?)(?:[^\]]*?)\]")
+QUELLE_D_ROW_RE = re.compile(r"D\.1\.(\d+)")
 
 
 class _ModelPlan:
@@ -142,9 +148,39 @@ def _normalize_label(s: Optional[str]) -> str:
     return s.strip()
 
 
+def _section_from_note_line(text: str, current_section: Optional[str]) -> Optional[str]:
+    norm = (text or "").strip().lower()
+    if norm.startswith("- status-ansatz:"):
+        return "status"
+    if norm.startswith("- ziel-ansatz:"):
+        return "ziel"
+    return current_section
+
+
+def _normalize_source_ref_code(raw_ref: object, d_prefixed_ref: object) -> Optional[str]:
+    """Return canonical 9.xxx code from a 9.Quellen row.
+
+    Some workbook rows cache the col-2 formula oddly under data_only mode.
+    Col-1's D-prefixed code is more stable, so use it as a fallback.
+    """
+    if isinstance(raw_ref, str):
+        raw_ref = raw_ref.strip()
+        if re.fullmatch(r"9\.\d+(?:\.\d+)?", raw_ref):
+            return raw_ref
+
+    if isinstance(d_prefixed_ref, str):
+        d_prefixed_ref = d_prefixed_ref.strip()
+        m = re.fullmatch(r"D\.(9\.\d+(?:\.\d+)?)", d_prefixed_ref)
+        if m:
+            return m.group(1)
+
+    return None
+
+
 class Command(BaseCommand):
     help = (
-        "Phase A §2.3: import provenance (source URL + assumption text + origin) "
+        "Phase A §2.3: import provenance (source URL + cited-source refs + "
+        "assumption text + origin) "
         "from D.xlsx into LandUse / RenewableData / VerbrauchData / GebaeudewaermeData."
     )
 
@@ -223,7 +259,12 @@ class Command(BaseCommand):
                     f"Got sheets: {wb.sheetnames}"
                 )
 
-        sources = self._extract_sources(wb["9.Quellen"])
+        source_catalog = self._extract_source_catalog(wb["9.Quellen"])
+        sources = {
+            ref_code: entry["url"]
+            for ref_code, entry in source_catalog.items()
+            if entry.get("url")
+        }
         self.stdout.write(self.style.SUCCESS(f"Extracted {len(sources)} source URLs from 9.Quellen"))
 
         d1_label_index, entries_by_row, row_to_parent_p = self._build_d1_index(wb["1."])
@@ -274,7 +315,7 @@ class Command(BaseCommand):
         for plan in MODEL_PLANS:
             vm = value_maps.get(plan.model.__name__, {})
             d = self._compute_diff(
-                plan, d1_label_index, entries_by_row, row_to_parent_p, vm, sources,
+                plan, d1_label_index, entries_by_row, row_to_parent_p, vm, sources, source_catalog,
                 region_obj,
             )
             diffs.append(d)
@@ -340,29 +381,115 @@ class Command(BaseCommand):
     # extractors
     # ------------------------------------------------------------------
 
-    def _extract_sources(self, ws) -> dict[str, str]:
-        """Build {ref_code: url} from 9.Quellen.
+    def _extract_source_catalog(self, ws) -> dict[str, dict[str, Optional[str]]]:
+        """Build {ref_code: {"description": ..., "url": ...}} from 9.Quellen.
 
         Layout (verified by scripts/audit_out/workbook_catalog.txt):
           col 1 = D-prefixed code (e.g. 'D.9.5')
           col 2 = bare ref code (e.g. '9.5')
-          col 4 = URL hyperlink target
+          col 4 = source text or URL hyperlink target
+
+        Some workbook variants split one citation across two adjacent rows:
+          - row N   = reference text for 9.xxx
+          - row N+1 = URL only
+
+        In that case, attach the URL from row N+1 back to the preceding
+        reference code as well. This preserves the user-facing "click the
+        cited source" behavior even when the workbook stores the URL one row
+        below the textual citation.
         """
-        sources: dict[str, str] = {}
+        catalog: dict[str, dict[str, Optional[str]]] = {}
+        pending_ref_code: Optional[str] = None
         for r in range(1, ws.max_row + 1):
-            ref_code = ws.cell(row=r, column=2).value
-            if not isinstance(ref_code, str) or not ref_code.strip():
+            ref_code = _normalize_source_ref_code(
+                ws.cell(row=r, column=2).value,
+                ws.cell(row=r, column=1).value,
+            )
+            if not ref_code:
                 continue
-            ref_code = ref_code.strip()
             cell_url = ws.cell(row=r, column=4)
+            entry = catalog.setdefault(ref_code, {"description": None, "url": None})
             url: Optional[str] = None
             if cell_url.hyperlink and cell_url.hyperlink.target:
                 url = cell_url.hyperlink.target
             elif isinstance(cell_url.value, str) and cell_url.value.startswith(("http://", "https://")):
                 url = cell_url.value
+
             if url:
-                sources[ref_code] = url
-        return sources
+                entry["url"] = url
+                if pending_ref_code:
+                    pending_entry = catalog.setdefault(
+                        pending_ref_code,
+                        {"description": None, "url": None},
+                    )
+                    pending_entry["url"] = pending_entry.get("url") or url
+                pending_ref_code = None
+                continue
+
+            cell_text = cell_url.value if isinstance(cell_url.value, str) else ""
+            has_reference_text = bool(cell_text.strip())
+            if has_reference_text:
+                entry["description"] = cell_text.strip()
+            pending_ref_code = ref_code if has_reference_text else None
+        return catalog
+
+    def _extract_sources(self, ws) -> dict[str, str]:
+        """Compatibility wrapper: Build {ref_code: url} from 9.Quellen."""
+        catalog = self._extract_source_catalog(ws)
+        return {
+            ref_code: entry["url"]
+            for ref_code, entry in catalog.items()
+            if entry.get("url")
+        }
+
+    def _extract_source_refs(
+        self,
+        note_text: Optional[str],
+        source_catalog: dict[str, dict[str, Optional[str]]],
+    ) -> list[dict[str, Optional[str]]]:
+        """Return cited 9.Quellen refs from note text in stable order."""
+        if not note_text:
+            return []
+
+        refs: list[dict[str, Optional[str]]] = []
+        seen: set[str] = set()
+        for ref_code in SOURCE_REF_RE.findall(note_text):
+            if ref_code in seen:
+                continue
+            seen.add(ref_code)
+            catalog_entry = source_catalog.get(ref_code, {})
+            refs.append(
+                {
+                    "code": ref_code,
+                    "description": catalog_entry.get("description"),
+                    "url": catalog_entry.get("url"),
+                }
+            )
+        return refs
+
+    def _merge_source_refs(
+        self,
+        explicit_refs: list[dict[str, Optional[str]]],
+        note_text: Optional[str],
+        source_catalog: dict[str, dict[str, Optional[str]]],
+    ) -> list[dict[str, Optional[str]]]:
+        """Prefer explicit D-sheet row refs; add regex-derived refs only as fallback."""
+        merged: list[dict[str, Optional[str]]] = []
+        seen: set[tuple[Optional[str], Optional[str], Optional[str]]] = set()
+
+        for ref in explicit_refs:
+            key = (ref.get("code"), ref.get("section"), ref.get("label"))
+            if key in seen:
+                continue
+            seen.add(key)
+            merged.append(ref)
+
+        existing_codes = {ref.get("code") for ref in merged}
+        for ref in self._extract_source_refs(note_text, source_catalog):
+            if ref.get("code") in existing_codes:
+                continue
+            merged.append(ref)
+        return merged
 
     def _build_d1_index(self, ws):
         """Build three indexes over D.xlsx '1.':
@@ -370,7 +497,7 @@ class Command(BaseCommand):
         - entries_by_row: {p_row_num: entry_dict}
         - row_to_parent_p: {any_row_num: p_row_num} — for any row, find its containing parameter
 
-        Each entry_dict = {row, label, assumption_text, value_w}.
+        Each entry_dict = {row, label, assumption_text, value_w, source_refs}.
         """
         rows: list[tuple[int, Optional[str], Optional[str], object]] = []
         for r in range(1, ws.max_row + 1):
@@ -390,12 +517,27 @@ class Command(BaseCommand):
             if t != PARAMETER_TYPE or not isinstance(label, str) or not label.strip():
                 continue
             assumption_parts: list[str] = []
+            source_refs: list[dict[str, Optional[str]]] = []
+            current_section: Optional[str] = None
             for j in range(i + 1, len(rows)):
                 rj, tj, lj, wj = rows[j]
                 if tj == PARAMETER_TYPE:
                     break
                 if tj in ASSUMPTION_TYPES and isinstance(lj, str) and lj.strip():
                     assumption_parts.append(lj.strip())
+                    current_section = _section_from_note_line(lj, current_section)
+                    source_code = ws.cell(row=rj, column=ROW_SOURCE_CODE_COL).value
+                    source_code = source_code.strip() if isinstance(source_code, str) else source_code
+                    if isinstance(source_code, str) and re.fullmatch(r"9\.\d+(?:\.\d+)?", source_code):
+                        source_label = ws.cell(row=rj, column=ROW_SOURCE_LABEL_COL).value
+                        source_label = source_label.strip() if isinstance(source_label, str) else None
+                        source_refs.append(
+                            {
+                                "code": source_code,
+                                "label": source_label or None,
+                                "section": current_section,
+                            }
+                        )
             assumption_text = "\n\n".join(assumption_parts) if assumption_parts else None
 
             entry = {
@@ -403,6 +545,7 @@ class Command(BaseCommand):
                 "label": label.strip(),
                 "assumption_text": assumption_text,
                 "value_w": w,
+                "source_refs": source_refs,
             }
             entries_by_row[r] = entry
             norm = _normalize_label(label)
@@ -473,6 +616,7 @@ class Command(BaseCommand):
         row_to_parent_p: dict,
         value_map: dict,
         sources: dict,
+        source_catalog: dict,
         region_obj,
     ) -> dict:
         model = plan.model
@@ -516,6 +660,20 @@ class Command(BaseCommand):
             code = getattr(row, plan.code_field, None) or ""
             if not code:
                 continue
+            if model.__name__ == "LandUse":
+                quelle = getattr(row, "quelle", None) or ""
+                m = QUELLE_D_ROW_RE.search(str(quelle))
+                if m:
+                    d_row = int(m.group(1))
+                    if d_row in entries_by_row:
+                        direct_matches[code] = entries_by_row[d_row]
+                        continue
+                # LandUse rows whose Quelle only contains workbook-internal
+                # bracket refs like [27][28] or [14]...[19] should inherit
+                # provenance from their parent, not be force-matched to an
+                # unrelated D-sheet note via the value-map fallback.
+                if str(quelle).strip():
+                    continue
             label = getattr(row, plan.label_field, None) or ""
             entry = d1_label_index.get(_normalize_label(label))
             if entry:
@@ -537,17 +695,33 @@ class Command(BaseCommand):
 
             new_source_url: Optional[str] = None
             new_notes_assumption: Optional[str] = None
+            new_source_refs: list[dict[str, Optional[str]]] = []
             new_origin = "internal"
 
             if entry:
                 # Direct match in D.xlsx 1.
                 new_origin = "d_xlsx"
                 new_notes_assumption = entry["assumption_text"]
-                if new_notes_assumption:
-                    for ref in SOURCE_REF_RE.findall(new_notes_assumption):
-                        if ref in sources:
-                            new_source_url = sources[ref]
-                            break
+                explicit_refs = []
+                for source_ref in entry.get("source_refs", []):
+                    code = source_ref.get("code")
+                    catalog_entry = source_catalog.get(code or "", {})
+                    explicit_refs.append(
+                        {
+                            "code": code,
+                            "label": source_ref.get("label"),
+                            "section": source_ref.get("section"),
+                            "description": catalog_entry.get("description"),
+                            "url": catalog_entry.get("url"),
+                        }
+                    )
+                new_source_refs = self._merge_source_refs(
+                    explicit_refs,
+                    new_notes_assumption,
+                    source_catalog,
+                )
+                if new_source_refs:
+                    new_source_url = new_source_refs[0].get("url")
                 diff["matched"] += 1
             else:
                 # Walk up the hierarchy looking for a matched ancestor.
@@ -571,10 +745,26 @@ class Command(BaseCommand):
                     # Inherit source_url from the ancestor's first reference; do NOT copy
                     # ancestor's notes_assumption (that's not OUR row's assumption).
                     a_text = ancestor_entry.get("assumption_text") or ""
-                    for ref in SOURCE_REF_RE.findall(a_text):
-                        if ref in sources:
-                            new_source_url = sources[ref]
-                            break
+                    explicit_refs = []
+                    for source_ref in ancestor_entry.get("source_refs", []):
+                        code = source_ref.get("code")
+                        catalog_entry = source_catalog.get(code or "", {})
+                        explicit_refs.append(
+                            {
+                                "code": code,
+                                "label": source_ref.get("label"),
+                                "section": source_ref.get("section"),
+                                "description": catalog_entry.get("description"),
+                                "url": catalog_entry.get("url"),
+                            }
+                        )
+                    new_source_refs = self._merge_source_refs(
+                        explicit_refs,
+                        a_text,
+                        source_catalog,
+                    )
+                    if new_source_refs:
+                        new_source_url = new_source_refs[0].get("url")
                     diff["derived"] += 1
                 else:
                     diff["unmatched"] += 1
@@ -582,8 +772,8 @@ class Command(BaseCommand):
                         (code, label, "no D.xlsx 1. parameter row or ancestor matches"),
                     )
 
-            current = (row.source_url, row.notes_assumption, row.origin)
-            new = (new_source_url, new_notes_assumption, new_origin)
+            current = (row.source_url, row.notes_assumption, row.origin, row.source_refs or [])
+            new = (new_source_url, new_notes_assumption, new_origin, new_source_refs)
             if current != new:
                 diff["changed"] += 1
                 diff["updates"].append(
@@ -592,6 +782,7 @@ class Command(BaseCommand):
                         "code": code,
                         "source_url": new_source_url,
                         "notes_assumption": new_notes_assumption,
+                        "source_refs": new_source_refs,
                         "origin": new_origin,
                     }
                 )
@@ -704,7 +895,7 @@ class Command(BaseCommand):
         return total_created
 
     def _propagate_to_workspace_rows(self, region_obj) -> int:
-        """For each base row with non-default provenance, copy the 3 provenance
+        """For each base row with non-default provenance, copy the provenance
         columns onto every user-workspace row sharing the same code AND
         the same region. Value columns are NOT touched (SR-005 hold). Uses
         QuerySet.update() to bypass signals — provenance writes never affect
@@ -737,13 +928,14 @@ class Command(BaseCommand):
                 ).update(
                     source_url=base.source_url,
                     notes_assumption=base.notes_assumption,
+                    source_refs=base.source_refs,
                     origin=base.origin,
                 )
                 total += affected
         return total
 
     def _apply_diff(self, model, diff: dict) -> None:
-        """Write only the 3 provenance columns via QuerySet.update() —
+        """Write only the provenance columns via QuerySet.update() —
         bypasses signals so cache invalidation isn't triggered (provenance
         does not affect calculations)."""
         for upd in diff["updates"]:
@@ -754,6 +946,7 @@ class Command(BaseCommand):
             qs.update(
                 source_url=upd["source_url"],
                 notes_assumption=upd["notes_assumption"],
+                source_refs=upd["source_refs"],
                 origin=upd["origin"],
             )
 

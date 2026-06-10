@@ -1,0 +1,301 @@
+{% extends 'simulator/base.html' %}
+
+{% block title %}Erneuerbare bearbeiten{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div class="container-fluid">
+    <div class="row">
+        {% include 'simulator/partials/sidebar_nav.html' with active_section='renewable' %}
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <div>
+                    <h1 class="h2">Erneuerbare Energien bearbeiten</h1>
+                    <p class="text-muted mb-0">
+                        {{ renewable.code }} · {{ renewable.name }} · {{ renewable.region.display_name|default:"Deutschland" }}
+                    </p>
+                </div>
+                <a class="btn btn-outline-secondary" href="{{ return_url }}">Zurück</a>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>Wichtig:</strong>
+                Diese Seite ändert gemeinsame Erneuerbare-Stammdaten.
+                Status/Ziel-Werte und Formeln können Berechnungen auf Bilanz, Cockpit und Jahresstrom beeinflussen.
+                Normale Nutzer ohne Bearbeitungsrolle können diese Seite nicht öffnen.
+            </div>
+
+            <form method="post" class="mb-5">
+                {% csrf_token %}
+                <input type="hidden" name="return_url" value="{{ return_url }}">
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <strong>1. Werte</strong>
+                        <span class="text-muted ms-2">Diese Zahlen erscheinen in der Erneuerbare-Tabelle.</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label" for="status_value">Status</label>
+                                <input class="form-control" id="status_value" name="status_value" type="text"
+                                       value="{% if renewable.status_value is not None %}{{ renewable.status_value|floatformat:1 }}{% endif %}">
+                                <div class="form-text">Aktueller Wert, zum Beispiel 34.243,0.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="target_value">Ziel</label>
+                                <input class="form-control" id="target_value" name="target_value" type="text"
+                                       value="{% if renewable.target_value is not None %}{{ renewable.target_value|floatformat:1 }}{% endif %}">
+                                <div class="form-text">Zielwert, zum Beispiel 199.396,0.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="unit">Einheit</label>
+                                <input class="form-control" id="unit" name="unit" type="text" value="{{ renewable.unit }}">
+                                <div class="form-text">Zum Beispiel ha, %, GWh/a oder MW.</div>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="is_fixed"
+                                           name="is_fixed" {% if renewable.is_fixed %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_fixed">Fester Wert</label>
+                                    <div class="form-text">
+                                        Aktiv bedeutet: der gespeicherte Status/Ziel-Wert bleibt der direkte Tabellenwert.
+                                        Inaktiv bedeutet: die Formel darf diesen Wert berechnen.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="user_editable"
+                                           name="user_editable" {% if renewable.user_editable %}checked{% endif %}>
+                                    <label class="form-check-label" for="user_editable">Benutzereingabe erlauben</label>
+                                    <div class="form-text">
+                                        Aktiv bedeutet: normale UI-Nutzer mit Bearbeitungsrecht sehen ein Eingabefeld für diese Zeile.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <strong>2. Zeilen-Formelnotiz</strong>
+                        <span class="text-muted ms-2">Nur Orientierung in dieser Datenzeile.</span>
+                    </div>
+                    <div class="card-body">
+                        <label class="form-label" for="row_formula">Formeltext in RenewableData</label>
+                        <textarea class="form-control font-monospace" id="row_formula" name="row_formula" rows="4">{{ renewable.formula|default:'' }}</textarea>
+                        <div class="form-text">
+                            Die wichtigsten Berechnungen kommen aus den echten Formula-Einträgen unten.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <strong>3. Echte Berechnungsformeln</strong>
+                        <span class="text-muted ms-2">Diese Formula-Einträge werden vom Rechenkern genutzt.</span>
+                    </div>
+                    <div class="card-body">
+                        {% if can_edit_formula_master_data %}
+                            <div class="row g-4">
+                                <div class="col-lg-6">
+                                    <h6>Status-Formel</h6>
+                                    <div class="form-text mb-2">
+                                        Schlüssel: <code>{{ status_formula_key|default:"kein Code" }}</code>
+                                    </div>
+                                    <label class="form-label" for="status_formula_expression">Formel-Ausdruck</label>
+                                    <textarea class="form-control font-monospace" id="status_formula_expression"
+                                              name="status_formula_expression" rows="6">{{ status_formula.expression|default:'' }}</textarea>
+                                    <label class="form-label mt-3" for="status_formula_description">Beschreibung</label>
+                                    <textarea class="form-control" id="status_formula_description"
+                                              name="status_formula_description" rows="3">{{ status_formula.description|default:'' }}</textarea>
+                                    <div class="form-check form-switch mt-3">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                               id="status_formula_is_active" name="status_formula_is_active"
+                                               {% if not status_formula or status_formula.is_active %}checked{% endif %}>
+                                        <label class="form-check-label" for="status_formula_is_active">Status-Formel aktiv</label>
+                                    </div>
+                                    <div class="mt-4">
+                                        <h6>Variablen für Status-Formel</h6>
+                                        <p class="form-text">
+                                            Hier wird festgelegt, was ein Variablenname wirklich bedeutet:
+                                            zum Beispiel Erneuerbare-Status, Erneuerbare-Ziel oder Flächennutzung-Ziel.
+                                        </p>
+                                        <input type="hidden" name="status_variables_total" value="{{ status_variables|length }}">
+                                        {% for variable in status_variables %}
+                                            <div class="border rounded p-3 mb-3 bg-light">
+                                                <input type="hidden" name="status_var_id_{{ forloop.counter0 }}" value="{{ variable.id|default:'' }}">
+                                                <div class="row g-2">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label" for="status_var_name_{{ forloop.counter0 }}">Variablenname</label>
+                                                        <input class="form-control font-monospace" id="status_var_name_{{ forloop.counter0 }}"
+                                                               name="status_var_name_{{ forloop.counter0 }}" type="text"
+                                                               value="{{ variable.variable_name|default:'' }}"
+                                                               placeholder="z. B. Renewable_1_1_1">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label" for="status_var_source_type_{{ forloop.counter0 }}">Quelle nimmt Wert aus</label>
+                                                        <select class="form-select" id="status_var_source_type_{{ forloop.counter0 }}"
+                                                                name="status_var_source_type_{{ forloop.counter0 }}">
+                                                            <option value="">Bitte auswählen</option>
+                                                            {% for choice in formula_variable_source_choices %}
+                                                                <option value="{{ choice.0 }}" {% if choice.0 == variable.source_type %}selected{% endif %}>{{ choice.1 }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label" for="status_var_source_key_{{ forloop.counter0 }}">Quellcode oder Wert</label>
+                                                        <input class="form-control font-monospace" id="status_var_source_key_{{ forloop.counter0 }}"
+                                                               name="status_var_source_key_{{ forloop.counter0 }}" type="text"
+                                                               value="{{ variable.source_key|default:'' }}"
+                                                               placeholder="z. B. 1.1.1 oder LU_2.1">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label" for="status_var_default_value_{{ forloop.counter0 }}">Fallback wenn leer</label>
+                                                        <input class="form-control" id="status_var_default_value_{{ forloop.counter0 }}"
+                                                               name="status_var_default_value_{{ forloop.counter0 }}" type="text"
+                                                               value="{% if variable.default_value is not None %}{{ variable.default_value|floatformat:1 }}{% endif %}"
+                                                               placeholder="optional">
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="form-label" for="status_var_notes_{{ forloop.counter0 }}">Notiz</label>
+                                                        <textarea class="form-control" id="status_var_notes_{{ forloop.counter0 }}"
+                                                                  name="status_var_notes_{{ forloop.counter0 }}" rows="2">{{ variable.notes|default:'' }}</textarea>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="status_var_is_required_{{ forloop.counter0 }}"
+                                                                   name="status_var_is_required_{{ forloop.counter0 }}"
+                                                                   {% if not variable.id or variable.is_required %}checked{% endif %}>
+                                                            <label class="form-check-label" for="status_var_is_required_{{ forloop.counter0 }}">Pflichtvariable</label>
+                                                        </div>
+                                                    </div>
+                                                    {% if variable.id %}
+                                                    <div class="col-md-6">
+                                                        <div class="form-check text-danger">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="status_var_delete_{{ forloop.counter0 }}"
+                                                                   name="status_var_delete_{{ forloop.counter0 }}">
+                                                            <label class="form-check-label" for="status_var_delete_{{ forloop.counter0 }}">Diese Variable löschen</label>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h6>Ziel-Formel</h6>
+                                    <div class="form-text mb-2">
+                                        Schlüssel: <code>{{ target_formula_key|default:"kein Ziel-Schlüssel" }}</code>
+                                    </div>
+                                    <label class="form-label" for="target_formula_expression">Formel-Ausdruck</label>
+                                    <textarea class="form-control font-monospace" id="target_formula_expression"
+                                              name="target_formula_expression" rows="6">{{ target_formula.expression|default:'' }}</textarea>
+                                    <label class="form-label mt-3" for="target_formula_description">Beschreibung</label>
+                                    <textarea class="form-control" id="target_formula_description"
+                                              name="target_formula_description" rows="3">{{ target_formula.description|default:'' }}</textarea>
+                                    <div class="form-check form-switch mt-3">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                               id="target_formula_is_active" name="target_formula_is_active"
+                                               {% if not target_formula or target_formula.is_active %}checked{% endif %}>
+                                        <label class="form-check-label" for="target_formula_is_active">Ziel-Formel aktiv</label>
+                                    </div>
+                                    <div class="mt-4">
+                                        <h6>Variablen für Ziel-Formel</h6>
+                                        <p class="form-text">
+                                            Wichtig für Ziel-Formeln: jede Variable kann ausdrücklich Status oder Ziel aus einer Quelle nehmen.
+                                            Das System muss hier nicht raten.
+                                        </p>
+                                        <input type="hidden" name="target_variables_total" value="{{ target_variables|length }}">
+                                        {% for variable in target_variables %}
+                                            <div class="border rounded p-3 mb-3 bg-light">
+                                                <input type="hidden" name="target_var_id_{{ forloop.counter0 }}" value="{{ variable.id|default:'' }}">
+                                                <div class="row g-2">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label" for="target_var_name_{{ forloop.counter0 }}">Variablenname</label>
+                                                        <input class="form-control font-monospace" id="target_var_name_{{ forloop.counter0 }}"
+                                                               name="target_var_name_{{ forloop.counter0 }}" type="text"
+                                                               value="{{ variable.variable_name|default:'' }}"
+                                                               placeholder="z. B. Renewable_1_1_1">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label" for="target_var_source_type_{{ forloop.counter0 }}">Quelle nimmt Wert aus</label>
+                                                        <select class="form-select" id="target_var_source_type_{{ forloop.counter0 }}"
+                                                                name="target_var_source_type_{{ forloop.counter0 }}">
+                                                            <option value="">Bitte auswählen</option>
+                                                            {% for choice in formula_variable_source_choices %}
+                                                                <option value="{{ choice.0 }}" {% if choice.0 == variable.source_type %}selected{% endif %}>{{ choice.1 }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label" for="target_var_source_key_{{ forloop.counter0 }}">Quellcode oder Wert</label>
+                                                        <input class="form-control font-monospace" id="target_var_source_key_{{ forloop.counter0 }}"
+                                                               name="target_var_source_key_{{ forloop.counter0 }}" type="text"
+                                                               value="{{ variable.source_key|default:'' }}"
+                                                               placeholder="z. B. 1.1.1 oder LU_2.1">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label" for="target_var_default_value_{{ forloop.counter0 }}">Fallback wenn leer</label>
+                                                        <input class="form-control" id="target_var_default_value_{{ forloop.counter0 }}"
+                                                               name="target_var_default_value_{{ forloop.counter0 }}" type="text"
+                                                               value="{% if variable.default_value is not None %}{{ variable.default_value|floatformat:1 }}{% endif %}"
+                                                               placeholder="optional">
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="form-label" for="target_var_notes_{{ forloop.counter0 }}">Notiz</label>
+                                                        <textarea class="form-control" id="target_var_notes_{{ forloop.counter0 }}"
+                                                                  name="target_var_notes_{{ forloop.counter0 }}" rows="2">{{ variable.notes|default:'' }}</textarea>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="target_var_is_required_{{ forloop.counter0 }}"
+                                                                   name="target_var_is_required_{{ forloop.counter0 }}"
+                                                                   {% if not variable.id or variable.is_required %}checked{% endif %}>
+                                                            <label class="form-check-label" for="target_var_is_required_{{ forloop.counter0 }}">Pflichtvariable</label>
+                                                        </div>
+                                                    </div>
+                                                    {% if variable.id %}
+                                                    <div class="col-md-6">
+                                                        <div class="form-check text-danger">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                   id="target_var_delete_{{ forloop.counter0 }}"
+                                                                   name="target_var_delete_{{ forloop.counter0 }}">
+                                                            <label class="form-check-label" for="target_var_delete_{{ forloop.counter0 }}">Diese Variable löschen</label>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-secondary mb-0">
+                                Diese Rolle darf Erneuerbare-Werte bearbeiten, aber keine Formel-Ausdrücke ändern.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>Speichern und neu berechnen
+                    </button>
+                    <a class="btn btn-outline-secondary" href="{{ return_url }}">Abbrechen</a>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>
+{% endblock %}

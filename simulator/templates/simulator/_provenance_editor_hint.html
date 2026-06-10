@@ -1,0 +1,8 @@
+{% if perms.simulator.change_uiprovenanceoverride %}
+<div class="alert provenance-editor-hint py-2 mb-3" role="alert">
+    <i class="fas fa-pen-to-square me-1"></i>
+    <strong>Quellen-Bearbeitung aktiv:</strong>
+    Mit <span class="badge text-bg-light border">Bearbeiten</span> neben einem Code können Erklärungstext und Quellen direkt in der Webapp gepflegt werden.
+    Werte, Formeln und Berechnungen bleiben unverändert.
+</div>
+{% endif %}

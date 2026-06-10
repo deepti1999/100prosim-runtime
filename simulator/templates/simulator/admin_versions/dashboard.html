@@ -1,0 +1,86 @@
+{% extends "simulator/admin_versions/base.html" %}
+
+{% block title %}Admin-Szenarien{% endblock %}
+
+{% block content %}
+<section class="card">
+  <h2>Einfacher Ablauf</h2>
+  <div class="grid">
+    <div class="step">
+      <strong>1. Aktuellen Stand speichern</strong>
+      Klicken Sie auf "Admin-Szenario speichern". Dann wird der jetzige Admin-Datenstand gesichert.
+    </div>
+    <div class="step">
+      <strong>2. Admin-Daten bearbeiten</strong>
+      Danach können Sie wie gewohnt in der Django-Verwaltung arbeiten.
+    </div>
+    <div class="step">
+      <strong>3. Bei Fehler zurück</strong>
+      Wenn etwas falsch ist, stellen Sie ein gespeichertes Admin-Szenario wieder her.
+    </div>
+  </div>
+  <div class="actions" style="margin-top:18px;">
+    {% if can_add_version %}
+      <a class="button secondary" href="{% url 'simulator:admin_version_create' %}">Admin-Szenario speichern</a>
+    {% endif %}
+    <a class="button light" href="{% url 'admin:index' %}">Daten im Admin bearbeiten</a>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Gespeicherte Admin-Szenarien</h2>
+  {% if versions %}
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Region</th>
+          <th>Status</th>
+          <th>Gespeichert</th>
+          <th>Gespeichert von</th>
+          <th>Schutz</th>
+          <th>Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for version in versions %}
+          <tr>
+            <td>
+              <strong>{{ version.name }}</strong>
+              {% if version.note %}
+                <br><span class="muted">{{ version.note|truncatechars:120 }}</span>
+              {% endif %}
+            </td>
+            <td>{{ version.region }}</td>
+            <td><span class="badge">{{ version.get_status_display }}</span></td>
+            <td>
+              {% if version.captured_at %}
+                {{ version.captured_at|date:"d.m.Y H:i" }}
+              {% else %}
+                -
+              {% endif %}
+            </td>
+            <td>{% if version.created_by %}{{ version.created_by.get_username }}{% else %}-{% endif %}</td>
+            <td>{% if version.is_protected %}Geschützt{% else %}Entwurf{% endif %}</td>
+            <td>
+              <div class="actions">
+                {% if can_restore_version %}
+                  <a class="button danger" href="{% url 'simulator:admin_version_restore' version.id %}">Dieses Szenario wiederherstellen</a>
+                {% endif %}
+                {% if can_refresh_version and not version.is_protected %}
+                  <a class="button warning" href="{% url 'simulator:admin_version_refresh' version.id %}">Mit aktuellem Stand überschreiben</a>
+                {% endif %}
+                {% if can_delete_version and not version.is_protected %}
+                  <a class="button light" href="{% url 'simulator:admin_version_delete' version.id %}">Löschen</a>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Noch kein Admin-Szenario gespeichert.</p>
+  {% endif %}
+</section>
+{% endblock %}

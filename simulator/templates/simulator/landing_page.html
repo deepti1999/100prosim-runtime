@@ -400,8 +400,9 @@
             </div>
 
             <div class="hero-description">
-                <strong>100ProSim</strong> ist ein umfassendes Simulationswerkzeug zur Modellierung von Deutschlands
-                <strong>Transformationsziel 100% erneuerbare Energien 2045</strong>. Es berechnet ausgehend vom Status,
+                <strong>100ProSim</strong> ist ein umfassendes Simulationswerkzeug zur Modellierung des Transformationsziels
+                <strong>{{ active_goal_description|default:"100 % Erneuerbare Energien" }} {{ active_region.target_year|stringformat:"d"|default:"2045" }}</strong>
+                für {{ active_region_name|default:"Deutschland" }}. Es berechnet ausgehend vom Status,
                 wie Veränderungen in der Flächennutzung, der erneuerbaren Erzeugung und dem Verbrauch die Energiebilanz
                 beeinflussen und hilft strategische Möglichkeiten zu identifizieren, um fossile Brennstoffe vollständig
                 durch saubere Energiequellen zu ersetzen.

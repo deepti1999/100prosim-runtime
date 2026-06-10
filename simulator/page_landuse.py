@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from .models import CalculationRun, Formula, LandUse
+from .ui_provenance_service import apply_ui_provenance_to_objects
 
 def get_landuse_data():
     """Get LandUse data formatted for calculations"""
@@ -88,7 +89,8 @@ def calculate_percentages(landuse):
 @login_required
 def landuse_list(request):
     """Display all land use data with calculations done in web app"""
-    landuses = LandUse.objects.all().order_by('code')
+    landuses = list(LandUse.objects.all().order_by('code'))
+    apply_ui_provenance_to_objects(landuses, "landuse")
     latest_run = CalculationRun.objects.first()
 
     landuse_data = []
@@ -97,7 +99,7 @@ def landuse_list(request):
 
     context = {
         'landuse_data': landuse_data,
-        'total_count': landuses.count(),
+        'total_count': len(landuses),
         'current_section': 'landuse',
         'latest_run': latest_run,
     }
@@ -107,10 +109,13 @@ def landuse_list(request):
 def landuse_detail(request, pk):
     """Display detailed view of a specific land use item"""
     landuse = LandUse.objects.get(pk=pk)
+    apply_ui_provenance_to_objects([landuse], "landuse")
     data = calculate_percentages(landuse)
 
+    children = list(landuse.children.all())
+    apply_ui_provenance_to_objects(children, "landuse")
     children_data = []
-    for child in landuse.children.all():
+    for child in children:
         children_data.append(calculate_percentages(child))
 
     context = {

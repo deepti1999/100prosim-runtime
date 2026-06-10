@@ -1,0 +1,13 @@
+{% if can_edit_workspace_values %}
+<div class="alert alert-success py-2 mb-3" role="alert">
+    <i class="fas fa-sliders me-1"></i>
+    <strong>Werte-Bearbeitung aktiv:</strong>
+    Bearbeitbare Eingabefelder speichern automatisch in diesem Arbeits-Szenario.
+</div>
+{% elif user.is_staff %}
+<div class="alert alert-secondary py-2 mb-3" role="alert">
+    <i class="fas fa-eye me-1"></i>
+    <strong>Nur ansehen:</strong>
+    Ihre Rolle erlaubt keine Änderung von Werten.
+</div>
+{% endif %}
