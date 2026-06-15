@@ -5,6 +5,7 @@ set -euo pipefail
 
 APP="${HEROKU_APP:-prosim-100}"
 REGION="${HEROKU_REGION:-eu}"
+PYTHON_BIN="${PYTHON_BIN:-$(command -v python3 || command -v python)}"
 
 say() { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
 
@@ -40,8 +41,8 @@ if ! heroku addons -a "$APP" | grep -q heroku-redis; then
 fi
 
 say "Setting config vars"
-SECRET="${DJANGO_SECRET_KEY:-$(python -c 'import secrets; print(secrets.token_urlsafe(64))')}"
-HOSTNAME="$(heroku apps:info -a "$APP" --json | python -c 'import sys,json; print(json.load(sys.stdin)["app"]["web_url"].rstrip("/").removeprefix("https://"))')"
+SECRET="${DJANGO_SECRET_KEY:-$("$PYTHON_BIN" -c 'import secrets; print(secrets.token_urlsafe(64))')}"
+HOSTNAME="$(heroku apps:info -a "$APP" --json | "$PYTHON_BIN" -c 'import sys,json; print(json.load(sys.stdin)["app"]["web_url"].rstrip("/").removeprefix("https://"))')"
 heroku config:set -a "$APP" \
   DJANGO_SECRET_KEY="$SECRET" \
   DJANGO_DEBUG=false \
