@@ -818,8 +818,6 @@ def _format_history_number(value, unit):
 
 def _history_scope(request):
     user = getattr(request, "user", None)
-    if user and user.is_authenticated and user.is_staff:
-        return {"key": "global", "owner": None}
     if user and user.is_authenticated:
         return {"key": f"user:{user.id}", "owner": user}
     return {"key": "global", "owner": None}

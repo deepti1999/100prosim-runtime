@@ -139,6 +139,28 @@ def _check_landuse_increase_limit(landuse, requested_percent):
         'max_allowed_value': max_allowed_value,
     }
 
+
+def _resolve_landuse_for_update_pk(pk):
+    """
+    Resolve the row edited by the UI.
+
+    Older callers/tests may still post the global/base row pk. In the normal
+    webapp, authenticated users edit their own workspace copy, so map that pk
+    back to the visible scoped row by stable code + region.
+    """
+    scoped_qs = LandUse.objects.select_related("parent")
+    try:
+        return scoped_qs.get(pk=pk)
+    except LandUse.DoesNotExist:
+        source = get_object_or_404(LandUse.all_objects.select_related("region"), pk=pk)
+        lookup = {"code": source.code}
+        if getattr(source, "region_id", None):
+            lookup["region_id"] = source.region_id
+        else:
+            lookup["region__isnull"] = True
+        return get_object_or_404(scoped_qs, **lookup)
+
+
 @require_http_methods(["POST"])
 def save_and_recalculate_verbrauch(request):
     """Queue Verbrauch recalculation on hosted environments; keep inline fallback locally."""
@@ -159,12 +181,12 @@ def save_and_recalculate_verbrauch(request):
             return JsonResponse(payload)
 
         from simulator.models import BalanceJob
-        from simulator.ws_queue_api import _queue_or_reuse_balance_job
+        from simulator.ws_queue_api import _queue_new_balance_job, _stamp_region
 
-        job = _queue_or_reuse_balance_job(
+        job = _queue_new_balance_job(
             getattr(request, "user", None),
             BalanceJob.TYPE_VERBRAUCH_RECALC,
-            {"scope": "verbrauch"},
+            _stamp_region({"scope": "verbrauch"}, request),
         )
         return JsonResponse({
             'success': True,
@@ -219,7 +241,7 @@ def update_landuse_percent(request, pk):
         }, status=400)
 
     try:
-        landuse = get_object_or_404(LandUse, pk=pk)
+        landuse = _resolve_landuse_for_update_pk(pk)
 
         if not landuse.parent:
             return JsonResponse({
@@ -308,6 +330,7 @@ def update_verbrauch_bulk(request):
         updates = data.get('updates', [])
 
         updated_count = 0
+        recalc_job_id = None
         for update in updates:
             code = update.get('code')
             user_percent = update.get('user_percent')
@@ -316,7 +339,7 @@ def update_verbrauch_bulk(request):
                 try:
                     item = VerbrauchData.objects.get(code=code)
                     item.user_percent = float(user_percent)
-                    item.save()
+                    item.save(skip_cascade=True, skip_verbrauch_recalc=True)
                     updated_count += 1
                 except VerbrauchData.DoesNotExist:
                     pass
@@ -327,10 +350,23 @@ def update_verbrauch_bulk(request):
                 triggered_by=getattr(request.user, "username", "unknown"),
                 updated_count=updated_count,
             )
+            try:
+                from simulator.models import BalanceJob
+                from simulator.ws_queue_api import _queue_new_balance_job, _stamp_region
+
+                recalc_job = _queue_new_balance_job(
+                    request.user,
+                    BalanceJob.TYPE_VERBRAUCH_RECALC,
+                    _stamp_region({"scope": "verbrauch", "trigger_code": "bulk"}, request),
+                )
+                recalc_job_id = str(recalc_job.id) if recalc_job else None
+            except Exception as e:
+                print(f"Failed to enqueue verbrauch_recalc after bulk save: {e}")
 
         return JsonResponse({
             'status': 'ok',
             'updated': updated_count,
+            'recalc_job_id': recalc_job_id,
         })
     except Exception as e:
         return JsonResponse({
@@ -369,20 +405,18 @@ def save_verbrauch_user_input(request):
 
         old_value = item.user_percent
         item.user_percent = float(user_percent) if user_percent is not None else None
-        # T25 follow-up: keep per-cell save fast (skip the inline cascade) and
-        # enqueue a background verbrauch_recalc job so dependent Verbrauch /
-        # Renewable / Bilanz cells recompute without blocking the user.
-        # Mirrors the queue path in save_and_recalculate_verbrauch.
-        item.save(skip_cascade=True)
+        # Keep per-cell saves responsive. The queued worker job below performs
+        # the full Verbrauch cascade before the page reloads.
+        item.save(skip_cascade=True, skip_verbrauch_recalc=True)
 
         recalc_job_id = None
         try:
             from simulator.models import BalanceJob
-            from simulator.ws_queue_api import _queue_or_reuse_balance_job
-            recalc_job = _queue_or_reuse_balance_job(
+            from simulator.ws_queue_api import _queue_new_balance_job, _stamp_region
+            recalc_job = _queue_new_balance_job(
                 request.user,
                 BalanceJob.TYPE_VERBRAUCH_RECALC,
-                {"scope": "verbrauch", "trigger_code": code},
+                _stamp_region({"scope": "verbrauch", "trigger_code": code}, request),
             )
             recalc_job_id = str(recalc_job.id) if recalc_job else None
         except Exception as e:

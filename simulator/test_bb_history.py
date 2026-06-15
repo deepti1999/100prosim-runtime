@@ -374,12 +374,49 @@ class ModificationHistoryTests(TestCase):
         self.assertContains(response, "333")
         self.assertContains(response, "444")
 
+    def test_history_staff_user_sees_own_workspace_scenarios_not_global_scenarios(self):
+        staff_user = get_user_model().objects.create_user(
+            username="history_staff",
+            password="x",
+            is_staff=True,
+        )
+        ScenarioSnapshot.objects.create(
+            owner=None,
+            name="Ideal scenario",
+            payload={
+                "renewable": [
+                    {"code": "9.2", "status_value": 111.0, "target_value": 222.0}
+                ]
+            },
+        )
+        ScenarioSnapshot.objects.create(
+            owner=staff_user,
+            name="verbrauch",
+            payload={
+                "renewable": [
+                    {"code": "9.2", "status_value": 333.0, "target_value": 444.0}
+                ]
+            },
+        )
+        self.client.force_login(staff_user)
+
+        response = self.client.get(reverse("simulator:historie"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "verbrauch Status")
+        self.assertContains(response, "verbrauch Ziel")
+        self.assertContains(response, "333")
+        self.assertContains(response, "444")
+        self.assertNotContains(response, "Ideal scenario Status")
+        self.assertNotContains(response, "Ideal scenario Ziel")
+
     def test_history_page_has_changed_value_highlight_control(self):
         response = self.client.get(reverse("simulator:historie"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'id="historyHighlightMode"')
         self.assertContains(response, "Keine Hervorhebung")
-        self.assertContains(response, "Geänderte Werte hervorheben")
+        self.assertContains(response, "Nur geänderte Werte anzeigen")
         self.assertContains(response, 'data-history-value-group="status"')
         self.assertContains(response, 'data-history-value-group="target"')
         self.assertContains(response, "is-history-changed")
+        self.assertContains(response, "is-history-unchanged")

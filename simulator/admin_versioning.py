@@ -309,6 +309,57 @@ def restore_admin_version_payload(payload: dict[str, Any]) -> dict[str, int]:
     return restored
 
 
+def clone_region_data_model(source_region: Region, target_region: Region) -> dict[str, int]:
+    """Copy region-scoped admin baseline data into another region.
+
+    This is intentionally narrower than AdminDataVersion restore: formulas and
+    other global configuration stay shared. Only data rows that belong to one
+    region are copied to the target region.
+    """
+    with transaction.atomic():
+        restored = {
+            "landuse": _restore_landuse(_serialize_landuse(source_region), target_region),
+            "renewable": _restore_rows(
+                RenewableData,
+                _serialize_rows(RenewableData, source_region, order_by="code"),
+                target_region,
+            ),
+            "verbrauch": _restore_rows(
+                VerbrauchData,
+                _serialize_rows(VerbrauchData, source_region, order_by="code"),
+                target_region,
+            ),
+            "gebaeudewaerme": _restore_rows(
+                GebaeudewaermeData,
+                _serialize_rows(GebaeudewaermeData, source_region, order_by="code"),
+                target_region,
+            ),
+            "ws": _restore_rows(
+                WSData,
+                _serialize_rows(WSData, source_region, order_by="tag_im_jahr"),
+                target_region,
+            ),
+            "ui_provenance": _restore_ui_provenance(
+                _serialize_ui_provenance(source_region),
+                target_region,
+            ),
+        }
+    invalidate_admin_version_caches()
+    return restored
+
+
+def region_data_model_counts(region: Region) -> dict[str, int]:
+    """Small admin summary for checking whether a region has copied data."""
+    return {
+        "landuse": _global_qs(LandUse, region).count(),
+        "renewable": _global_qs(RenewableData, region).count(),
+        "verbrauch": _global_qs(VerbrauchData, region).count(),
+        "gebaeudewaerme": _global_qs(GebaeudewaermeData, region).count(),
+        "ws": _global_qs(WSData, region).count(),
+        "ui_provenance": UIProvenanceOverride.objects.filter(region=region).count(),
+    }
+
+
 def invalidate_admin_version_caches() -> None:
     try:
         from django.core.cache import cache

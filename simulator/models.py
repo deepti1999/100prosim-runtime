@@ -331,8 +331,8 @@ class AdminDataVersion(models.Model):
             models.Index(fields=["region", "status"]),
             models.Index(fields=["captured_at"]),
         ]
-        verbose_name = "Admin-Szenario"
-        verbose_name_plural = "Admin-Szenarien"
+        verbose_name = "Datenmodell"
+        verbose_name_plural = "Datenmodelle"
         permissions = [
             ("restore_admin_data_version", "Can restore admin data versions"),
             ("refresh_admin_data_version", "Can refresh admin data versions"),
@@ -1359,8 +1359,10 @@ class VerbrauchData(models.Model):
           siblings auto-adjust to maintain 100% total
         """
         skip_cascade = kwargs.pop('skip_cascade', False)
+        skip_verbrauch_recalc = kwargs.pop('skip_verbrauch_recalc', False)
         skip_recalc = kwargs.pop('skip_recalc', False)
         skip_rebalance = kwargs.pop('skip_rebalance', False)  # Skip percentage rebalancing
+        self._skip_verbrauch_recalc = skip_verbrauch_recalc
         old_status = None
         old_ziel = None
         old_user_percent = None
@@ -1429,6 +1431,8 @@ class VerbrauchData(models.Model):
                         _cascade_context.chain.discard(self.code)
                         if len(_cascade_context.chain) == 0:
                             delattr(_cascade_context, 'chain')
+
+        self._skip_verbrauch_recalc = False
 
     
     def _recalculate_dependents(self):

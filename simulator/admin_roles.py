@@ -124,25 +124,13 @@ def user_can_edit_formula_master_data(user) -> bool:
 
 
 def user_can_edit_workspace_values(user) -> bool:
-    """Normal UI no longer edits model values; use Django admin for data changes."""
-    return False
+    """Normal scenario/workspace inputs are editable by every logged-in user."""
+    return bool(getattr(user, "is_authenticated", False))
 
 
 def user_can_manage_workspace_scenarios(user) -> bool:
-    """Role-aware permission for save/restore of normal UI scenarios."""
-    if not getattr(user, "is_authenticated", False):
-        return False
-    if user.is_superuser:
-        return True
-    if not user.is_staff:
-        return True
-    return user.groups.filter(
-        name__in=(
-            "100ProSim Admin Editor",
-            "100ProSim Admin Manager",
-            ADMIN_FULL_GROUP,
-        )
-    ).exists()
+    """Normal UI scenarios are part of each logged-in user's workspace."""
+    return bool(getattr(user, "is_authenticated", False))
 
 
 def ensure_admin_role_groups(sender=None, **kwargs):

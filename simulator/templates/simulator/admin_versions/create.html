@@ -1,19 +1,19 @@
 {% extends "simulator/admin_versions/base.html" %}
 
-{% block title %}Admin-Szenario speichern{% endblock %}
+{% block title %}Datenmodell speichern{% endblock %}
 
 {% block content %}
 <section class="card">
-  <h2>Aktuellen Admin-Stand speichern</h2>
+  <h2>Aktuelles Datenmodell speichern</h2>
   <p>
-    Das ist wie "Szenario speichern" in der Webapp: Der aktuelle Admin-Datenstand
+    Der aktuelle Datenmodell-Stand
     wird gesichert und kann später wiederhergestellt werden. Die Webapp-Logik
     wird dadurch nicht verändert.
   </p>
 
   <form method="post">
     {% csrf_token %}
-    <label for="name">Name für dieses Admin-Szenario</label>
+    <label for="name">Name für dieses Datenmodell</label>
     <input id="name" name="name" type="text" required value="{{ default_name }}" placeholder="z.B. Vor Änderung der Flächennutzung">
 
     <label for="region">Region</label>
@@ -31,15 +31,15 @@
     </select>
 
     <label for="note">Notiz</label>
-    <textarea id="note" name="note" placeholder="Kurze Erklärung, warum dieses Admin-Szenario gespeichert wird."></textarea>
+    <textarea id="note" name="note" placeholder="Kurze Erklärung, warum dieses Datenmodell gespeichert wird."></textarea>
 
     <label>
       <input type="checkbox" name="is_protected">
-      Dieses Admin-Szenario schützen, damit es nicht versehentlich überschrieben wird
+      Dieses Datenmodell schützen, damit es nicht versehentlich überschrieben wird
     </label>
 
     <div class="actions" style="margin-top:18px;">
-      <button type="submit" class="secondary">Admin-Szenario jetzt speichern</button>
+      <button type="submit" class="secondary">Datenmodell jetzt speichern</button>
       <a class="button light" href="{% url 'simulator:admin_versions_dashboard' %}">Abbrechen</a>
     </div>
   </form>

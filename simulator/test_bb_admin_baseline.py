@@ -98,6 +98,23 @@ class AdminBaselineContractTests(TestCase):
         self.assertTrue(user_copies.exists())
         self.assertAlmostEqual(user_copies.first().user_percent, 7.0)
 
+    def test_staff_restore_baseline_targets_staff_workspace_not_global_rows(self):
+        """Staff use the normal webapp with their own workspace too."""
+        self.client.force_login(self.admin)
+        self.client.post(reverse("simulator:create_baseline"))
+
+        admin_copy = LandUse.all_objects.get(owner=self.admin, code="LU_2.1")
+        admin_copy.user_percent = 88.0
+        admin_copy.save(skip_cascade=True)
+
+        response = self.client.post(reverse("simulator:restore_baseline"))
+
+        self.assertEqual(response.status_code, 200)
+        restored_admin_copy = LandUse.all_objects.get(owner=self.admin, code="LU_2.1")
+        self.assertAlmostEqual(restored_admin_copy.user_percent, 7.0)
+        global_row = LandUse.all_objects.get(owner__isnull=True, code="LU_2.1")
+        self.assertAlmostEqual(global_row.user_percent, 7.0)
+
     def test_restore_without_baseline_returns_404(self):
         """No baseline yet -> user-friendly error, not a crash."""
         self.client.force_login(self.user)

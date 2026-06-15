@@ -63,7 +63,7 @@ from .admin_version_views import (
 )
 from .page_historie import historie_view
 from .page_modifikationsdetails import modifikationsdetails_view
-from .page_data_sources import data_sources_view
+from .page_data_sources import data_source_detail_view, data_sources_view
 from .views_ws import (
     ws_api_apply_balance,
     ws_api_apply_balance_wind,
@@ -101,6 +101,7 @@ urlpatterns = [
     # Phase 6-B (T48-T52): Variantenvergleich-Charts
     path('modifikationsdetails/', modifikationsdetails_view, name='modifikationsdetails'),
     path('datenquellen/', data_sources_view, name='data_sources'),
+    path('datenquellen/<str:domain>/<str:row_code>/', data_source_detail_view, name='data_source_detail'),
     path('quelleninfo/bearbeiten/', ui_provenance_edit, name='ui_provenance_edit'),
     path('landuse/', landuse_list, name='landuse_list'),
     path('landuse/<int:pk>/stammdaten-bearbeiten/', landuse_master_edit, name='landuse_master_edit'),

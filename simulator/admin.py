@@ -2,6 +2,7 @@ from django.contrib import admin
 from django import forms
 from django.contrib.admin import SimpleListFilter
 from django.contrib import messages
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.utils.html import format_html
@@ -24,9 +25,67 @@ from .models import (
 )
 from .admin_versioning import (
     capture_admin_version_payload,
+    clone_region_data_model,
     payload_size_mb,
+    region_data_model_counts,
     restore_admin_version_payload,
 )
+
+
+def readonly_region_after_create(obj, readonly_fields):
+    """Region identifies the country data model; changing it can create duplicate rows."""
+    fields = list(readonly_fields)
+    if obj is not None and "region" not in fields:
+        fields.append("region")
+    return fields
+
+
+class AdminAllObjectsMixin:
+    """Admin uses DB-wide rows, but defaults to the shared template model."""
+
+    def get_queryset(self, request):
+        manager = getattr(self.model, "all_objects", None)
+        if manager is None:
+            return super().get_queryset(request)
+        queryset = manager.get_queryset()
+        if any(field.name == "owner" for field in self.model._meta.fields):
+            wants_user_rows = (
+                request.GET.get("owner_scope") == "user"
+                or any(key.startswith("owner") for key in request.GET)
+            )
+            if not wants_user_rows:
+                queryset = queryset.filter(owner__isnull=True)
+        ordering = self.get_ordering(request)
+        if ordering:
+            queryset = queryset.order_by(*ordering)
+        return queryset
+
+
+class OwnerScopeFilter(SimpleListFilter):
+    title = "Datenstand"
+    parameter_name = "owner_scope"
+
+    def lookups(self, request, model_admin):
+        return (
+            ("global", "Vorlage / global"),
+            ("user", "Nutzerkopien anzeigen"),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == "global":
+            return queryset.filter(owner__isnull=True)
+        if self.value() == "user":
+            return queryset.filter(owner__isnull=False)
+        return queryset
+
+
+class OwnerScopeDisplayMixin:
+    @admin.display(description="Datenstand")
+    def owner_scope(self, obj):
+        if getattr(obj, "owner_id", None):
+            return f"Nutzer: {obj.owner.username}"
+        return "Vorlage"
+
 
 class DataTypeFilter(SimpleListFilter):
     title = 'Data Type'
@@ -62,6 +121,7 @@ class DataTypeFilter(SimpleListFilter):
 
 @admin.register(Region)
 class RegionAdmin(admin.ModelAdmin):
+    change_list_template = "admin/simulator/region/change_list.html"
     list_display = [
         "code",
         "display_name",
@@ -70,6 +130,7 @@ class RegionAdmin(admin.ModelAdmin):
         "target_year",
         "locale_code",
         "total_area_ha",
+        "data_model_summary",
     ]
     list_filter = ["active", "target_year", "status_year"]
     search_fields = ["code", "display_name", "goal_description", "data_source_label"]
@@ -104,6 +165,143 @@ class RegionAdmin(admin.ModelAdmin):
             ),
         }),
     )
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "copy-data-model/",
+                self.admin_site.admin_view(self.copy_data_model_view),
+                name="simulator_region_copy_data_model",
+            ),
+        ]
+        return custom_urls + urls
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context["copy_data_model_url"] = reverse("admin:simulator_region_copy_data_model")
+        return super().changelist_view(request, extra_context=extra_context)
+
+    def data_model_summary(self, obj):
+        counts = region_data_model_counts(obj)
+        return ", ".join(
+            [
+                f"Fläche: {counts['landuse']}",
+                f"EE: {counts['renewable']}",
+                f"Verbrauch: {counts['verbrauch']}",
+                f"GW: {counts['gebaeudewaerme']}",
+                f"WS: {counts['ws']}",
+            ]
+        )
+    data_model_summary.short_description = "Datenmodell"
+
+    def copy_data_model_view(self, request):
+        if not self.has_add_permission(request):
+            self.message_user(
+                request,
+                "Sie haben keine Berechtigung, ein neues Datenmodell anzulegen.",
+                level=messages.ERROR,
+            )
+            return HttpResponseRedirect(reverse("admin:simulator_region_changelist"))
+
+        class CopyDataModelForm(forms.Form):
+            source_region = forms.ModelChoiceField(
+                label="Vorlage kopieren von",
+                queryset=Region.objects.filter(active=True).order_by("code"),
+                help_text="Zum Beispiel Deutschland als Startpunkt wählen.",
+            )
+            code = forms.CharField(
+                label="Neuer Code",
+                max_length=16,
+                help_text="Kurzer Code, zum Beispiel FR, IT, ES oder AT.",
+            )
+            display_name = forms.CharField(
+                label="Neuer Name",
+                max_length=100,
+                help_text="Name, der oben in der Webapp angezeigt wird.",
+            )
+            locale_code = forms.CharField(label="Sprache/Format", max_length=16, initial="de-DE")
+            status_year = forms.IntegerField(label="Status-Jahr", initial=2023, min_value=1900)
+            target_year = forms.IntegerField(label="Ziel-Jahr", initial=2045, min_value=1900)
+            goal_description = forms.CharField(
+                label="Zielbeschreibung",
+                max_length=255,
+                initial="100 % Erneuerbare Energien",
+            )
+            total_area_ha = forms.FloatField(
+                label="Gesamtfläche ha",
+                min_value=0,
+                help_text="Kann später im Datenmodell angepasst werden.",
+            )
+            data_source_label = forms.CharField(
+                label="Datenquelle / Notiz",
+                max_length=255,
+                required=False,
+                help_text="Kurze interne Orientierung, woher die Datenbasis kommt.",
+            )
+            active = forms.BooleanField(label="In Webapp anzeigen", initial=True, required=False)
+
+            def clean_code(self):
+                code = (self.cleaned_data["code"] or "").strip().upper()
+                if Region.objects.filter(code=code).exists():
+                    raise forms.ValidationError("Dieser Code existiert bereits.")
+                return code
+
+            def clean(self):
+                cleaned = super().clean()
+                source = cleaned.get("source_region")
+                if source:
+                    cleaned.setdefault("total_area_ha", source.total_area_ha)
+                return cleaned
+
+        if request.method == "POST":
+            form = CopyDataModelForm(request.POST)
+            if form.is_valid():
+                source_region = form.cleaned_data["source_region"]
+                with transaction.atomic():
+                    target_region = Region.objects.create(
+                        code=form.cleaned_data["code"],
+                        display_name=form.cleaned_data["display_name"],
+                        active=form.cleaned_data["active"],
+                        locale_code=form.cleaned_data["locale_code"],
+                        status_year=form.cleaned_data["status_year"],
+                        target_year=form.cleaned_data["target_year"],
+                        goal_description=form.cleaned_data["goal_description"],
+                        total_area_ha=form.cleaned_data["total_area_ha"],
+                        data_source_label=form.cleaned_data["data_source_label"],
+                        installed_pmax_ely_gw=source_region.installed_pmax_ely_gw,
+                        installed_pmax_rv_gw=source_region.installed_pmax_rv_gw,
+                    )
+                    counts = clone_region_data_model(source_region, target_region)
+                details = ", ".join(f"{key}: {value}" for key, value in counts.items())
+                self.message_user(
+                    request,
+                    f'Datenmodell "{target_region}" wurde aus "{source_region}" angelegt. {details}',
+                    level=messages.SUCCESS,
+                )
+                return HttpResponseRedirect(reverse("admin:simulator_region_changelist"))
+        else:
+            source = Region.objects.filter(code="DE").first() or Region.objects.first()
+            initial = {}
+            if source:
+                initial = {
+                    "source_region": source.pk,
+                    "locale_code": source.locale_code,
+                    "status_year": source.status_year,
+                    "target_year": source.target_year,
+                    "goal_description": source.goal_description,
+                    "total_area_ha": source.total_area_ha,
+                    "data_source_label": source.data_source_label,
+                }
+            form = CopyDataModelForm(initial=initial)
+
+        context = {
+            **self.admin_site.each_context(request),
+            "title": "Neues Datenmodell aus Vorlage anlegen",
+            "form": form,
+            "opts": self.model._meta,
+        }
+        return TemplateResponse(request, "admin/simulator/region/copy_data_model.html", context)
 
 
 class UIProvenanceOverrideAdminForm(forms.ModelForm):
@@ -187,10 +385,10 @@ class AdminDataVersionAdmin(admin.ModelAdmin):
     actions = ["restore_selected_version", "refresh_selected_versions"]
 
     fieldsets = (
-        ("Admin-Szenario", {
+        ("Datenmodell", {
             "fields": ("name", "region", "status", "is_protected", "note"),
             "description": (
-                "Speichert den aktuellen globalen Admin-Datenstand als Admin-Szenario. "
+                "Speichert den aktuellen globalen Datenmodell-Stand. "
                 "Das ändert keine Formeln oder Werte direkt, sondern legt einen "
                 "Wiederherstellungspunkt an."
             ),
@@ -199,7 +397,7 @@ class AdminDataVersionAdmin(admin.ModelAdmin):
             "fields": ("payload_summary", "captured_at", "created_by"),
             "description": (
                 "Beim ersten Speichern wird automatisch der aktuelle Datenstand "
-                "dieser Region erfasst. Über die Aktion 'ausgewähltes Szenario "
+                "dieser Region erfasst. Über die Aktion 'ausgewähltes Datenmodell "
                 "wiederherstellen' kann dieser Stand zurückgespielt werden."
             ),
         }),
@@ -262,7 +460,7 @@ class AdminDataVersionAdmin(admin.ModelAdmin):
         if obj.is_protected:
             self.message_user(
                 request,
-                "Dieses Admin-Szenario ist geschützt und wurde nicht gelöscht.",
+                "Dieses Datenmodell ist geschützt und wurde nicht gelöscht.",
                 level=messages.ERROR,
             )
             return
@@ -277,7 +475,7 @@ class AdminDataVersionAdmin(admin.ModelAdmin):
         if protected:
             self.message_user(
                 request,
-                f"{protected} geschützte Admin-Szenario(s) wurden nicht gelöscht.",
+                f"{protected} geschützte Datenmodell(e) wurden nicht gelöscht.",
                 level=messages.WARNING,
             )
 
@@ -328,14 +526,14 @@ class AdminDataVersionAdmin(admin.ModelAdmin):
         if not self.has_restore_permission(request):
             self.message_user(
                 request,
-                "Sie haben keine Berechtigung, Admin-Szenarien wiederherzustellen.",
+                "Sie haben keine Berechtigung, Datenmodelle wiederherzustellen.",
                 level=messages.ERROR,
             )
             return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
 
         version = self.get_object(request, object_id)
         if version is None:
-            self.message_user(request, "Admin-Szenario nicht gefunden.", level=messages.ERROR)
+            self.message_user(request, "Datenmodell nicht gefunden.", level=messages.ERROR)
             return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
 
         if request.method == "POST":
@@ -343,14 +541,14 @@ class AdminDataVersionAdmin(admin.ModelAdmin):
             details = ", ".join(f"{key}: {value}" for key, value in restored.items())
             self.message_user(
                 request,
-                f'Admin-Szenario "{version.name}" wurde wiederhergestellt. {details}',
+                f'Datenmodell "{version.name}" wurde wiederhergestellt. {details}',
                 level=messages.SUCCESS,
             )
             return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
 
         context = {
             **self.admin_site.each_context(request),
-            "title": "Admin-Szenario wiederherstellen",
+            "title": "Datenmodell wiederherstellen",
             "version": version,
             "payload_counts": (version.payload or {}).get("counts") or {},
             "payload_size": payload_size_mb(version.payload),
@@ -366,19 +564,19 @@ class AdminDataVersionAdmin(admin.ModelAdmin):
         if not self.has_refresh_permission(request):
             self.message_user(
                 request,
-                "Sie haben keine Berechtigung, Admin-Szenarien neu zu speichern.",
+                "Sie haben keine Berechtigung, Datenmodelle neu zu speichern.",
                 level=messages.ERROR,
             )
             return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
 
         version = self.get_object(request, object_id)
         if version is None:
-            self.message_user(request, "Admin-Szenario nicht gefunden.", level=messages.ERROR)
+            self.message_user(request, "Datenmodell nicht gefunden.", level=messages.ERROR)
             return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
         if version.is_protected:
             self.message_user(
                 request,
-                "Geschützte Admin-Szenarien können nicht überschrieben werden.",
+                "Geschützte Datenmodelle können nicht überschrieben werden.",
                 level=messages.ERROR,
             )
             return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
@@ -391,14 +589,14 @@ class AdminDataVersionAdmin(admin.ModelAdmin):
             version.save(update_fields=["payload", "captured_at", "updated_at"])
             self.message_user(
                 request,
-                f'Admin-Szenario "{version.name}" wurde mit dem aktuellen Admin-Datenstand neu gespeichert.',
+                f'Datenmodell "{version.name}" wurde mit dem aktuellen Datenmodell-Stand neu gespeichert.',
                 level=messages.SUCCESS,
             )
             return HttpResponseRedirect(reverse("admin:simulator_admindataversion_changelist"))
 
         context = {
             **self.admin_site.each_context(request),
-            "title": "Admin-Szenario überschreiben",
+            "title": "Datenmodell überschreiben",
             "version": version,
             "opts": self.model._meta,
         }
@@ -412,7 +610,7 @@ class AdminDataVersionAdmin(admin.ModelAdmin):
         if queryset.count() != 1:
             self.message_user(
                 request,
-                "Bitte genau ein Admin-Szenario auswählen, das wiederhergestellt werden soll.",
+                "Bitte genau ein Datenmodell auswählen, das wiederhergestellt werden soll.",
                 level=messages.ERROR,
             )
             return
@@ -421,10 +619,10 @@ class AdminDataVersionAdmin(admin.ModelAdmin):
         details = ", ".join(f"{key}: {value}" for key, value in restored.items())
         self.message_user(
             request,
-            f'Admin-Szenario "{version.name}" wurde wiederhergestellt. {details}',
+            f'Datenmodell "{version.name}" wurde wiederhergestellt. {details}',
             level=messages.SUCCESS,
         )
-    restore_selected_version.short_description = "Ausgewähltes Admin-Szenario wiederherstellen"
+    restore_selected_version.short_description = "Ausgewähltes Datenmodell wiederherstellen"
 
     def refresh_selected_versions(self, request, queryset):
         refreshed = 0
@@ -441,10 +639,10 @@ class AdminDataVersionAdmin(admin.ModelAdmin):
             refreshed += 1
         self.message_user(
             request,
-            f"{refreshed} Admin-Szenario(s) neu gespeichert. {skipped} geschützte Admin-Szenario(s) übersprungen.",
+            f"{refreshed} Datenmodell(e) neu gespeichert. {skipped} geschützte Datenmodell(e) übersprungen.",
             level=messages.SUCCESS if refreshed else messages.WARNING,
         )
-    refresh_selected_versions.short_description = "Ausgewählte Admin-Szenarien mit aktuellem Stand überschreiben"
+    refresh_selected_versions.short_description = "Ausgewählte Datenmodelle mit aktuellem Stand überschreiben"
 
 
 @admin.register(UIProvenanceOverride)
@@ -487,6 +685,9 @@ class UIProvenanceOverrideAdmin(admin.ModelAdmin):
             if value:
                 initial[key] = value
         return initial
+
+    def get_readonly_fields(self, request, obj=None):
+        return readonly_region_after_create(obj, super().get_readonly_fields(request, obj))
 
 
 class UIProvenanceLinkMixin:
@@ -763,10 +964,10 @@ class FormulaAdmin(admin.ModelAdmin):
         self.message_user(request, f"Formula {key} deleted - dependent values will auto-recalculate!")
 
 @admin.register(LandUse)
-class LandUseAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
+class LandUseAdmin(AdminAllObjectsMixin, OwnerScopeDisplayMixin, UIProvenanceLinkMixin, admin.ModelAdmin):
     ui_provenance_domain = "landuse"
-    list_display = ['code', 'name', 'status_ha', 'target_ha', 'parent', 'quelle', 'ui_provenance_link']
-    list_filter = ['quelle', 'parent']
+    list_display = ['code', 'name', 'region', 'owner_scope', 'status_ha', 'target_ha', 'parent', 'quelle', 'ui_provenance_link']
+    list_filter = ['region', OwnerScopeFilter, 'quelle', 'parent']
     search_fields = ['code', 'name']
     ordering = ['code']
     
@@ -777,7 +978,7 @@ class LandUseAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
     
     fieldsets = (
         ('Basic Information', {
-            'fields': ('code', 'name', 'parent', 'quelle')
+            'fields': ('code', 'name', 'region', 'parent', 'quelle')
         }),
         ('Data (Editable)', {
             'fields': ('status_ha', 'target_ha', 'user_percent', 'target_locked'),
@@ -793,6 +994,9 @@ class LandUseAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+    def get_readonly_fields(self, request, obj=None):
+        return readonly_region_after_create(obj, super().get_readonly_fields(request, obj))
     
     def trigger_cascade_update(self, request, queryset):
         """Manually trigger cascade update for selected LandUse records"""
@@ -834,11 +1038,11 @@ class LandUseAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
         )
 
 @admin.register(RenewableData)
-class RenewableDataAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
+class RenewableDataAdmin(AdminAllObjectsMixin, OwnerScopeDisplayMixin, UIProvenanceLinkMixin, admin.ModelAdmin):
     ui_provenance_domain = "renewable"
     # Show all entries with values only for fixed items
-    list_display = ['code', 'name', 'category', 'subcategory', 'unit', 'status_display', 'target_display', 'is_fixed', 'user_editable', 'parent_code', 'ui_provenance_link']
-    list_filter = ['category', 'subcategory', 'is_fixed', 'user_editable', 'created_at']
+    list_display = ['code', 'name', 'region', 'owner_scope', 'category', 'subcategory', 'unit', 'status_display', 'target_display', 'is_fixed', 'user_editable', 'parent_code', 'ui_provenance_link']
+    list_filter = ['region', OwnerScopeFilter, 'category', 'subcategory', 'is_fixed', 'user_editable', 'created_at']
     search_fields = ['code', 'name', 'category', 'subcategory']
     ordering = ['code']
     
@@ -865,7 +1069,7 @@ class RenewableDataAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
     
     fieldsets = (
         ('Identification', {
-            'fields': ('code', 'name', 'category', 'subcategory', 'description')
+            'fields': ('code', 'name', 'region', 'category', 'subcategory', 'description')
         }),
         ('Hierarchy', {
             'fields': ('parent_code',),
@@ -899,7 +1103,7 @@ class RenewableDataAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
             readonly = list(super().get_readonly_fields(request, obj))
             if 'formula' not in readonly:
                 readonly.append('formula')
-            return readonly
+            return readonly_region_after_create(obj, readonly)
         
         readonly = list(super().get_readonly_fields(request, obj))
         for field in ['code', 'created_at', 'updated_at', 'formula']:
@@ -911,14 +1115,14 @@ class RenewableDataAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
                 if field not in readonly:
                     readonly.append(field)
         
-        return readonly
+        return readonly_region_after_create(obj, readonly)
     
 
 @admin.register(VerbrauchData)
-class VerbrauchDataAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
+class VerbrauchDataAdmin(AdminAllObjectsMixin, OwnerScopeDisplayMixin, UIProvenanceLinkMixin, admin.ModelAdmin):
     ui_provenance_domain = "verbrauch"
-    list_display = ['code', 'category_display', 'unit', 'status_display', 'ziel_display', 'user_percent_display', 'is_calculated', 'user_editable', 'data_type', 'ui_provenance_link']
-    list_filter = [DataTypeFilter, 'is_calculated', 'user_editable', 'unit', 'created_at']
+    list_display = ['code', 'category_display', 'region', 'owner_scope', 'unit', 'status_display', 'ziel_display', 'user_percent_display', 'is_calculated', 'user_editable', 'data_type', 'ui_provenance_link']
+    list_filter = ['region', OwnerScopeFilter, DataTypeFilter, 'is_calculated', 'user_editable', 'unit', 'created_at']
     search_fields = ['code', 'category']
     ordering = ['code']
     
@@ -927,7 +1131,7 @@ class VerbrauchDataAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
     
     fieldsets = (
         ('Identification', {
-            'fields': ('code', 'category')
+            'fields': ('code', 'category', 'region')
         }),
         ('Data Values', {
             'fields': ('unit', 'status', 'ziel', 'user_percent'),
@@ -958,7 +1162,7 @@ class VerbrauchDataAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
             for field in ['status', 'ziel', 'user_percent']:
                 if field not in readonly:
                     readonly.append(field)
-        return readonly
+        return readonly_region_after_create(obj, readonly)
     
     readonly_fields = ['created_at', 'updated_at']
     
@@ -1075,16 +1279,16 @@ class VerbrauchDataAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
 
 
 @admin.register(GebaeudewaermeData)
-class GebaeudewaermeDataAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
+class GebaeudewaermeDataAdmin(AdminAllObjectsMixin, UIProvenanceLinkMixin, admin.ModelAdmin):
     ui_provenance_domain = "gebaeudewaerme"
-    list_display = ["code", "category", "unit", "status", "ziel", "is_calculated", "ui_provenance_link"]
-    list_filter = ["is_calculated", "unit", "created_at"]
+    list_display = ["code", "category", "region", "unit", "status", "ziel", "is_calculated", "ui_provenance_link"]
+    list_filter = ["region", "is_calculated", "unit", "created_at"]
     search_fields = ["code", "category"]
     ordering = ["code"]
     readonly_fields = ["created_at", "updated_at"]
     fieldsets = (
         ("Identification", {
-            "fields": ("code", "category"),
+            "fields": ("code", "category", "region"),
         }),
         ("Data Values", {
             "fields": ("unit", "status", "ziel", "user_percent"),
@@ -1102,26 +1306,30 @@ class GebaeudewaermeDataAdmin(UIProvenanceLinkMixin, admin.ModelAdmin):
         }),
     )
 
+    def get_readonly_fields(self, request, obj=None):
+        return readonly_region_after_create(obj, super().get_readonly_fields(request, obj))
+
 @admin.register(WSData)
-class WSDataAdmin(admin.ModelAdmin):
+class WSDataAdmin(AdminAllObjectsMixin, OwnerScopeDisplayMixin, admin.ModelAdmin):
     """Admin for WS daily inputs only (4 columns)."""
 
     list_display = [
         "tag_im_jahr",
+        "region",
         "solar_promille",
         "wind_promille",
         "heizung_abwaerm_promille",
         "verbrauch_promille",
-        "owner",
+        "owner_scope",
         "updated_at",
     ]
-    list_filter = ["owner"]
+    list_filter = ["region", OwnerScopeFilter]
     search_fields = ["tag_im_jahr"]
-    ordering = ["owner", "tag_im_jahr"]
+    ordering = ["region", "tag_im_jahr"]
     list_per_page = 100
 
     fieldsets = (
-        ("Day", {"fields": ("tag_im_jahr", "owner")}),
+        ("Day", {"fields": ("tag_im_jahr", "region", "owner")}),
         (
             "WS Input Columns",
             {
@@ -1135,6 +1343,9 @@ class WSDataAdmin(admin.ModelAdmin):
             },
         ),
     )
+
+    def get_readonly_fields(self, request, obj=None):
+        return readonly_region_after_create(obj, super().get_readonly_fields(request, obj))
 
 @admin.register(WS365Formula)
 class WS365FormulaAdmin(admin.ModelAdmin):

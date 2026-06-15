@@ -45,18 +45,18 @@
 {% block nav-global %}
 {% if perms.simulator.add_admindataversion or perms.simulator.view_admindataversion or perms.auth.change_user or user.is_superuser %}
   <div class="prosim-admin-shortcuts">
-    <strong>Admin-Szenarien:</strong>
+    <strong>Datenmodell:</strong>
     {% if perms.simulator.add_admindataversion %}
-      <a href="{% url 'simulator:admin_version_create' %}">Aktuellen Admin-Stand speichern</a>
+      <a href="{% url 'simulator:admin_version_create' %}">Aktuelles Datenmodell speichern</a>
     {% endif %}
     {% if perms.simulator.view_admindataversion %}
-      <a class="secondary" href="{% url 'simulator:admin_versions_dashboard' %}">Gespeicherte Szenarien öffnen</a>
+      <a class="secondary" href="{% url 'simulator:admin_versions_dashboard' %}">Gespeicherte Datenmodelle öffnen</a>
     {% endif %}
     {% if perms.auth.change_user or user.is_superuser %}
       <a class="secondary" href="{% url 'simulator:admin_roles_dashboard' %}">Rollen & Zugänge</a>
       <a class="secondary" href="{% url 'simulator:admin_role_assign' %}">Rolle zuweisen</a>
     {% endif %}
-    <span>Vor größeren Änderungen speichern, bei Fehlern später wiederherstellen.</span>
+    <span>Datenmodell vor größeren Änderungen speichern, bei Fehlern später wiederherstellen.</span>
   </div>
 {% endif %}
 {% endblock %}

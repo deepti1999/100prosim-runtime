@@ -101,6 +101,14 @@
         font-weight: 800;
     }
 
+    .history-value.is-history-unchanged {
+        color: transparent;
+    }
+
+    .history-value.is-history-unchanged .history-empty {
+        visibility: hidden;
+    }
+
     .history-empty {
         color: #adb5bd;
     }
@@ -176,10 +184,10 @@
                     <label for="historyHighlightMode">Anzeige</label>
         <select id="historyHighlightMode" class="form-select form-select-sm">
             <option value="off">Keine Hervorhebung</option>
-            <option value="changed">Geänderte Werte hervorheben</option>
+            <option value="changed">Nur geänderte Werte anzeigen</option>
         </select>
         <span class="history-highlight-help small">
-            Markiert Status- oder Zielwerte, wenn sie sich zwischen Baseline und Szenarien unterscheiden.
+            Blendet unveränderte Status-/Zielwerte aus. Nr., Code, Bezeichnung und Einheit bleiben sichtbar.
         </span>
     </div>
                 <div class="table-responsive">
@@ -213,11 +221,11 @@
                         <tbody>
                             {% for row in history_rows %}
                                 {% if row.type == "section" %}
-                                    <tr class="history-section-row">
+                                    <tr class="history-section-row" data-history-section>
                                         <td colspan="{{ history_colspan }}">{{ row.label }}</td>
                                     </tr>
                                 {% elif row.type == "spacer" %}
-                                    <tr class="history-spacer">
+                                    <tr class="history-spacer" data-history-spacer>
                                         <td colspan="{{ history_colspan }}"></td>
                                     </tr>
                                 {% else %}
@@ -267,6 +275,9 @@
             document
                 .querySelectorAll(".history-value.is-history-changed")
                 .forEach((cell) => cell.classList.remove("is-history-changed"));
+            document
+                .querySelectorAll(".history-value.is-history-unchanged")
+                .forEach((cell) => cell.classList.remove("is-history-unchanged"));
         };
 
         const updateHighlights = () => {
@@ -287,6 +298,9 @@
                     const uniqueValues = new Set(values);
 
                     if (uniqueValues.size <= 1) {
+                        cells.forEach((cell) => {
+                            cell.classList.add("is-history-unchanged");
+                        });
                         return;
                     }
 

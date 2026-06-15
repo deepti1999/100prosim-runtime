@@ -1,6 +1,512 @@
 {% extends 'simulator/base.html' %}
 
-{% block title %}Modifikationsdetails{% endblock %}
+{% block title %}Variantenvergleich{% endblock %}
+
+{% block extra_head %}
+<style>
+    .mod-chart-shell {
+        max-width: 760px;
+        border: 1px solid #d4d4d4;
+        background: #fff;
+        color: #666;
+        font-family: Calibri, Arial, sans-serif;
+        font-size: 12px;
+    }
+
+    .mod-chart-title {
+        background: #eeeeee;
+        color: #7a7a7a;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.15;
+        padding: 3px 6px;
+    }
+
+    .mod-chart-legend {
+        display: grid;
+        grid-template-columns: 170px repeat(4, auto) 1fr;
+        gap: 12px;
+        align-items: center;
+        padding: 4px 12px 2px 170px;
+        color: #555;
+        font-size: 12px;
+    }
+
+    .mod-legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+    }
+
+    .mod-legend-swatch {
+        width: 9px;
+        height: 9px;
+        display: inline-block;
+    }
+
+    .mod-legend-status {
+        background: #d9d9d9;
+    }
+
+    .mod-legend-basis {
+        background: #9b91bf;
+    }
+
+    .mod-legend-vor {
+        background: #cbd4f2;
+    }
+
+    .mod-legend-current {
+        background: #4057d8;
+    }
+
+    .mod-chart-scale {
+        display: grid;
+        grid-template-columns: 230px 1fr 56px;
+        align-items: end;
+        padding: 0 8px 1px 0;
+        color: #555;
+        font-size: 12px;
+    }
+
+    .mod-scale-label {
+        text-align: right;
+        padding-right: 12px;
+    }
+
+    .mod-scale-grid {
+        position: relative;
+        height: 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+    }
+
+    .mod-scale-grid span {
+        text-align: left;
+    }
+
+    .mod-status-note {
+        align-self: start;
+        color: #1d54d9;
+        font-size: 10px;
+        font-weight: 700;
+        text-align: right;
+    }
+
+    .mod-chart-row,
+    .mod-chart-section {
+        display: grid;
+        grid-template-columns: 28px 202px 1fr 56px;
+        min-height: 38px;
+        border-top: 1px solid #b7b7b7;
+    }
+
+    .mod-chart-row {
+        padding: 3px 0;
+    }
+
+    .mod-chart-section {
+        min-height: 32px;
+        background: #fff;
+    }
+
+    .mod-row-icon {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        color: #001cff;
+        font-size: 19px;
+        font-weight: 700;
+        padding-left: 4px;
+    }
+
+    .mod-row-label {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 8px 0 4px;
+        color: #777;
+        font-weight: 700;
+        text-align: right;
+        line-height: 1.15;
+    }
+
+    .mod-section-label {
+        grid-column: 1 / 3;
+        display: flex;
+        align-items: center;
+        padding-left: 34px;
+        color: #777;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .mod-section-zero {
+        display: flex;
+        align-items: center;
+        color: #ffff00;
+        font-weight: 700;
+    }
+
+    .mod-bar-area {
+        position: relative;
+        min-height: 34px;
+        padding: 4px 0;
+        background-image: linear-gradient(to right,
+            transparent 0,
+            transparent calc(16.666% - 1px),
+            #d2d2d2 calc(16.666% - 1px),
+            #d2d2d2 16.666%,
+            transparent 16.666%,
+            transparent calc(33.333% - 1px),
+            #d2d2d2 calc(33.333% - 1px),
+            #d2d2d2 33.333%,
+            transparent 33.333%,
+            transparent calc(50% - 1px),
+            #d2d2d2 calc(50% - 1px),
+            #d2d2d2 50%,
+            transparent 50%,
+            transparent calc(66.666% - 1px),
+            #d2d2d2 calc(66.666% - 1px),
+            #d2d2d2 66.666%,
+            transparent 66.666%,
+            transparent calc(83.333% - 1px),
+            #d2d2d2 calc(83.333% - 1px),
+            #d2d2d2 83.333%,
+            transparent 83.333%);
+    }
+
+    .mod-chart-150 .mod-bar-area {
+        background-image: linear-gradient(to right,
+            transparent 0,
+            transparent calc(33.333% - 1px),
+            #d2d2d2 calc(33.333% - 1px),
+            #d2d2d2 33.333%,
+            transparent 33.333%,
+            transparent calc(66.667% - 1px),
+            #d2d2d2 calc(66.667% - 1px),
+            #d2d2d2 66.667%,
+            transparent 66.667%);
+    }
+
+    .mod-zero-line {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        border-left: 1px solid #b5b5b5;
+    }
+
+    .mod-bar {
+        position: relative;
+        height: 6px;
+        margin-bottom: 3px;
+        min-width: 1px;
+    }
+
+    .mod-bar-status {
+        background: #d9d9d9;
+    }
+
+    .mod-bar-basis {
+        background: #b9afd2;
+    }
+
+    .mod-bar-vor {
+        background: #cbd4f2;
+    }
+
+    .mod-bar-current {
+        background: #4057d8;
+    }
+
+    .mod-value {
+        position: absolute;
+        left: calc(50% - 9px);
+        top: -2px;
+        width: 24px;
+        color: #ffff00;
+        font-size: 10px;
+        font-weight: 700;
+        text-align: center;
+        line-height: 1;
+    }
+
+    .mod-muted-value {
+        color: #8f8f8f;
+    }
+
+    .mod-delta {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 4px;
+        color: #1d54d9;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .mod-footnote {
+        padding: 1px 0 3px 42px;
+        color: #001cff;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .mod-stacked-title {
+        color: #565656;
+        font-size: 15px;
+        font-weight: 700;
+        padding: 10px 14px 4px;
+    }
+
+    .mod-stacked-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        align-items: center;
+        padding: 4px 14px;
+        color: #555;
+        font-size: 12px;
+    }
+
+    .mod-stacked-legend .mod-legend-item {
+        gap: 3px;
+    }
+
+    .mod-stack-scale {
+        display: grid;
+        grid-template-columns: 132px 1fr 54px;
+        align-items: end;
+        padding: 0 8px 0 0;
+        color: #555;
+        font-size: 12px;
+    }
+
+    .mod-stack-unit {
+        text-align: right;
+        padding-right: 16px;
+    }
+
+    .mod-stack-axis {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        height: 22px;
+    }
+
+    .mod-stacked-row {
+        display: grid;
+        grid-template-columns: 132px 1fr 54px;
+        min-height: 30px;
+        align-items: center;
+    }
+
+    .mod-stacked-label {
+        color: #555;
+        font-weight: 700;
+        text-align: right;
+        padding-right: 14px;
+    }
+
+    .mod-stacked-area {
+        position: relative;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        background-image: linear-gradient(to right,
+            transparent 0,
+            transparent calc(16.667% - 1px),
+            #d2d2d2 calc(16.667% - 1px),
+            #d2d2d2 16.667%,
+            transparent 16.667%,
+            transparent calc(33.333% - 1px),
+            #d2d2d2 calc(33.333% - 1px),
+            #d2d2d2 33.333%,
+            transparent 33.333%,
+            transparent calc(50% - 1px),
+            #d2d2d2 calc(50% - 1px),
+            #d2d2d2 50%,
+            transparent 50%,
+            transparent calc(66.667% - 1px),
+            #d2d2d2 calc(66.667% - 1px),
+            #d2d2d2 66.667%,
+            transparent 66.667%,
+            transparent calc(83.333% - 1px),
+            #d2d2d2 calc(83.333% - 1px),
+            #d2d2d2 83.333%,
+            transparent 83.333%);
+    }
+
+    .mod-stacked-area-3500 {
+        background-image: linear-gradient(to right,
+            transparent 0,
+            transparent calc(14.286% - 1px),
+            #d2d2d2 calc(14.286% - 1px),
+            #d2d2d2 14.286%,
+            transparent 14.286%,
+            transparent calc(28.571% - 1px),
+            #d2d2d2 calc(28.571% - 1px),
+            #d2d2d2 28.571%,
+            transparent 28.571%,
+            transparent calc(42.857% - 1px),
+            #d2d2d2 calc(42.857% - 1px),
+            #d2d2d2 42.857%,
+            transparent 42.857%,
+            transparent calc(57.143% - 1px),
+            #d2d2d2 calc(57.143% - 1px),
+            #d2d2d2 57.143%,
+            transparent 57.143%,
+            transparent calc(71.429% - 1px),
+            #d2d2d2 calc(71.429% - 1px),
+            #d2d2d2 71.429%,
+            transparent 71.429%,
+            transparent calc(85.714% - 1px),
+            #d2d2d2 calc(85.714% - 1px),
+            #d2d2d2 85.714%,
+            transparent 85.714%);
+    }
+
+    .mod-stack {
+        display: flex;
+        height: 8px;
+        width: 100%;
+    }
+
+    .mod-seg {
+        height: 8px;
+    }
+
+    .mod-seg-klik { background: #ffc43d; }
+    .mod-seg-gw { background: #d59a9a; }
+    .mod-seg-pw { background: #f2c49a; }
+    .mod-seg-grund { background: #c9c29c; }
+    .mod-seg-ma { background: #9fb6d3; }
+    .mod-seg-status { background: #d9d9d9; }
+    .mod-seg-basis { background: #9b91bf; }
+    .mod-seg-vor { background: #cbd4f2; }
+    .mod-seg-current { background: #4057d8; }
+    .mod-seg-wind-on { background: #9ed7e4; }
+    .mod-seg-wind-off { background: #dbe9ef; }
+    .mod-seg-pv { background: #ffff00; }
+    .mod-seg-water { background: #365f91; }
+    .mod-seg-bio { background: #77933c; }
+    .mod-seg-heat { background: #f2dcdb; }
+    .mod-seg-fossil { background: #7f7f7f; }
+
+    .mod-stacked-divider {
+        border-top: 1px solid #9f9f9f;
+        margin: 10px 0 8px;
+    }
+
+    .mod-exp-section-title {
+        color: #555;
+        font-size: 14px;
+        font-weight: 700;
+        padding: 8px 8px 2px;
+        border-top: 1px solid #9f9f9f;
+    }
+
+    .mod-exp-subtitle {
+        color: #555;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 8px 0 24px;
+    }
+
+    .mod-exp-row {
+        display: grid;
+        grid-template-columns: 28px 184px 1fr 54px;
+        min-height: 32px;
+        align-items: center;
+    }
+
+    .mod-exp-label {
+        color: #2450c8;
+        font-size: 12px;
+        font-weight: 700;
+        text-align: right;
+        padding-right: 8px;
+        line-height: 1.15;
+    }
+
+    .mod-exp-axis {
+        display: grid;
+        grid-template-columns: 212px 1fr 54px;
+        align-items: end;
+        color: #555;
+        font-size: 12px;
+        padding-right: 8px;
+    }
+
+    .mod-exp-unit {
+        text-align: right;
+        padding-right: 12px;
+    }
+
+    .mod-exp-scale {
+        display: flex;
+        justify-content: space-between;
+        height: 20px;
+        align-items: end;
+    }
+
+    .mod-exp-area {
+        position: relative;
+        min-height: 30px;
+        padding: 4px 0;
+        background-image: linear-gradient(to right,
+            transparent 0,
+            transparent calc(20% - 1px),
+            #d2d2d2 calc(20% - 1px),
+            #d2d2d2 20%,
+            transparent 20%,
+            transparent calc(40% - 1px),
+            #d2d2d2 calc(40% - 1px),
+            #d2d2d2 40%,
+            transparent 40%,
+            transparent calc(60% - 1px),
+            #d2d2d2 calc(60% - 1px),
+            #d2d2d2 60%,
+            transparent 60%,
+            transparent calc(80% - 1px),
+            #d2d2d2 calc(80% - 1px),
+            #d2d2d2 80%,
+            transparent 80%);
+    }
+
+    .mod-exp-bar {
+        height: 6px;
+        margin-bottom: 4px;
+        min-width: 1px;
+        position: relative;
+    }
+
+    .mod-exp-potential {
+        display: flex;
+        height: 7px;
+        width: 100%;
+    }
+
+    .mod-seg-saved { background: #70ad47; }
+    .mod-seg-sufficient { background: #ffff00; }
+    .mod-seg-thinkable { background: #ff7f00; }
+    .mod-seg-hopeless { background: #ff0000; }
+
+    @media (max-width: 900px) {
+        .mod-chart-shell {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .mod-chart-inner {
+            min-width: 620px;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
@@ -9,94 +515,629 @@
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2"><i class="fas fa-chart-bar me-2"></i>Modifikationsdetails</h1>
+                <h1 class="h2"><i class="fas fa-chart-bar me-2"></i>Variantenvergleich</h1>
             </div>
 
-            <div class="alert alert-info" role="alert">
-                <strong>Hinweis:</strong> Diese Seite zeigt die fünf Variantenvergleiche aus 100prosim-Excel
-                (AH Cockpit2) in Web-Form. Jedes Diagramm vergleicht vier Serien:
-                <em>Status</em>, <em>Basisszenario</em>, <em>Vorzustand</em> und <em>Aktueller Zustand</em>.
-                <br>
-                <small class="text-muted">
-                    Vorzustand-Quelle: {{ vorzustand_source }}.
-                    {% if not admin_baseline_available %}
-                        Hinweis: Noch kein Basisszenario vom Administrator erstellt — die Serie &quot;Basisszenario&quot; bleibt leer.
-                    {% endif %}
-                </small>
-            </div>
+            <div class="mod-chart-shell" aria-label="Nachfrage-Einflüsse auf Endenergieverbrauch: Variantenvergleich">
+                <div class="mod-chart-inner">
+                    <div class="mod-chart-title">1. Nachfrage-Einflüsse auf Endenergieverbrauch: Variantenvergleich</div>
 
-            {% for chart in charts %}
-            <div class="card mb-4" id="{{ chart.id }}-card">
-                <div class="card-header">
-                    <strong>{{ chart.title }}</strong>
-                    <span class="ms-2 small text-muted">Einheit: {{ chart.unit }}</span>
+                    <div class="mod-chart-legend">
+                        <div>Szenariostand:</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-legend-status"></span>Status</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-legend-basis"></span>Basisszenario</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-legend-current"></span>Aktueller Zustand</div>
+                    </div>
+
+                    <div class="mod-chart-scale">
+                        <div class="mod-scale-label"></div>
+                        <div class="mod-scale-grid" aria-hidden="true">
+                            <span>0</span>
+                            <span>20</span>
+                            <span>40</span>
+                            <span>60</span>
+                            <span>80</span>
+                            <span>100</span>
+                            <span>120</span>
+                        </div>
+                        <div class="mod-status-note">&Delta; zum Status:</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">{{ comparison_rows.0.label }}</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: {{ comparison_rows.0.status_width }}%;"><span class="mod-value mod-muted-value">{{ comparison_rows.0.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ comparison_rows.0.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ comparison_rows.0.current_width }}%;"><span class="mod-value">{{ comparison_rows.0.current }}</span></div>
+                        </div>
+                        <div class="mod-delta">{{ comparison_rows.0.delta }}</div>
+                    </div>
+
+                    <div class="mod-chart-section">
+                        <div class="mod-section-label">davon Suffizienz-Einflüsse:</div>
+                        <div class="mod-section-zero">0</div>
+                        <div></div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">{{ comparison_rows.1.label }}</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: {{ comparison_rows.1.status_width }}%;"><span class="mod-value mod-muted-value">{{ comparison_rows.1.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ comparison_rows.1.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ comparison_rows.1.current_width }}%;"><span class="mod-value">{{ comparison_rows.1.current }}</span></div>
+                        </div>
+                        <div class="mod-delta">{{ comparison_rows.1.delta }}</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">{{ comparison_rows.2.label }}</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: {{ comparison_rows.2.status_width }}%;"><span class="mod-value mod-muted-value">{{ comparison_rows.2.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ comparison_rows.2.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ comparison_rows.2.current_width }}%;"><span class="mod-value">{{ comparison_rows.2.current }}</span></div>
+                        </div>
+                        <div class="mod-delta">{{ comparison_rows.2.delta }}</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">{{ comparison_rows.3.label }}</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: {{ comparison_rows.3.status_width }}%;"><span class="mod-value mod-muted-value">{{ comparison_rows.3.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ comparison_rows.3.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ comparison_rows.3.current_width }}%;"><span class="mod-value">{{ comparison_rows.3.current }}</span></div>
+                        </div>
+                        <div class="mod-delta">{{ comparison_rows.3.delta }}</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">{{ comparison_rows.4.label }}</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: {{ comparison_rows.4.status_width }}%;"><span class="mod-value mod-muted-value">{{ comparison_rows.4.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ comparison_rows.4.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ comparison_rows.4.current_width }}%;"><span class="mod-value">{{ comparison_rows.4.current }}</span></div>
+                        </div>
+                        <div class="mod-delta">{{ comparison_rows.4.delta }}</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">{{ comparison_rows.5.label }}</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: {{ comparison_rows.5.status_width }}%;"><span class="mod-value mod-muted-value">{{ comparison_rows.5.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ comparison_rows.5.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ comparison_rows.5.current_width }}%;"><span class="mod-value">{{ comparison_rows.5.current }}</span></div>
+                        </div>
+                        <div class="mod-delta">{{ comparison_rows.5.delta }}</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">{{ comparison_rows.6.label }}</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: {{ comparison_rows.6.status_width }}%;"><span class="mod-value mod-muted-value">{{ comparison_rows.6.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ comparison_rows.6.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ comparison_rows.6.current_width }}%;"><span class="mod-value">{{ comparison_rows.6.current }}</span></div>
+                        </div>
+                        <div class="mod-delta">{{ comparison_rows.6.delta }}</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">{{ comparison_rows.7.label }}</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: {{ comparison_rows.7.status_width }}%;"><span class="mod-value mod-muted-value">{{ comparison_rows.7.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ comparison_rows.7.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ comparison_rows.7.current_width }}%;"><span class="mod-value">{{ comparison_rows.7.current }}</span></div>
+                        </div>
+                        <div class="mod-delta">{{ comparison_rows.7.delta }}</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">{{ comparison_rows.8.label }}</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: {{ comparison_rows.8.status_width }}%;"><span class="mod-value mod-muted-value">{{ comparison_rows.8.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ comparison_rows.8.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ comparison_rows.8.current_width }}%;"><span class="mod-value">{{ comparison_rows.8.current }}</span></div>
+                        </div>
+                        <div class="mod-delta">{{ comparison_rows.8.delta }}</div>
+                    </div>
+
                 </div>
-                <div class="card-body">
-                    <div style="height: 360px;">
-                        <canvas id="{{ chart.id }}"></canvas>
+            </div>
+
+            <div class="mod-chart-shell mod-chart-150 mt-4" aria-label="Effizienz-Einflüsse auf Endenergieverbrauch: Variantenvergleich">
+                <div class="mod-chart-inner">
+                    <div class="mod-chart-title">2. Effizienz-Einflüsse auf Endenergieverbrauch: Variantenvergleich</div>
+
+                    <div class="mod-chart-legend">
+                        <div>Szenariostand:</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-legend-status"></span>Status</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-legend-basis"></span>Basisszenario</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-legend-vor"></span>Vorzustand</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-legend-current"></span>Aktueller Zustand</div>
+                    </div>
+
+                    <div class="mod-chart-scale">
+                        <div class="mod-scale-label"></div>
+                        <div class="mod-scale-grid" aria-hidden="true">
+                            <span>0</span>
+                            <span>50</span>
+                            <span>100</span>
+                            <span>150</span>
+                        </div>
+                        <div class="mod-status-note">&Delta; zum Status:</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">{{ efficiency_rows.0.label }}</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: {{ efficiency_rows.0.status_width }}%;"><span class="mod-value mod-muted-value">{{ efficiency_rows.0.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ efficiency_rows.0.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: {{ efficiency_rows.0.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ efficiency_rows.0.current_width }}%;"><span class="mod-value">{{ efficiency_rows.0.current }}</span></div>
+                        </div>
+                        <div class="mod-delta">{{ efficiency_rows.0.delta }}</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">{{ efficiency_rows.1.label }}</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: {{ efficiency_rows.1.status_width }}%;"><span class="mod-value mod-muted-value">{{ efficiency_rows.1.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ efficiency_rows.1.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: {{ efficiency_rows.1.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ efficiency_rows.1.current_width }}%;"><span class="mod-value">{{ efficiency_rows.1.current }}</span></div>
+                        </div>
+                        <div class="mod-delta">{{ efficiency_rows.1.delta }}</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">{{ efficiency_rows.2.label }}</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: {{ efficiency_rows.2.status_width }}%;"><span class="mod-value mod-muted-value">{{ efficiency_rows.2.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ efficiency_rows.2.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: {{ efficiency_rows.2.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ efficiency_rows.2.current_width }}%;"><span class="mod-value">{{ efficiency_rows.2.current }}</span></div>
+                        </div>
+                        <div class="mod-delta">{{ efficiency_rows.2.delta }}</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">Energet.Sanierung Gebäudebestand</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: 66.667%;"><span class="mod-value mod-muted-value">100</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: 63.333%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: 56.667%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: 56.667%;"><span class="mod-value">85</span></div>
+                        </div>
+                        <div class="mod-delta">-15 %</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">Wärmepumpenant.an Gebäudew.</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: 2.667%;"><span class="mod-value mod-muted-value">4</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: 58%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: 58%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: 58%;"><span class="mod-value">87</span></div>
+                        </div>
+                        <div class="mod-delta">x 20,3</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">Solarthermieanteil an Gebäudew.</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: 0.667%;"><span class="mod-value mod-muted-value">1</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: 1.333%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: 1.333%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: 1.333%;"><span class="mod-value">2</span></div>
+                        </div>
+                        <div class="mod-delta">x 1,6</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">Anteil Biobrennstoff an Geb.W.</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: 7.333%;"><span class="mod-value mod-muted-value">11</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: 0%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: 0%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: 0%;"><span class="mod-value">0</span></div>
+                        </div>
+                        <div class="mod-delta">x 0,0</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">Wärmeanw.-Effiz.Gewerbe/Industrie</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: 66.667%;"><span class="mod-value mod-muted-value">100</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: 59.333%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: 59.333%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: 59.333%;"><span class="mod-value">89</span></div>
+                        </div>
+                        <div class="mod-delta">x 0,9</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">Syntheseanteil an Grundstoffen</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: 0%;"><span class="mod-value mod-muted-value">0</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: 48.667%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: 48.667%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: 48.667%;"><span class="mod-value">73</span></div>
+                        </div>
+                        <div class="mod-delta">(Neu)</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">Anteil Elektrotrakt. Personenverkehr</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: 12.667%;"><span class="mod-value mod-muted-value">19</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: 55.333%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: 55.333%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: 55.333%;"><span class="mod-value">83</span></div>
+                        </div>
+                        <div class="mod-delta">x 10,0</div>
+                    </div>
+
+                    <div class="mod-chart-row">
+                        <div class="mod-row-icon">&rarr;</div>
+                        <div class="mod-row-label">Anteil Elektrotrakt. Güterverkehr</div>
+                        <div class="mod-bar-area">
+                            <span class="mod-zero-line"></span>
+                            <div class="mod-bar mod-bar-status" style="width: 8%;"><span class="mod-value mod-muted-value">12</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: 49.333%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: 49.333%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: 49.333%;"><span class="mod-value">74</span></div>
+                        </div>
+                        <div class="mod-delta">x 4,5</div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
+
+            <div class="mod-chart-shell mt-4" aria-label="Variantenvergleich">
+                <div class="mod-chart-inner">
+                    <div class="mod-chart-title">3. Variantenvergleich</div>
+
+                    <div class="mod-stacked-title">Endenergie-Verbrauch nach Anwendungsbereichen inklusive Grundstoffe</div>
+                    <div class="mod-stacked-legend">
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-klik"></span>KLIK</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-gw"></span>GW</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-pw"></span>PW</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-grund"></span>Grundst.</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-ma"></span>MA</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-status"></span>Status</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-basis"></span>Basisszenario</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-vor"></span>Vorzustand</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-current"></span>Aktueller Zust.</div>
+                    </div>
+
+                    <div class="mod-stack-scale">
+                        <div class="mod-stack-unit">[TWh/a]</div>
+                        <div class="mod-stack-axis" aria-hidden="true">
+                            <span>0</span><span>500</span><span>1000</span><span>1500</span><span>2000</span><span>2500</span><span>3000</span>
+                        </div>
+                        <div class="mod-status-note">&Delta; zum Status:</div>
+                    </div>
+
+                    <div class="mod-stacked-row">
+                        <div class="mod-stacked-label">Status</div>
+                        <div class="mod-stacked-area">
+                            <div class="mod-stack" style="width: 88%;">
+                                <span class="mod-seg mod-seg-klik" style="width: 13%;"></span>
+                                <span class="mod-seg mod-seg-gw" style="width: 28%;"></span>
+                                <span class="mod-seg mod-seg-pw" style="width: 21%;"></span>
+                                <span class="mod-seg mod-seg-grund" style="width: 8%;"></span>
+                                <span class="mod-seg mod-seg-ma" style="width: 30%;"></span>
+                            </div>
+                        </div>
+                        <div></div>
+                    </div>
+                    <div class="mod-stacked-row">
+                        <div class="mod-stacked-label">Basisszenario</div>
+                        <div class="mod-stacked-area">
+                            <div class="mod-stack" style="width: 65%;">
+                                <span class="mod-seg mod-seg-klik" style="width: 17%;"></span>
+                                <span class="mod-seg mod-seg-gw" style="width: 34%;"></span>
+                                <span class="mod-seg mod-seg-pw" style="width: 25%;"></span>
+                                <span class="mod-seg mod-seg-grund" style="width: 4%;"></span>
+                                <span class="mod-seg mod-seg-ma" style="width: 20%;"></span>
+                            </div>
+                        </div>
+                        <div></div>
+                    </div>
+                    <div class="mod-stacked-row">
+                        <div class="mod-stacked-label">Vorzustand</div>
+                        <div class="mod-stacked-area"></div>
+                        <div></div>
+                    </div>
+                    <div class="mod-stacked-row">
+                        <div class="mod-stacked-label">Aktueller Zustand</div>
+                        <div class="mod-stacked-area">
+                            <div class="mod-stack" style="width: 65%;">
+                                <span class="mod-seg mod-seg-current" style="width: 100%;"></span>
+                            </div>
+                            <div class="mod-stack" style="width: 65%; position:absolute; left:0; top:13px;">
+                                <span class="mod-seg mod-seg-klik" style="width: 17%;"></span>
+                                <span class="mod-seg mod-seg-gw" style="width: 34%;"></span>
+                                <span class="mod-seg mod-seg-pw" style="width: 25%;"></span>
+                                <span class="mod-seg mod-seg-grund" style="width: 4%;"></span>
+                                <span class="mod-seg mod-seg-ma" style="width: 20%;"></span>
+                            </div>
+                        </div>
+                        <div class="mod-delta">-27 %</div>
+                    </div>
+
+                    <div class="mod-stacked-divider"></div>
+
+                    <div class="mod-stacked-title">Primärenergie-Beiträge nach Quellen</div>
+                    <div class="mod-stacked-legend">
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-wind-on"></span>Wind onshore</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-wind-off"></span>Wind offshore</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-pv"></span>Photovoltaik</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-water"></span>Wasserkraft</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-bio"></span>Biobrennstoffe</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-heat"></span>Umgeb./Solarwärme</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-fossil"></span>Foss.Atom.Brennst.</div>
+                    </div>
+
+                    <div class="mod-stack-scale">
+                        <div class="mod-stack-unit">[TWh/a]</div>
+                        <div class="mod-stack-axis" aria-hidden="true">
+                            <span>0</span><span>500</span><span>1000</span><span>1500</span><span>2000</span><span>2500</span><span>3000</span><span>3500</span>
+                        </div>
+                        <div class="mod-status-note">&Delta; zum Status:</div>
+                    </div>
+
+                    <div class="mod-stacked-row">
+                        <div class="mod-stacked-label">Status</div>
+                        <div class="mod-stacked-area mod-stacked-area-3500">
+                            <div class="mod-stack" style="width: 86%;">
+                                <span class="mod-seg mod-seg-wind-on" style="width: 5%;"></span>
+                                <span class="mod-seg mod-seg-wind-off" style="width: 3%;"></span>
+                                <span class="mod-seg mod-seg-pv" style="width: 3%;"></span>
+                                <span class="mod-seg mod-seg-water" style="width: 1%;"></span>
+                                <span class="mod-seg mod-seg-bio" style="width: 14%;"></span>
+                                <span class="mod-seg mod-seg-heat" style="width: 2%;"></span>
+                                <span class="mod-seg mod-seg-fossil" style="width: 72%;"></span>
+                            </div>
+                        </div>
+                        <div></div>
+                    </div>
+                    <div class="mod-stacked-row">
+                        <div class="mod-stacked-label">Basisszenario</div>
+                        <div class="mod-stacked-area mod-stacked-area-3500">
+                            <div class="mod-stack" style="width: 70%;">
+                                <span class="mod-seg mod-seg-wind-on" style="width: 16%;"></span>
+                                <span class="mod-seg mod-seg-pv" style="width: 45%;"></span>
+                                <span class="mod-seg mod-seg-bio" style="width: 9%;"></span>
+                                <span class="mod-seg mod-seg-heat" style="width: 30%;"></span>
+                            </div>
+                        </div>
+                        <div></div>
+                    </div>
+                    <div class="mod-stacked-row">
+                        <div class="mod-stacked-label">Vorzustand</div>
+                        <div class="mod-stacked-area mod-stacked-area-3500"></div>
+                        <div></div>
+                    </div>
+                    <div class="mod-stacked-row">
+                        <div class="mod-stacked-label">Aktueller Zustand</div>
+                        <div class="mod-stacked-area mod-stacked-area-3500">
+                            <div class="mod-stack" style="width: 70%;">
+                                <span class="mod-seg mod-seg-current" style="width: 100%;"></span>
+                            </div>
+                            <div class="mod-stack" style="width: 70%; position:absolute; left:0; top:13px;">
+                                <span class="mod-seg mod-seg-wind-on" style="width: 16%;"></span>
+                                <span class="mod-seg mod-seg-pv" style="width: 45%;"></span>
+                                <span class="mod-seg mod-seg-bio" style="width: 9%;"></span>
+                                <span class="mod-seg mod-seg-heat" style="width: 30%;"></span>
+                            </div>
+                        </div>
+                        <div class="mod-delta">-18 %</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mod-chart-shell mt-4" aria-label="Ausbau der Erneuerbaren Energiequellen">
+                <div class="mod-chart-inner">
+                    <div class="mod-chart-title">4. Ausbau der Erneuerbaren Energiequellen</div>
+
+                    <div class="mod-stacked-legend">
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-legend-status"></span>Status</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-legend-basis"></span>Basisszenario</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-legend-vor"></span>Vorzustand</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-legend-current"></span>Aktueller Zustand</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-saved"></span>gesichert</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-sufficient"></span>aussichtsreich</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-thinkable"></span>denkbar</div>
+                        <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-hopeless"></span>aussichtslos</div>
+                    </div>
+
+                    <div class="mod-exp-section-title">5.1 Windenergie onshore</div>
+                    <div class="mod-exp-subtitle">&rarr; Windparkfläche</div>
+                    <div class="mod-exp-axis">
+                        <div class="mod-exp-unit">% v.Bodenfläche der Zielregion:</div>
+                        <div class="mod-exp-scale"><span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span></div>
+                        <div class="mod-status-note">&Delta; zum Status:</div>
+                    </div>
+                    <div class="mod-exp-row">
+                        <div></div>
+                        <div class="mod-exp-label">2,0 % der Regionsfläche</div>
+                        <div class="mod-exp-area">
+                            <div class="mod-exp-bar mod-bar-status" style="width: 20%;"></div>
+                            <div class="mod-exp-bar mod-bar-basis" style="width: 20%;"></div>
+                            <div class="mod-exp-bar mod-bar-current" style="width: 20%;"></div>
+                            <div class="mod-exp-potential">
+                                <span class="mod-seg mod-seg-saved" style="width: 5%;"></span>
+                                <span class="mod-seg mod-seg-sufficient" style="width: 37%;"></span>
+                                <span class="mod-seg mod-seg-thinkable" style="width: 38%;"></span>
+                                <span class="mod-seg mod-seg-hopeless" style="width: 20%;"></span>
+                            </div>
+                        </div>
+                        <div class="mod-delta">x 4,1</div>
+                    </div>
+                    <div class="mod-exp-subtitle">&rarr; Installierte Leistung</div>
+                    <div class="mod-exp-axis">
+                        <div class="mod-exp-unit">[GW]</div>
+                        <div class="mod-exp-scale"><span>0</span><span>50</span><span>100</span><span>150</span><span>200</span></div>
+                        <div></div>
+                    </div>
+                    <div class="mod-exp-row">
+                        <div></div>
+                        <div class="mod-exp-label">59,5 GW<br>188 GW</div>
+                        <div class="mod-exp-area">
+                            <div class="mod-exp-bar mod-bar-status" style="width: 32%;"></div>
+                            <div class="mod-exp-bar mod-bar-basis" style="width: 95%;"></div>
+                            <div class="mod-exp-bar mod-bar-current" style="width: 95%;"></div>
+                        </div>
+                        <div class="mod-delta">x 3,2</div>
+                    </div>
+
+                    <div class="mod-exp-section-title">4.2 Windenergie offshore Deutschland (anteilige Anrechnung)</div>
+                    <div class="mod-exp-subtitle">&rarr; Install. Leistung ges.</div>
+                    <div class="mod-exp-axis">
+                        <div class="mod-exp-unit"></div>
+                        <div class="mod-exp-scale"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span><span>120</span></div>
+                        <div class="mod-status-note">&Delta; zum Status:</div>
+                    </div>
+                    <div class="mod-exp-row">
+                        <div></div>
+                        <div class="mod-exp-label">8,3 GW<br>70 GW</div>
+                        <div class="mod-exp-area">
+                            <div class="mod-exp-bar mod-bar-status" style="width: 7%;"></div>
+                            <div class="mod-exp-bar mod-bar-basis" style="width: 58%;"></div>
+                            <div class="mod-exp-bar mod-bar-current" style="width: 58%;"></div>
+                            <div class="mod-exp-potential">
+                                <span class="mod-seg mod-seg-saved" style="width: 10%;"></span>
+                                <span class="mod-seg mod-seg-sufficient" style="width: 58%;"></span>
+                                <span class="mod-seg mod-seg-thinkable" style="width: 12%;"></span>
+                                <span class="mod-seg mod-seg-hopeless" style="width: 20%;"></span>
+                            </div>
+                        </div>
+                        <div class="mod-delta">x 8,4</div>
+                    </div>
+
+                    <div class="mod-exp-section-title">4.3 Solarenergie</div>
+                    <div class="mod-exp-subtitle">&rarr; Solar-Dachflächen</div>
+                    <div class="mod-exp-axis">
+                        <div class="mod-exp-unit">% von Siedlungsfläche:</div>
+                        <div class="mod-exp-scale"><span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span><span>12</span></div>
+                        <div class="mod-status-note">&Delta; zum Status:</div>
+                    </div>
+                    <div class="mod-exp-row">
+                        <div></div>
+                        <div class="mod-exp-label">5,5 % v. Siedlungsfläche</div>
+                        <div class="mod-exp-area">
+                            <div class="mod-exp-bar mod-bar-status" style="width: 14%;"></div>
+                            <div class="mod-exp-bar mod-bar-basis" style="width: 55%;"></div>
+                            <div class="mod-exp-bar mod-bar-current" style="width: 55%;"></div>
+                            <div class="mod-exp-potential">
+                                <span class="mod-seg mod-seg-saved" style="width: 8%;"></span>
+                                <span class="mod-seg mod-seg-sufficient" style="width: 38%;"></span>
+                                <span class="mod-seg mod-seg-thinkable" style="width: 30%;"></span>
+                                <span class="mod-seg mod-seg-hopeless" style="width: 24%;"></span>
+                            </div>
+                        </div>
+                        <div class="mod-delta">x 5,4</div>
+                    </div>
+                    <div class="mod-exp-subtitle">&rarr; Solar-Freiflächen</div>
+                    <div class="mod-exp-axis">
+                        <div class="mod-exp-unit">% von Landwirtschaftsfläche:</div>
+                        <div class="mod-exp-scale"><span>0</span><span>5</span><span>10</span><span>15</span><span>20</span><span>25</span></div>
+                        <div></div>
+                    </div>
+                    <div class="mod-exp-row">
+                        <div></div>
+                        <div class="mod-exp-label">3,8 % v. Landwirtsch.fläche</div>
+                        <div class="mod-exp-area">
+                            <div class="mod-exp-bar mod-bar-status" style="width: 50%; border: 1px dashed #555; background: transparent;"></div>
+                            <div class="mod-exp-bar mod-bar-basis" style="width: 50%; border: 1px dashed #4057d8; background: transparent;"></div>
+                            <div class="mod-exp-potential">
+                                <span class="mod-seg mod-seg-saved" style="width: 8%;"></span>
+                                <span class="mod-seg mod-seg-sufficient" style="width: 48%;"></span>
+                                <span class="mod-seg mod-seg-thinkable" style="width: 36%;"></span>
+                                <span class="mod-seg mod-seg-hopeless" style="width: 8%;"></span>
+                            </div>
+                        </div>
+                        <div class="mod-delta">x 35,0</div>
+                    </div>
+                    <div class="mod-exp-subtitle">&rarr; Installierte Solarstrom-Leistung</div>
+                    <div class="mod-exp-axis">
+                        <div class="mod-exp-unit">[GW]</div>
+                        <div class="mod-exp-scale"><span>0</span><span>200</span><span>400</span><span>600</span><span>800</span><span>1.000</span><span>1.200</span><span>1.400</span></div>
+                        <div></div>
+                    </div>
+                    <div class="mod-exp-row">
+                        <div></div>
+                        <div class="mod-exp-label">67,4 GW<br>1297 GW</div>
+                        <div class="mod-exp-area">
+                            <div class="mod-exp-bar mod-bar-status" style="width: 5%;"></div>
+                            <div class="mod-exp-bar mod-bar-basis" style="width: 93%;"></div>
+                            <div class="mod-exp-bar mod-bar-current" style="width: 93%;"></div>
+                        </div>
+                        <div class="mod-delta">x 19,2</div>
+                    </div>
+
+                    <div class="mod-exp-section-title">4.4 Energiepflanzenanbau</div>
+                    <div class="mod-exp-subtitle">&rarr; Anbaufläche</div>
+                    <div class="mod-exp-axis">
+                        <div class="mod-exp-unit">% von Landwirtschaftsfläche:</div>
+                        <div class="mod-exp-scale"><span>0</span><span>5</span><span>10</span><span>15</span><span>20</span><span>25</span></div>
+                        <div class="mod-status-note">&Delta; zum Status:</div>
+                    </div>
+                    <div class="mod-exp-row">
+                        <div></div>
+                        <div class="mod-exp-label">9,1 % v. Landwirtsch.fläche</div>
+                        <div class="mod-exp-area">
+                            <div class="mod-exp-bar mod-bar-status" style="width: 50%; border: 1px dashed #555; background: transparent;"></div>
+                            <div class="mod-exp-bar mod-bar-basis" style="width: 38%;"></div>
+                            <div class="mod-exp-bar mod-bar-current" style="width: 38%;"></div>
+                            <div class="mod-exp-potential">
+                                <span class="mod-seg mod-seg-saved" style="width: 8%;"></span>
+                                <span class="mod-seg mod-seg-sufficient" style="width: 50%;"></span>
+                                <span class="mod-seg mod-seg-thinkable" style="width: 32%;"></span>
+                                <span class="mod-seg mod-seg-hopeless" style="width: 10%;"></span>
+                            </div>
+                        </div>
+                        <div class="mod-delta">x 0,7</div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 </div>
-
-{{ charts|json_script:"modifikationsdetails-data" }}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const data = JSON.parse(document.getElementById('modifikationsdetails-data').textContent || '[]');
-    const colors = {
-        status:        '#64748b',   // slate
-        basisszenario: '#3b82f6',   // blue
-        vorzustand:    '#f59e0b',   // amber
-        aktuell:       '#10b981',   // emerald
-    };
-    const formatN = (n) => (n === null || n === undefined)
-        ? '—'
-        : Number(n).toLocaleString('de-DE', { maximumFractionDigits: 1 });
-
-    data.forEach(cfg => {
-        const ctx = document.getElementById(cfg.id);
-        if (!ctx) return;
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: cfg.labels,
-                datasets: [
-                    { label: 'Status',            data: cfg.series.status,        backgroundColor: colors.status },
-                    { label: 'Basisszenario',     data: cfg.series.basisszenario, backgroundColor: colors.basisszenario },
-                    { label: 'Vorzustand',        data: cfg.series.vorzustand,    backgroundColor: colors.vorzustand },
-                    { label: 'Aktueller Zustand', data: cfg.series.aktuell,       backgroundColor: colors.aktuell },
-                ],
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'top' },
-                    tooltip: {
-                        callbacks: {
-                            label: c => c.dataset.label + ': ' + formatN(c.parsed.y) + ' ' + cfg.unit,
-                        },
-                    },
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: { display: true, text: cfg.unit },
-                        ticks: {
-                            callback: (v) => Number(v).toLocaleString('de-DE', { maximumFractionDigits: 1 }),
-                        },
-                    },
-                    x: {
-                        ticks: { font: { size: 12 } },
-                    },
-                },
-            },
-        });
-    });
-});
-</script>
 {% endblock %}

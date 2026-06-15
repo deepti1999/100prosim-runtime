@@ -27,8 +27,6 @@ ACTIVE_SCENARIO_UPDATED_AT_KEY = "active_scenario_updated_at"
 
 def _baseline_scope(request):
     user = getattr(request, "user", None)
-    if user and user.is_authenticated and user.is_staff:
-        return {"key": "global", "owner": None, "label": "global"}
     if user and user.is_authenticated:
         return {"key": f"user:{user.id}", "owner": user, "label": "workspace"}
     return {"key": "global", "owner": None, "label": "global"}
@@ -326,7 +324,7 @@ def restore_baseline(request):
         # IMPORTANT: restore into the caller's workspace (per-user data),
         # using the admin baseline as the source-of-truth payload.
         user = request.user
-        target_owner = None if (user.is_authenticated and user.is_staff) else user
+        target_owner = user if user.is_authenticated else None
         _restore_snapshot_payload(target_owner, snapshot.payload)
         _invalidate_after_snapshot_restore(
             owner=target_owner,

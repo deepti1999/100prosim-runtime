@@ -138,6 +138,23 @@ def _queue_or_reuse_balance_job(user, job_type, payload):
         payload=payload or {},
     )
 
+def _queue_new_balance_job(user, job_type, payload):
+    """
+    Queue a fresh job for data-changing saves.
+
+    Reusing an already-running recalculation job is unsafe after a user edit:
+    the old job may have started before the new value was saved, so it would
+    finish with stale dependent values. Manual balance buttons can still use
+    _queue_or_reuse_balance_job to avoid duplicate heavy jobs.
+    """
+    _expire_stale_balance_jobs(user=user, job_type=job_type)
+    return BalanceJob.objects.create(
+        job_type=job_type,
+        status=BalanceJob.STATUS_QUEUED,
+        created_by=user,
+        payload=payload or {},
+    )
+
 def _run_balance_job_inline_debug(request, job_type):
     """
     Localhost fallback: execute WS balance job inline when DEBUG is enabled.
@@ -294,6 +311,7 @@ def ws_api_balance_job_status(request, job_id):
     return JsonResponse(payload)
 
 __all__ = [
+    "_queue_new_balance_job",
     "_queue_or_reuse_balance_job",
     "ws_api_apply_balance",
     "ws_api_apply_full_balance",

@@ -2,10 +2,10 @@
 
 {% block content %}
 <div id="content-main">
-  <h1>Admin-Szenario überschreiben</h1>
+  <h1>Datenmodell überschreiben</h1>
   <p>
-    Diese Aktion überschreibt dieses gespeicherte Admin-Szenario mit
-    dem aktuellen globalen Admin-Datenstand der Region
+    Diese Aktion überschreibt dieses gespeicherte Datenmodell mit
+    dem aktuellen globalen Datenmodell-Stand der Region
     <strong>{{ version.region }}</strong>.
   </p>
   <p>
@@ -13,13 +13,13 @@
   </p>
 
   <p style="color:#8a4b00;">
-    Geschützte Admin-Szenarien können nicht überschrieben werden. Nutzen Sie diese
+    Geschützte Datenmodelle können nicht überschrieben werden. Nutzen Sie diese
     Aktion nur für Entwürfe oder Tests.
   </p>
 
   <form method="post">
     {% csrf_token %}
-    <input type="submit" class="default" value="Ja, aktuellen Stand in diesem Admin-Szenario speichern">
+    <input type="submit" class="default" value="Ja, aktuellen Stand in diesem Datenmodell speichern">
     <a href="{% url 'admin:simulator_admindataversion_changelist' %}" class="button cancel-link">Abbrechen</a>
   </form>
 </div>

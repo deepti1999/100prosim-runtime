@@ -24,6 +24,8 @@ from .models import (
 )
 
 ADMIN_BASELINE_KEY = "global"
+BAR_SCALE_MAX = 120.0
+EFFICIENCY_BAR_SCALE_MAX = 150.0
 
 
 # --- Chart definitions ---------------------------------------------------
@@ -221,6 +223,187 @@ def _chart_snapshot_value(chart, payload, code, pick):
     return _scale(_snapshot_lookup(payload, chart["source"], code, pick), chart.get("scale", 1.0))
 
 
+def _bar_width(value, scale_max=BAR_SCALE_MAX):
+    number = _to_float(value)
+    if number is None:
+        return "0"
+    width = max(0.0, min((number / scale_max) * 100.0, 100.0))
+    return f"{width:.3f}".rstrip("0").rstrip(".")
+
+
+def _format_percent_value(value):
+    number = _to_float(value)
+    if number is None:
+        return "—"
+    if number.is_integer():
+        return str(int(number))
+    return f"{number:.1f}".replace(".", ",")
+
+
+def _comparison_row(label, *, status, basis, current, scale_max=BAR_SCALE_MAX):
+    status_value = _to_float(status)
+    current_value = _to_float(current)
+    delta = None
+    if status_value is not None and current_value is not None:
+        delta = current_value - status_value
+    return {
+        "label": label,
+        "status": _format_percent_value(status),
+        "basis": _format_percent_value(basis),
+        "current": _format_percent_value(current),
+        "status_width": _bar_width(status, scale_max),
+        "basis_width": _bar_width(basis, scale_max),
+        "current_width": _bar_width(current, scale_max),
+        "delta": (
+            "—"
+            if delta is None
+            else f"{'+' if delta >= 0 else ''}{_format_percent_value(delta)} %"
+        ),
+    }
+
+
+def _global_verbrauch_value(code, field):
+    try:
+        from simulator.region_scope import get_current_region_code
+
+        qs = VerbrauchData.all_objects.filter(
+            owner__isnull=True,
+            code=code,
+        )
+        region_code = get_current_region_code()
+        if region_code:
+            qs = qs.filter(region__code=region_code)
+        row = qs.first()
+    except Exception:
+        return None
+    return getattr(row, field, None) if row else None
+
+
+def _scoped_verbrauch_value(code, field):
+    try:
+        row = VerbrauchData.objects.filter(code=code).first()
+    except Exception:
+        return None
+    return getattr(row, field, None) if row else None
+
+
+def _verbrauch_comparison_row(label, code, *, scale_max=BAR_SCALE_MAX):
+    status = _global_verbrauch_value(code, "status")
+    basis = _global_verbrauch_value(code, "ziel")
+    current = _scoped_verbrauch_value(code, "ziel")
+    return _comparison_row(
+        label,
+        status=status if status is not None else 100.0,
+        basis=basis if basis is not None else 100.0,
+        current=current if current is not None else basis,
+        scale_max=scale_max,
+    )
+
+
+def _modification_comparison_rows():
+    wohn_status = _global_verbrauch_value("2.1.2", "status")
+    wohn_basis = _global_verbrauch_value("2.1.2", "ziel")
+    wohn_current = _scoped_verbrauch_value("2.1.2", "ziel")
+    gewerbe_status = _global_verbrauch_value("2.2.1", "status")
+    gewerbe_basis = _global_verbrauch_value("2.2.1", "ziel")
+    gewerbe_current = _scoped_verbrauch_value("2.2.1", "ziel")
+    handel_status = _global_verbrauch_value("1.2.2", "status")
+    handel_basis = _global_verbrauch_value("1.2.2", "ziel")
+    handel_current = _scoped_verbrauch_value("1.2.2", "ziel")
+    industrie_status = _global_verbrauch_value("3.2.1", "status")
+    industrie_basis = _global_verbrauch_value("3.2.1", "ziel")
+    industrie_current = _scoped_verbrauch_value("3.2.1", "ziel")
+    kunststoff_status = _global_verbrauch_value("9.1.1", "status")
+    kunststoff_basis = _global_verbrauch_value("9.1.1", "ziel")
+    kunststoff_current = _scoped_verbrauch_value("9.1.1", "ziel")
+    personen_status = _global_verbrauch_value("4.1.1.1", "status")
+    personen_basis = _global_verbrauch_value("4.1.1.1", "ziel")
+    personen_current = _scoped_verbrauch_value("4.1.1.1", "ziel")
+    gueter_status = _global_verbrauch_value("4.1.2.1", "status")
+    gueter_basis = _global_verbrauch_value("4.1.2.1", "ziel")
+    gueter_current = _scoped_verbrauch_value("4.1.2.1", "ziel")
+    luft_status = _global_verbrauch_value("5.1", "status")
+    luft_basis = _global_verbrauch_value("5.1", "ziel")
+    luft_current = _scoped_verbrauch_value("5.1", "ziel")
+
+    return [
+        _comparison_row(
+            "Bevölkerung / Verbraucher",
+            status=100.0,
+            basis=100.0,
+            current=100.0,
+        ),
+        _comparison_row(
+            "Wohnfläche/Pers.",
+            status=wohn_status if wohn_status is not None else 100.0,
+            basis=wohn_basis if wohn_basis is not None else 100.0,
+            current=wohn_current if wohn_current is not None else wohn_basis,
+        ),
+        _comparison_row(
+            "Gewerbefläche/Pers.",
+            status=gewerbe_status if gewerbe_status is not None else 100.0,
+            basis=gewerbe_basis if gewerbe_basis is not None else 100.0,
+            current=gewerbe_current if gewerbe_current is not None else gewerbe_basis,
+        ),
+        _comparison_row(
+            "Handels-/Dienstleistungsvol./Pers.",
+            status=handel_status if handel_status is not None else 100.0,
+            basis=handel_basis if handel_basis is not None else 100.0,
+            current=handel_current if handel_current is not None else handel_basis,
+        ),
+        _comparison_row(
+            "Industrie/Gewerbe-Produkt.Vol./Pers.",
+            status=industrie_status if industrie_status is not None else 100.0,
+            basis=industrie_basis if industrie_basis is not None else 100.0,
+            current=industrie_current if industrie_current is not None else industrie_basis,
+        ),
+        _comparison_row(
+            "Kunststofferzeugung/Pers.",
+            status=kunststoff_status if kunststoff_status is not None else 100.0,
+            basis=kunststoff_basis if kunststoff_basis is not None else 100.0,
+            current=kunststoff_current if kunststoff_current is not None else kunststoff_basis,
+        ),
+        _comparison_row(
+            "Personenverkehrsleistung /Pers.",
+            status=personen_status if personen_status is not None else 100.0,
+            basis=personen_basis if personen_basis is not None else 100.0,
+            current=personen_current if personen_current is not None else personen_basis,
+        ),
+        _comparison_row(
+            "Güterverkehrsleistung /Pers.",
+            status=gueter_status if gueter_status is not None else 100.0,
+            basis=gueter_basis if gueter_basis is not None else 100.0,
+            current=gueter_current if gueter_current is not None else gueter_basis,
+        ),
+        _comparison_row(
+            "Luftverkehrsleistung / Pers.",
+            status=luft_status if luft_status is not None else 100.0,
+            basis=luft_basis if luft_basis is not None else 100.0,
+            current=luft_current if luft_current is not None else luft_basis,
+        ),
+    ]
+
+
+def _efficiency_comparison_rows():
+    return [
+        _verbrauch_comparison_row(
+            "Stromanwend.-Effizienz Haushalte",
+            "1.1.2",
+            scale_max=EFFICIENCY_BAR_SCALE_MAX,
+        ),
+        _verbrauch_comparison_row(
+            "Stromanw.-Effiz.Handel/Dienstl.",
+            "1.2.4",
+            scale_max=EFFICIENCY_BAR_SCALE_MAX,
+        ),
+        _verbrauch_comparison_row(
+            "Stromanw.-Effiz.Gewerbe/Industrie",
+            "1.3.4",
+            scale_max=EFFICIENCY_BAR_SCALE_MAX,
+        ),
+    ]
+
+
 @login_required
 def modifikationsdetails_view(request):
     # Resolve baselines.
@@ -279,6 +462,8 @@ def modifikationsdetails_view(request):
             "Szenario: " + last_scenario.name if last_scenario else
             "Basisszenario" if admin_baseline else "—"
         ),
+        "comparison_rows": _modification_comparison_rows(),
+        "efficiency_rows": _efficiency_comparison_rows(),
         "current_section": "modifikationsdetails",
     }
     return render(request, "simulator/modifikationsdetails.html", context)

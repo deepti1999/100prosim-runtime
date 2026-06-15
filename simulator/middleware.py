@@ -4,6 +4,17 @@ from simulator.workspace_service import ensure_user_workspace_data
 
 
 _DEFAULT_REGION_CODE = "DE"
+_GLOBAL_ADMIN_PREFIXES = (
+    "/admin/",
+    "/admin-versionen/",
+    "/admin-rollen/",
+)
+
+
+def _uses_global_admin_scope(request):
+    """Django/admin-control pages edit shared admin data, not user workspaces."""
+    path = getattr(request, "path_info", "") or getattr(request, "path", "") or ""
+    return any(path.startswith(prefix) for prefix in _GLOBAL_ADMIN_PREFIXES)
 
 
 def _active_region_code(request):
@@ -24,8 +35,8 @@ def _active_region_code(request):
 
 class OwnerScopeMiddleware:
     """
-    Bind each authenticated non-staff request to its own isolated data workspace.
-    Staff/admin users continue to use global baseline rows.
+    Bind each authenticated webapp request to its own isolated data workspace.
+    Django/admin-control URLs continue to use global admin rows.
 
     Phase B (T65): also binds the active region (from session, default
     DE) to a thread-local so OwnerScopedManager can scope queries by
@@ -44,7 +55,7 @@ class OwnerScopeMiddleware:
 
         user = getattr(request, "user", None)
 
-        if user and user.is_authenticated and not user.is_staff:
+        if user and user.is_authenticated and not _uses_global_admin_scope(request):
             ensure_user_workspace_data(user, region_code=region_code)
             set_current_owner(user)
 

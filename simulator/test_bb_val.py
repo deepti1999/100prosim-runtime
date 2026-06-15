@@ -69,7 +69,7 @@ class BlackBoxValidationTests(TestCase):
         self.assertEqual(payload["status"], "ok")
         self.assertEqual(payload["code"], "LU_2.1")
 
-        updated = LandUse.objects.get(pk=self.child.pk)
+        updated = LandUse.all_objects.get(owner=self.user, code=self.child.code)
         self.assertAlmostEqual(updated.user_percent, 13.0)
 
     def test_landuse_update_rejects_root_node(self):

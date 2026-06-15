@@ -1,5 +1,6 @@
 import os
 
+from django.db import transaction
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
@@ -270,6 +271,47 @@ post_save.connect(_invalidate_formula_lookup_caches, sender=VerbrauchData)
 post_save.connect(_invalidate_formula_lookup_caches, sender=RenewableData)
 post_save.connect(_invalidate_formula_lookup_caches, sender=Formula)
 post_save.connect(_invalidate_formula_lookup_caches, sender=FormulaVariable)
+
+
+def _sync_admin_template_row_to_user_workspaces(instance, kwargs):
+    if _skip_signal_processing(kwargs):
+        return
+    if getattr(instance, "owner_id", None) is not None:
+        return
+
+    def _sync():
+        try:
+            from simulator.workspace_service import sync_template_to_user_rows
+
+            sync_template_to_user_rows(instance)
+        except Exception as exc:
+            print(f"Workspace template sync error: {exc}")
+
+    transaction.on_commit(_sync)
+
+
+@receiver(post_save, sender=LandUse)
+def landuse_template_changed(sender, instance, **kwargs):
+    del sender
+    _sync_admin_template_row_to_user_workspaces(instance, kwargs)
+
+
+@receiver(post_save, sender=RenewableData)
+def renewable_template_changed(sender, instance, **kwargs):
+    del sender
+    _sync_admin_template_row_to_user_workspaces(instance, kwargs)
+
+
+@receiver(post_save, sender=VerbrauchData)
+def verbrauch_template_changed(sender, instance, **kwargs):
+    del sender
+    _sync_admin_template_row_to_user_workspaces(instance, kwargs)
+
+
+@receiver(post_save, sender=WSData)
+def ws_template_changed(sender, instance, **kwargs):
+    del sender
+    _sync_admin_template_row_to_user_workspaces(instance, kwargs)
 
 
 @receiver(post_save, sender=LandUse)

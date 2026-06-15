@@ -17,7 +17,7 @@ from simulator.input_api import (
 from simulator.admin_roles import user_can_edit_workspace_values
 from simulator.display_state import mark_display_state_changed
 from simulator.recalc_service import unified_recalc_all
-from simulator.ws_queue_api import _queue_or_reuse_balance_job
+from simulator.ws_queue_api import _queue_new_balance_job, _stamp_region
 
 _SIMULATOR_VERBOSE_PRINTS = os.environ.get("SIMULATOR_VERBOSE_PRINTS", "false").lower() == "true"
 if not _SIMULATOR_VERBOSE_PRINTS:
@@ -250,10 +250,10 @@ def save_all_user_inputs(request):
 
         job = None
         if items_to_save:
-            job = _queue_or_reuse_balance_job(
+            job = _queue_new_balance_job(
                 request.user,
                 BalanceJob.TYPE_LANDUSE_RECALC,
-                {'scope': 'landuse'},
+                _stamp_region({'scope': 'landuse'}, request),
             )
 
         return JsonResponse({

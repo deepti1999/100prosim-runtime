@@ -1,0 +1,173 @@
+{% extends 'simulator/base.html' %}
+
+{% block title %}Datenquelle – {{ row_code }}{% endblock %}
+
+{% block content %}
+<style>
+    .source-detail-header {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: .5rem;
+        padding: 1rem 1.25rem;
+    }
+    .source-detail-code {
+        font-family: "Courier New", monospace;
+        font-weight: 700;
+    }
+    .source-detail-card {
+        border: 1px solid #e5e7eb;
+        border-radius: .5rem;
+        background: #fff;
+    }
+    .source-detail-card .card-header {
+        background: #f8f9fa;
+        font-weight: 700;
+    }
+    .source-detail-ref {
+        border-top: 1px solid #edf2f7;
+        padding-top: .75rem;
+        margin-top: .75rem;
+    }
+    .source-detail-ref:first-child {
+        border-top: 0;
+        padding-top: 0;
+        margin-top: 0;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        {% include 'simulator/partials/sidebar_nav.html' with active_section='data_sources' %}
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <div>
+                    <h1 class="h2">Datenquelle im Detail</h1>
+                    <p class="text-muted mb-0">Informationen und Quellen nur für diese Datenzeile.</p>
+                </div>
+                <a class="btn btn-outline-secondary btn-sm" href="{% url 'simulator:data_sources' %}">
+                    <i class="fas fa-arrow-left me-1"></i>Datenquellen
+                </a>
+            </div>
+
+            <div class="source-detail-header mb-4">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-2">
+                        <div class="text-muted small">Bereich</div>
+                        <div>{{ domain_title }}</div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-muted small">Code</div>
+                        <span class="badge bg-secondary source-detail-code">{{ row_code }}</span>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="text-muted small">Bezeichnung</div>
+                        <strong>{{ row_label }}</strong>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-muted small">Einheit</div>
+                        <div>{{ row.unit|default:"-" }}</div>
+                    </div>
+                </div>
+            </div>
+
+            {% if general_information %}
+            <section class="source-detail-card card mb-4">
+                <div class="card-header">Allgemeine Information</div>
+                <div class="card-body">
+                    <p class="mb-0">{{ general_information|linebreaksbr }}</p>
+                </div>
+            </section>
+            {% endif %}
+
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <section class="source-detail-card card h-100">
+                        <div class="card-header d-flex justify-content-between">
+                            <span>Status</span>
+                            <span class="text-muted fw-normal">{{ row_values.status|default_if_none:"-" }}</span>
+                        </div>
+                        <div class="card-body">
+                            {% if status_information %}
+                                <p>{{ status_information|linebreaksbr }}</p>
+                            {% else %}
+                                <p class="text-muted">Keine separate Status-Erklärung hinterlegt.</p>
+                            {% endif %}
+
+                            {% if source_refs_by_section.status %}
+                                <h2 class="h6 mt-4">Quellen</h2>
+                                {% for ref in source_refs_by_section.status %}
+                                    <div class="source-detail-ref small">
+                                        {% if ref.label %}<div><strong>{{ ref.label }}</strong></div>{% endif %}
+                                        {% if ref.description %}<div>{{ ref.description }}</div>{% endif %}
+                                        {% if ref.url %}
+                                            <div class="mt-1"><a href="{{ ref.url }}" target="_blank" rel="noopener noreferrer">Quelle öffnen</a></div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+
+                <div class="col-lg-6">
+                    <section class="source-detail-card card h-100">
+                        <div class="card-header d-flex justify-content-between">
+                            <span>Ziel</span>
+                            <span class="text-muted fw-normal">{{ row_values.ziel|default_if_none:"-" }}</span>
+                        </div>
+                        <div class="card-body">
+                            {% if ziel_information %}
+                                <p>{{ ziel_information|linebreaksbr }}</p>
+                            {% else %}
+                                <p class="text-muted">Keine separate Ziel-Erklärung hinterlegt.</p>
+                            {% endif %}
+
+                            {% if source_refs_by_section.ziel %}
+                                <h2 class="h6 mt-4">Quellen</h2>
+                                {% for ref in source_refs_by_section.ziel %}
+                                    <div class="source-detail-ref small">
+                                        {% if ref.label %}<div><strong>{{ ref.label }}</strong></div>{% endif %}
+                                        {% if ref.description %}<div>{{ ref.description }}</div>{% endif %}
+                                        {% if ref.url %}
+                                            <div class="mt-1"><a href="{{ ref.url }}" target="_blank" rel="noopener noreferrer">Quelle öffnen</a></div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            {% if source_refs_by_section.general or show_primary_source_url %}
+            <section class="source-detail-card card mt-4">
+                <div class="card-header">Weitere Quellen</div>
+                <div class="card-body small">
+                    {% for ref in source_refs_by_section.general %}
+                        <div class="source-detail-ref">
+                            {% if ref.label %}<div><strong>{{ ref.label }}</strong></div>{% endif %}
+                            {% if ref.description %}<div>{{ ref.description }}</div>{% endif %}
+                            {% if ref.url %}
+                                <div class="mt-1"><a href="{{ ref.url }}" target="_blank" rel="noopener noreferrer">Quelle öffnen</a></div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    {% if show_primary_source_url %}
+                        <div class="source-detail-ref">
+                            <a href="{{ source_url }}" target="_blank" rel="noopener noreferrer">Quelle öffnen</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+            {% endif %}
+
+            {% if not has_provenance %}
+            <div class="alert alert-secondary mt-4">
+                Für diese Zeile sind aktuell keine zusätzlichen Quelleninformationen hinterlegt.
+            </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+{% endblock %}

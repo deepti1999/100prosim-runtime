@@ -6,6 +6,9 @@
   the row code badge so users can click the code itself.
 {% endcomment %}
 <span class="provenance-code-cell">
+{% if provenance_domain and row_code %}
+  {% url 'simulator:data_source_detail' provenance_domain row_code as provenance_detail_url %}
+{% endif %}
 {% if provenance_override_active %}
   {% if source_url or notes_assumption or source_refs %}
     <button type="button"
@@ -15,7 +18,7 @@
             data-bs-html="true"
             data-bs-placement="right"
             data-bs-title="Datenquelle (§2.3)"
-            data-bs-content="<div class='small'>{% if notes_assumption %}<div><strong>Information:</strong><br><em>{{ notes_assumption|linebreaksbr }}</em></div>{% endif %}{% if source_refs %}<div class='mt-2'><strong>Quellen:</strong>{% for ref in source_refs %}<div class='mt-2 border-top pt-2'>{% if ref.section == 'status' %}<div class='text-muted small'>Status</div>{% elif ref.section == 'ziel' %}<div class='text-muted small'>Ziel</div>{% endif %}{% if ref.label %}<div><strong>{{ ref.label|escape }}</strong></div>{% endif %}{% if ref.description %}<div>{{ ref.description|escape }}</div>{% endif %}{% if ref.url %}<div class='mt-1'><a href='{{ ref.url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>{% endfor %}</div>{% elif source_url %}<div class='mt-2'><strong>Quelle:</strong> <a href='{{ source_url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>"
+            data-bs-content="<div class='small'>{% if notes_assumption %}<div><strong>Information:</strong><br><em>{{ notes_assumption|linebreaksbr }}</em></div>{% endif %}{% if source_refs %}<div class='mt-2'><strong>Quellen:</strong>{% for ref in source_refs %}<div class='mt-2 border-top pt-2'>{% if ref.section == 'status' %}<div class='text-muted small'>Status</div>{% elif ref.section == 'ziel' %}<div class='text-muted small'>Ziel</div>{% endif %}{% if ref.label %}<div><strong>{{ ref.label|escape }}</strong></div>{% endif %}{% if ref.description %}<div>{{ ref.description|escape }}</div>{% endif %}{% if ref.url %}<div class='mt-1'><a href='{{ ref.url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>{% endfor %}</div>{% elif source_url %}<div class='mt-2'><strong>Quelle:</strong> <a href='{{ source_url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}{% if provenance_detail_url %}<div class='mt-3 border-top pt-2'><a class='btn btn-sm btn-outline-primary' href='{{ provenance_detail_url }}{% if region_id %}?region_id={{ region_id }}{% endif %}' target='_blank' rel='noopener noreferrer'>Details anzeigen</a></div>{% endif %}</div>"
             aria-label="Datenquelle für {{ trigger_label }} anzeigen"
             title="Klicken für Quellen-Information">
       <span class="badge {{ badge_class|default:'bg-secondary' }}">{{ trigger_label }}</span>
@@ -32,7 +35,7 @@
             data-bs-html="true"
             data-bs-placement="right"
             data-bs-title="Datenquelle (§2.3)"
-            data-bs-content="<div class='small'>{% if notes_assumption %}<div><strong>Information:</strong><br><em>{{ notes_assumption|render_provenance_note:source_refs }}</em></div>{% endif %}{% if source_refs %}<div class='mt-2'><strong>Quellen:</strong>{% for ref in source_refs %}<div class='mt-2 border-top pt-2'>{% if ref.section == 'status' %}<div class='text-muted small'>Status</div>{% elif ref.section == 'ziel' %}<div class='text-muted small'>Ziel</div>{% endif %}{% if ref.label %}<div><strong>{{ ref.label|escape }}</strong></div>{% endif %}{% if ref.description %}<div>{{ ref.description|escape }}</div>{% endif %}{% if ref.url %}<div class='mt-1'><a href='{{ ref.url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>{% endfor %}</div>{% elif source_url %}<div class='mt-2'><strong>Quelle:</strong> <a href='{{ source_url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>"
+            data-bs-content="<div class='small'>{% if notes_assumption %}<div><strong>Information:</strong><br><em>{{ notes_assumption|render_provenance_note:source_refs }}</em></div>{% endif %}{% if source_refs %}<div class='mt-2'><strong>Quellen:</strong>{% for ref in source_refs %}<div class='mt-2 border-top pt-2'>{% if ref.section == 'status' %}<div class='text-muted small'>Status</div>{% elif ref.section == 'ziel' %}<div class='text-muted small'>Ziel</div>{% endif %}{% if ref.label %}<div><strong>{{ ref.label|escape }}</strong></div>{% endif %}{% if ref.description %}<div>{{ ref.description|escape }}</div>{% endif %}{% if ref.url %}<div class='mt-1'><a href='{{ ref.url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}</div>{% endfor %}</div>{% elif source_url %}<div class='mt-2'><strong>Quelle:</strong> <a href='{{ source_url|escape }}' target='_blank' rel='noopener noreferrer'>Quelle öffnen</a></div>{% endif %}{% if provenance_detail_url %}<div class='mt-3 border-top pt-2'><a class='btn btn-sm btn-outline-primary' href='{{ provenance_detail_url }}{% if region_id %}?region_id={{ region_id }}{% endif %}' target='_blank' rel='noopener noreferrer'>Details anzeigen</a></div>{% endif %}</div>"
             aria-label="Datenquelle für {{ trigger_label }} anzeigen"
             title="Klicken für Quellen-Information">
       <span class="badge {{ badge_class|default:'bg-secondary' }}">{{ trigger_label }}</span>

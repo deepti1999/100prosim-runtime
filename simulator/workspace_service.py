@@ -1,13 +1,19 @@
 from django.db import transaction
 
 
-def _clone_simple_model(model, user, region, exclude_fields=None):
+def _template_sync_fields(model, exclude_fields=None):
     exclude = set(exclude_fields or [])
-    fields = [
+    return [
         f.name
         for f in model._meta.concrete_fields
-        if f.name not in {"id", "owner", "region"} and f.name not in exclude
+        if f.name not in {"id", "owner", "region", "created_at", "updated_at"}
+        and f.name not in exclude
     ]
+
+
+def _clone_simple_model(model, user, region, exclude_fields=None):
+    exclude = set(exclude_fields or [])
+    fields = _template_sync_fields(model, exclude)
 
     source_rows = list(
         model.all_objects.filter(owner__isnull=True, region=region).order_by("id")
@@ -24,6 +30,26 @@ def _clone_simple_model(model, user, region, exclude_fields=None):
 
     model.all_objects.bulk_create(clones, batch_size=1000)
     return len(clones)
+
+
+def _sync_simple_template_to_user_rows(template_row, exclude_fields=None):
+    if getattr(template_row, "owner_id", None) is not None:
+        return 0
+
+    model = type(template_row)
+    lookup_field = "tag_im_jahr" if model.__name__ == "WSData" else "code"
+    lookup_value = getattr(template_row, lookup_field, None)
+    if lookup_value in (None, ""):
+        return 0
+
+    fields = _template_sync_fields(model, exclude_fields)
+    updates = {name: getattr(template_row, name) for name in fields}
+
+    return model.all_objects.filter(
+        owner__isnull=False,
+        region=template_row.region,
+        **{lookup_field: lookup_value},
+    ).update(**updates)
 
 
 def _clone_landuse_for_user(LandUse, user, region):
@@ -85,9 +111,64 @@ def _clone_landuse_for_user(LandUse, user, region):
     return len(clones)
 
 
+def sync_landuse_template_to_user_rows(template_row):
+    """
+    Keep existing user workspaces aligned when a shared admin LandUse row is
+    edited. The web UI reads user rows first, so without this sync an admin
+    change can look correct in admin but stale in the webapp.
+    """
+    if getattr(template_row, "owner_id", None) is not None:
+        return 0
+
+    updated = _sync_simple_template_to_user_rows(template_row, exclude_fields={"parent"})
+
+    if template_row.parent_id:
+        user_rows = type(template_row).all_objects.filter(
+            owner__isnull=False,
+            region=template_row.region,
+            code=template_row.code,
+        )
+        for row in user_rows:
+            parent = type(template_row).all_objects.filter(
+                owner_id=row.owner_id,
+                region=template_row.region,
+                code=template_row.parent.code,
+            ).first()
+            if parent and row.parent_id != parent.id:
+                type(template_row).all_objects.filter(pk=row.pk).update(parent=parent)
+
+    return updated
+
+
+def sync_template_to_user_rows(template_row):
+    if template_row.__class__.__name__ == "LandUse":
+        return sync_landuse_template_to_user_rows(template_row)
+    return _sync_simple_template_to_user_rows(template_row)
+
+
+def sync_all_templates_to_user_rows(region_code=None):
+    """
+    One-time repair helper for already-existing databases. It copies current
+    shared admin/template values into all existing user workspace copies.
+    """
+    from simulator.models import LandUse, Region, RenewableData, VerbrauchData
+    from simulator.ws_models import WSData
+
+    regions = Region.objects.all()
+    if region_code:
+        regions = regions.filter(code=region_code)
+
+    updated = 0
+    for region in regions:
+        for model in (LandUse, RenewableData, VerbrauchData, WSData):
+            for row in model.all_objects.filter(owner__isnull=True, region=region):
+                updated += sync_template_to_user_rows(row)
+    return updated
+
+
 def ensure_user_workspace_data(user, region_code="DE"):
     """
-    Ensure a non-staff user has isolated simulation data rows for the
+    Ensure a logged-in webapp user has isolated simulation data rows for the
     given region. Copies current global baseline rows on first use.
 
     Phase B (T65): per-(owner, region) scoping. If `region_code` is
@@ -95,8 +176,6 @@ def ensure_user_workspace_data(user, region_code="DE"):
     working unchanged.
     """
     if not user or not getattr(user, "is_authenticated", False):
-        return
-    if getattr(user, "is_staff", False):
         return
 
     from simulator.models import LandUse, RenewableData, Region, VerbrauchData

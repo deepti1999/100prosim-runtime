@@ -101,7 +101,7 @@ class BlackBoxE2EWorkflowTests(TestCase):
         self.assertEqual(recalc_response.status_code, 200)
         self.assertEqual(recalc_payload["status"], "ok")
 
-        persisted = LandUse.objects.get(code="LU_2.1")
+        persisted = LandUse.all_objects.get(owner=self.user, code="LU_2.1")
         self.assertAlmostEqual(persisted.user_percent, 12.0)
         self.assertAlmostEqual(persisted.target_ha, 120.0)
 
@@ -120,7 +120,7 @@ class BlackBoxE2EWorkflowTests(TestCase):
             {"user_percent": 12.0},
         )
         self.assertEqual(mutate_response.status_code, 200)
-        mutated = LandUse.objects.get(code="LU_2.1")
+        mutated = LandUse.all_objects.get(owner=self.user, code="LU_2.1")
         self.assertAlmostEqual(mutated.user_percent, 12.0)
 
         restore_response = self.client.post(reverse("simulator:restore_baseline"))
@@ -128,6 +128,6 @@ class BlackBoxE2EWorkflowTests(TestCase):
         self.assertEqual(restore_response.status_code, 200)
         self.assertEqual(restore_payload["status"], "ok")
 
-        restored = LandUse.objects.get(code="LU_2.1")
+        restored = LandUse.all_objects.get(owner=self.user, code="LU_2.1")
         self.assertAlmostEqual(restored.user_percent, 10.0)
         self.assertAlmostEqual(restored.target_ha, 100.0)

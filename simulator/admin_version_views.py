@@ -37,7 +37,7 @@ def admin_versions_dashboard(request):
 @permission_required("simulator.add_admindataversion", raise_exception=True)
 def admin_version_create(request):
     regions = Region.objects.filter(active=True).order_by("code")
-    default_name = timezone.localtime().strftime("Admin-Szenario %d.%m.%Y %H:%M")
+    default_name = timezone.localtime().strftime("Datenmodell %d.%m.%Y %H:%M")
     if request.method == "POST":
         name = (request.POST.get("name") or "").strip()
         note = (request.POST.get("note") or "").strip()
@@ -63,7 +63,7 @@ def admin_version_create(request):
             )
             messages.success(
                 request,
-                f'Admin-Szenario "{version.name}" wurde gespeichert.',
+                f'Datenmodell "{version.name}" wurde gespeichert.',
             )
             return redirect("simulator:admin_versions_dashboard")
 
@@ -88,7 +88,7 @@ def admin_version_restore(request, version_id):
         details = ", ".join(f"{key}: {value}" for key, value in restored.items())
         messages.success(
             request,
-            f'Admin-Szenario "{version.name}" wurde wiederhergestellt. {details}',
+            f'Datenmodell "{version.name}" wurde wiederhergestellt. {details}',
         )
         return redirect("simulator:admin_versions_dashboard")
 
@@ -117,7 +117,7 @@ def admin_version_refresh(request, version_id):
         version.save(update_fields=["payload", "captured_at", "updated_at"])
         messages.success(
             request,
-            f'Admin-Szenario "{version.name}" wurde mit dem aktuellen Stand neu gespeichert.',
+            f'Datenmodell "{version.name}" wurde mit dem aktuellen Stand neu gespeichert.',
         )
         return redirect("simulator:admin_versions_dashboard")
 
@@ -133,13 +133,13 @@ def admin_version_refresh(request, version_id):
 def admin_version_delete(request, version_id):
     version = get_object_or_404(AdminDataVersion, pk=version_id)
     if version.is_protected:
-        messages.error(request, "Geschützte Admin-Szenarien können nicht gelöscht werden.")
+        messages.error(request, "Geschützte Datenmodelle können nicht gelöscht werden.")
         return redirect("simulator:admin_versions_dashboard")
 
     if request.method == "POST":
         name = version.name
         version.delete()
-        messages.success(request, f'Admin-Szenario "{name}" wurde gelöscht.')
+        messages.success(request, f'Datenmodell "{name}" wurde gelöscht.')
         return redirect("simulator:admin_versions_dashboard")
 
     return render(

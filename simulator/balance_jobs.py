@@ -89,7 +89,10 @@ def run_balance_job(job: BalanceJob) -> Dict[str, Any]:
     # region scope instead of always-DE. Pre-Phase-C jobs (or
     # internal callers that didn't stamp it) fall back to DE.
     payload_region_code = (job.payload or {}).get("region_code") or "DE"
-    if user and not user.is_staff:
+    # Staff users can also work in the normal webapp. Those pages are
+    # owner-scoped too, so the worker must prepare the same workspace for
+    # staff and non-staff users before recalculating dependent values.
+    if user:
         ensure_user_workspace_data(user, region_code=payload_region_code)
 
     # Invalidate ALL process-local caches at entry. Workers process many
