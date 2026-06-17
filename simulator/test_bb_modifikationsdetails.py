@@ -20,6 +20,7 @@ from simulator.models import (
 from simulator.page_modifikationsdetails import (
     _biofuel_comparison_row,
     _building_renovation_comparison_row,
+    _endenergie_stack_rows,
     _efficiency_comparison_rows,
     _heat_pump_comparison_row,
     _solar_thermal_comparison_row,
@@ -46,6 +47,7 @@ class ModifikationsdetailsPageTests(TestCase):
             ("2.5.1","Warmwasser-Eff.",   "%",     100.0,  70.0),
             ("3.1.1","PW Haushalte",      "%",     100.0,  95.0),
             ("3.2.2","PW Industrie/GHD",  "%",     100.0,  89.0),
+            ("9.1.2","Grundstoff Status", "GWh/a", 197000.0, 197000.0),
             ("9.1.3","Synthese Grundstoffe", "%",   0.0,  73.0),
             ("4.1.1.6","Elektrotraktion Personenverkehr", "%", 19.0, 83.0),
             ("4.1.2.5","Elektrotraktion Güterverkehr", "%", 12.0, 74.0),
@@ -143,7 +145,7 @@ class ModifikationsdetailsPageTests(TestCase):
 
         endenergie = charts["chart_endenergie_anwendungen"]
         self.assertEqual(endenergie["unit"], "TWh/a")
-        self.assertEqual(endenergie["series"]["status"], [300.0, 500.0, 350.0, 450.0, 90.0])
+        self.assertEqual(endenergie["series"]["status"], [300.0, 500.0, 350.0, 450.0, 197.0])
 
         primaerenergie = charts["chart_primaerenergie_quellen"]
         self.assertEqual(primaerenergie["unit"], "TWh/a")
@@ -153,6 +155,25 @@ class ModifikationsdetailsPageTests(TestCase):
         self.assertEqual(ausbau["unit"], "%")
         self.assertEqual(ausbau["series"]["status"], [10.0, 10.0])
         self.assertEqual(ausbau["series"]["aktuell"], [30.0, 30.0])
+
+    def test_endenergie_stack_uses_requested_verbrauch_sources(self):
+        rows = _endenergie_stack_rows()
+        status = rows[0]["segments"]
+        current = rows[3]["segments"]
+
+        self.assertEqual(rows[0]["width"], "59.9")
+        self.assertEqual(status["klik"], "16.694")
+        self.assertEqual(status["gw"], "27.824")
+        self.assertEqual(status["pw"], "19.477")
+        self.assertEqual(status["grund"], "10.963")
+        self.assertEqual(status["ma"], "25.042")
+
+        self.assertEqual(rows[3]["width"], "47")
+        self.assertEqual(current["klik"], "19.858")
+        self.assertEqual(current["gw"], "28.369")
+        self.assertEqual(current["pw"], "22.695")
+        self.assertEqual(current["grund"], "5.674")
+        self.assertEqual(current["ma"], "23.404")
 
     def test_energetic_renovation_row_uses_heiner_formula(self):
         row = _building_renovation_comparison_row()

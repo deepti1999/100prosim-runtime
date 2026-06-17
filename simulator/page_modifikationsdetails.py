@@ -26,6 +26,7 @@ from .models import (
 ADMIN_BASELINE_KEY = "global"
 BAR_SCALE_MAX = 120.0
 EFFICIENCY_BAR_SCALE_MAX = 150.0
+ENDENERGIE_STACK_SCALE_MAX = 3000.0
 
 
 # --- Chart definitions ---------------------------------------------------
@@ -79,7 +80,12 @@ CHARTS = [
             {"code": "2.10", "label": "Gebäudewärme"},
             {"code": "3.7", "label": "Prozesswärme"},
             {"code": "6.0", "label": "Mobile Anwendungen"},
-            {"code": "9.1.4", "label": "Grundstoffe"},
+            {
+                "code": "9.1.4",
+                "status_code": "9.1.2",
+                "target_code": "9.1.4",
+                "label": "Grundstoffe",
+            },
         ],
     },
     {
@@ -231,6 +237,15 @@ def _bar_width(value, scale_max=BAR_SCALE_MAX):
     return f"{width:.3f}".rstrip("0").rstrip(".")
 
 
+def _stack_width(value, total):
+    number = _to_float(value)
+    total_number = _to_float(total)
+    if number is None or not total_number:
+        return "0"
+    width = max(0.0, min((number / total_number) * 100.0, 100.0))
+    return f"{width:.3f}".rstrip("0").rstrip(".")
+
+
 def _format_percent_value(value):
     number = _to_float(value)
     if number is None:
@@ -260,6 +275,54 @@ def _comparison_row(label, *, status, basis, current, scale_max=BAR_SCALE_MAX):
             else f"{'+' if delta >= 0 else ''}{_format_percent_value(delta)} %"
         ),
     }
+
+
+def _endenergie_segment_values(payload=None, target=False):
+    field = "ziel" if target else "status"
+    source = _snapshot_lookup if payload else None
+
+    def value(code, pick):
+        raw = source(payload, "verbrauch", code, pick) if source else _live_value("verbrauch", code, pick)
+        return _scale(raw, 0.001)
+
+    return {
+        "klik": value("1", field),
+        "gw": value("2.10", field),
+        "pw": value("3.7", field),
+        "grund": value("9.1.4" if target else "9.1.2", "ziel" if target else "status"),
+        "ma": value("6.0", field),
+    }
+
+
+def _endenergie_stack_row(label, values, status_total=None):
+    total = sum(value for value in values.values() if value is not None)
+    delta = ""
+    if status_total and label == "Aktueller Zustand":
+        percent = ((total - status_total) / status_total) * 100.0
+        delta = f"{'+' if percent >= 0 else ''}{_format_percent_value(percent)} %"
+    return {
+        "label": label,
+        "width": _bar_width(total, ENDENERGIE_STACK_SCALE_MAX),
+        "delta": delta,
+        "segments": {
+            name: _stack_width(value, total)
+            for name, value in values.items()
+        },
+    }
+
+
+def _endenergie_stack_rows(admin_payload=None, vorzustand_payload=None):
+    status_values = _endenergie_segment_values(target=False)
+    basis_values = _endenergie_segment_values(admin_payload, target=True)
+    vor_values = _endenergie_segment_values(vorzustand_payload, target=True)
+    current_values = _endenergie_segment_values(target=True)
+    status_total = sum(value for value in status_values.values() if value is not None)
+    return [
+        _endenergie_stack_row("Status", status_values),
+        _endenergie_stack_row("Basisszenario", basis_values),
+        _endenergie_stack_row("Vorzustand", vor_values),
+        _endenergie_stack_row("Aktueller Zustand", current_values, status_total=status_total),
+    ]
 
 
 def _global_verbrauch_value(code, field):
@@ -628,10 +691,12 @@ def modifikationsdetails_view(request):
 
         for entry in chart["codes"]:
             code = entry["code"]
-            status.append(_chart_live_value(chart, code, status_field))
-            basis.append(_chart_snapshot_value(chart, admin_payload, code, target_field))
-            vor.append(_chart_snapshot_value(chart, vorzustand_payload, code, target_field))
-            current.append(_chart_live_value(chart, code, target_field))
+            status_code = entry.get("status_code", code)
+            target_code = entry.get("target_code", code)
+            status.append(_chart_live_value(chart, status_code, status_field))
+            basis.append(_chart_snapshot_value(chart, admin_payload, target_code, target_field))
+            vor.append(_chart_snapshot_value(chart, vorzustand_payload, target_code, target_field))
+            current.append(_chart_live_value(chart, target_code, target_field))
 
         charts_payload.append({
             "id": chart["id"],
@@ -655,6 +720,7 @@ def modifikationsdetails_view(request):
         ),
         "comparison_rows": _modification_comparison_rows(),
         "efficiency_rows": _efficiency_comparison_rows(),
+        "endenergie_stack_rows": _endenergie_stack_rows(admin_payload, vorzustand_payload),
         "current_section": "modifikationsdetails",
     }
     return render(request, "simulator/modifikationsdetails.html", context)
