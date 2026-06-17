@@ -724,41 +724,41 @@
 
                     <div class="mod-chart-row">
                         <div class="mod-row-icon">&rarr;</div>
-                        <div class="mod-row-label">Energet.Sanierung Gebäudebestand</div>
+                        <div class="mod-row-label">{{ efficiency_rows.3.label }}</div>
                         <div class="mod-bar-area">
                             <span class="mod-zero-line"></span>
-                            <div class="mod-bar mod-bar-status" style="width: 66.667%;"><span class="mod-value mod-muted-value">100</span></div>
-                            <div class="mod-bar mod-bar-basis" style="width: 63.333%;"></div>
-                            <div class="mod-bar mod-bar-vor" style="width: 56.667%;"></div>
-                            <div class="mod-bar mod-bar-current" style="width: 56.667%;"><span class="mod-value">85</span></div>
+                            <div class="mod-bar mod-bar-status" style="width: {{ efficiency_rows.3.status_width }}%;"><span class="mod-value mod-muted-value">{{ efficiency_rows.3.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ efficiency_rows.3.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: {{ efficiency_rows.3.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ efficiency_rows.3.current_width }}%;"><span class="mod-value">{{ efficiency_rows.3.current }}</span></div>
                         </div>
-                        <div class="mod-delta">-15 %</div>
+                        <div class="mod-delta">{{ efficiency_rows.3.delta }}</div>
                     </div>
 
                     <div class="mod-chart-row">
                         <div class="mod-row-icon">&rarr;</div>
-                        <div class="mod-row-label">Wärmepumpenant.an Gebäudew.</div>
+                        <div class="mod-row-label">{{ efficiency_rows.4.label }}</div>
                         <div class="mod-bar-area">
                             <span class="mod-zero-line"></span>
-                            <div class="mod-bar mod-bar-status" style="width: 2.667%;"><span class="mod-value mod-muted-value">4</span></div>
-                            <div class="mod-bar mod-bar-basis" style="width: 58%;"></div>
-                            <div class="mod-bar mod-bar-vor" style="width: 58%;"></div>
-                            <div class="mod-bar mod-bar-current" style="width: 58%;"><span class="mod-value">87</span></div>
+                            <div class="mod-bar mod-bar-status" style="width: {{ efficiency_rows.4.status_width }}%;"><span class="mod-value mod-muted-value">{{ efficiency_rows.4.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ efficiency_rows.4.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: {{ efficiency_rows.4.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ efficiency_rows.4.current_width }}%;"><span class="mod-value">{{ efficiency_rows.4.current }}</span></div>
                         </div>
-                        <div class="mod-delta">x 20,3</div>
+                        <div class="mod-delta">{{ efficiency_rows.4.delta }}</div>
                     </div>
 
                     <div class="mod-chart-row">
                         <div class="mod-row-icon">&rarr;</div>
-                        <div class="mod-row-label">Solarthermieanteil an Gebäudew.</div>
+                        <div class="mod-row-label">{{ efficiency_rows.5.label }}</div>
                         <div class="mod-bar-area">
                             <span class="mod-zero-line"></span>
-                            <div class="mod-bar mod-bar-status" style="width: 0.667%;"><span class="mod-value mod-muted-value">1</span></div>
-                            <div class="mod-bar mod-bar-basis" style="width: 1.333%;"></div>
-                            <div class="mod-bar mod-bar-vor" style="width: 1.333%;"></div>
-                            <div class="mod-bar mod-bar-current" style="width: 1.333%;"><span class="mod-value">2</span></div>
+                            <div class="mod-bar mod-bar-status" style="width: {{ efficiency_rows.5.status_width }}%;"><span class="mod-value mod-muted-value">{{ efficiency_rows.5.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ efficiency_rows.5.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: {{ efficiency_rows.5.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ efficiency_rows.5.current_width }}%;"><span class="mod-value">{{ efficiency_rows.5.current }}</span></div>
                         </div>
-                        <div class="mod-delta">x 1,6</div>
+                        <div class="mod-delta">{{ efficiency_rows.5.delta }}</div>
                     </div>
 
                     <div class="mod-chart-row">

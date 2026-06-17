@@ -14,6 +14,7 @@ from simulator.models import (
     ScenarioSnapshot,
     VerbrauchData,
 )
+from simulator.page_historie import _history_values_for_source
 
 
 class ModificationHistoryTests(TestCase):
@@ -103,6 +104,7 @@ class ModificationHistoryTests(TestCase):
             ("2.1.1", 44.7, 44.7, "Wohnfläche pro Person", "m² / Kopf"),
             ("2.2.1", 100.0, 100.0, "Gewerbefläche pro Person", "% v. Status"),
             ("2.4.1", 136.0, 75.0, "Spez.Raumwärmebed.Status/Saniert", "kWh / (m² * a)"),
+            ("2.4.5", 0.0, 33.0, "Gebäudeanteil mit Ziel-Wärmeschutz", "% v. Bestand"),
             ("2.10", 798867.0, 663539.0, "Endenergieverbrauch GW gesamt", "GWh/a"),
             ("4.1.1.1", 100.0, 100.0, "Zieleinfluss Pers.-Verkehrsleist./Pers.", "% v. Status"),
             ("4.1.2", 32.6, 32.6, "davon Güterverkehr u. a. (GVk)", "% v. Status"),
@@ -300,6 +302,59 @@ class ModificationHistoryTests(TestCase):
         numbers = re.findall(r'class="history-row-number">(\d+)</td>', body)
         self.assertGreater(len(numbers), 5)
         self.assertEqual(numbers[:5], ["1", "2", "3", "4", "5"])
+
+    def test_history_building_renovation_standard_is_derived_from_kwh_row(self):
+        payload = {
+            "verbrauch": [
+                {
+                    "code": "2.4.1",
+                    "status": 136.0,
+                    "ziel": 75.0,
+                }
+            ]
+        }
+
+        status, target = _history_values_for_source(
+            ("verbrauch_status_percent", "2.4.1"),
+            "% v. Status",
+            payload,
+        )
+
+        self.assertEqual(status, "100")
+        self.assertEqual(target, "55,1")
+
+    def test_history_building_renovated_share_uses_verbrauch_245(self):
+        status, target = _history_values_for_source(
+            ("verbrauch", "2.4.5"),
+            "% v. Bestand",
+            payload=None,
+            fallback_to_live=True,
+        )
+
+        self.assertEqual(status, "0")
+        self.assertEqual(target, "33")
+
+    def test_history_heat_pump_share_uses_wp_rows_over_building_heat_total(self):
+        status, target = _history_values_for_source(
+            ("heat_pump_building_heat_share", ""),
+            "%",
+            payload=None,
+            fallback_to_live=True,
+        )
+
+        self.assertEqual(status, "4,3")
+        self.assertEqual(target, "87,2")
+
+    def test_history_solar_thermal_share_uses_solar_thermal_over_building_heat_total(self):
+        status, target = _history_values_for_source(
+            ("solar_thermal_building_heat_share", ""),
+            "% v. Gesamt",
+            payload=None,
+            fallback_to_live=True,
+        )
+
+        self.assertEqual(status, "1,1")
+        self.assertEqual(target, "1,7")
 
     def test_history_compares_baseline_against_saved_scenario(self):
         BaselineSnapshot.objects.create(

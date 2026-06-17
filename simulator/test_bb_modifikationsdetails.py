@@ -17,6 +17,11 @@ from simulator.models import (
     ScenarioSnapshot,
     VerbrauchData,
 )
+from simulator.page_modifikationsdetails import (
+    _building_renovation_comparison_row,
+    _heat_pump_comparison_row,
+    _solar_thermal_comparison_row,
+)
 
 
 class ModifikationsdetailsPageTests(TestCase):
@@ -34,6 +39,8 @@ class ModifikationsdetailsPageTests(TestCase):
             ("1.1.2","Strom-Eff. Haush.", "%",     100.0,  95.0),
             ("1.2.4","Strom-Eff. HDL",    "%",     100.0,  95.0),
             ("1.3.4","Strom-Eff. GI",     "%",     100.0,  95.0),
+            ("2.4.1","Spez.Raumwärmebed.Status/Saniert", "kWh / (m² * a)", 136.0, 75.0),
+            ("2.4.5","Gebäudeanteil mit Ziel-Wärmeschutz", "%", 0.0, 33.0),
             ("2.5.1","Warmwasser-Eff.",   "%",     100.0,  70.0),
             ("3.1.1","PW Haushalte",      "%",     100.0,  95.0),
             ("3.2.2","PW Industrie/GHD",  "%",     100.0,  89.0),
@@ -50,6 +57,9 @@ class ModifikationsdetailsPageTests(TestCase):
             ("9.1.2", "Solar Freiflächen", 30000.0, 1200000.0),
             ("9.1.3", "Wasserkraft+Geothermie", 19000.0, 25000.0),
             ("9.1.4", "Biobrennstoffe", 5000.0, 4500.0),
+            ("7.1.2.2", "Luftgekoppelte WP", 15000.0, 300000.0),
+            ("7.1.4.2", "Erdreichgekoppelte WP", 5000.0, 48000.0),
+            ("1.1.1.1.2", "Solarthermie Gebäudewärme", 5000.0, 8000.0),
         ]:
             RenewableData.objects.get_or_create(
                 code=code, defaults={
@@ -137,6 +147,33 @@ class ModifikationsdetailsPageTests(TestCase):
         self.assertEqual(ausbau["series"]["status"], [10.0, 10.0])
         self.assertEqual(ausbau["series"]["aktuell"], [30.0, 30.0])
 
+    def test_energetic_renovation_row_uses_heiner_formula(self):
+        row = _building_renovation_comparison_row()
+
+        self.assertEqual(row["label"], "Energet.Sanierung Gebäudebestand")
+        self.assertEqual(row["status"], "100")
+        self.assertEqual(row["basis"], "85,2")
+        self.assertEqual(row["current"], "85,2")
+        self.assertEqual(row["delta"], "-14,8 %")
+
+    def test_heat_pump_row_uses_wp_sum_over_building_heat_total(self):
+        row = _heat_pump_comparison_row()
+
+        self.assertEqual(row["label"], "Wärmepumpenant.an Gebäudew.")
+        self.assertEqual(row["status"], "4")
+        self.assertEqual(row["basis"], "87")
+        self.assertEqual(row["current"], "87")
+        self.assertEqual(row["delta"], "+83 %")
+
+    def test_solar_thermal_row_uses_solar_thermal_over_building_heat_total(self):
+        row = _solar_thermal_comparison_row()
+
+        self.assertEqual(row["label"], "Solarthermieanteil an Gebäudew.")
+        self.assertEqual(row["status"], "1")
+        self.assertEqual(row["basis"], "2")
+        self.assertEqual(row["current"], "2")
+        self.assertEqual(row["delta"], "+1 %")
+
 
 class ModifikationsdetailsPopulatedStateTests(TestCase):
     """Exercises the full data path: admin baseline + scenario snapshot
@@ -162,6 +199,8 @@ class ModifikationsdetailsPopulatedStateTests(TestCase):
             ("1.1.2","Strom-Eff. Haush.", "%",     100.0,  95.0),
             ("1.2.4","Strom-Eff. HDL",    "%",     100.0,  95.0),
             ("1.3.4","Strom-Eff. GI",     "%",     100.0,  95.0),
+            ("2.4.1","Spez.Raumwärmebed.Status/Saniert", "kWh / (m² * a)", 136.0, 75.0),
+            ("2.4.5","Gebäudeanteil mit Ziel-Wärmeschutz", "%", 0.0, 33.0),
             ("2.5.1","Warmwasser-Eff.",   "%",     100.0,  70.0),
             ("3.1.1","PW Haushalte",      "%",     100.0,  95.0),
             ("3.2.2","PW Industrie/GHD",  "%",     100.0,  89.0),
@@ -177,6 +216,9 @@ class ModifikationsdetailsPopulatedStateTests(TestCase):
             ("9.1.2", "Solar Freiflächen", 30000.0, 1200000.0),
             ("9.1.3", "Wasserkraft+Geothermie", 19000.0, 25000.0),
             ("9.1.4", "Biobrennstoffe", 5000.0, 4500.0),
+            ("7.1.2.2", "Luftgekoppelte WP", 15000.0, 300000.0),
+            ("7.1.4.2", "Erdreichgekoppelte WP", 5000.0, 48000.0),
+            ("1.1.1.1.2", "Solarthermie Gebäudewärme", 5000.0, 8000.0),
         ]:
             RenewableData.objects.get_or_create(
                 code=code, defaults={

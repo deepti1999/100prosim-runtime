@@ -18,12 +18,16 @@ HISTORY_VALUE_SOURCES = {
     "19": ("renewable", "9.2.1.5.2"),
     "22": ("verbrauch", "2.1.1"),
     "23": ("verbrauch", "2.2.1"),
+    "25": ("verbrauch_status_percent", "2.4.1"),
     "26": ("verbrauch", "2.4.1"),
+    "27": ("verbrauch", "2.4.5"),
+    "29": ("heat_pump_building_heat_share", ""),
     "30": ("renewable", "7.1.2.2"),
     "31": ("renewable", "7.1.4.2"),
     "33": ("renewable", "4.1.3.1"),
     "34": ("renewable", "4.1.3"),
     "35": ("verbrauch", "2.10"),
+    "36": ("solar_thermal_building_heat_share", ""),
     "37": ("renewable", "1.1.1.1.2"),
     "40": ("landuse", "LU_1"),
     "42": ("verbrauch", "4.1.1.1"),
@@ -835,11 +839,133 @@ def _payload_rows_by_code(payload, payload_key):
     }
 
 
+def _status_percent_values(status_value, target_value, unit):
+    try:
+        status = float(status_value)
+    except (TypeError, ValueError):
+        return "", ""
+
+    if status == 0:
+        return "", ""
+
+    try:
+        target = float(target_value)
+    except (TypeError, ValueError):
+        target = None
+
+    return (
+        _format_history_number(100.0, unit),
+        _format_history_number((target / status) * 100.0 if target is not None else None, unit),
+    )
+
+
+def _share_of_total(numerator_a, numerator_b, denominator, unit):
+    first = _to_history_float(numerator_a)
+    second = _to_history_float(numerator_b)
+    total = _to_history_float(denominator)
+    if first is None or second is None or not total:
+        return ""
+    return _format_history_number(((first + second) / total) * 100.0, unit)
+
+
+def _to_history_float(value):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _heat_pump_building_heat_values_from_payload(payload, unit):
+    renewables = _payload_rows_by_code(payload, "renewable")
+    verbrauch = _payload_rows_by_code(payload, "verbrauch")
+    air = renewables.get("7.1.2.2")
+    ground = renewables.get("7.1.4.2")
+    building_heat = verbrauch.get("2.10")
+    return (
+        _share_of_total(
+            air.get("status_value") if air else None,
+            ground.get("status_value") if ground else None,
+            building_heat.get("status") if building_heat else None,
+            unit,
+        ),
+        _share_of_total(
+            air.get("target_value") if air else None,
+            ground.get("target_value") if ground else None,
+            building_heat.get("ziel") if building_heat else None,
+            unit,
+        ),
+    )
+
+
+def _heat_pump_building_heat_values_from_live(unit):
+    air = RenewableData.objects.filter(code="7.1.2.2").first()
+    ground = RenewableData.objects.filter(code="7.1.4.2").first()
+    building_heat = VerbrauchData.objects.filter(code="2.10").first()
+    return (
+        _share_of_total(
+            air.status_value if air else None,
+            ground.status_value if ground else None,
+            building_heat.status if building_heat else None,
+            unit,
+        ),
+        _share_of_total(
+            air.target_value if air else None,
+            ground.target_value if ground else None,
+            building_heat.ziel if building_heat else None,
+            unit,
+        ),
+    )
+
+
+def _solar_thermal_building_heat_values_from_payload(payload, unit):
+    renewables = _payload_rows_by_code(payload, "renewable")
+    verbrauch = _payload_rows_by_code(payload, "verbrauch")
+    solar_thermal = renewables.get("1.1.1.1.2")
+    building_heat = verbrauch.get("2.10")
+    return (
+        _share_of_total(
+            solar_thermal.get("status_value") if solar_thermal else None,
+            0.0,
+            building_heat.get("status") if building_heat else None,
+            unit,
+        ),
+        _share_of_total(
+            solar_thermal.get("target_value") if solar_thermal else None,
+            0.0,
+            building_heat.get("ziel") if building_heat else None,
+            unit,
+        ),
+    )
+
+
+def _solar_thermal_building_heat_values_from_live(unit):
+    solar_thermal = RenewableData.objects.filter(code="1.1.1.1.2").first()
+    building_heat = VerbrauchData.objects.filter(code="2.10").first()
+    return (
+        _share_of_total(
+            solar_thermal.status_value if solar_thermal else None,
+            0.0,
+            building_heat.status if building_heat else None,
+            unit,
+        ),
+        _share_of_total(
+            solar_thermal.target_value if solar_thermal else None,
+            0.0,
+            building_heat.ziel if building_heat else None,
+            unit,
+        ),
+    )
+
+
 def _history_source_values_from_payload(payload, source_type, code, unit, target_code=None):
     if not payload:
         return "", ""
 
-    if source_type == "renewable":
+    if source_type == "heat_pump_building_heat_share":
+        return _heat_pump_building_heat_values_from_payload(payload, unit)
+    elif source_type == "solar_thermal_building_heat_share":
+        return _solar_thermal_building_heat_values_from_payload(payload, unit)
+    elif source_type == "renewable":
         row = _payload_rows_by_code(payload, "renewable").get(code)
         if row:
             return (
@@ -855,6 +981,10 @@ def _history_source_values_from_payload(payload, source_type, code, unit, target
                 _format_history_number(row.get("status"), unit),
                 _format_history_number(row.get("ziel"), unit),
             )
+    elif source_type == "verbrauch_status_percent":
+        row = _payload_rows_by_code(payload, "verbrauch").get(code)
+        if row:
+            return _status_percent_values(row.get("status"), row.get("ziel"), unit)
     elif source_type == "verbrauch_split":
         rows = _payload_rows_by_code(payload, "verbrauch")
         status_row = rows.get(code)
@@ -875,7 +1005,11 @@ def _history_source_values_from_payload(payload, source_type, code, unit, target
 
 
 def _history_source_values_from_live(source_type, code, unit, target_code=None):
-    if source_type == "renewable":
+    if source_type == "heat_pump_building_heat_share":
+        return _heat_pump_building_heat_values_from_live(unit)
+    elif source_type == "solar_thermal_building_heat_share":
+        return _solar_thermal_building_heat_values_from_live(unit)
+    elif source_type == "renewable":
         row = RenewableData.objects.filter(code=code).first()
         if row:
             return (
@@ -891,6 +1025,10 @@ def _history_source_values_from_live(source_type, code, unit, target_code=None):
                 _format_history_number(row.status, unit),
                 _format_history_number(row.ziel, unit),
             )
+    elif source_type == "verbrauch_status_percent":
+        row = VerbrauchData.objects.filter(code=code).first()
+        if row:
+            return _status_percent_values(row.status, row.ziel, unit)
     elif source_type == "verbrauch_split":
         status_row = VerbrauchData.objects.filter(code=code).first()
         target_row = VerbrauchData.objects.filter(code=target_code).first()

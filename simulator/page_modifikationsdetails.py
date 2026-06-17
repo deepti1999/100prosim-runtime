@@ -279,9 +279,34 @@ def _global_verbrauch_value(code, field):
     return getattr(row, field, None) if row else None
 
 
+def _global_renewable_value(code, field):
+    try:
+        from simulator.region_scope import get_current_region_code
+
+        qs = RenewableData.all_objects.filter(
+            owner__isnull=True,
+            code=code,
+        )
+        region_code = get_current_region_code()
+        if region_code:
+            qs = qs.filter(region__code=region_code)
+        row = qs.first()
+    except Exception:
+        return None
+    return getattr(row, field, None) if row else None
+
+
 def _scoped_verbrauch_value(code, field):
     try:
         row = VerbrauchData.objects.filter(code=code).first()
+    except Exception:
+        return None
+    return getattr(row, field, None) if row else None
+
+
+def _scoped_renewable_value(code, field):
+    try:
+        row = RenewableData.objects.filter(code=code).first()
     except Exception:
         return None
     return getattr(row, field, None) if row else None
@@ -295,6 +320,114 @@ def _verbrauch_comparison_row(label, code, *, scale_max=BAR_SCALE_MAX):
         label,
         status=status if status is not None else 100.0,
         basis=basis if basis is not None else 100.0,
+        current=current if current is not None else basis,
+        scale_max=scale_max,
+    )
+
+
+def _renovation_standard_percent(status_kwh, value_kwh):
+    status = _to_float(status_kwh)
+    value = _to_float(value_kwh)
+    if status in (None, 0.0) or value is None:
+        return None
+    return (value / status) * 100.0
+
+
+def _renovation_effect_value(standard_percent, renovated_share_percent):
+    standard = _to_float(standard_percent)
+    share = _to_float(renovated_share_percent)
+    if standard is None or share is None:
+        return None
+    return 100.0 + (standard - 100.0) * (share / 100.0)
+
+
+def _building_renovation_comparison_row(*, scale_max=EFFICIENCY_BAR_SCALE_MAX):
+    standard_status_kwh = _global_verbrauch_value("2.4.1", "status")
+    standard_basis_kwh = _global_verbrauch_value("2.4.1", "ziel")
+    standard_current_kwh = _scoped_verbrauch_value("2.4.1", "ziel")
+
+    share_status = _global_verbrauch_value("2.4.5", "status")
+    share_basis = _global_verbrauch_value("2.4.5", "ziel")
+    share_current = _scoped_verbrauch_value("2.4.5", "ziel")
+
+    status_standard = _renovation_standard_percent(standard_status_kwh, standard_status_kwh)
+    basis_standard = _renovation_standard_percent(standard_status_kwh, standard_basis_kwh)
+    current_standard = _renovation_standard_percent(
+        standard_status_kwh,
+        standard_current_kwh if standard_current_kwh is not None else standard_basis_kwh,
+    )
+
+    return _comparison_row(
+        "Energet.Sanierung Gebäudebestand",
+        status=_renovation_effect_value(status_standard, share_status if share_status is not None else 0.0),
+        basis=_renovation_effect_value(basis_standard, share_basis if share_basis is not None else 0.0),
+        current=_renovation_effect_value(
+            current_standard,
+            share_current if share_current is not None else share_basis,
+        ),
+        scale_max=scale_max,
+    )
+
+
+def _heat_pump_share_value(air_value, ground_value, building_heat_value):
+    air = _to_float(air_value)
+    ground = _to_float(ground_value)
+    building_heat = _to_float(building_heat_value)
+    if air is None or ground is None or not building_heat:
+        return None
+    return ((air + ground) / building_heat) * 100.0
+
+
+def _heat_pump_comparison_row(*, scale_max=EFFICIENCY_BAR_SCALE_MAX):
+    status = _heat_pump_share_value(
+        _global_renewable_value("7.1.2.2", "status_value"),
+        _global_renewable_value("7.1.4.2", "status_value"),
+        _global_verbrauch_value("2.10", "status"),
+    )
+    basis = _heat_pump_share_value(
+        _global_renewable_value("7.1.2.2", "target_value"),
+        _global_renewable_value("7.1.4.2", "target_value"),
+        _global_verbrauch_value("2.10", "ziel"),
+    )
+    current = _heat_pump_share_value(
+        _scoped_renewable_value("7.1.2.2", "target_value"),
+        _scoped_renewable_value("7.1.4.2", "target_value"),
+        _scoped_verbrauch_value("2.10", "ziel"),
+    )
+    return _comparison_row(
+        "Wärmepumpenant.an Gebäudew.",
+        status=status,
+        basis=basis,
+        current=current if current is not None else basis,
+        scale_max=scale_max,
+    )
+
+
+def _solar_thermal_share_value(solar_thermal_value, building_heat_value):
+    solar_thermal = _to_float(solar_thermal_value)
+    building_heat = _to_float(building_heat_value)
+    if solar_thermal is None or not building_heat:
+        return None
+    return (solar_thermal / building_heat) * 100.0
+
+
+def _solar_thermal_comparison_row(*, scale_max=EFFICIENCY_BAR_SCALE_MAX):
+    status = _solar_thermal_share_value(
+        _global_renewable_value("1.1.1.1.2", "status_value"),
+        _global_verbrauch_value("2.10", "status"),
+    )
+    basis = _solar_thermal_share_value(
+        _global_renewable_value("1.1.1.1.2", "target_value"),
+        _global_verbrauch_value("2.10", "ziel"),
+    )
+    current = _solar_thermal_share_value(
+        _scoped_renewable_value("1.1.1.1.2", "target_value"),
+        _scoped_verbrauch_value("2.10", "ziel"),
+    )
+    return _comparison_row(
+        "Solarthermieanteil an Gebäudew.",
+        status=status,
+        basis=basis,
         current=current if current is not None else basis,
         scale_max=scale_max,
     )
@@ -401,6 +534,9 @@ def _efficiency_comparison_rows():
             "1.3.4",
             scale_max=EFFICIENCY_BAR_SCALE_MAX,
         ),
+        _building_renovation_comparison_row(),
+        _heat_pump_comparison_row(),
+        _solar_thermal_comparison_row(),
     ]
 
 
