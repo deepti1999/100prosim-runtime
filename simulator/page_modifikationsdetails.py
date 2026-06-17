@@ -572,6 +572,26 @@ def _efficiency_comparison_rows():
         _heat_pump_comparison_row(),
         _solar_thermal_comparison_row(),
         _biofuel_comparison_row(),
+        _verbrauch_comparison_row(
+            "Wärmeanw.-Effiz.Gewerbe/Industrie",
+            "3.2.2",
+            scale_max=EFFICIENCY_BAR_SCALE_MAX,
+        ),
+        _verbrauch_comparison_row(
+            "Syntheseanteil an Grundstoffen",
+            "9.1.3",
+            scale_max=EFFICIENCY_BAR_SCALE_MAX,
+        ),
+        _verbrauch_comparison_row(
+            "Anteil Elektrotrakt. Personenverkehr",
+            "4.1.1.6",
+            scale_max=EFFICIENCY_BAR_SCALE_MAX,
+        ),
+        _verbrauch_comparison_row(
+            "Anteil Elektrotrakt. Güterverkehr",
+            "4.1.2.5",
+            scale_max=EFFICIENCY_BAR_SCALE_MAX,
+        ),
     ]
 
 

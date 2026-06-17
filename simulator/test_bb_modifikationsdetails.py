@@ -20,6 +20,7 @@ from simulator.models import (
 from simulator.page_modifikationsdetails import (
     _biofuel_comparison_row,
     _building_renovation_comparison_row,
+    _efficiency_comparison_rows,
     _heat_pump_comparison_row,
     _solar_thermal_comparison_row,
 )
@@ -45,6 +46,9 @@ class ModifikationsdetailsPageTests(TestCase):
             ("2.5.1","Warmwasser-Eff.",   "%",     100.0,  70.0),
             ("3.1.1","PW Haushalte",      "%",     100.0,  95.0),
             ("3.2.2","PW Industrie/GHD",  "%",     100.0,  89.0),
+            ("9.1.3","Synthese Grundstoffe", "%",   0.0,  73.0),
+            ("4.1.1.6","Elektrotraktion Personenverkehr", "%", 19.0, 83.0),
+            ("4.1.2.5","Elektrotraktion Güterverkehr", "%", 12.0, 74.0),
         ]:
             VerbrauchData.objects.get_or_create(
                 code=code, defaults={
@@ -185,6 +189,25 @@ class ModifikationsdetailsPageTests(TestCase):
         self.assertEqual(row["basis"], "0")
         self.assertEqual(row["current"], "0")
         self.assertEqual(row["delta"], "-17,7 %")
+
+    def test_remaining_efficiency_rows_use_requested_verbrauch_codes(self):
+        rows = {row["label"]: row for row in _efficiency_comparison_rows()}
+
+        self.assertEqual(rows["Wärmeanw.-Effiz.Gewerbe/Industrie"]["status"], "100")
+        self.assertEqual(rows["Wärmeanw.-Effiz.Gewerbe/Industrie"]["basis"], "89")
+        self.assertEqual(rows["Wärmeanw.-Effiz.Gewerbe/Industrie"]["current"], "89")
+
+        self.assertEqual(rows["Syntheseanteil an Grundstoffen"]["status"], "0")
+        self.assertEqual(rows["Syntheseanteil an Grundstoffen"]["basis"], "73")
+        self.assertEqual(rows["Syntheseanteil an Grundstoffen"]["current"], "73")
+
+        self.assertEqual(rows["Anteil Elektrotrakt. Personenverkehr"]["status"], "19")
+        self.assertEqual(rows["Anteil Elektrotrakt. Personenverkehr"]["basis"], "83")
+        self.assertEqual(rows["Anteil Elektrotrakt. Personenverkehr"]["current"], "83")
+
+        self.assertEqual(rows["Anteil Elektrotrakt. Güterverkehr"]["status"], "12")
+        self.assertEqual(rows["Anteil Elektrotrakt. Güterverkehr"]["basis"], "74")
+        self.assertEqual(rows["Anteil Elektrotrakt. Güterverkehr"]["current"], "74")
 
 
 class ModifikationsdetailsPopulatedStateTests(TestCase):
