@@ -433,6 +433,40 @@ def _solar_thermal_comparison_row(*, scale_max=EFFICIENCY_BAR_SCALE_MAX):
     )
 
 
+def _biofuel_share_value(wood_total_value, wood_share_percent, building_heat_value):
+    wood = _to_float(wood_total_value)
+    share = _to_float(wood_share_percent)
+    building_heat = _to_float(building_heat_value)
+    if wood is None or share is None or not building_heat:
+        return None
+    return (wood * share) / building_heat
+
+
+def _biofuel_comparison_row(*, scale_max=EFFICIENCY_BAR_SCALE_MAX):
+    status = _biofuel_share_value(
+        _global_renewable_value("4.1.3", "status_value"),
+        _global_renewable_value("4.1.3.1", "status_value"),
+        _global_verbrauch_value("2.10", "status"),
+    )
+    basis = _biofuel_share_value(
+        _global_renewable_value("4.1.3", "target_value"),
+        _global_renewable_value("4.1.3.1", "target_value"),
+        _global_verbrauch_value("2.10", "ziel"),
+    )
+    current = _biofuel_share_value(
+        _scoped_renewable_value("4.1.3", "target_value"),
+        _scoped_renewable_value("4.1.3.1", "target_value"),
+        _scoped_verbrauch_value("2.10", "ziel"),
+    )
+    return _comparison_row(
+        "Anteil Biobrennstoff an Geb.W.",
+        status=status,
+        basis=basis,
+        current=current if current is not None else basis,
+        scale_max=scale_max,
+    )
+
+
 def _modification_comparison_rows():
     wohn_status = _global_verbrauch_value("2.1.2", "status")
     wohn_basis = _global_verbrauch_value("2.1.2", "ziel")
@@ -537,6 +571,7 @@ def _efficiency_comparison_rows():
         _building_renovation_comparison_row(),
         _heat_pump_comparison_row(),
         _solar_thermal_comparison_row(),
+        _biofuel_comparison_row(),
     ]
 
 

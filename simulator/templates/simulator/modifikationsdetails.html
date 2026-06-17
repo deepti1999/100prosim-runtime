@@ -763,15 +763,15 @@
 
                     <div class="mod-chart-row">
                         <div class="mod-row-icon">&rarr;</div>
-                        <div class="mod-row-label">Anteil Biobrennstoff an Geb.W.</div>
+                        <div class="mod-row-label">{{ efficiency_rows.6.label }}</div>
                         <div class="mod-bar-area">
                             <span class="mod-zero-line"></span>
-                            <div class="mod-bar mod-bar-status" style="width: 7.333%;"><span class="mod-value mod-muted-value">11</span></div>
-                            <div class="mod-bar mod-bar-basis" style="width: 0%;"></div>
-                            <div class="mod-bar mod-bar-vor" style="width: 0%;"></div>
-                            <div class="mod-bar mod-bar-current" style="width: 0%;"><span class="mod-value">0</span></div>
+                            <div class="mod-bar mod-bar-status" style="width: {{ efficiency_rows.6.status_width }}%;"><span class="mod-value mod-muted-value">{{ efficiency_rows.6.status }}</span></div>
+                            <div class="mod-bar mod-bar-basis" style="width: {{ efficiency_rows.6.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-vor" style="width: {{ efficiency_rows.6.basis_width }}%;"></div>
+                            <div class="mod-bar mod-bar-current" style="width: {{ efficiency_rows.6.current_width }}%;"><span class="mod-value">{{ efficiency_rows.6.current }}</span></div>
                         </div>
-                        <div class="mod-delta">x 0,0</div>
+                        <div class="mod-delta">{{ efficiency_rows.6.delta }}</div>
                     </div>
 
                     <div class="mod-chart-row">

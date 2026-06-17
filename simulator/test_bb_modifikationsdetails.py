@@ -18,6 +18,7 @@ from simulator.models import (
     VerbrauchData,
 )
 from simulator.page_modifikationsdetails import (
+    _biofuel_comparison_row,
     _building_renovation_comparison_row,
     _heat_pump_comparison_row,
     _solar_thermal_comparison_row,
@@ -60,6 +61,8 @@ class ModifikationsdetailsPageTests(TestCase):
             ("7.1.2.2", "Luftgekoppelte WP", 15000.0, 300000.0),
             ("7.1.4.2", "Erdreichgekoppelte WP", 5000.0, 48000.0),
             ("1.1.1.1.2", "Solarthermie Gebäudewärme", 5000.0, 8000.0),
+            ("4.1.3.1", "Anteil Energieholz zur Deckung", 73.3, 0.0),
+            ("4.1.3", "Energieholz gesamt", 120449.0, 71302.0),
         ]:
             RenewableData.objects.get_or_create(
                 code=code, defaults={
@@ -173,6 +176,15 @@ class ModifikationsdetailsPageTests(TestCase):
         self.assertEqual(row["basis"], "2")
         self.assertEqual(row["current"], "2")
         self.assertEqual(row["delta"], "+1 %")
+
+    def test_biofuel_row_uses_wood_share_over_building_heat_total(self):
+        row = _biofuel_comparison_row()
+
+        self.assertEqual(row["label"], "Anteil Biobrennstoff an Geb.W.")
+        self.assertEqual(row["status"], "17,7")
+        self.assertEqual(row["basis"], "0")
+        self.assertEqual(row["current"], "0")
+        self.assertEqual(row["delta"], "-17,7 %")
 
 
 class ModifikationsdetailsPopulatedStateTests(TestCase):

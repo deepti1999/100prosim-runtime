@@ -24,6 +24,7 @@ HISTORY_VALUE_SOURCES = {
     "29": ("heat_pump_building_heat_share", ""),
     "30": ("renewable", "7.1.2.2"),
     "31": ("renewable", "7.1.4.2"),
+    "32": ("biofuel_building_heat_share", ""),
     "33": ("renewable", "4.1.3.1"),
     "34": ("renewable", "4.1.3"),
     "35": ("verbrauch", "2.10"),
@@ -957,6 +958,57 @@ def _solar_thermal_building_heat_values_from_live(unit):
     )
 
 
+def _biofuel_building_heat_value(wood_total, wood_share_percent, building_heat, unit):
+    wood = _to_history_float(wood_total)
+    share = _to_history_float(wood_share_percent)
+    total = _to_history_float(building_heat)
+    if wood is None or share is None or not total:
+        return ""
+    return _format_history_number((wood * share) / total, unit)
+
+
+def _biofuel_building_heat_values_from_payload(payload, unit):
+    renewables = _payload_rows_by_code(payload, "renewable")
+    verbrauch = _payload_rows_by_code(payload, "verbrauch")
+    wood_share = renewables.get("4.1.3.1")
+    wood_total = renewables.get("4.1.3")
+    building_heat = verbrauch.get("2.10")
+    return (
+        _biofuel_building_heat_value(
+            wood_total.get("status_value") if wood_total else None,
+            wood_share.get("status_value") if wood_share else None,
+            building_heat.get("status") if building_heat else None,
+            unit,
+        ),
+        _biofuel_building_heat_value(
+            wood_total.get("target_value") if wood_total else None,
+            wood_share.get("target_value") if wood_share else None,
+            building_heat.get("ziel") if building_heat else None,
+            unit,
+        ),
+    )
+
+
+def _biofuel_building_heat_values_from_live(unit):
+    wood_share = RenewableData.objects.filter(code="4.1.3.1").first()
+    wood_total = RenewableData.objects.filter(code="4.1.3").first()
+    building_heat = VerbrauchData.objects.filter(code="2.10").first()
+    return (
+        _biofuel_building_heat_value(
+            wood_total.status_value if wood_total else None,
+            wood_share.status_value if wood_share else None,
+            building_heat.status if building_heat else None,
+            unit,
+        ),
+        _biofuel_building_heat_value(
+            wood_total.target_value if wood_total else None,
+            wood_share.target_value if wood_share else None,
+            building_heat.ziel if building_heat else None,
+            unit,
+        ),
+    )
+
+
 def _history_source_values_from_payload(payload, source_type, code, unit, target_code=None):
     if not payload:
         return "", ""
@@ -965,6 +1017,8 @@ def _history_source_values_from_payload(payload, source_type, code, unit, target
         return _heat_pump_building_heat_values_from_payload(payload, unit)
     elif source_type == "solar_thermal_building_heat_share":
         return _solar_thermal_building_heat_values_from_payload(payload, unit)
+    elif source_type == "biofuel_building_heat_share":
+        return _biofuel_building_heat_values_from_payload(payload, unit)
     elif source_type == "renewable":
         row = _payload_rows_by_code(payload, "renewable").get(code)
         if row:
@@ -1009,6 +1063,8 @@ def _history_source_values_from_live(source_type, code, unit, target_code=None):
         return _heat_pump_building_heat_values_from_live(unit)
     elif source_type == "solar_thermal_building_heat_share":
         return _solar_thermal_building_heat_values_from_live(unit)
+    elif source_type == "biofuel_building_heat_share":
+        return _biofuel_building_heat_values_from_live(unit)
     elif source_type == "renewable":
         row = RenewableData.objects.filter(code=code).first()
         if row:

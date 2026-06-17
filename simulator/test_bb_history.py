@@ -356,6 +356,17 @@ class ModificationHistoryTests(TestCase):
         self.assertEqual(status, "1,1")
         self.assertEqual(target, "1,7")
 
+    def test_history_biofuel_share_uses_wood_share_over_building_heat_total(self):
+        status, target = _history_values_for_source(
+            ("biofuel_building_heat_share", ""),
+            "%",
+            payload=None,
+            fallback_to_live=True,
+        )
+
+        self.assertEqual(status, "11,1")
+        self.assertEqual(target, "0")
+
     def test_history_compares_baseline_against_saved_scenario(self):
         BaselineSnapshot.objects.create(
             key="global",
