@@ -61,6 +61,7 @@ def _record_balance_calculation_run(job: BalanceJob, result: Dict[str, Any], dur
         "sector_balance_ok",
         "drift_ok",
         "overall_balanced",
+        "profile",
     ):
         if key in result:
             summary[key] = result.get(key)

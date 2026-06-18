@@ -1,6 +1,8 @@
 """WS 365 orchestration flows (solar/wind, sector-first variants)."""
 
+import logging
 import os
+import time
 
 from .ws365_core import (
     MOBILE_GAP_TOLERANCE,
@@ -32,6 +34,15 @@ if not _SIMULATOR_VERBOSE_PRINTS:
 # cheaply. Invalidated via signals (WSData/VerbrauchData/RenewableData
 # post_save in signals.py) and via invalidate_ws365_cache() below.
 _WS365_COMPUTE_CACHE = {}  # {(goal_seek,): (sig, response_dict)}
+logger = logging.getLogger(__name__)
+
+
+def _profile_mark(profile, label, start):
+    """Record/log elapsed time for profiling without changing balance logic."""
+    elapsed_ms = int((time.perf_counter() - start) * 1000)
+    profile.append({"step": label, "duration_ms": elapsed_ms})
+    logger.info("balance_profile step=%s duration_ms=%s", label, elapsed_ms)
+    return elapsed_ms
 
 
 def _ws365_inputs_signature(ws_data, fixed_values):
@@ -168,16 +179,21 @@ def apply_balanced_landuse(
     landuse_name = 'LU_2.1'
     old_landuse_percent = None
     new_landuse_percent = None
+    profile = []
 
     with transaction.atomic():
         # Early-exit: if WS storage drift is already within tolerance, no
         # landuse adjustment is needed. Spinning 3 goal_seek cycles on a
         # balanced state cost ~200s on Heroku.
+        _step_start = time.perf_counter()
         _initial_ws = get_ws_365_data(run_goal_seek=False)
+        _profile_mark(profile, "solar_ws_only.initial_ws", _step_start)
         _initial_drift = float(_initial_ws.get('current', {}).get('storage_drift') or 0.0)
         if abs(_initial_drift) <= ws_drift_tolerance:
+            _step_start = time.perf_counter()
             _initial_annual = float(_initial_ws.get('current', {}).get('annual_electricity') or 0.0)
             _lu21 = LandUse.objects.filter(code='LU_2.1').values_list('target_ha', flat=True).first()
+            _profile_mark(profile, "solar_ws_only.early_exit_lookup", _step_start)
             return {
                 'success': True,
                 'early_exit': True,
@@ -191,6 +207,7 @@ def apply_balanced_landuse(
                 'old_landuse_percent': None,
                 'new_landuse_percent': None,
                 'is_balanced': True,
+                'profile': profile,
             }
 
         for cycle_index in range(max_convergence_cycles):
@@ -200,20 +217,26 @@ def apply_balanced_landuse(
 
             # Step 1: Goal Seek on current WS inputs
             print(" Running Goal Seek...")
+            _step_start = time.perf_counter()
             ws_data = get_ws_base_data()
             fixed_values = get_fixed_values()
+            _profile_mark(profile, f"solar_ws_only.cycle_{cycle_no}.load_inputs", _step_start)
+            _step_start = time.perf_counter()
             goal_seek_result = goal_seek_optimal_solar(
                 ws_data,
                 fixed_values,
                 tolerance=ws_drift_tolerance
             )
+            _profile_mark(profile, f"solar_ws_only.cycle_{cycle_no}.goal_seek", _step_start)
 
             optimal_solar = goal_seek_result['optimal_solar']
             print(f"   Found optimal Solar: {optimal_solar:,.0f} GWh")
             print(f"   Storage drift at optimal: {goal_seek_result['result']['storage_drift']:.2f} GWh")
 
             # Step 2: Calculate required LU_2.1 from optimal solar
+            _step_start = time.perf_counter()
             landuse_result = calculate_required_landuse(optimal_solar)
+            _profile_mark(profile, f"solar_ws_only.cycle_{cycle_no}.calculate_required_landuse", _step_start)
             required_landuse = landuse_result['required_landuse']
             if old_landuse is None:
                 old_landuse = landuse_result['current_landuse']
@@ -223,6 +246,7 @@ def apply_balanced_landuse(
             )
 
             # Step 3: Update LU_2.1 in DB
+            _step_start = time.perf_counter()
             lu_21 = LandUse.objects.select_related('parent').get(code='LU_2.1')
             landuse_name = lu_21.name or landuse_name
             if old_landuse_percent is None:
@@ -244,9 +268,11 @@ def apply_balanced_landuse(
                 new_landuse_percent = float(lu_21.user_percent)
             elif lu_21.parent and lu_21.parent.target_ha and lu_21.parent.target_ha > 0:
                 new_landuse_percent = (float(required_landuse) / float(lu_21.parent.target_ha)) * 100.0
+            _profile_mark(profile, f"solar_ws_only.cycle_{cycle_no}.save_landuse", _step_start)
             print(f"Updated LU_2.1 target_ha to {required_landuse:.2f} ha")
 
             print(" Recalculating renewable chain...")
+            _step_start = time.perf_counter()
             r_1211 = RenewableData.objects.get(code='1.2.1.1')
             r_1212 = RenewableData.objects.get(code='1.2.1.2')
             new_1212 = required_landuse * (r_1211.target_value or 0) / 1000
@@ -259,10 +285,12 @@ def apply_balanced_landuse(
             new_912 = (r_11212.target_value or 0) + new_1212
             r_912.target_value = new_912
             r_912.save(skip_cascade=True)
+            _profile_mark(profile, f"solar_ws_only.cycle_{cycle_no}.renewable_chain", _step_start)
             print(f"   9.1.2 = {new_912:,.0f} GWh")
 
             # Step 5: WS calculation and sync 9.3.1 / 9.3.4 / 9.4.1
             print("Calculating WS 365 days with new Solar...")
+            _step_start = time.perf_counter()
             ws_data = get_ws_base_data()
             fixed_values = get_fixed_values()
             final_result = calculate_365_days(fixed_values['ziel_912'], ws_data, fixed_values)
@@ -274,6 +302,7 @@ def apply_balanced_landuse(
             r941.is_fixed = True
             r941.formula = None
             r941.save(skip_cascade=True)
+            _profile_mark(profile, f"solar_ws_only.cycle_{cycle_no}.ws_calculate_and_sync", _step_start)
             print(f"   9.4.1 = {annual_electricity:,.0f} GWh (annual electricity from diagram, fixed)")
 
             final_drift = final_result['storage_drift']
@@ -282,7 +311,9 @@ def apply_balanced_landuse(
             if include_sector_balance:
                 # Step 6: Heat + mobile balancing
                 print("Balancing sectors (10.4↔2.10, 10.5↔3.7, 10.6.1↔6.1)...")
+                _step_start = time.perf_counter()
                 heat_balance = _balance_heat_sectors_after_ws()
+                _profile_mark(profile, f"solar_ws_only.cycle_{cycle_no}.sector_balance", _step_start)
                 gw_after = heat_balance['after']['gebaeudewaerme']
                 pw_after = heat_balance['after']['prozesswaerme']
                 mobile_after = heat_balance['after']['mobile_anwendungen']
@@ -306,6 +337,7 @@ def apply_balanced_landuse(
                     )
 
                 # Step 7: Re-check WS drift AFTER sector balancing
+                _step_start = time.perf_counter()
                 ws_data_post_heat = get_ws_base_data()
                 fixed_values_post_heat = get_fixed_values()
                 final_result = calculate_365_days(
@@ -318,6 +350,7 @@ def apply_balanced_landuse(
                 annual_electricity = final_result.get('annual_electricity', 0)
                 r941.target_value = annual_electricity
                 r941.save(skip_cascade=True, update_fields=['target_value'])
+                _profile_mark(profile, f"solar_ws_only.cycle_{cycle_no}.post_sector_ws_recheck", _step_start)
 
                 final_drift = final_result['storage_drift']
                 drift_ok = abs(final_drift) <= ws_drift_tolerance
@@ -347,7 +380,9 @@ def apply_balanced_landuse(
     
     if run_final_renewable_sync and final_result is not None:
         from simulator.recalc_service import recalc_all_renewables_full
+        _step_start = time.perf_counter()
         recalc_all_renewables_full(exclude_ws_dependent=False)
+        _profile_mark(profile, "solar_ws_only.final_renewable_sync", _step_start)
 
     # Final verification
     final_drift = final_result['storage_drift'] if final_result else 0
@@ -372,6 +407,7 @@ def apply_balanced_landuse(
         'landuse_name': landuse_name,
         'old_landuse_percent': old_landuse_percent,
         'new_landuse_percent': new_landuse_percent,
+        'profile': profile,
     }
 
 def _initial_state_already_balanced(sector_totals: dict, storage_drift: float) -> bool:
@@ -406,15 +442,22 @@ def apply_balanced_landuse_sector_first():
     from django.db import transaction
     from simulator.recalc_service import recalc_all_renewables_full
 
+    profile = []
     with transaction.atomic():
         # Early-exit gate on already-balanced state.
+        _step_start = time.perf_counter()
         initial_totals = _get_sector_totals()
+        _profile_mark(profile, "solar_sector_first.initial_sector_totals", _step_start)
+        _step_start = time.perf_counter()
         initial_ws = get_ws_365_data(run_goal_seek=False)
+        _profile_mark(profile, "solar_sector_first.initial_ws", _step_start)
         initial_drift = float(initial_ws.get('current', {}).get('storage_drift') or 0.0)
         initial_annual = float(initial_ws.get('current', {}).get('annual_electricity') or 0.0)
         if _initial_state_already_balanced(initial_totals, initial_drift):
+            _step_start = time.perf_counter()
             from simulator.models import LandUse, VerbrauchData, RenewableData
             lu21 = LandUse.objects.filter(code='LU_2.1').values_list('target_ha', flat=True).first()
+            _profile_mark(profile, "solar_sector_first.early_exit_lookup", _step_start)
             return {
                 'success': True,
                 'balance_mode': 'sector_then_ws',
@@ -431,6 +474,7 @@ def apply_balanced_landuse_sector_first():
                 'overall_balanced': True,
                 'storage_drift': initial_drift,
                 'annual_electricity': initial_annual,
+                'profile': profile,
             }
 
         # Pre-pass — WS-only quick fix so LU_2.1 is primed close to balance
@@ -440,10 +484,12 @@ def apply_balanced_landuse_sector_first():
         # adjustments, and the post-WS pass can't fully converge -> sect_ok=False.
         try:
             print(" WS pre-pass to prime LU_2.1...")
+            _step_start = time.perf_counter()
             apply_balanced_landuse(
                 include_sector_balance=False,
                 run_final_renewable_sync=False,
             )
+            _profile_mark(profile, "solar_sector_first.ws_prepass", _step_start)
         except Exception as _e:
             print(f" WS pre-pass failed (non-fatal, continuing): {_e}")
 
@@ -463,16 +509,22 @@ def apply_balanced_landuse_sector_first():
         for idx in range(max_cycles):
             cycle_count = idx + 1
             print(f"Sector-first balancing cycle {cycle_count}/{max_cycles}...")
+            _step_start = time.perf_counter()
             sector_balance = _balance_heat_sectors_after_ws()
+            _profile_mark(profile, f"solar_sector_first.cycle_{cycle_count}.sector_balance", _step_start)
 
             print(" Rebalancing WS drift + electricity after sector tuning...")
+            _step_start = time.perf_counter()
             ws_rebalance = apply_balanced_landuse(
                 include_sector_balance=False,
                 run_final_renewable_sync=False
             )
+            _profile_mark(profile, f"solar_sector_first.cycle_{cycle_count}.ws_rebalance", _step_start)
 
+            _step_start = time.perf_counter()
             recalc_all_renewables_full(exclude_ws_dependent=False)
             final_sector_totals = _get_sector_totals()
+            _profile_mark(profile, f"solar_sector_first.cycle_{cycle_count}.final_sync_and_totals", _step_start)
 
             gw_gap = abs(float(final_sector_totals['gebaeudewaerme']['gap']))
             pw_gap = abs(float(final_sector_totals['prozesswaerme']['gap']))
@@ -496,8 +548,10 @@ def apply_balanced_landuse_sector_first():
         annual_electricity = float(ws_rebalance.get('annual_electricity') or 0.0)
         drift_ok = abs(final_drift) <= 0.1
 
+        _step_start = time.perf_counter()
         recalc_all_renewables_full(exclude_ws_dependent=False)
         final_sector_totals = _get_sector_totals()
+        _profile_mark(profile, "solar_sector_first.final_sync_and_totals", _step_start)
         gw_gap = abs(float(final_sector_totals['gebaeudewaerme']['gap']))
         pw_gap = abs(float(final_sector_totals['prozesswaerme']['gap']))
         mobile_gap = abs(float(final_sector_totals['mobile_anwendungen']['gap']))
@@ -549,6 +603,7 @@ def apply_balanced_landuse_sector_first():
             'old_landuse_percent': ws_rebalance.get('old_landuse_percent'),
             'new_landuse_percent': ws_rebalance.get('new_landuse_percent'),
                 'warning': ' '.join(warnings).strip(),
+            'profile': profile,
         }
 
 def apply_balanced_wind_landuse(
@@ -589,6 +644,7 @@ def apply_balanced_wind_landuse(
     lu21_guard = LandUse.objects.get(code='LU_2.1')
     fixed_lu21_target = float(lu21_guard.target_ha or 0)
     fixed_lu21_percent = lu21_guard.user_percent
+    profile = []
 
     def _restore_frozen_solar_if_needed():
         r912_now = RenewableData.objects.get(code='9.1.2')
@@ -598,11 +654,15 @@ def apply_balanced_wind_landuse(
 
     with transaction.atomic():
         # Early-exit: wind mode exits fast when drift already within tolerance.
+        _step_start = time.perf_counter()
         _initial_ws = get_ws_365_data(run_goal_seek=False)
+        _profile_mark(profile, "wind_ws_only.initial_ws", _step_start)
         _initial_drift = float(_initial_ws.get('current', {}).get('storage_drift') or 0.0)
         if abs(_initial_drift) <= ws_drift_tolerance:
+            _step_start = time.perf_counter()
             _initial_annual = float(_initial_ws.get('current', {}).get('annual_electricity') or 0.0)
             _lu6 = LandUse.objects.filter(code='LU_6').values_list('target_ha', flat=True).first()
+            _profile_mark(profile, "wind_ws_only.early_exit_lookup", _step_start)
             return {
                 'success': True,
                 'early_exit': True,
@@ -616,6 +676,7 @@ def apply_balanced_wind_landuse(
                 'old_landuse_percent': None,
                 'new_landuse_percent': None,
                 'is_balanced': True,
+                'profile': profile,
             }
 
         for cycle_index in range(max_convergence_cycles):
@@ -625,22 +686,28 @@ def apply_balanced_wind_landuse(
 
             # Step 1: Goal Seek on current WS inputs (Wind variable)
             print(" Running Wind Goal Seek...")
+            _step_start = time.perf_counter()
             _restore_frozen_solar_if_needed()
             ws_data = get_ws_base_data()
             fixed_values = get_fixed_values()
             fixed_values['ziel_912'] = fixed_solar_912
+            _profile_mark(profile, f"wind_ws_only.cycle_{cycle_no}.load_inputs", _step_start)
+            _step_start = time.perf_counter()
             goal_seek_result = goal_seek_optimal_wind(
                 ws_data,
                 fixed_values,
                 tolerance=ws_drift_tolerance
             )
+            _profile_mark(profile, f"wind_ws_only.cycle_{cycle_no}.goal_seek", _step_start)
 
             optimal_wind = goal_seek_result['optimal_wind']
             print(f"   Found optimal Wind: {optimal_wind:,.0f} GWh")
             print(f"   Storage drift at optimal: {goal_seek_result['result']['storage_drift']:.2f} GWh")
 
             # Step 2: Calculate required LU_6 from optimal wind
+            _step_start = time.perf_counter()
             landuse_result = calculate_required_landuse_wind(optimal_wind)
+            _profile_mark(profile, f"wind_ws_only.cycle_{cycle_no}.calculate_required_landuse", _step_start)
             required_landuse = landuse_result['required_landuse']
             if old_landuse is None:
                 old_landuse = landuse_result['current_landuse']
@@ -650,6 +717,7 @@ def apply_balanced_wind_landuse(
             )
 
             # Step 3: Update LU_6 in DB
+            _step_start = time.perf_counter()
             lu_6 = LandUse.objects.select_related('parent').get(code='LU_6')
             landuse_name = lu_6.name or landuse_name
             if old_landuse_percent is None:
@@ -671,9 +739,11 @@ def apply_balanced_wind_landuse(
                 new_landuse_percent = float(lu_6.user_percent)
             elif lu_6.parent and lu_6.parent.target_ha and lu_6.parent.target_ha > 0:
                 new_landuse_percent = (float(required_landuse) / float(lu_6.parent.target_ha)) * 100.0
+            _profile_mark(profile, f"wind_ws_only.cycle_{cycle_no}.save_landuse", _step_start)
             print(f"Updated LU_6 target_ha to {required_landuse:.2f} ha")
 
             print(" Recalculating wind renewable chain...")
+            _step_start = time.perf_counter()
             r_211 = RenewableData.objects.get(code='2.1.1')
             r_211.target_value = required_landuse
             r_211.save(skip_cascade=True)
@@ -699,10 +769,12 @@ def apply_balanced_wind_landuse(
             new_911 = (r_22123.target_value or 0) + new_211122
             r_911.target_value = new_911
             r_911.save(skip_cascade=True)
+            _profile_mark(profile, f"wind_ws_only.cycle_{cycle_no}.renewable_chain", _step_start)
             print(f"   9.1.1 = {new_911:,.0f} GWh")
 
             # Step 5: WS calculation and sync 9.3.1 / 9.3.4 / 9.4.1
             print("Calculating WS 365 days with new Wind...")
+            _step_start = time.perf_counter()
             ws_data = get_ws_base_data()
             fixed_values = get_fixed_values()
             fixed_values['ziel_912'] = fixed_solar_912
@@ -715,6 +787,7 @@ def apply_balanced_wind_landuse(
             r941.is_fixed = True
             r941.formula = None
             r941.save(skip_cascade=True)
+            _profile_mark(profile, f"wind_ws_only.cycle_{cycle_no}.ws_calculate_and_sync", _step_start)
             print(f"   9.4.1 = {annual_electricity:,.0f} GWh (annual electricity from diagram, fixed)")
 
             final_drift = final_result['storage_drift']
@@ -723,7 +796,9 @@ def apply_balanced_wind_landuse(
             if include_sector_balance:
                 # Step 6: Heat + mobile balancing
                 print("Balancing sectors (10.4↔2.10, 10.5↔3.7, 10.6.1↔6.1)...")
+                _step_start = time.perf_counter()
                 heat_balance = _balance_heat_sectors_after_ws()
+                _profile_mark(profile, f"wind_ws_only.cycle_{cycle_no}.sector_balance", _step_start)
                 gw_after = heat_balance['after']['gebaeudewaerme']
                 pw_after = heat_balance['after']['prozesswaerme']
                 mobile_after = heat_balance['after']['mobile_anwendungen']
@@ -747,6 +822,7 @@ def apply_balanced_wind_landuse(
                     )
 
                 # Step 7: Re-check WS drift AFTER heat
+                _step_start = time.perf_counter()
                 ws_data_post_heat = get_ws_base_data()
                 fixed_values_post_heat = get_fixed_values()
                 fixed_values_post_heat['ziel_912'] = fixed_solar_912
@@ -761,6 +837,7 @@ def apply_balanced_wind_landuse(
                 annual_electricity = final_result.get('annual_electricity', 0)
                 r941.target_value = annual_electricity
                 r941.save(skip_cascade=True, update_fields=['target_value'])
+                _profile_mark(profile, f"wind_ws_only.cycle_{cycle_no}.post_sector_ws_recheck", _step_start)
 
                 final_drift = final_result['storage_drift']
                 drift_ok = abs(final_drift) <= ws_drift_tolerance
@@ -789,6 +866,7 @@ def apply_balanced_wind_landuse(
                     break
 
         # Guard-restore: keep Solar/LU_2.1 untouched in wind mode.
+        _step_start = time.perf_counter()
         r912_now = RenewableData.objects.get(code='9.1.2')
         if abs(float(r912_now.target_value or 0) - fixed_solar_912) > 1e-9:
             r912_now.target_value = fixed_solar_912
@@ -820,10 +898,13 @@ def apply_balanced_wind_landuse(
         r941 = RenewableData.objects.get(code='9.4.1')
         r941.target_value = annual_electricity
         r941.save(skip_cascade=True, update_fields=['target_value'])
+        _profile_mark(profile, "wind_ws_only.guard_restore_and_final_ws", _step_start)
 
     if run_final_renewable_sync and final_result is not None:
         from simulator.recalc_service import recalc_all_renewables_full
+        _step_start = time.perf_counter()
         recalc_all_renewables_full(exclude_ws_dependent=False)
+        _profile_mark(profile, "wind_ws_only.final_renewable_sync", _step_start)
 
     final_drift = final_result['storage_drift'] if final_result else 0
     annual_electricity = final_result.get('annual_electricity', 0) if final_result else 0
@@ -847,6 +928,7 @@ def apply_balanced_wind_landuse(
         'landuse_name': landuse_name,
         'old_landuse_percent': old_landuse_percent,
         'new_landuse_percent': new_landuse_percent,
+        'profile': profile,
     }
 
 def apply_balanced_wind_landuse_sector_first():
@@ -860,15 +942,22 @@ def apply_balanced_wind_landuse_sector_first():
     from django.db import transaction
     from simulator.recalc_service import recalc_all_renewables_full
 
+    profile = []
     with transaction.atomic():
         # Early-exit: wind sector_first exits fast when already balanced.
+        _step_start = time.perf_counter()
         initial_totals = _get_sector_totals()
+        _profile_mark(profile, "wind_sector_first.initial_sector_totals", _step_start)
+        _step_start = time.perf_counter()
         initial_ws = get_ws_365_data(run_goal_seek=False)
+        _profile_mark(profile, "wind_sector_first.initial_ws", _step_start)
         initial_drift = float(initial_ws.get('current', {}).get('storage_drift') or 0.0)
         initial_annual = float(initial_ws.get('current', {}).get('annual_electricity') or 0.0)
         if _initial_state_already_balanced(initial_totals, initial_drift):
+            _step_start = time.perf_counter()
             from simulator.models import LandUse
             lu6 = LandUse.objects.filter(code='LU_6').values_list('target_ha', flat=True).first()
+            _profile_mark(profile, "wind_sector_first.early_exit_lookup", _step_start)
             return {
                 'success': True,
                 'balance_mode': 'wind_sector_then_ws',
@@ -885,6 +974,7 @@ def apply_balanced_wind_landuse_sector_first():
                 'overall_balanced': True,
                 'storage_drift': initial_drift,
                 'annual_electricity': initial_annual,
+                'profile': profile,
             }
 
         # Pre-pass — Wind WS-only quick fix so LU_6 is primed close to balance
@@ -892,10 +982,12 @@ def apply_balanced_wind_landuse_sector_first():
         # workflow (Wind Balance → Wind Full Balance) inside a single click.
         try:
             print(" Wind WS pre-pass to prime LU_6...")
+            _step_start = time.perf_counter()
             apply_balanced_wind_landuse(
                 include_sector_balance=False,
                 run_final_renewable_sync=False,
             )
+            _profile_mark(profile, "wind_sector_first.ws_prepass", _step_start)
         except Exception as _e:
             print(f" Wind WS pre-pass failed (non-fatal, continuing): {_e}")
 
@@ -913,16 +1005,22 @@ def apply_balanced_wind_landuse_sector_first():
         for idx in range(max_cycles):
             cycle_count = idx + 1
             print(f"Wind sector-first balancing cycle {cycle_count}/{max_cycles}...")
+            _step_start = time.perf_counter()
             sector_balance = _balance_heat_sectors_after_ws()
+            _profile_mark(profile, f"wind_sector_first.cycle_{cycle_count}.sector_balance", _step_start)
 
             print(" Rebalancing WS drift + electricity after sector tuning (wind)...")
+            _step_start = time.perf_counter()
             ws_rebalance = apply_balanced_wind_landuse(
                 include_sector_balance=False,
                 run_final_renewable_sync=False
             )
+            _profile_mark(profile, f"wind_sector_first.cycle_{cycle_count}.ws_rebalance", _step_start)
 
+            _step_start = time.perf_counter()
             recalc_all_renewables_full(exclude_ws_dependent=False)
             final_sector_totals = _get_sector_totals()
+            _profile_mark(profile, f"wind_sector_first.cycle_{cycle_count}.final_sync_and_totals", _step_start)
 
             gw_gap = abs(float(final_sector_totals['gebaeudewaerme']['gap']))
             pw_gap = abs(float(final_sector_totals['prozesswaerme']['gap']))
@@ -946,8 +1044,10 @@ def apply_balanced_wind_landuse_sector_first():
         annual_electricity = float(ws_rebalance.get('annual_electricity') or 0.0)
         drift_ok = abs(final_drift) <= 0.1
 
+        _step_start = time.perf_counter()
         recalc_all_renewables_full(exclude_ws_dependent=False)
         final_sector_totals = _get_sector_totals()
+        _profile_mark(profile, "wind_sector_first.final_sync_and_totals", _step_start)
         gw_gap = abs(float(final_sector_totals['gebaeudewaerme']['gap']))
         pw_gap = abs(float(final_sector_totals['prozesswaerme']['gap']))
         mobile_gap = abs(float(final_sector_totals['mobile_anwendungen']['gap']))
@@ -999,4 +1099,5 @@ def apply_balanced_wind_landuse_sector_first():
             'old_landuse_percent': ws_rebalance.get('old_landuse_percent'),
             'new_landuse_percent': ws_rebalance.get('new_landuse_percent'),
             'warning': ' '.join(warnings).strip(),
+            'profile': profile,
         }
