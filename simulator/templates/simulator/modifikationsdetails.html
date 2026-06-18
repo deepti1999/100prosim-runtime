@@ -495,6 +495,263 @@
     .mod-seg-thinkable { background: #ff7f00; }
     .mod-seg-hopeless { background: #ff0000; }
 
+    .mod-cockpit-shell {
+        max-width: 980px;
+    }
+
+    .mod-cockpit-grid {
+        display: grid;
+        grid-template-columns: minmax(310px, 1.05fr) 230px minmax(280px, .95fr);
+        gap: 20px;
+        padding: 8px 14px 12px;
+        align-items: start;
+    }
+
+    .mod-cockpit-left {
+        display: grid;
+        gap: 10px;
+    }
+
+    .mod-cockpit-effect {
+        display: grid;
+        grid-template-columns: 86px 1fr;
+        gap: 12px;
+        align-items: center;
+        min-height: 70px;
+    }
+
+    .mod-cockpit-thumb {
+        height: 58px;
+        border: 5px solid var(--thumb-border, #d8d8d8);
+        background:
+            linear-gradient(135deg, rgba(255,255,255,.22), rgba(0,0,0,.22)),
+            var(--thumb-fill, #d8d8d8);
+        box-shadow: inset 0 0 0 2px #fff;
+    }
+
+    .mod-thumb-ma { --thumb-border: #b9d9ea; --thumb-fill: #2f506f; }
+    .mod-thumb-gw { --thumb-border: #dca0a0; --thumb-fill: #bf7b4e; }
+    .mod-thumb-pw { --thumb-border: #f2c49a; --thumb-fill: #d9782e; }
+    .mod-thumb-gs { --thumb-border: #c7b8a5; --thumb-fill: #b39b69; }
+    .mod-thumb-klik { --thumb-border: #ffff30; --thumb-fill: #6f5b38; }
+    .mod-thumb-pop { --thumb-border: #dfe9cc; --thumb-fill: #2a2a2a; }
+
+    .mod-cockpit-main {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        color: #000;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 1.1;
+    }
+
+    .mod-cockpit-main span {
+        color: #777;
+        font-size: 14px;
+    }
+
+    .mod-cockpit-change {
+        color: #3159d4;
+        font-size: 18px;
+        font-weight: 700;
+        min-width: 58px;
+        text-align: right;
+    }
+
+    .mod-cockpit-sub {
+        display: grid;
+        grid-template-columns: 58px 1fr;
+        gap: 8px;
+        color: #000;
+        font-size: 14px;
+        line-height: 1.25;
+        margin-top: 4px;
+    }
+
+    .mod-cockpit-sub strong {
+        color: #3159d4;
+        font-size: 14px;
+        text-align: right;
+    }
+
+    .mod-cockpit-sub span {
+        color: #001fe8;
+        font-weight: 700;
+        margin-right: 4px;
+    }
+
+    .mod-cockpit-center {
+        display: grid;
+        grid-template-columns: 34px repeat(4, 34px);
+        gap: 6px;
+        align-items: end;
+        min-height: 420px;
+        padding-top: 8px;
+    }
+
+    .mod-cockpit-axis {
+        height: 360px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: end;
+        color: #aaa;
+        font-size: 17px;
+        font-weight: 700;
+        padding-right: 4px;
+        border-bottom: 2px solid #aaa;
+    }
+
+    .mod-cockpit-vcol {
+        height: 360px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: stretch;
+        position: relative;
+        border-bottom: 2px solid #aaa;
+    }
+
+    .mod-cockpit-vbar {
+        width: 17px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column-reverse;
+        border-left: 1px solid rgba(0,0,0,.15);
+        border-right: 1px solid rgba(0,0,0,.15);
+    }
+
+    .mod-cockpit-vbar.is-target {
+        width: 20px;
+    }
+
+    .mod-cockpit-vbar.is-outline {
+        border: 1px dashed #777;
+        background: rgba(255,255,255,.6);
+    }
+
+    .mod-cockpit-part {
+        min-height: 2px;
+    }
+
+    .mod-part-klik { background: #fff400; }
+    .mod-part-ma { background: #7edfe5; }
+    .mod-part-gw { background: #d59a9a; }
+    .mod-part-pw { background: #f2c49a; }
+    .mod-part-gs { background: #c9c29c; }
+    .mod-part-fossil { background: #7f7f7f; }
+    .mod-part-renew { background: #b08a35; }
+    .mod-part-bio { background: #73923b; }
+
+    .mod-cockpit-vlabel {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        color: #3159d4;
+        font-size: 14px;
+        font-weight: 700;
+        text-align: center;
+        margin: 6px auto 0;
+        height: 42px;
+    }
+
+    .mod-cockpit-vlabel span {
+        color: #777;
+    }
+
+    .mod-cockpit-right {
+        display: grid;
+        grid-template-columns: 92px 1fr;
+        gap: 10px 14px;
+        align-items: center;
+    }
+
+    .mod-cockpit-x {
+        height: 72px;
+        border: 7px solid #8b8b8b;
+        background: linear-gradient(135deg, #eee, #777);
+        position: relative;
+    }
+
+    .mod-cockpit-x::before,
+    .mod-cockpit-x::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -8px;
+        width: calc(100% + 16px);
+        height: 8px;
+        background: rgba(232, 93, 73, .7);
+        transform: rotate(42deg);
+    }
+
+    .mod-cockpit-x::after {
+        transform: rotate(-42deg);
+    }
+
+    .mod-cockpit-renew-title {
+        grid-column: 2;
+        color: #76a95a;
+        font-size: 25px;
+        font-weight: 700;
+        margin-top: 4px;
+    }
+
+    .mod-renew-thumb {
+        height: 72px;
+        border: 8px solid var(--renew-border, #7edfe5);
+        background:
+            linear-gradient(135deg, rgba(255,255,255,.35), rgba(0,0,0,.18)),
+            var(--renew-fill, #7edfe5);
+        box-shadow: inset 0 0 0 2px #fff;
+    }
+
+    .mod-renew-wind { --renew-border: #7edfe5; --renew-fill: #7fb8e8; }
+    .mod-renew-solar { --renew-border: #ffc933; --renew-fill: #3e73b7; }
+    .mod-renew-bio { --renew-border: #78963f; --renew-fill: #6e9f35; }
+    .mod-renew-other { --renew-border: #a77d2f; --renew-fill: #d8dde0; }
+
+    .mod-renew-copy {
+        color: #000;
+        font-size: 14px;
+        line-height: 1.35;
+    }
+
+    .mod-renew-copy h4 {
+        margin: 0 0 2px;
+        color: #000;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .mod-renew-copy h4 span {
+        color: #888;
+        font-size: 14px;
+    }
+
+    .mod-renew-copy strong {
+        color: #3159d4;
+        display: inline-block;
+        min-width: 50px;
+        font-size: 18px;
+    }
+
+    .mod-renew-copy .small-line {
+        color: #3159d4;
+        font-weight: 700;
+    }
+
+    .mod-cockpit-import {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 92px 1fr;
+        gap: 10px 14px;
+        align-items: center;
+        border-top: 1px solid #aaa;
+        padding-top: 8px;
+        margin-top: 4px;
+    }
+
     @media (max-width: 900px) {
         .mod-chart-shell {
             max-width: 100%;
@@ -503,6 +760,10 @@
 
         .mod-chart-inner {
             min-width: 620px;
+        }
+
+        .mod-cockpit-inner {
+            min-width: 930px;
         }
     }
 </style>
@@ -1158,6 +1419,154 @@
                             </div>
                         </div>
                         <div class="mod-delta">x 0,7</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mod-chart-shell mod-cockpit-shell mt-4 mb-4" aria-label="Energie- und Einflussvergleich">
+                <div class="mod-chart-inner mod-cockpit-inner">
+                    <div class="mod-chart-title">5. Energie- und Einflussvergleich</div>
+                    <div class="mod-cockpit-grid">
+                        <div class="mod-cockpit-left">
+                            <div class="mod-cockpit-effect">
+                                <div class="mod-cockpit-thumb mod-thumb-ma"></div>
+                                <div>
+                                    <div class="mod-cockpit-main"><div class="mod-cockpit-change">-48 %</div>Mobile Anwendungen <span>(MA)</span></div>
+                                    <div class="mod-cockpit-sub"><strong>+-0 %</strong><div><span>&rarr;</span>Suffizienz (Pkm/Pers.)</div></div>
+                                    <div class="mod-cockpit-sub"><strong>-48 %</strong><div><span>&rarr;</span>Effizienz (kWh/Pkm)</div></div>
+                                </div>
+                            </div>
+
+                            <div class="mod-cockpit-effect">
+                                <div class="mod-cockpit-thumb mod-thumb-gw"></div>
+                                <div>
+                                    <div class="mod-cockpit-main"><div class="mod-cockpit-change">-17 %</div>Gebäudewärme <span>(GW)</span></div>
+                                    <div class="mod-cockpit-sub"><strong>+-0 %</strong><div><span>&rarr;</span>Suffizienz (qm/Pers.)</div></div>
+                                    <div class="mod-cockpit-sub"><strong>-17 %</strong><div><span>&rarr;</span>Effizienz (Wärmeschutz, San.-Rate)</div></div>
+                                </div>
+                            </div>
+
+                            <div class="mod-cockpit-effect">
+                                <div class="mod-cockpit-thumb mod-thumb-pw"></div>
+                                <div>
+                                    <div class="mod-cockpit-main"><div class="mod-cockpit-change">-12 %</div>Prozesswärme <span>(PW)</span></div>
+                                    <div class="mod-cockpit-sub"><strong>+-0 %</strong><div><span>&rarr;</span>Suffizienz (Prod.Vol./Pers.)</div></div>
+                                    <div class="mod-cockpit-sub"><strong>-12 %</strong><div><span>&rarr;</span>Effizienz (Produktions-Proz.)</div></div>
+                                </div>
+                            </div>
+
+                            <div class="mod-cockpit-effect">
+                                <div class="mod-cockpit-thumb mod-thumb-gs"></div>
+                                <div>
+                                    <div class="mod-cockpit-main"><div class="mod-cockpit-change">-61 %</div>Grundstoffe <span>(GS)</span></div>
+                                    <div class="mod-cockpit-sub"><strong>-47 %</strong><div><span>&rarr;</span>Suffizienz (Kunststoff-Vol./Pers.)</div></div>
+                                    <div class="mod-cockpit-sub"><strong>-14 %</strong><div><span>&rarr;</span>Effizienz (Kunststoff-Recycling)</div></div>
+                                </div>
+                            </div>
+
+                            <div class="mod-cockpit-effect">
+                                <div class="mod-cockpit-thumb mod-thumb-klik"></div>
+                                <div>
+                                    <div class="mod-cockpit-main"><div class="mod-cockpit-change">-5 %</div>Strom-Anwend. <span>(KLIK*)</span></div>
+                                    <div class="mod-cockpit-sub"><strong>+-0 %</strong><div><span>&rarr;</span>Suffizienz (El. Geräte/Pers.)</div></div>
+                                    <div class="mod-cockpit-sub"><strong>-5 %</strong><div><span>&rarr;</span>Effizienz (Elektrische Geräte)</div></div>
+                                </div>
+                            </div>
+
+                            <div class="mod-cockpit-effect">
+                                <div class="mod-cockpit-thumb mod-thumb-pop"></div>
+                                <div>
+                                    <div class="mod-cockpit-main"><div class="mod-cockpit-change">0 %</div>Bevölkerungsentwicklung</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mod-cockpit-center">
+                            <div class="mod-cockpit-axis"><span>3.500</span><span>3.000</span><span>2.500</span><span>2.000</span><span>1.500</span><span>1.000</span><span>500</span><span>0</span></div>
+
+                            <div class="mod-cockpit-vcol">
+                                <div class="mod-cockpit-vbar is-outline" style="height: 82%;"></div>
+                                <div class="mod-cockpit-vlabel"><span>Status</span></div>
+                            </div>
+
+                            <div class="mod-cockpit-vcol">
+                                <div class="mod-cockpit-vbar is-outline" style="height: 74%;"></div>
+                                <div class="mod-cockpit-vlabel">Ziel</div>
+                            </div>
+
+                            <div class="mod-cockpit-vcol">
+                                <div class="mod-cockpit-vbar" style="height: 86%;">
+                                    <span class="mod-cockpit-part mod-part-fossil" style="height: 83%;"></span>
+                                    <span class="mod-cockpit-part mod-part-ma" style="height: 8%;"></span>
+                                    <span class="mod-cockpit-part mod-part-bio" style="height: 5%;"></span>
+                                    <span class="mod-cockpit-part mod-part-klik" style="height: 4%;"></span>
+                                </div>
+                                <div class="mod-cockpit-vlabel"><span>Status</span></div>
+                            </div>
+
+                            <div class="mod-cockpit-vcol">
+                                <div class="mod-cockpit-vbar is-target" style="height: 74%;">
+                                    <span class="mod-cockpit-part mod-part-renew" style="height: 18%;"></span>
+                                    <span class="mod-cockpit-part mod-part-bio" style="height: 10%;"></span>
+                                    <span class="mod-cockpit-part mod-part-klik" style="height: 16%;"></span>
+                                    <span class="mod-cockpit-part mod-part-ma" style="height: 56%;"></span>
+                                </div>
+                                <div class="mod-cockpit-vlabel">Ziel</div>
+                            </div>
+                        </div>
+
+                        <div class="mod-cockpit-right">
+                            <div class="mod-cockpit-x"></div>
+                            <div class="mod-renew-copy">
+                                <h4>Fossile/atomare Brennstoffe</h4>
+                                <div><strong>&#9658; Null</strong></div>
+                            </div>
+
+                            <div></div>
+                            <div class="mod-cockpit-renew-title">Renewables:</div>
+
+                            <div class="mod-renew-thumb mod-renew-wind"></div>
+                            <div class="mod-renew-copy">
+                                <h4>Windstrom <span>(WiS)</span></h4>
+                                <div><strong>x 5,2</strong></div>
+                                <div><span class="small-line">x 4,3 &rarr;</span> onshore</div>
+                                <div><span class="small-line">x 9,6 &rarr;</span> offshore</div>
+                            </div>
+
+                            <div class="mod-renew-thumb mod-renew-solar"></div>
+                            <div class="mod-renew-copy">
+                                <h4>Solarstrom <span>(SoS)</span></h4>
+                                <div><strong>x 19,2</strong></div>
+                                <div><span class="small-line">x 8,2 &rarr;</span> Dachflächen</div>
+                                <div><span class="small-line">x 46,2 &rarr;</span> Freiflächen</div>
+                            </div>
+
+                            <div class="mod-renew-thumb mod-renew-bio"></div>
+                            <div class="mod-renew-copy">
+                                <h4>Biobrennstoffe <span>(BB)</span></h4>
+                                <div><strong>x 1,0</strong></div>
+                                <div><span class="small-line">x 0,7 &rarr;</span> Energiepflanzen-Anbau</div>
+                                <div><span class="small-line">x 0,6 &rarr;</span> Forstholz direkt und nach stoffl. Nutzung</div>
+                                <div><span class="small-line">x 4,9 &rarr;</span> Stroh &rarr; Exkremente &rarr; Bioabfall</div>
+                            </div>
+
+                            <div class="mod-renew-thumb mod-renew-other"></div>
+                            <div class="mod-renew-copy">
+                                <h4>Sonstige Erneuerbare <span>(SE)</span></h4>
+                                <div><strong>x 9,0</strong></div>
+                                <div><span class="small-line">x 18,3 &rarr;</span> Umgeb.wärme (Luft-/Erd-Wärmepumpen)</div>
+                                <div><span class="small-line">x 1,0 &rarr;</span> Wasserkraft</div>
+                                <div><span class="small-line">x 1,4 &rarr;</span> Solarthermie</div>
+                            </div>
+
+                            <div class="mod-cockpit-import">
+                                <div class="mod-renew-thumb" style="--renew-border:#f25b45;--renew-fill:#e7f3f8;"></div>
+                                <div class="mod-renew-copy">
+                                    <h4>Netto-Importanteil</h4>
+                                    <div><strong>0 %</strong> <span class="small-line">&rarr;</span> Solar-/Windstrom direkt</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

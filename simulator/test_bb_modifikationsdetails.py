@@ -112,6 +112,7 @@ class ModifikationsdetailsPageTests(TestCase):
         self.assertContains(response, "Endenergie-Verbrauch nach Anwendungsbereichen")
         self.assertContains(response, "Primärenergie-Beiträge nach Quellen")
         self.assertContains(response, "Ausbau der Erneuerbaren Energiequellen")
+        self.assertContains(response, "Energie- und Einflussvergleich")
 
     def test_renders_four_series_labels_per_chart(self):
         response = self.client.get(reverse("simulator:modifikationsdetails"))
