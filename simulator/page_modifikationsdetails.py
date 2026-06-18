@@ -263,12 +263,27 @@ def _format_percent_value(value):
     return f"{number:.1f}".replace(".", ",")
 
 
-def _comparison_row(label, *, status, basis, current, scale_max=BAR_SCALE_MAX):
+def _format_ratio_value(value):
+    number = _to_float(value)
+    if number is None:
+        return "—"
+    return f"{number:.1f}".replace(".", ",")
+
+
+def _comparison_delta(status, current, mode="difference"):
     status_value = _to_float(status)
     current_value = _to_float(current)
-    delta = None
-    if status_value is not None and current_value is not None:
-        delta = current_value - status_value
+    if status_value is None or current_value is None:
+        return "—"
+    if mode == "ratio":
+        if status_value == 0.0:
+            return "(Neu)" if current_value else "x 0,0"
+        return f"x {_format_ratio_value(current_value / status_value)}"
+    delta = current_value - status_value
+    return f"{'+' if delta >= 0 else ''}{_format_percent_value(delta)} %"
+
+
+def _comparison_row(label, *, status, basis, current, scale_max=BAR_SCALE_MAX, delta_mode="difference"):
     return {
         "label": label,
         "status": _format_percent_value(status),
@@ -277,11 +292,7 @@ def _comparison_row(label, *, status, basis, current, scale_max=BAR_SCALE_MAX):
         "status_width": _bar_width(status, scale_max),
         "basis_width": _bar_width(basis, scale_max),
         "current_width": _bar_width(current, scale_max),
-        "delta": (
-            "—"
-            if delta is None
-            else f"{'+' if delta >= 0 else ''}{_format_percent_value(delta)} %"
-        ),
+        "delta": _comparison_delta(status, current, delta_mode),
     }
 
 
@@ -463,7 +474,7 @@ def _scoped_renewable_value(code, field):
     return getattr(row, field, None) if row else None
 
 
-def _verbrauch_comparison_row(label, code, *, scale_max=BAR_SCALE_MAX):
+def _verbrauch_comparison_row(label, code, *, scale_max=BAR_SCALE_MAX, delta_mode="difference"):
     status = _global_verbrauch_value(code, "status")
     basis = _global_verbrauch_value(code, "ziel")
     current = _scoped_verbrauch_value(code, "ziel")
@@ -473,6 +484,7 @@ def _verbrauch_comparison_row(label, code, *, scale_max=BAR_SCALE_MAX):
         basis=basis if basis is not None else 100.0,
         current=current if current is not None else basis,
         scale_max=scale_max,
+        delta_mode=delta_mode,
     )
 
 
@@ -550,6 +562,7 @@ def _heat_pump_comparison_row(*, scale_max=EFFICIENCY_BAR_SCALE_MAX):
         status=status,
         basis=basis,
         current=current if current is not None else basis,
+        delta_mode="ratio",
         scale_max=scale_max,
     )
 
@@ -580,6 +593,7 @@ def _solar_thermal_comparison_row(*, scale_max=EFFICIENCY_BAR_SCALE_MAX):
         status=status,
         basis=basis,
         current=current if current is not None else basis,
+        delta_mode="ratio",
         scale_max=scale_max,
     )
 
@@ -614,6 +628,7 @@ def _biofuel_comparison_row(*, scale_max=EFFICIENCY_BAR_SCALE_MAX):
         status=status,
         basis=basis,
         current=current if current is not None else basis,
+        delta_mode="ratio",
         scale_max=scale_max,
     )
 
@@ -726,21 +741,25 @@ def _efficiency_comparison_rows():
         _verbrauch_comparison_row(
             "Wärmeanw.-Effiz.Gewerbe/Industrie",
             "3.2.2",
+            delta_mode="ratio",
             scale_max=EFFICIENCY_BAR_SCALE_MAX,
         ),
         _verbrauch_comparison_row(
             "Syntheseanteil an Grundstoffen",
             "9.1.3",
+            delta_mode="ratio",
             scale_max=EFFICIENCY_BAR_SCALE_MAX,
         ),
         _verbrauch_comparison_row(
             "Anteil Elektrotrakt. Personenverkehr",
             "4.1.1.6",
+            delta_mode="ratio",
             scale_max=EFFICIENCY_BAR_SCALE_MAX,
         ),
         _verbrauch_comparison_row(
             "Anteil Elektrotrakt. Güterverkehr",
             "4.1.2.5",
+            delta_mode="ratio",
             scale_max=EFFICIENCY_BAR_SCALE_MAX,
         ),
     ]
