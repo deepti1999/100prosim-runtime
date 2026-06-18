@@ -1,6 +1,8 @@
 """WS 365 sector-balancing helpers."""
 
+import logging
 import os
+import time
 
 from .models import VerbrauchData, RenewableData
 from .ws365_core import (
@@ -12,9 +14,18 @@ from .ws365_core import (
 )
 
 _SIMULATOR_VERBOSE_PRINTS = os.environ.get("SIMULATOR_VERBOSE_PRINTS", "false").lower() == "true"
+logger = logging.getLogger(__name__)
+
 if not _SIMULATOR_VERBOSE_PRINTS:
     def print(*args, **kwargs):  # type: ignore[override]
         return None
+
+
+def _profile_mark(profile, label, start):
+    elapsed_ms = int((time.perf_counter() - start) * 1000)
+    profile.append({"step": label, "duration_ms": elapsed_ms})
+    logger.info("balance_profile step=%s duration_ms=%s", label, elapsed_ms)
+    return elapsed_ms
 
 def _get_sector_totals():
     """
@@ -92,7 +103,10 @@ def _balance_heat_sectors_after_ws():
     from simulator.recalc_service import recalc_all_renewables_full
     from simulator.verbrauch_recalculator import recalc_all_verbrauch
 
+    profile = []
+
     # Keep 8.2 fixed to the required baseline value.
+    _step_start = time.perf_counter()
     r82_fixed = RenewableData.objects.get(code='8.2')
     old_82_target = float(r82_fixed.target_value or 0)
     if abs(old_82_target - FIXED_82_TARGET) > 1e-9:
@@ -100,6 +114,7 @@ def _balance_heat_sectors_after_ws():
         r82_fixed.is_fixed = True
         r82_fixed.save(skip_cascade=True, update_fields=['target_value', 'is_fixed'])
     new_82_target = float(r82_fixed.target_value or 0)
+    _profile_mark(profile, "sector_balance.fix_8_2", _step_start)
 
     def settle_totals(trigger_prefix: str, max_rounds: int = 1, tolerance: float = 1.0):
         """
@@ -116,9 +131,15 @@ def _balance_heat_sectors_after_ws():
         prev = None
         current = None
         for idx in range(max_rounds):
+            _step_start = time.perf_counter()
             recalc_all_verbrauch(trigger_code=f"{trigger_prefix}_{idx + 1}")
+            _profile_mark(profile, f"sector_balance.{trigger_prefix}.round_{idx + 1}.verbrauch_recalc", _step_start)
+            _step_start = time.perf_counter()
             recalc_all_renewables_full(exclude_ws_dependent=False)
+            _profile_mark(profile, f"sector_balance.{trigger_prefix}.round_{idx + 1}.renewables_recalc", _step_start)
+            _step_start = time.perf_counter()
             current = _get_sector_totals()
+            _profile_mark(profile, f"sector_balance.{trigger_prefix}.round_{idx + 1}.sector_totals", _step_start)
             if prev is not None:
                 gw_delta = abs(current['gebaeudewaerme']['gap'] - prev['gebaeudewaerme']['gap'])
                 pw_delta = abs(current['prozesswaerme']['gap'] - prev['prozesswaerme']['gap'])
@@ -128,9 +149,12 @@ def _balance_heat_sectors_after_ws():
             prev = current
         return current or _get_sector_totals()
 
+    _step_start = time.perf_counter()
     before = settle_totals("ws_heat_balance_start")
+    _profile_mark(profile, "sector_balance.initial_settle_total", _step_start)
 
     # --- Gebäudewärme knob: Verbrauch 2.8 ziel (%) ---
+    _step_start = time.perf_counter()
     v28 = VerbrauchData.objects.get(code='2.8')
     old_28 = float(v28.ziel or 0)
     old_gap = float(before['gebaeudewaerme']['gap'])
@@ -252,7 +276,9 @@ def _balance_heat_sectors_after_ws():
 
     v28.refresh_from_db(fields=['ziel', 'user_percent'])
     final_28, final_gw_gap, totals_after_28 = apply_28_and_get_gap(best_28, settle_rounds=3)
+    _profile_mark(profile, "sector_balance.gebaeudewaerme_2_8_phase", _step_start)
 
+    _step_start = time.perf_counter()
     v34 = VerbrauchData.objects.get(code='3.4')
     v35 = VerbrauchData.objects.get(code='3.5')
     v343 = VerbrauchData.objects.get(code='3.4.3')
@@ -368,10 +394,14 @@ def _balance_heat_sectors_after_ws():
             else (process_reason or 'No change needed')
         ),
     })
+    _profile_mark(profile, "sector_balance.prozesswaerme_3_4_phase", _step_start)
 
     # Recalculate until stable after heat knob updates.
+    _step_start = time.perf_counter()
     post_heat = settle_totals("ws_heat_balance_final")
+    _profile_mark(profile, "sector_balance.post_heat_settle_total", _step_start)
 
+    _step_start = time.perf_counter()
     mobile_before = post_heat['mobile_anwendungen']
     mobile_gap_before = float(mobile_before['gap'])
 
@@ -581,11 +611,13 @@ def _balance_heat_sectors_after_ws():
     )
     mobile_primary_adjustment['new_gap'] = current_gap
     mobile_secondary_adjustment['new_gap'] = current_gap
+    _profile_mark(profile, "sector_balance.mobile_phase", _step_start)
 
     return {
         'before': before,
         'post_heat': post_heat,
         'after': after,
+        'profile': profile,
         'adjustments': {
             'verbrauch_2_8': {
                 'old_ziel_percent': old_28,
@@ -605,4 +637,3 @@ def _balance_heat_sectors_after_ws():
             'verbrauch_4_1_1_6_mobile_secondary': mobile_secondary_adjustment,
         },
     }
-
