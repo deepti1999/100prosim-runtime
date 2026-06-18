@@ -1,4 +1,5 @@
 {% extends 'simulator/base.html' %}
+{% load static %}
 
 {% block title %}Variantenvergleich{% endblock %}
 
@@ -529,7 +530,10 @@
         box-shadow: inset 0 0 0 2px #fff;
     }
 
-    .mod-thumb-ma { --thumb-border: #b9d9ea; --thumb-fill: #2f506f; }
+    .mod-thumb-ma {
+        --thumb-border: #b9d9ea;
+        background: url("{% static 'simulator/images/cockpit_mobile_applications.png' %}") center / cover no-repeat;
+    }
     .mod-thumb-gw { --thumb-border: #dca0a0; --thumb-fill: #bf7b4e; }
     .mod-thumb-pw { --thumb-border: #f2c49a; --thumb-fill: #d9782e; }
     .mod-thumb-gs { --thumb-border: #c7b8a5; --thumb-fill: #b39b69; }
