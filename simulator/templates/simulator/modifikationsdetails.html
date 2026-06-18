@@ -931,51 +931,67 @@
                     </div>
 
                     <div class="mod-stacked-row">
-                        <div class="mod-stacked-label">Status</div>
+                        <div class="mod-stacked-label">{{ primaerenergie_stack_rows.0.label }}</div>
                         <div class="mod-stacked-area mod-stacked-area-3500">
-                            <div class="mod-stack" style="width: 86%;">
-                                <span class="mod-seg mod-seg-wind-on" style="width: 5%;"></span>
-                                <span class="mod-seg mod-seg-wind-off" style="width: 3%;"></span>
-                                <span class="mod-seg mod-seg-pv" style="width: 3%;"></span>
-                                <span class="mod-seg mod-seg-water" style="width: 1%;"></span>
-                                <span class="mod-seg mod-seg-bio" style="width: 14%;"></span>
-                                <span class="mod-seg mod-seg-heat" style="width: 2%;"></span>
-                                <span class="mod-seg mod-seg-fossil" style="width: 72%;"></span>
+                            <div class="mod-stack" style="width: {{ primaerenergie_stack_rows.0.width }}%;">
+                                <span class="mod-seg mod-seg-wind-on" style="width: {{ primaerenergie_stack_rows.0.segments.wind_on }}%;"></span>
+                                <span class="mod-seg mod-seg-wind-off" style="width: {{ primaerenergie_stack_rows.0.segments.wind_off }}%;"></span>
+                                <span class="mod-seg mod-seg-pv" style="width: {{ primaerenergie_stack_rows.0.segments.pv }}%;"></span>
+                                <span class="mod-seg mod-seg-water" style="width: {{ primaerenergie_stack_rows.0.segments.water }}%;"></span>
+                                <span class="mod-seg mod-seg-bio" style="width: {{ primaerenergie_stack_rows.0.segments.bio }}%;"></span>
+                                <span class="mod-seg mod-seg-heat" style="width: {{ primaerenergie_stack_rows.0.segments.heat }}%;"></span>
+                                <span class="mod-seg mod-seg-fossil" style="width: {{ primaerenergie_stack_rows.0.segments.fossil }}%;"></span>
                             </div>
                         </div>
                         <div></div>
                     </div>
                     <div class="mod-stacked-row">
-                        <div class="mod-stacked-label">Basisszenario</div>
+                        <div class="mod-stacked-label">{{ primaerenergie_stack_rows.1.label }}</div>
                         <div class="mod-stacked-area mod-stacked-area-3500">
-                            <div class="mod-stack" style="width: 70%;">
-                                <span class="mod-seg mod-seg-wind-on" style="width: 16%;"></span>
-                                <span class="mod-seg mod-seg-pv" style="width: 45%;"></span>
-                                <span class="mod-seg mod-seg-bio" style="width: 9%;"></span>
-                                <span class="mod-seg mod-seg-heat" style="width: 30%;"></span>
+                            <div class="mod-stack" style="width: {{ primaerenergie_stack_rows.1.width }}%;">
+                                <span class="mod-seg mod-seg-wind-on" style="width: {{ primaerenergie_stack_rows.1.segments.wind_on }}%;"></span>
+                                <span class="mod-seg mod-seg-wind-off" style="width: {{ primaerenergie_stack_rows.1.segments.wind_off }}%;"></span>
+                                <span class="mod-seg mod-seg-pv" style="width: {{ primaerenergie_stack_rows.1.segments.pv }}%;"></span>
+                                <span class="mod-seg mod-seg-water" style="width: {{ primaerenergie_stack_rows.1.segments.water }}%;"></span>
+                                <span class="mod-seg mod-seg-bio" style="width: {{ primaerenergie_stack_rows.1.segments.bio }}%;"></span>
+                                <span class="mod-seg mod-seg-heat" style="width: {{ primaerenergie_stack_rows.1.segments.heat }}%;"></span>
+                                <span class="mod-seg mod-seg-fossil" style="width: {{ primaerenergie_stack_rows.1.segments.fossil }}%;"></span>
                             </div>
                         </div>
                         <div></div>
                     </div>
                     <div class="mod-stacked-row">
-                        <div class="mod-stacked-label">Vorzustand</div>
-                        <div class="mod-stacked-area mod-stacked-area-3500"></div>
+                        <div class="mod-stacked-label">{{ primaerenergie_stack_rows.2.label }}</div>
+                        <div class="mod-stacked-area mod-stacked-area-3500">
+                            <div class="mod-stack" style="width: {{ primaerenergie_stack_rows.2.width }}%;">
+                                <span class="mod-seg mod-seg-wind-on" style="width: {{ primaerenergie_stack_rows.2.segments.wind_on }}%;"></span>
+                                <span class="mod-seg mod-seg-wind-off" style="width: {{ primaerenergie_stack_rows.2.segments.wind_off }}%;"></span>
+                                <span class="mod-seg mod-seg-pv" style="width: {{ primaerenergie_stack_rows.2.segments.pv }}%;"></span>
+                                <span class="mod-seg mod-seg-water" style="width: {{ primaerenergie_stack_rows.2.segments.water }}%;"></span>
+                                <span class="mod-seg mod-seg-bio" style="width: {{ primaerenergie_stack_rows.2.segments.bio }}%;"></span>
+                                <span class="mod-seg mod-seg-heat" style="width: {{ primaerenergie_stack_rows.2.segments.heat }}%;"></span>
+                                <span class="mod-seg mod-seg-fossil" style="width: {{ primaerenergie_stack_rows.2.segments.fossil }}%;"></span>
+                            </div>
+                        </div>
                         <div></div>
                     </div>
                     <div class="mod-stacked-row">
-                        <div class="mod-stacked-label">Aktueller Zustand</div>
+                        <div class="mod-stacked-label">{{ primaerenergie_stack_rows.3.label }}</div>
                         <div class="mod-stacked-area mod-stacked-area-3500">
-                            <div class="mod-stack" style="width: 70%;">
+                            <div class="mod-stack" style="width: {{ primaerenergie_stack_rows.3.width }}%;">
                                 <span class="mod-seg mod-seg-current" style="width: 100%;"></span>
                             </div>
-                            <div class="mod-stack" style="width: 70%; position:absolute; left:0; top:13px;">
-                                <span class="mod-seg mod-seg-wind-on" style="width: 16%;"></span>
-                                <span class="mod-seg mod-seg-pv" style="width: 45%;"></span>
-                                <span class="mod-seg mod-seg-bio" style="width: 9%;"></span>
-                                <span class="mod-seg mod-seg-heat" style="width: 30%;"></span>
+                            <div class="mod-stack" style="width: {{ primaerenergie_stack_rows.3.width }}%; position:absolute; left:0; top:13px;">
+                                <span class="mod-seg mod-seg-wind-on" style="width: {{ primaerenergie_stack_rows.3.segments.wind_on }}%;"></span>
+                                <span class="mod-seg mod-seg-wind-off" style="width: {{ primaerenergie_stack_rows.3.segments.wind_off }}%;"></span>
+                                <span class="mod-seg mod-seg-pv" style="width: {{ primaerenergie_stack_rows.3.segments.pv }}%;"></span>
+                                <span class="mod-seg mod-seg-water" style="width: {{ primaerenergie_stack_rows.3.segments.water }}%;"></span>
+                                <span class="mod-seg mod-seg-bio" style="width: {{ primaerenergie_stack_rows.3.segments.bio }}%;"></span>
+                                <span class="mod-seg mod-seg-heat" style="width: {{ primaerenergie_stack_rows.3.segments.heat }}%;"></span>
+                                <span class="mod-seg mod-seg-fossil" style="width: {{ primaerenergie_stack_rows.3.segments.fossil }}%;"></span>
                             </div>
                         </div>
-                        <div class="mod-delta">-18 %</div>
+                        <div class="mod-delta">{{ primaerenergie_stack_rows.3.delta }}</div>
                     </div>
                 </div>
             </div>

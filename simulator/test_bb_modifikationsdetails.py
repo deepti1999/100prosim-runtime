@@ -23,6 +23,7 @@ from simulator.page_modifikationsdetails import (
     _endenergie_stack_rows,
     _efficiency_comparison_rows,
     _heat_pump_comparison_row,
+    _primaerenergie_stack_rows,
     _solar_thermal_comparison_row,
 )
 
@@ -64,6 +65,13 @@ class ModifikationsdetailsPageTests(TestCase):
             ("9.1.2", "Solar Freiflächen", 30000.0, 1200000.0),
             ("9.1.3", "Wasserkraft+Geothermie", 19000.0, 25000.0),
             ("9.1.4", "Biobrennstoffe", 5000.0, 4500.0),
+            ("2.1.1.2.2", "Wind onshore", 111500.0, 480000.0),
+            ("2.2.1.2.3", "Wind offshore", 23500.0, 226200.0),
+            ("10.9.1.1", "Biobrennstoffe gasförmig", 92400.0, 110600.0),
+            ("10.9.1.2", "Biobrennstoffe flüssig", 30200.0, 4300.0),
+            ("10.9.1.3", "Biobrennstoffe fest", 135100.0, 130000.0),
+            ("7.1.2.3", "Umgebungswärme Luft", 16100.0, 401400.0),
+            ("7.1.4.3", "Umgebungswärme Erde", 8100.0, 41200.0),
             ("7.1.2.2", "Luftgekoppelte WP", 15000.0, 300000.0),
             ("7.1.4.2", "Erdreichgekoppelte WP", 5000.0, 48000.0),
             ("1.1.1.1.2", "Solarthermie Gebäudewärme", 5000.0, 8000.0),
@@ -174,6 +182,29 @@ class ModifikationsdetailsPageTests(TestCase):
         self.assertEqual(current["pw"], "22.695")
         self.assertEqual(current["grund"], "5.674")
         self.assertEqual(current["ma"], "23.404")
+
+    def test_primaerenergie_stack_uses_confirmed_sources_and_sums(self):
+        rows = _primaerenergie_stack_rows()
+        status = rows[0]["segments"]
+        current = rows[3]["segments"]
+
+        self.assertEqual(rows[0]["width"], "91.4")
+        self.assertEqual(status["wind_on"], "3.485")
+        self.assertEqual(status["wind_off"], "0.735")
+        self.assertEqual(status["pv"], "0.938")
+        self.assertEqual(status["water"], "0.594")
+        self.assertEqual(status["bio"], "8.056")
+        self.assertEqual(status["heat"], "0.913")
+        self.assertEqual(status["fossil"], "85.28")
+
+        self.assertEqual(rows[3]["width"], "75.049")
+        self.assertEqual(current["wind_on"], "18.274")
+        self.assertEqual(current["wind_off"], "8.612")
+        self.assertEqual(current["pv"], "45.685")
+        self.assertEqual(current["water"], "0.952")
+        self.assertEqual(current["bio"], "9.323")
+        self.assertEqual(current["heat"], "17.155")
+        self.assertEqual(current["fossil"], "0")
 
     def test_energetic_renovation_row_uses_heiner_formula(self):
         row = _building_renovation_comparison_row()

@@ -27,6 +27,8 @@ ADMIN_BASELINE_KEY = "global"
 BAR_SCALE_MAX = 120.0
 EFFICIENCY_BAR_SCALE_MAX = 150.0
 ENDENERGIE_STACK_SCALE_MAX = 3000.0
+PRIMARY_STACK_SCALE_MAX = 3500.0
+PRIMARY_STATUS_TOTAL_TWH = 3199.0
 
 
 # --- Chart definitions ---------------------------------------------------
@@ -95,10 +97,16 @@ CHARTS = [
         "source": "renewable",
         "scale": 0.001,
         "codes": [
-            {"code": "9.1.1", "label": "Wind onshore"},
+            {"code": "2.1.1.2.2", "label": "Wind onshore"},
+            {"code": "2.2.1.2.3", "label": "Wind offshore"},
             {"code": "9.1.2", "label": "Solar Freiflächen"},
             {"code": "9.1.3", "label": "Wasserkraft + Geothermie"},
-            {"code": "9.1.4", "label": "Biobrennstoffe"},
+            {"code": "10.9.1.1", "label": "Biobrennstoffe gasförmig"},
+            {"code": "10.9.1.2", "label": "Biobrennstoffe flüssig"},
+            {"code": "10.9.1.3", "label": "Biobrennstoffe fest"},
+            {"code": "7.1.2.3", "label": "Umgebungswärme Luft"},
+            {"code": "7.1.4.3", "label": "Umgebungswärme Erde"},
+            {"code": "1.1.1.1.2", "label": "Solarwärme"},
         ],
     },
     {
@@ -322,6 +330,86 @@ def _endenergie_stack_rows(admin_payload=None, vorzustand_payload=None):
         _endenergie_stack_row("Basisszenario", basis_values),
         _endenergie_stack_row("Vorzustand", vor_values),
         _endenergie_stack_row("Aktueller Zustand", current_values, status_total=status_total),
+    ]
+
+
+def _renewable_twh(code, field, payload=None):
+    raw = (
+        _snapshot_lookup(payload, "renewable", code, field)
+        if payload
+        else _live_value("renewable", code, field)
+    )
+    return _scale(raw, 0.001)
+
+
+def _sum_values(*values):
+    numeric = [_to_float(value) for value in values]
+    present = [value for value in numeric if value is not None]
+    if len(present) != len(values):
+        return None
+    return sum(present)
+
+
+def _primaerenergie_segment_values(payload=None, target=False):
+    field = "target_value" if target else "status_value"
+    wind_on = _renewable_twh("2.1.1.2.2", field, payload)
+    if wind_on is None:
+        wind_on = _renewable_twh("9.1.1", field, payload)
+    wind_off = _renewable_twh("2.2.1.2.3", field, payload)
+    pv = _renewable_twh("9.1.2", field, payload)
+    water = _renewable_twh("9.1.3", field, payload)
+    bio = _sum_values(
+        _renewable_twh("10.9.1.1", field, payload),
+        _renewable_twh("10.9.1.2", field, payload),
+        _renewable_twh("10.9.1.3", field, payload),
+    )
+    heat = _sum_values(
+        _renewable_twh("7.1.2.3", field, payload),
+        _renewable_twh("7.1.4.3", field, payload),
+        _renewable_twh("1.1.1.1.2", field, payload),
+    )
+    values = {
+        "wind_on": wind_on,
+        "wind_off": wind_off,
+        "pv": pv,
+        "water": water,
+        "bio": bio,
+        "heat": heat,
+    }
+    renewable_total = sum(value for value in values.values() if value is not None)
+    total = renewable_total if target else PRIMARY_STATUS_TOTAL_TWH
+    values["fossil"] = max(total - renewable_total, 0.0)
+    return values
+
+
+def _primaerenergie_stack_row(label, values, status_total=None):
+    total = sum(value for value in values.values() if value is not None)
+    delta = ""
+    if status_total and label == "Aktueller Zustand":
+        percent = ((total - status_total) / status_total) * 100.0
+        delta = f"{'+' if percent >= 0 else ''}{_format_percent_value(percent)} %"
+    return {
+        "label": label,
+        "width": _bar_width(total, PRIMARY_STACK_SCALE_MAX),
+        "delta": delta,
+        "segments": {
+            name: _stack_width(value, total)
+            for name, value in values.items()
+        },
+    }
+
+
+def _primaerenergie_stack_rows(admin_payload=None, vorzustand_payload=None):
+    status_values = _primaerenergie_segment_values(target=False)
+    basis_values = _primaerenergie_segment_values(admin_payload, target=True)
+    vor_values = _primaerenergie_segment_values(vorzustand_payload, target=True)
+    current_values = _primaerenergie_segment_values(target=True)
+    status_total = sum(value for value in status_values.values() if value is not None)
+    return [
+        _primaerenergie_stack_row("Status", status_values),
+        _primaerenergie_stack_row("Basisszenario", basis_values),
+        _primaerenergie_stack_row("Vorzustand", vor_values),
+        _primaerenergie_stack_row("Aktueller Zustand", current_values, status_total=status_total),
     ]
 
 
@@ -721,6 +809,7 @@ def modifikationsdetails_view(request):
         "comparison_rows": _modification_comparison_rows(),
         "efficiency_rows": _efficiency_comparison_rows(),
         "endenergie_stack_rows": _endenergie_stack_rows(admin_payload, vorzustand_payload),
+        "primaerenergie_stack_rows": _primaerenergie_stack_rows(admin_payload, vorzustand_payload),
         "current_section": "modifikationsdetails",
     }
     return render(request, "simulator/modifikationsdetails.html", context)
