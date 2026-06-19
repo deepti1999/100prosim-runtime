@@ -485,6 +485,21 @@
         position: relative;
     }
 
+    .mod-exp-bar.is-outline {
+        background: transparent;
+        border: 1px dashed currentColor;
+    }
+
+    .mod-exp-bar.is-outline.mod-bar-status {
+        color: #777;
+    }
+
+    .mod-exp-bar.is-outline.mod-bar-basis,
+    .mod-exp-bar.is-outline.mod-bar-vor,
+    .mod-exp-bar.is-outline.mod-bar-current {
+        color: #4057d8;
+    }
+
     .mod-exp-potential {
         display: flex;
         height: 7px;
@@ -1285,154 +1300,37 @@
                         <div class="mod-legend-item"><span class="mod-legend-swatch mod-seg-hopeless"></span>aussichtslos</div>
                     </div>
 
-                    <div class="mod-exp-section-title">5.1 Windenergie onshore</div>
-                    <div class="mod-exp-subtitle">&rarr; Windparkfläche</div>
-                    <div class="mod-exp-axis">
-                        <div class="mod-exp-unit">% v.Bodenfläche der Zielregion:</div>
-                        <div class="mod-exp-scale"><span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span></div>
-                        <div class="mod-status-note">&Delta; zum Status:</div>
-                    </div>
-                    <div class="mod-exp-row">
-                        <div></div>
-                        <div class="mod-exp-label">2,0 % der Regionsfläche</div>
-                        <div class="mod-exp-area">
-                            <div class="mod-exp-bar mod-bar-status" style="width: 20%;"></div>
-                            <div class="mod-exp-bar mod-bar-basis" style="width: 20%;"></div>
-                            <div class="mod-exp-bar mod-bar-current" style="width: 20%;"></div>
-                            <div class="mod-exp-potential">
-                                <span class="mod-seg mod-seg-saved" style="width: 5%;"></span>
-                                <span class="mod-seg mod-seg-sufficient" style="width: 37%;"></span>
-                                <span class="mod-seg mod-seg-thinkable" style="width: 38%;"></span>
-                                <span class="mod-seg mod-seg-hopeless" style="width: 20%;"></span>
+                    {% for section in section4_expansion_rows %}
+                        <div class="mod-exp-section-title">{{ section.title }}</div>
+                        {% for row in section.rows %}
+                            <div class="mod-exp-subtitle">&rarr; {{ row.subtitle }}</div>
+                            <div class="mod-exp-axis">
+                                <div class="mod-exp-unit">{{ row.unit }}</div>
+                                <div class="mod-exp-scale">
+                                    {% for tick in row.scale %}<span>{{ tick }}</span>{% endfor %}
+                                </div>
+                                <div class="mod-status-note">&Delta; zum Status:</div>
                             </div>
-                        </div>
-                        <div class="mod-delta">x 4,1</div>
-                    </div>
-                    <div class="mod-exp-subtitle">&rarr; Installierte Leistung</div>
-                    <div class="mod-exp-axis">
-                        <div class="mod-exp-unit">[GW]</div>
-                        <div class="mod-exp-scale"><span>0</span><span>50</span><span>100</span><span>150</span><span>200</span></div>
-                        <div></div>
-                    </div>
-                    <div class="mod-exp-row">
-                        <div></div>
-                        <div class="mod-exp-label">59,5 GW<br>188 GW</div>
-                        <div class="mod-exp-area">
-                            <div class="mod-exp-bar mod-bar-status" style="width: 32%;"></div>
-                            <div class="mod-exp-bar mod-bar-basis" style="width: 95%;"></div>
-                            <div class="mod-exp-bar mod-bar-current" style="width: 95%;"></div>
-                        </div>
-                        <div class="mod-delta">x 3,2</div>
-                    </div>
-
-                    <div class="mod-exp-section-title">4.2 Windenergie offshore Deutschland (anteilige Anrechnung)</div>
-                    <div class="mod-exp-subtitle">&rarr; Install. Leistung ges.</div>
-                    <div class="mod-exp-axis">
-                        <div class="mod-exp-unit"></div>
-                        <div class="mod-exp-scale"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span><span>120</span></div>
-                        <div class="mod-status-note">&Delta; zum Status:</div>
-                    </div>
-                    <div class="mod-exp-row">
-                        <div></div>
-                        <div class="mod-exp-label">8,3 GW<br>70 GW</div>
-                        <div class="mod-exp-area">
-                            <div class="mod-exp-bar mod-bar-status" style="width: 7%;"></div>
-                            <div class="mod-exp-bar mod-bar-basis" style="width: 58%;"></div>
-                            <div class="mod-exp-bar mod-bar-current" style="width: 58%;"></div>
-                            <div class="mod-exp-potential">
-                                <span class="mod-seg mod-seg-saved" style="width: 10%;"></span>
-                                <span class="mod-seg mod-seg-sufficient" style="width: 58%;"></span>
-                                <span class="mod-seg mod-seg-thinkable" style="width: 12%;"></span>
-                                <span class="mod-seg mod-seg-hopeless" style="width: 20%;"></span>
+                            <div class="mod-exp-row">
+                                <div></div>
+                                <div class="mod-exp-label">{{ row.label }}</div>
+                                <div class="mod-exp-area">
+                                    <div class="mod-exp-bar mod-bar-status{% if row.outline %} is-outline{% endif %}" style="width: {{ row.status_width }}%;"></div>
+                                    <div class="mod-exp-bar mod-bar-basis{% if row.outline %} is-outline{% endif %}" style="width: {{ row.basis_width }}%;"></div>
+                                    <div class="mod-exp-bar mod-bar-vor{% if row.outline %} is-outline{% endif %}" style="width: {{ row.vor_width }}%;"></div>
+                                    <div class="mod-exp-bar mod-bar-current{% if row.outline %} is-outline{% endif %}" style="width: {{ row.current_width }}%;"></div>
+                                    {% if row.potential_segments %}
+                                        <div class="mod-exp-potential">
+                                            {% for segment in row.potential_segments %}
+                                                <span class="mod-seg {{ segment.class }}" style="width: {{ segment.width }}%;"></span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="mod-delta">{{ row.delta }}</div>
                             </div>
-                        </div>
-                        <div class="mod-delta">x 8,4</div>
-                    </div>
-
-                    <div class="mod-exp-section-title">4.3 Solarenergie</div>
-                    <div class="mod-exp-subtitle">&rarr; Solar-Dachflächen</div>
-                    <div class="mod-exp-axis">
-                        <div class="mod-exp-unit">% von Siedlungsfläche:</div>
-                        <div class="mod-exp-scale"><span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span><span>12</span></div>
-                        <div class="mod-status-note">&Delta; zum Status:</div>
-                    </div>
-                    <div class="mod-exp-row">
-                        <div></div>
-                        <div class="mod-exp-label">5,5 % v. Siedlungsfläche</div>
-                        <div class="mod-exp-area">
-                            <div class="mod-exp-bar mod-bar-status" style="width: 14%;"></div>
-                            <div class="mod-exp-bar mod-bar-basis" style="width: 55%;"></div>
-                            <div class="mod-exp-bar mod-bar-current" style="width: 55%;"></div>
-                            <div class="mod-exp-potential">
-                                <span class="mod-seg mod-seg-saved" style="width: 8%;"></span>
-                                <span class="mod-seg mod-seg-sufficient" style="width: 38%;"></span>
-                                <span class="mod-seg mod-seg-thinkable" style="width: 30%;"></span>
-                                <span class="mod-seg mod-seg-hopeless" style="width: 24%;"></span>
-                            </div>
-                        </div>
-                        <div class="mod-delta">x 5,4</div>
-                    </div>
-                    <div class="mod-exp-subtitle">&rarr; Solar-Freiflächen</div>
-                    <div class="mod-exp-axis">
-                        <div class="mod-exp-unit">% von Landwirtschaftsfläche:</div>
-                        <div class="mod-exp-scale"><span>0</span><span>5</span><span>10</span><span>15</span><span>20</span><span>25</span></div>
-                        <div></div>
-                    </div>
-                    <div class="mod-exp-row">
-                        <div></div>
-                        <div class="mod-exp-label">3,8 % v. Landwirtsch.fläche</div>
-                        <div class="mod-exp-area">
-                            <div class="mod-exp-bar mod-bar-status" style="width: 50%; border: 1px dashed #555; background: transparent;"></div>
-                            <div class="mod-exp-bar mod-bar-basis" style="width: 50%; border: 1px dashed #4057d8; background: transparent;"></div>
-                            <div class="mod-exp-potential">
-                                <span class="mod-seg mod-seg-saved" style="width: 8%;"></span>
-                                <span class="mod-seg mod-seg-sufficient" style="width: 48%;"></span>
-                                <span class="mod-seg mod-seg-thinkable" style="width: 36%;"></span>
-                                <span class="mod-seg mod-seg-hopeless" style="width: 8%;"></span>
-                            </div>
-                        </div>
-                        <div class="mod-delta">x 35,0</div>
-                    </div>
-                    <div class="mod-exp-subtitle">&rarr; Installierte Solarstrom-Leistung</div>
-                    <div class="mod-exp-axis">
-                        <div class="mod-exp-unit">[GW]</div>
-                        <div class="mod-exp-scale"><span>0</span><span>200</span><span>400</span><span>600</span><span>800</span><span>1.000</span><span>1.200</span><span>1.400</span></div>
-                        <div></div>
-                    </div>
-                    <div class="mod-exp-row">
-                        <div></div>
-                        <div class="mod-exp-label">67,4 GW<br>1297 GW</div>
-                        <div class="mod-exp-area">
-                            <div class="mod-exp-bar mod-bar-status" style="width: 5%;"></div>
-                            <div class="mod-exp-bar mod-bar-basis" style="width: 93%;"></div>
-                            <div class="mod-exp-bar mod-bar-current" style="width: 93%;"></div>
-                        </div>
-                        <div class="mod-delta">x 19,2</div>
-                    </div>
-
-                    <div class="mod-exp-section-title">4.4 Energiepflanzenanbau</div>
-                    <div class="mod-exp-subtitle">&rarr; Anbaufläche</div>
-                    <div class="mod-exp-axis">
-                        <div class="mod-exp-unit">% von Landwirtschaftsfläche:</div>
-                        <div class="mod-exp-scale"><span>0</span><span>5</span><span>10</span><span>15</span><span>20</span><span>25</span></div>
-                        <div class="mod-status-note">&Delta; zum Status:</div>
-                    </div>
-                    <div class="mod-exp-row">
-                        <div></div>
-                        <div class="mod-exp-label">9,1 % v. Landwirtsch.fläche</div>
-                        <div class="mod-exp-area">
-                            <div class="mod-exp-bar mod-bar-status" style="width: 50%; border: 1px dashed #555; background: transparent;"></div>
-                            <div class="mod-exp-bar mod-bar-basis" style="width: 38%;"></div>
-                            <div class="mod-exp-bar mod-bar-current" style="width: 38%;"></div>
-                            <div class="mod-exp-potential">
-                                <span class="mod-seg mod-seg-saved" style="width: 8%;"></span>
-                                <span class="mod-seg mod-seg-sufficient" style="width: 50%;"></span>
-                                <span class="mod-seg mod-seg-thinkable" style="width: 32%;"></span>
-                                <span class="mod-seg mod-seg-hopeless" style="width: 10%;"></span>
-                            </div>
-                        </div>
-                        <div class="mod-delta">x 0,7</div>
-                    </div>
+                        {% endfor %}
+                    {% endfor %}
                 </div>
             </div>
 

@@ -30,6 +30,7 @@ ENDENERGIE_STACK_SCALE_MAX = 3000.0
 PRIMARY_STACK_SCALE_MAX = 3500.0
 PRIMARY_STATUS_TOTAL_TWH = 3199.0
 COCKPIT_STACK_SCALE_MAX = 3500.0
+EXPANSION_PCT_SCALE_MAX = 25.0
 
 
 # --- Chart definitions ---------------------------------------------------
@@ -269,6 +270,15 @@ def _format_ratio_value(value):
     if number is None:
         return "—"
     return f"{number:.1f}".replace(".", ",")
+
+
+def _format_decimal_value(value, decimals=1):
+    number = _to_float(value)
+    if number is None:
+        return "—"
+    if decimals == 0:
+        return str(int(round(number)))
+    return f"{number:.{decimals}f}".replace(".", ",")
 
 
 def _format_signed_percent(value, *, zero_style="+-0"):
@@ -639,6 +649,281 @@ def _scoped_renewable_value(code, field):
     return getattr(row, field, None) if row else None
 
 
+def _global_landuse_value(code, field):
+    try:
+        from simulator.region_scope import get_current_region_code
+
+        qs = LandUse.all_objects.filter(
+            owner__isnull=True,
+            code=code,
+        )
+        region_code = get_current_region_code()
+        if region_code:
+            qs = qs.filter(region__code=region_code)
+        row = qs.first()
+    except Exception:
+        return None
+    return getattr(row, field, None) if row else None
+
+
+def _scoped_landuse_value(code, field):
+    try:
+        row = LandUse.objects.filter(code=code).first()
+    except Exception:
+        return None
+    return getattr(row, field, None) if row else None
+
+
+def _landuse_percent_of_value(code, denominator_code, field, payload=None, *, scoped=False):
+    if payload:
+        numerator = _snapshot_lookup(payload, "landuse", code, field)
+        denominator = _snapshot_lookup(payload, "landuse", denominator_code, field)
+    elif scoped:
+        numerator = _scoped_landuse_value(code, field)
+        denominator = _scoped_landuse_value(denominator_code, field)
+    else:
+        numerator = _global_landuse_value(code, field)
+        denominator = _global_landuse_value(denominator_code, field)
+    numerator = _to_float(numerator)
+    denominator = _to_float(denominator)
+    if numerator is None or not denominator:
+        return None
+    return (numerator / denominator) * 100.0
+
+
+def _landuse_energy_crop_percent(field, payload=None, *, scoped=False):
+    crop_codes = ("LU_2.2.2", "LU_2.2.3", "LU_2.2.4", "LU_2.2.5")
+    if payload:
+        crop_values = [_snapshot_lookup(payload, "landuse", code, field) for code in crop_codes]
+        denominator = _snapshot_lookup(payload, "landuse", "LU_2", field)
+    elif scoped:
+        crop_values = [_scoped_landuse_value(code, field) for code in crop_codes]
+        denominator = _scoped_landuse_value("LU_2", field)
+    else:
+        crop_values = [_global_landuse_value(code, field) for code in crop_codes]
+        denominator = _global_landuse_value("LU_2", field)
+    total = _sum_values(*crop_values)
+    denominator = _to_float(denominator)
+    if total is None or not denominator:
+        return None
+    return (total / denominator) * 100.0
+
+
+def _renewable_gw_value(code, field, payload=None, *, scoped=False):
+    if payload:
+        raw = _snapshot_lookup(payload, "renewable", code, field)
+    elif scoped:
+        raw = _scoped_renewable_value(code, field)
+    else:
+        raw = _global_renewable_value(code, field)
+    return _scale(raw, 0.001)
+
+
+def _renewable_gw_sum(codes, field, payload=None, *, scoped=False):
+    values = [_renewable_gw_value(code, field, payload, scoped=scoped) for code in codes]
+    return _sum_values(*values)
+
+
+def _expansion_width(value, scale_max):
+    return _bar_width(value, scale_max)
+
+
+def _expansion_delta(status, current):
+    return _comparison_delta(status, current, mode="ratio")
+
+
+def _expansion_row(
+    subtitle,
+    *,
+    unit,
+    scale,
+    status,
+    basis,
+    vorzustand,
+    current,
+    label_template,
+    scale_max,
+    potential_segments=None,
+    outline=False,
+    decimals=1,
+):
+    return {
+        "subtitle": subtitle,
+        "unit": unit,
+        "scale": scale,
+        "label": label_template.format(value=_format_decimal_value(current if current is not None else basis, decimals)),
+        "status_label": _format_decimal_value(status, decimals),
+        "current_label": _format_decimal_value(current if current is not None else basis, decimals),
+        "delta": _expansion_delta(status, current if current is not None else basis),
+        "outline": outline,
+        "potential_segments": potential_segments or [],
+        "status_width": _expansion_width(status, scale_max),
+        "basis_width": _expansion_width(basis, scale_max),
+        "vor_width": _expansion_width(vorzustand if vorzustand is not None else basis, scale_max),
+        "current_width": _expansion_width(current if current is not None else basis, scale_max),
+    }
+
+
+def _section4_expansion_rows(admin_payload=None, vorzustand_payload=None):
+    potential_10 = [
+        {"class": "mod-seg-saved", "width": "5"},
+        {"class": "mod-seg-sufficient", "width": "37"},
+        {"class": "mod-seg-thinkable", "width": "38"},
+        {"class": "mod-seg-hopeless", "width": "20"},
+    ]
+    potential_120 = [
+        {"class": "mod-seg-saved", "width": "10"},
+        {"class": "mod-seg-sufficient", "width": "58"},
+        {"class": "mod-seg-thinkable", "width": "12"},
+        {"class": "mod-seg-hopeless", "width": "20"},
+    ]
+    potential_12 = [
+        {"class": "mod-seg-saved", "width": "8"},
+        {"class": "mod-seg-sufficient", "width": "38"},
+        {"class": "mod-seg-thinkable", "width": "30"},
+        {"class": "mod-seg-hopeless", "width": "24"},
+    ]
+    potential_25_solar = [
+        {"class": "mod-seg-saved", "width": "8"},
+        {"class": "mod-seg-sufficient", "width": "48"},
+        {"class": "mod-seg-thinkable", "width": "36"},
+        {"class": "mod-seg-hopeless", "width": "8"},
+    ]
+    potential_25_crops = [
+        {"class": "mod-seg-saved", "width": "8"},
+        {"class": "mod-seg-sufficient", "width": "50"},
+        {"class": "mod-seg-thinkable", "width": "32"},
+        {"class": "mod-seg-hopeless", "width": "10"},
+    ]
+
+    def landuse_row(subtitle, code, denominator_code, label_template, scale, scale_max, potential, *, outline=False):
+        return _expansion_row(
+            subtitle,
+            unit=scale["unit"],
+            scale=scale["ticks"],
+            status=_landuse_percent_of_value(code, denominator_code, "status_ha"),
+            basis=_landuse_percent_of_value(code, denominator_code, "target_ha", admin_payload),
+            vorzustand=_landuse_percent_of_value(code, denominator_code, "target_ha", vorzustand_payload),
+            current=_landuse_percent_of_value(code, denominator_code, "target_ha", scoped=True),
+            label_template=label_template,
+            scale_max=scale_max,
+            potential_segments=potential,
+            outline=outline,
+        )
+
+    def renewable_row(subtitle, codes, label_template, scale, scale_max, potential=None):
+        code_list = tuple(codes) if isinstance(codes, (list, tuple)) else (codes,)
+
+        def value(field, payload=None, scoped=False):
+            if len(code_list) == 1:
+                return _renewable_gw_value(code_list[0], field, payload, scoped=scoped)
+            return _renewable_gw_sum(code_list, field, payload, scoped=scoped)
+
+        return _expansion_row(
+            subtitle,
+            unit=scale["unit"],
+            scale=scale["ticks"],
+            status=value("status_value"),
+            basis=value("target_value", admin_payload),
+            vorzustand=value("target_value", vorzustand_payload),
+            current=value("target_value", scoped=True),
+            label_template=label_template,
+            scale_max=scale_max,
+            potential_segments=potential or [],
+        )
+
+    energy_crop_status = _landuse_energy_crop_percent("status_ha")
+    energy_crop_basis = _landuse_energy_crop_percent("target_ha", admin_payload)
+    energy_crop_vor = _landuse_energy_crop_percent("target_ha", vorzustand_payload)
+    energy_crop_current = _landuse_energy_crop_percent("target_ha", scoped=True)
+
+    return [
+        {
+            "title": "5.1 Windenergie onshore",
+            "rows": [
+                landuse_row(
+                    "Windparkfläche",
+                    "LU_6",
+                    "LU_0",
+                    "{value} % der Regionsfläche",
+                    {"unit": "% v.Bodenfläche der Zielregion:", "ticks": ["0", "2", "4", "6", "8", "10"]},
+                    10.0,
+                    potential_10,
+                ),
+                renewable_row(
+                    "Installierte Leistung",
+                    "2.1.1.2",
+                    "{value} GW",
+                    {"unit": "[GW]", "ticks": ["0", "50", "100", "150", "200"]},
+                    200.0,
+                ),
+            ],
+        },
+        {
+            "title": "4.2 Windenergie offshore Deutschland (anteilige Anrechnung)",
+            "rows": [
+                renewable_row(
+                    "Install. Leistung ges.",
+                    "2.2.1",
+                    "{value} GW",
+                    {"unit": "", "ticks": ["0", "20", "40", "60", "80", "100", "120"]},
+                    120.0,
+                    potential_120,
+                ),
+            ],
+        },
+        {
+            "title": "4.3 Solarenergie",
+            "rows": [
+                landuse_row(
+                    "Solar-Dachflächen",
+                    "LU_1.1",
+                    "LU_1",
+                    "{value} % v. Siedlungsfläche",
+                    {"unit": "% von Siedlungsfläche:", "ticks": ["0", "2", "4", "6", "8", "10", "12"]},
+                    12.0,
+                    potential_12,
+                ),
+                landuse_row(
+                    "Solar-Freiflächen",
+                    "LU_2.1",
+                    "LU_2",
+                    "{value} % v. Landwirtsch.fläche",
+                    {"unit": "% von Landwirtschaftsfläche:", "ticks": ["0", "5", "10", "15", "20", "25"]},
+                    EXPANSION_PCT_SCALE_MAX,
+                    potential_25_solar,
+                    outline=True,
+                ),
+                renewable_row(
+                    "Installierte Solarstrom-Leistung",
+                    ("1.1.2.1.2.2", "1.2.1.2.2"),
+                    "{value} GW",
+                    {"unit": "[GW]", "ticks": ["0", "200", "400", "600", "800", "1.000", "1.200", "1.400"]},
+                    1400.0,
+                ),
+            ],
+        },
+        {
+            "title": "4.4 Energiepflanzenanbau",
+            "rows": [
+                _expansion_row(
+                    "Anbaufläche",
+                    unit="% von Landwirtschaftsfläche:",
+                    scale=["0", "5", "10", "15", "20", "25"],
+                    status=energy_crop_status,
+                    basis=energy_crop_basis,
+                    vorzustand=energy_crop_vor,
+                    current=energy_crop_current,
+                    label_template="{value} % v. Landwirtsch.fläche",
+                    scale_max=EXPANSION_PCT_SCALE_MAX,
+                    potential_segments=potential_25_crops,
+                    outline=True,
+                ),
+            ],
+        },
+    ]
+
+
 def _verbrauch_comparison_row(label, code, *, scale_max=BAR_SCALE_MAX, delta_mode="difference"):
     status = _global_verbrauch_value(code, "status")
     basis = _global_verbrauch_value(code, "ziel")
@@ -994,6 +1279,7 @@ def modifikationsdetails_view(request):
         "efficiency_rows": _efficiency_comparison_rows(),
         "endenergie_stack_rows": _endenergie_stack_rows(admin_payload, vorzustand_payload),
         "primaerenergie_stack_rows": _primaerenergie_stack_rows(admin_payload, vorzustand_payload),
+        "section4_expansion_rows": _section4_expansion_rows(admin_payload, vorzustand_payload),
         "cockpit_energy_bars": _cockpit_energy_bars(),
         "cockpit_effect_rows": _cockpit_effect_rows(),
         "current_section": "modifikationsdetails",
