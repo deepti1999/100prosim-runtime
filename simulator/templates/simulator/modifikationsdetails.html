@@ -553,11 +553,22 @@
         --thumb-border: #b9d9ea;
         background: url("{% static 'simulator/images/cockpit_mobile_applications.png' %}") center / cover no-repeat;
     }
-    .mod-thumb-gw { --thumb-border: #dca0a0; --thumb-fill: #bf7b4e; }
-    .mod-thumb-pw { --thumb-border: #f2c49a; --thumb-fill: #d9782e; }
-    .mod-thumb-gs { --thumb-border: #c7b8a5; --thumb-fill: #b39b69; }
-    .mod-thumb-klik { --thumb-border: #ffff30; --thumb-fill: #6f5b38; }
-    .mod-thumb-pop { --thumb-border: #dfe9cc; --thumb-fill: #2a2a2a; }
+    .mod-thumb-gw,
+    .mod-thumb-pw,
+    .mod-thumb-gs,
+    .mod-thumb-klik,
+    .mod-thumb-pop {
+        border: 0;
+        box-shadow: none;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    .mod-thumb-gw { background-image: url("{% static 'simulator/images/modifikationsdetails/gebaeudewaerme.png' %}"); }
+    .mod-thumb-pw { background-image: url("{% static 'simulator/images/modifikationsdetails/prozesswaerme.png' %}"); }
+    .mod-thumb-gs { background-image: url("{% static 'simulator/images/modifikationsdetails/grundstoffe.png' %}"); }
+    .mod-thumb-klik { background-image: url("{% static 'simulator/images/modifikationsdetails/strom_anwend.png' %}"); }
+    .mod-thumb-pop { background-image: url("{% static 'simulator/images/modifikationsdetails/bevoelkerung.png' %}"); }
 
     .mod-cockpit-main {
         display: flex;
@@ -738,10 +749,22 @@
         box-shadow: inset 0 0 0 2px #fff;
     }
 
-    .mod-renew-wind { --renew-border: #7edfe5; --renew-fill: #7fb8e8; }
-    .mod-renew-solar { --renew-border: #ffc933; --renew-fill: #3e73b7; }
-    .mod-renew-bio { --renew-border: #78963f; --renew-fill: #6e9f35; }
-    .mod-renew-other { --renew-border: #a77d2f; --renew-fill: #d8dde0; }
+    .mod-renew-wind,
+    .mod-renew-solar,
+    .mod-renew-bio,
+    .mod-renew-other,
+    .mod-renew-import {
+        border: 0;
+        box-shadow: none;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    .mod-renew-wind { background-image: url("{% static 'simulator/images/modifikationsdetails/windstrom.png' %}"); }
+    .mod-renew-solar { background-image: url("{% static 'simulator/images/modifikationsdetails/solarstrom.png' %}"); }
+    .mod-renew-bio { background-image: url("{% static 'simulator/images/modifikationsdetails/biobrennstoffe.png' %}"); }
+    .mod-renew-other { background-image: url("{% static 'simulator/images/modifikationsdetails/sonstige_erneuerbare.png' %}"); }
+    .mod-renew-import { background-image: url("{% static 'simulator/images/modifikationsdetails/netto_import.png' %}"); }
 
     .mod-renew-copy {
         color: #000;
@@ -1427,7 +1450,7 @@
                             </div>
 
                             <div class="mod-cockpit-import">
-                                <div class="mod-renew-thumb" style="--renew-border:#f25b45;--renew-fill:#e7f3f8;"></div>
+                                <div class="mod-renew-thumb mod-renew-import"></div>
                                 <div class="mod-renew-copy">
                                     <h4>Netto-Importanteil</h4>
                                     <div><strong>0 %</strong> <span class="small-line">&rarr;</span> Solar-/Windstrom direkt</div>
