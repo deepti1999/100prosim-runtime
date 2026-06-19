@@ -599,6 +599,54 @@ def _cockpit_effect_rows():
     ]
 
 
+def _format_factor(status, current):
+    status_value = _to_float(status)
+    current_value = _to_float(current)
+    if status_value is None or current_value is None:
+        return "—"
+    if status_value == 0.0:
+        return "(Neu)" if current_value else "x 0,0"
+    return f"x {_format_ratio_value(current_value / status_value)}"
+
+
+def _renewable_factor(codes):
+    status_values = [_global_renewable_value(code, "status_value") for code in codes]
+    current_values = [_scoped_renewable_value(code, "target_value") for code in codes]
+    return _format_factor(_sum_values(*status_values), _sum_values(*current_values))
+
+
+def _landuse_energy_crop_factor():
+    status = _landuse_energy_crop_percent("status_ha")
+    current = _landuse_energy_crop_percent("target_ha", scoped=True)
+    return _format_factor(status, current)
+
+
+def _cockpit_renewable_factors():
+    wind_codes = ("2.1.1.2.2", "2.2.1.2.3")
+    solar_codes = ("9.1.2",)
+    bio_codes = ("10.9.1.1", "10.9.1.2", "10.9.1.3")
+    straw_rest_codes = ("4.2.1.1.2", "5.2", "5.3")
+    environment_heat_codes = ("7.1.2.3", "7.1.4.3")
+    other_codes = (*environment_heat_codes, "9.1.3", "1.1.1.1.2")
+
+    return {
+        "wind_total": _renewable_factor(wind_codes),
+        "wind_onshore": _renewable_factor(("2.1.1.2.2",)),
+        "wind_offshore": _renewable_factor(("2.2.1.2.3",)),
+        "solar_total": _renewable_factor(solar_codes),
+        "solar_roof": _renewable_factor(("1.1.2.1.2.2",)),
+        "solar_open": _renewable_factor(("1.2.1.2.2",)),
+        "bio_total": _renewable_factor(bio_codes),
+        "bio_energy_crops": _landuse_energy_crop_factor(),
+        "bio_forest_wood": _renewable_factor(("4.1.3",)),
+        "bio_straw_rest": _renewable_factor(straw_rest_codes),
+        "other_total": _renewable_factor(other_codes),
+        "other_environment_heat": _renewable_factor(environment_heat_codes),
+        "other_water": _renewable_factor(("9.1.3",)),
+        "other_solar_heat": _renewable_factor(("1.1.1.1.2",)),
+    }
+
+
 def _global_verbrauch_value(code, field):
     try:
         from simulator.region_scope import get_current_region_code
@@ -1291,6 +1339,7 @@ def modifikationsdetails_view(request):
         "section4_expansion_rows": _section4_expansion_rows(admin_payload, vorzustand_payload),
         "cockpit_energy_bars": _cockpit_energy_bars(),
         "cockpit_effect_rows": _cockpit_effect_rows(),
+        "cockpit_renewable_factors": _cockpit_renewable_factors(),
         "current_section": "modifikationsdetails",
     }
     return render(request, "simulator/modifikationsdetails.html", context)

@@ -1395,35 +1395,35 @@
                             <div class="mod-renew-thumb mod-renew-wind"></div>
                             <div class="mod-renew-copy">
                                 <h4>Windstrom <span>(WiS)</span></h4>
-                                <div><strong>x 5,2</strong></div>
-                                <div><span class="small-line">x 4,3 &rarr;</span> onshore</div>
-                                <div><span class="small-line">x 9,6 &rarr;</span> offshore</div>
+                                <div><strong>{{ cockpit_renewable_factors.wind_total }}</strong></div>
+                                <div><span class="small-line">{{ cockpit_renewable_factors.wind_onshore }} &rarr;</span> onshore</div>
+                                <div><span class="small-line">{{ cockpit_renewable_factors.wind_offshore }} &rarr;</span> offshore</div>
                             </div>
 
                             <div class="mod-renew-thumb mod-renew-solar"></div>
                             <div class="mod-renew-copy">
                                 <h4>Solarstrom <span>(SoS)</span></h4>
-                                <div><strong>x 19,2</strong></div>
-                                <div><span class="small-line">x 8,2 &rarr;</span> Dachflächen</div>
-                                <div><span class="small-line">x 46,2 &rarr;</span> Freiflächen</div>
+                                <div><strong>{{ cockpit_renewable_factors.solar_total }}</strong></div>
+                                <div><span class="small-line">{{ cockpit_renewable_factors.solar_roof }} &rarr;</span> Dachflächen</div>
+                                <div><span class="small-line">{{ cockpit_renewable_factors.solar_open }} &rarr;</span> Freiflächen</div>
                             </div>
 
                             <div class="mod-renew-thumb mod-renew-bio"></div>
                             <div class="mod-renew-copy">
                                 <h4>Biobrennstoffe <span>(BB)</span></h4>
-                                <div><strong>x 1,0</strong></div>
-                                <div><span class="small-line">x 0,7 &rarr;</span> Energiepflanzen-Anbau</div>
-                                <div><span class="small-line">x 0,6 &rarr;</span> Forstholz direkt und nach stoffl. Nutzung</div>
-                                <div><span class="small-line">x 4,9 &rarr;</span> Stroh &rarr; Exkremente &rarr; Bioabfall</div>
+                                <div><strong>{{ cockpit_renewable_factors.bio_total }}</strong></div>
+                                <div><span class="small-line">{{ cockpit_renewable_factors.bio_energy_crops }} &rarr;</span> Energiepflanzen-Anbau</div>
+                                <div><span class="small-line">{{ cockpit_renewable_factors.bio_forest_wood }} &rarr;</span> Forstholz direkt und nach stoffl. Nutzung</div>
+                                <div><span class="small-line">{{ cockpit_renewable_factors.bio_straw_rest }} &rarr;</span> Stroh &rarr; Exkremente &rarr; Bioabfall</div>
                             </div>
 
                             <div class="mod-renew-thumb mod-renew-other"></div>
                             <div class="mod-renew-copy">
                                 <h4>Sonstige Erneuerbare <span>(SE)</span></h4>
-                                <div><strong>x 9,0</strong></div>
-                                <div><span class="small-line">x 18,3 &rarr;</span> Umgeb.wärme (Luft-/Erd-Wärmepumpen)</div>
-                                <div><span class="small-line">x 1,0 &rarr;</span> Wasserkraft</div>
-                                <div><span class="small-line">x 1,4 &rarr;</span> Solarthermie</div>
+                                <div><strong>{{ cockpit_renewable_factors.other_total }}</strong></div>
+                                <div><span class="small-line">{{ cockpit_renewable_factors.other_environment_heat }} &rarr;</span> Umgeb.wärme (Luft-/Erd-Wärmepumpen)</div>
+                                <div><span class="small-line">{{ cockpit_renewable_factors.other_water }} &rarr;</span> Wasserkraft</div>
+                                <div><span class="small-line">{{ cockpit_renewable_factors.other_solar_heat }} &rarr;</span> Solarthermie</div>
                             </div>
 
                             <div class="mod-cockpit-import">
