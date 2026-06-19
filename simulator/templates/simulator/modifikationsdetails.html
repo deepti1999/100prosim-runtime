@@ -640,14 +640,18 @@
         min-height: 2px;
     }
 
-    .mod-part-klik { background: #fff400; }
-    .mod-part-ma { background: #7edfe5; }
+    .mod-part-klik { background: #ffc43d; }
+    .mod-part-ma { background: #9fb6d3; }
     .mod-part-gw { background: #d59a9a; }
     .mod-part-pw { background: #f2c49a; }
-    .mod-part-gs { background: #c9c29c; }
+    .mod-part-grund { background: #c9c29c; }
     .mod-part-fossil { background: #7f7f7f; }
-    .mod-part-renew { background: #b08a35; }
+    .mod-part-wind-on { background: #9bdce8; }
+    .mod-part-wind-off { background: #e8f2f7; }
+    .mod-part-pv { background: #fff72e; }
+    .mod-part-water { background: #35588f; }
     .mod-part-bio { background: #73923b; }
+    .mod-part-heat { background: #ead6d4; }
 
     .mod-cockpit-vlabel {
         writing-mode: vertical-rl;
@@ -658,6 +662,10 @@
         text-align: center;
         margin: 6px auto 0;
         height: 42px;
+    }
+
+    .mod-cockpit-vlabel.is-status {
+        color: #777;
     }
 
     .mod-cockpit-vlabel span {
@@ -1489,35 +1497,16 @@
                         <div class="mod-cockpit-center">
                             <div class="mod-cockpit-axis"><span>3.500</span><span>3.000</span><span>2.500</span><span>2.000</span><span>1.500</span><span>1.000</span><span>500</span><span>0</span></div>
 
-                            <div class="mod-cockpit-vcol">
-                                <div class="mod-cockpit-vbar is-outline" style="height: 82%;"></div>
-                                <div class="mod-cockpit-vlabel"><span>Status</span></div>
-                            </div>
-
-                            <div class="mod-cockpit-vcol">
-                                <div class="mod-cockpit-vbar is-outline" style="height: 74%;"></div>
-                                <div class="mod-cockpit-vlabel">Ziel</div>
-                            </div>
-
-                            <div class="mod-cockpit-vcol">
-                                <div class="mod-cockpit-vbar" style="height: 86%;">
-                                    <span class="mod-cockpit-part mod-part-fossil" style="height: 83%;"></span>
-                                    <span class="mod-cockpit-part mod-part-ma" style="height: 8%;"></span>
-                                    <span class="mod-cockpit-part mod-part-bio" style="height: 5%;"></span>
-                                    <span class="mod-cockpit-part mod-part-klik" style="height: 4%;"></span>
+                            {% for bar in cockpit_energy_bars %}
+                                <div class="mod-cockpit-vcol">
+                                    <div class="mod-cockpit-vbar" style="height: {{ bar.height }}%;">
+                                        {% for segment in bar.segments %}
+                                            <span class="mod-cockpit-part mod-part-{{ segment.class_name }}" style="height: {{ segment.height }}%;"></span>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="mod-cockpit-vlabel{% if bar.label_tone == 'status' %} is-status{% endif %}">{{ bar.label }}</div>
                                 </div>
-                                <div class="mod-cockpit-vlabel"><span>Status</span></div>
-                            </div>
-
-                            <div class="mod-cockpit-vcol">
-                                <div class="mod-cockpit-vbar is-target" style="height: 74%;">
-                                    <span class="mod-cockpit-part mod-part-renew" style="height: 18%;"></span>
-                                    <span class="mod-cockpit-part mod-part-bio" style="height: 10%;"></span>
-                                    <span class="mod-cockpit-part mod-part-klik" style="height: 16%;"></span>
-                                    <span class="mod-cockpit-part mod-part-ma" style="height: 56%;"></span>
-                                </div>
-                                <div class="mod-cockpit-vlabel">Ziel</div>
-                            </div>
+                            {% endfor %}
                         </div>
 
                         <div class="mod-cockpit-right">

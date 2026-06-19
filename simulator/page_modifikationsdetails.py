@@ -29,6 +29,7 @@ EFFICIENCY_BAR_SCALE_MAX = 150.0
 ENDENERGIE_STACK_SCALE_MAX = 3000.0
 PRIMARY_STACK_SCALE_MAX = 3500.0
 PRIMARY_STATUS_TOTAL_TWH = 3199.0
+COCKPIT_STACK_SCALE_MAX = 3500.0
 
 
 # --- Chart definitions ---------------------------------------------------
@@ -421,6 +422,52 @@ def _primaerenergie_stack_rows(admin_payload=None, vorzustand_payload=None):
         _primaerenergie_stack_row("Basisszenario", basis_values),
         _primaerenergie_stack_row("Vorzustand", vor_values),
         _primaerenergie_stack_row("Aktueller Zustand", current_values, status_total=status_total),
+    ]
+
+
+def _cockpit_vertical_bar(label, values, segment_order, *, label_tone="current"):
+    total = sum(value for value in values.values() if value is not None)
+    return {
+        "label": label,
+        "height": _bar_width(total, COCKPIT_STACK_SCALE_MAX),
+        "label_tone": label_tone,
+        "segments": [
+            {
+                "name": name,
+                "class_name": name.replace("_", "-"),
+                "height": _stack_width(values.get(name), total),
+            }
+            for name in segment_order
+        ],
+    }
+
+
+def _cockpit_energy_bars():
+    consumption_order = ["klik", "gw", "pw", "grund", "ma"]
+    production_order = ["fossil", "wind_on", "wind_off", "pv", "water", "bio", "heat"]
+    return [
+        _cockpit_vertical_bar(
+            "Status",
+            _endenergie_segment_values(target=False),
+            consumption_order,
+            label_tone="status",
+        ),
+        _cockpit_vertical_bar(
+            "Ziel",
+            _endenergie_segment_values(target=True),
+            consumption_order,
+        ),
+        _cockpit_vertical_bar(
+            "Status",
+            _primaerenergie_segment_values(target=False),
+            production_order,
+            label_tone="status",
+        ),
+        _cockpit_vertical_bar(
+            "Ziel",
+            _primaerenergie_segment_values(target=True),
+            production_order,
+        ),
     ]
 
 
@@ -829,6 +876,7 @@ def modifikationsdetails_view(request):
         "efficiency_rows": _efficiency_comparison_rows(),
         "endenergie_stack_rows": _endenergie_stack_rows(admin_payload, vorzustand_payload),
         "primaerenergie_stack_rows": _primaerenergie_stack_rows(admin_payload, vorzustand_payload),
+        "cockpit_energy_bars": _cockpit_energy_bars(),
         "current_section": "modifikationsdetails",
     }
     return render(request, "simulator/modifikationsdetails.html", context)
