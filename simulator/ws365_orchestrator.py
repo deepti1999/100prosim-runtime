@@ -313,6 +313,7 @@ def apply_balanced_landuse(
                 print("Balancing sectors (10.4↔2.10, 10.5↔3.7, 10.6.1↔6.1)...")
                 _step_start = time.perf_counter()
                 heat_balance = _balance_heat_sectors_after_ws()
+                profile.extend(heat_balance.get('profile') or [])
                 _profile_mark(profile, f"solar_ws_only.cycle_{cycle_no}.sector_balance", _step_start)
                 gw_after = heat_balance['after']['gebaeudewaerme']
                 pw_after = heat_balance['after']['prozesswaerme']
@@ -511,6 +512,7 @@ def apply_balanced_landuse_sector_first():
             print(f"Sector-first balancing cycle {cycle_count}/{max_cycles}...")
             _step_start = time.perf_counter()
             sector_balance = _balance_heat_sectors_after_ws()
+            profile.extend(sector_balance.get('profile') or [])
             _profile_mark(profile, f"solar_sector_first.cycle_{cycle_count}.sector_balance", _step_start)
 
             print(" Rebalancing WS drift + electricity after sector tuning...")
@@ -798,6 +800,7 @@ def apply_balanced_wind_landuse(
                 print("Balancing sectors (10.4↔2.10, 10.5↔3.7, 10.6.1↔6.1)...")
                 _step_start = time.perf_counter()
                 heat_balance = _balance_heat_sectors_after_ws()
+                profile.extend(heat_balance.get('profile') or [])
                 _profile_mark(profile, f"wind_ws_only.cycle_{cycle_no}.sector_balance", _step_start)
                 gw_after = heat_balance['after']['gebaeudewaerme']
                 pw_after = heat_balance['after']['prozesswaerme']
@@ -1007,6 +1010,7 @@ def apply_balanced_wind_landuse_sector_first():
             print(f"Wind sector-first balancing cycle {cycle_count}/{max_cycles}...")
             _step_start = time.perf_counter()
             sector_balance = _balance_heat_sectors_after_ws()
+            profile.extend(sector_balance.get('profile') or [])
             _profile_mark(profile, f"wind_sector_first.cycle_{cycle_count}.sector_balance", _step_start)
 
             print(" Rebalancing WS drift + electricity after sector tuning (wind)...")
