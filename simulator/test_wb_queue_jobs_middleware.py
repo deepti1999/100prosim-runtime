@@ -10,7 +10,7 @@ from django.test import SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
-from simulator.balance_jobs import _json_safe, claim_next_job, run_balance_job
+from simulator.balance_jobs import _json_safe, claim_next_job, recover_interrupted_jobs, run_balance_job
 from simulator.middleware import OwnerScopeMiddleware
 from simulator.models import BalanceJob, CalculationRun
 from simulator.ws_queue_api import (
@@ -55,12 +55,14 @@ class WBBalanceJobsTests(TestCase):
                 with patch("simulator.balance_jobs.apply_balanced_landuse", return_value={"ok": True}) as apply_ws:
                     result = run_balance_job(job)
 
-        ensure_workspace.assert_not_called()
+        ensure_workspace.assert_called_once_with(self.staff_user, region_code="DE")
         apply_ws.assert_called_once_with(
             include_sector_balance=False,
             run_final_renewable_sync=True,
         )
-        self.assertEqual(result, {"ok": True})
+        self.assertTrue(result["ok"])
+        self.assertIn("run_id", result)
+        self.assertEqual(result["summary"]["job_type"], BalanceJob.TYPE_SOLAR_WS_ONLY)
 
     def test_run_balance_job_dispatches_wind_ws_only_for_non_staff(self):
         job = BalanceJob(job_type=BalanceJob.TYPE_WIND_WS_ONLY, created_by=self.normal_user)
@@ -82,7 +84,7 @@ class WBBalanceJobsTests(TestCase):
 
         with patch("simulator.balance_jobs.owner_scope", return_value=contextlib.nullcontext()):
             with patch("simulator.balance_jobs.recalc_all_renewables_full", return_value=7):
-                with patch("simulator.balance_jobs.time.perf_counter", side_effect=[10.0, 10.25]):
+                with patch("simulator.balance_jobs.time.perf_counter", side_effect=[10.0, 10.0, 10.25, 10.25]):
                     result = run_balance_job(job)
 
         self.assertEqual(result["status"], "ok")
@@ -102,7 +104,7 @@ class WBBalanceJobsTests(TestCase):
                     "final_renewables": 19,
                 },
             ):
-                with patch("simulator.balance_jobs.time.perf_counter", side_effect=[20.0, 20.4]):
+                with patch("simulator.balance_jobs.time.perf_counter", side_effect=[20.0, 20.0, 20.4, 20.4]):
                     result = run_balance_job(job)
 
         self.assertEqual(result["status"], "ok")
@@ -137,6 +139,42 @@ class WBBalanceJobsTests(TestCase):
         self.assertEqual(claimed.attempts, 3)
         self.assertEqual(claimed.error, "")
         self.assertIsNotNone(claimed.started_at)
+
+    def test_recover_interrupted_jobs_requeues_running_job_after_worker_restart(self):
+        job = BalanceJob.objects.create(
+            job_type=BalanceJob.TYPE_WIND_SECTOR_WS,
+            status=BalanceJob.STATUS_RUNNING,
+            created_by=self.normal_user,
+            attempts=1,
+            started_at=timezone.now() - timedelta(minutes=4),
+            error="",
+        )
+
+        recovered = recover_interrupted_jobs()
+
+        self.assertEqual(recovered, {"requeued": 1, "failed": 0})
+        job.refresh_from_db()
+        self.assertEqual(job.status, BalanceJob.STATUS_QUEUED)
+        self.assertIsNone(job.started_at)
+        self.assertIn("Recovered after worker restart", job.error)
+
+    @override_settings(BALANCE_JOB_MAX_ATTEMPTS=2)
+    def test_recover_interrupted_jobs_fails_job_at_retry_limit(self):
+        job = BalanceJob.objects.create(
+            job_type=BalanceJob.TYPE_WIND_SECTOR_WS,
+            status=BalanceJob.STATUS_RUNNING,
+            created_by=self.normal_user,
+            attempts=2,
+            started_at=timezone.now() - timedelta(minutes=4),
+        )
+
+        recovered = recover_interrupted_jobs()
+
+        self.assertEqual(recovered, {"requeued": 0, "failed": 1})
+        job.refresh_from_db()
+        self.assertEqual(job.status, BalanceJob.STATUS_FAILED)
+        self.assertIsNotNone(job.finished_at)
+        self.assertIn("retry limit", job.error)
 
 class WBWSQueueApiTests(TestCase):
     @classmethod
@@ -251,7 +289,7 @@ class WBOwnerScopeMiddlewareTests(SimpleTestCase):
         set_owner.assert_called_once_with(request.user)
         self.assertEqual(reset_owner.call_count, 2)
 
-    def test_staff_user_skips_workspace_bootstrap(self):
+    def test_staff_user_gets_workspace_bootstrap_on_webapp_pages(self):
         request = SimpleNamespace(
             user=SimpleNamespace(is_authenticated=True, is_staff=True, id=22),
         )
@@ -263,8 +301,8 @@ class WBOwnerScopeMiddlewareTests(SimpleTestCase):
                     response = middleware(request)
 
         self.assertEqual(response, "ok")
-        ensure_workspace.assert_not_called()
-        set_owner.assert_not_called()
+        ensure_workspace.assert_called_once_with(request.user, region_code="DE")
+        set_owner.assert_called_once_with(request.user)
         self.assertEqual(reset_owner.call_count, 2)
 
     def test_reset_is_called_even_when_view_raises(self):

@@ -2,6 +2,7 @@ import math
 import time
 from typing import Any, Dict, Optional
 
+from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 
@@ -82,7 +83,7 @@ def _record_balance_calculation_run(job: BalanceJob, result: Dict[str, Any], dur
 
 def run_balance_job(job: BalanceJob) -> Dict[str, Any]:
     """Execute one queued balance job and return JSON-safe result payload."""
-    start = time.perf_counter()
+    job_start = time.perf_counter()
     user = job.created_by
     # Phase C (T66): payload carries region_code so the worker (a
     # separate process) runs the dispatch under the user's active
@@ -136,9 +137,9 @@ def run_balance_job(job: BalanceJob) -> Dict[str, Any]:
                 run_final_renewable_sync=True,
             )
         elif job.job_type == BalanceJob.TYPE_RENEWABLES_RECALC:
-            start = time.perf_counter()
+            branch_start = time.perf_counter()
             renewables_updated = recalc_all_renewables_full(exclude_ws_dependent=False)
-            duration_ms = int((time.perf_counter() - start) * 1000)
+            duration_ms = int((time.perf_counter() - branch_start) * 1000)
             summary = {
                 "duration_ms": duration_ms,
                 "renewables_updated": renewables_updated,
@@ -158,11 +159,11 @@ def run_balance_job(job: BalanceJob) -> Dict[str, Any]:
                 "created_at": run.created_at.isoformat(),
             }
         elif job.job_type == BalanceJob.TYPE_VERBRAUCH_RECALC:
-            start = time.perf_counter()
+            branch_start = time.perf_counter()
             result = _run_verbrauch_recalc_passes(
                 triggered_by=(user.username if user else "worker"),
             )
-            duration_ms = int((time.perf_counter() - start) * 1000)
+            duration_ms = int((time.perf_counter() - branch_start) * 1000)
             summary = {
                 "duration_ms": duration_ms,
                 "verbrauch_updated": result["updated_count"],
@@ -184,9 +185,9 @@ def run_balance_job(job: BalanceJob) -> Dict[str, Any]:
                 "created_at": run.created_at.isoformat(),
             })
         elif job.job_type == BalanceJob.TYPE_LANDUSE_RECALC:
-            start = time.perf_counter()
+            branch_start = time.perf_counter()
             summary = unified_recalc_all()
-            duration_ms = int((time.perf_counter() - start) * 1000)
+            duration_ms = int((time.perf_counter() - branch_start) * 1000)
             run_summary = {
                 "duration_ms": duration_ms,
                 "input_renewables": summary.get("input_renewables", 0),
@@ -210,7 +211,7 @@ def run_balance_job(job: BalanceJob) -> Dict[str, Any]:
             }
         else:
             raise ValueError(f"Unsupported balance job type: {job.job_type}")
-    duration_ms = int((time.perf_counter() - start) * 1000)
+    duration_ms = int((time.perf_counter() - job_start) * 1000)
     result = _record_balance_calculation_run(job, result or {}, duration_ms)
     try:
         from simulator.display_state import invalidate_runtime_caches
@@ -238,3 +239,53 @@ def claim_next_job() -> Optional[BalanceJob]:
         queued.error = ""
         queued.save(update_fields=["status", "started_at", "attempts", "error", "updated_at"])
         return queued
+
+
+def _max_balance_job_attempts() -> int:
+    try:
+        value = int(getattr(settings, "BALANCE_JOB_MAX_ATTEMPTS", 3))
+    except (TypeError, ValueError):
+        value = 3
+    return max(1, value)
+
+
+def recover_interrupted_jobs() -> Dict[str, int]:
+    """Recover jobs left running by a worker restart.
+
+    Heroku can restart the worker while a balance job is executing. If the
+    process exits before it can mark the row failed/succeeded, the next worker
+    would otherwise ignore the job forever because claim_next_job only claims
+    queued rows.
+    """
+    now = timezone.now()
+    max_attempts = _max_balance_job_attempts()
+    requeued = 0
+    failed = 0
+
+    with transaction.atomic():
+        interrupted = list(
+            BalanceJob.objects
+            .select_for_update(skip_locked=True)
+            .filter(status=BalanceJob.STATUS_RUNNING, finished_at__isnull=True)
+            .order_by("started_at", "created_at")
+        )
+
+        for job in interrupted:
+            if int(job.attempts or 0) >= max_attempts:
+                job.status = BalanceJob.STATUS_FAILED
+                job.error = (
+                    "Job interrupted by worker restart and reached the retry limit. "
+                    "Please run the action again."
+                )
+                job.finished_at = now
+                failed += 1
+                job.save(update_fields=["status", "error", "finished_at", "updated_at"])
+                continue
+
+            job.status = BalanceJob.STATUS_QUEUED
+            job.started_at = None
+            job.error = "Recovered after worker restart; retrying."
+            requeued += 1
+            job.save(update_fields=["status", "started_at", "error", "updated_at"])
+
+    return {"requeued": requeued, "failed": failed}

@@ -3,7 +3,7 @@ import time
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from simulator.balance_jobs import claim_next_job, run_balance_job
+from simulator.balance_jobs import claim_next_job, recover_interrupted_jobs, run_balance_job
 from simulator.models import BalanceJob
 
 class Command(BaseCommand):
@@ -27,6 +27,12 @@ class Command(BaseCommand):
         sleep_seconds = max(0.1, float(options.get("sleep", 2.0)))
 
         self.stdout.write(self.style.SUCCESS("Balance worker started"))
+        recovered = recover_interrupted_jobs()
+        if recovered["requeued"] or recovered["failed"]:
+            self.stdout.write(
+                "Recovered interrupted jobs: "
+                f"{recovered['requeued']} requeued, {recovered['failed']} failed"
+            )
 
         while True:
             job = claim_next_job()
@@ -55,4 +61,3 @@ class Command(BaseCommand):
 
             if run_once:
                 return
-
