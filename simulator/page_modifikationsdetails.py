@@ -278,7 +278,7 @@ def _format_signed_percent(value, *, zero_style="+-0"):
     if abs(number) < 0.05:
         return f"{zero_style} %"
     sign = "+" if number > 0 else ""
-    return f"{sign}{_format_percent_value(number)} %"
+    return f"{sign}{int(round(number))} %"
 
 
 def _comparison_delta(status, current, mode="difference"):
