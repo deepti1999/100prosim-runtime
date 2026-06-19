@@ -433,6 +433,10 @@
         line-height: 1.15;
     }
 
+    .mod-exp-label-muted {
+        color: #9a9a9a;
+    }
+
     .mod-exp-axis {
         display: grid;
         grid-template-columns: 212px 1fr 54px;
@@ -1313,7 +1317,15 @@
                             </div>
                             <div class="mod-exp-row">
                                 <div></div>
-                                <div class="mod-exp-label">{{ row.label }}</div>
+                                <div class="mod-exp-label">
+                                    {% if row.label_lines %}
+                                        {% for line in row.label_lines %}
+                                            <div{% if line.muted %} class="mod-exp-label-muted"{% endif %}>{{ line.text }}</div>
+                                        {% endfor %}
+                                    {% else %}
+                                        {{ row.label }}
+                                    {% endif %}
+                                </div>
                                 <div class="mod-exp-area">
                                     <div class="mod-exp-bar mod-bar-status{% if row.outline %} is-outline{% endif %}" style="width: {{ row.status_width }}%;"></div>
                                     <div class="mod-exp-bar mod-bar-basis{% if row.outline %} is-outline{% endif %}" style="width: {{ row.basis_width }}%;"></div>

@@ -746,15 +746,23 @@ def _expansion_row(
     potential_segments=None,
     outline=False,
     decimals=1,
+    show_status_label=False,
 ):
+    current_value = current if current is not None else basis
+    label = label_template.format(value=_format_decimal_value(current_value, decimals))
+    status_label = label_template.format(value=_format_decimal_value(status, decimals))
     return {
         "subtitle": subtitle,
         "unit": unit,
         "scale": scale,
-        "label": label_template.format(value=_format_decimal_value(current if current is not None else basis, decimals)),
+        "label": label,
+        "label_lines": [
+            {"text": status_label, "muted": True},
+            {"text": label, "muted": False},
+        ] if show_status_label else [],
         "status_label": _format_decimal_value(status, decimals),
-        "current_label": _format_decimal_value(current if current is not None else basis, decimals),
-        "delta": _expansion_delta(status, current if current is not None else basis),
+        "current_label": _format_decimal_value(current_value, decimals),
+        "delta": _expansion_delta(status, current_value),
         "outline": outline,
         "potential_segments": potential_segments or [],
         "status_width": _expansion_width(status, scale_max),
@@ -830,6 +838,7 @@ def _section4_expansion_rows(admin_payload=None, vorzustand_payload=None):
             label_template=label_template,
             scale_max=scale_max,
             potential_segments=potential or [],
+            show_status_label=True,
         )
 
     energy_crop_status = _landuse_energy_crop_percent("status_ha")
