@@ -271,6 +271,16 @@ def _format_ratio_value(value):
     return f"{number:.1f}".replace(".", ",")
 
 
+def _format_signed_percent(value, *, zero_style="+-0"):
+    number = _to_float(value)
+    if number is None:
+        return "—"
+    if abs(number) < 0.05:
+        return f"{zero_style} %"
+    sign = "+" if number > 0 else ""
+    return f"{sign}{_format_percent_value(number)} %"
+
+
 def _comparison_delta(status, current, mode="difference"):
     status_value = _to_float(status)
     current_value = _to_float(current)
@@ -282,6 +292,21 @@ def _comparison_delta(status, current, mode="difference"):
         return f"x {_format_ratio_value(current_value / status_value)}"
     delta = current_value - status_value
     return f"{'+' if delta >= 0 else ''}{_format_percent_value(delta)} %"
+
+
+def _percent_change(status, target):
+    status_value = _to_float(status)
+    target_value = _to_float(target)
+    if status_value is None or target_value is None or status_value == 0:
+        return None
+    return ((target_value / status_value) - 1.0) * 100.0
+
+
+def _verbrauch_percent_change(status_code, target_code=None):
+    return _percent_change(
+        _global_verbrauch_value(status_code, "status"),
+        _scoped_verbrauch_value(target_code or status_code, "ziel"),
+    )
 
 
 def _comparison_row(label, *, status, basis, current, scale_max=BAR_SCALE_MAX, delta_mode="difference"):
@@ -468,6 +493,99 @@ def _cockpit_energy_bars():
             _primaerenergie_segment_values(target=True),
             production_order,
         ),
+    ]
+
+
+def _cockpit_effect(label, short_label, thumb_class, total, sufficiency=None, sufficiency_label="", efficiency_label=""):
+    suff = _to_float(sufficiency)
+    total_value = _to_float(total)
+    efficiency = None
+    if total_value is not None:
+        efficiency = total_value - (suff if suff is not None else 0.0)
+    rows = []
+    if sufficiency_label:
+        rows.append({
+            "value": _format_signed_percent(suff if suff is not None else 0.0),
+            "label": sufficiency_label,
+        })
+    if efficiency_label:
+        rows.append({
+            "value": _format_signed_percent(efficiency),
+            "label": efficiency_label,
+        })
+    return {
+        "label": label,
+        "short_label": short_label,
+        "thumb_class": thumb_class,
+        "total": _format_signed_percent(total_value, zero_style="0"),
+        "rows": rows,
+    }
+
+
+def _cockpit_effect_rows():
+    mobile_total = _verbrauch_percent_change("6.0")
+    mobile_suff = _verbrauch_percent_change("4.1.1.1")
+    gw_total = _verbrauch_percent_change("2.10")
+    gw_suff = _verbrauch_percent_change("2.1.2")
+    pw_total = _verbrauch_percent_change("3.7")
+    pw_suff = _verbrauch_percent_change("3.2.1")
+    grund_total = _verbrauch_percent_change("9.1.2", "9.1.4")
+    grund_suff = _verbrauch_percent_change("9.1.1")
+    klik_total = _verbrauch_percent_change("1.4")
+
+    return [
+        _cockpit_effect(
+            "Mobile Anwendungen",
+            "MA",
+            "mod-thumb-ma",
+            mobile_total,
+            mobile_suff,
+            "Suffizienz (Pkm/Pers.)",
+            "Effizienz (kWh/Pkm)",
+        ),
+        _cockpit_effect(
+            "Gebäudewärme",
+            "GW",
+            "mod-thumb-gw",
+            gw_total,
+            gw_suff,
+            "Suffizienz (qm/Pers.)",
+            "Effizienz (Wärmeschutz, San.-Rate)",
+        ),
+        _cockpit_effect(
+            "Prozesswärme",
+            "PW",
+            "mod-thumb-pw",
+            pw_total,
+            pw_suff,
+            "Suffizienz (Prod.Vol./Pers.)",
+            "Effizienz (Produktions-Proz.)",
+        ),
+        _cockpit_effect(
+            "Grundstoffe",
+            "GS",
+            "mod-thumb-gs",
+            grund_total,
+            grund_suff,
+            "Suffizienz (Kunststoff-Vol./Pers.)",
+            "Effizienz (Kunststoff-Recycling)",
+        ),
+        _cockpit_effect(
+            "Strom-Anwend.",
+            "KLIK*",
+            "mod-thumb-klik",
+            klik_total,
+            0.0,
+            "Suffizienz (El. Geräte/Pers.)",
+            "Effizienz (Elektrische Geräte)",
+        ),
+        {
+            "label": "Bevölkerungsentwicklung",
+            "short_label": "",
+            "thumb_class": "mod-thumb-pop",
+            "total": "0 %",
+            "rows": [],
+        },
     ]
 
 
@@ -877,6 +995,7 @@ def modifikationsdetails_view(request):
         "endenergie_stack_rows": _endenergie_stack_rows(admin_payload, vorzustand_payload),
         "primaerenergie_stack_rows": _primaerenergie_stack_rows(admin_payload, vorzustand_payload),
         "cockpit_energy_bars": _cockpit_energy_bars(),
+        "cockpit_effect_rows": _cockpit_effect_rows(),
         "current_section": "modifikationsdetails",
     }
     return render(request, "simulator/modifikationsdetails.html", context)

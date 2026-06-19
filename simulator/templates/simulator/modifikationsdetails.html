@@ -1441,57 +1441,20 @@
                     <div class="mod-chart-title">5. Energie- und Einflussvergleich</div>
                     <div class="mod-cockpit-grid">
                         <div class="mod-cockpit-left">
-                            <div class="mod-cockpit-effect">
-                                <div class="mod-cockpit-thumb mod-thumb-ma"></div>
-                                <div>
-                                    <div class="mod-cockpit-main"><div class="mod-cockpit-change">-48 %</div>Mobile Anwendungen <span>(MA)</span></div>
-                                    <div class="mod-cockpit-sub"><strong>+-0 %</strong><div><span>&rarr;</span>Suffizienz (Pkm/Pers.)</div></div>
-                                    <div class="mod-cockpit-sub"><strong>-48 %</strong><div><span>&rarr;</span>Effizienz (kWh/Pkm)</div></div>
+                            {% for effect in cockpit_effect_rows %}
+                                <div class="mod-cockpit-effect">
+                                    <div class="mod-cockpit-thumb {{ effect.thumb_class }}"></div>
+                                    <div>
+                                        <div class="mod-cockpit-main">
+                                            <div class="mod-cockpit-change">{{ effect.total }}</div>{{ effect.label }}
+                                            {% if effect.short_label %}<span>({{ effect.short_label }})</span>{% endif %}
+                                        </div>
+                                        {% for row in effect.rows %}
+                                            <div class="mod-cockpit-sub"><strong>{{ row.value }}</strong><div><span>&rarr;</span>{{ row.label }}</div></div>
+                                        {% endfor %}
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="mod-cockpit-effect">
-                                <div class="mod-cockpit-thumb mod-thumb-gw"></div>
-                                <div>
-                                    <div class="mod-cockpit-main"><div class="mod-cockpit-change">-17 %</div>Gebäudewärme <span>(GW)</span></div>
-                                    <div class="mod-cockpit-sub"><strong>+-0 %</strong><div><span>&rarr;</span>Suffizienz (qm/Pers.)</div></div>
-                                    <div class="mod-cockpit-sub"><strong>-17 %</strong><div><span>&rarr;</span>Effizienz (Wärmeschutz, San.-Rate)</div></div>
-                                </div>
-                            </div>
-
-                            <div class="mod-cockpit-effect">
-                                <div class="mod-cockpit-thumb mod-thumb-pw"></div>
-                                <div>
-                                    <div class="mod-cockpit-main"><div class="mod-cockpit-change">-12 %</div>Prozesswärme <span>(PW)</span></div>
-                                    <div class="mod-cockpit-sub"><strong>+-0 %</strong><div><span>&rarr;</span>Suffizienz (Prod.Vol./Pers.)</div></div>
-                                    <div class="mod-cockpit-sub"><strong>-12 %</strong><div><span>&rarr;</span>Effizienz (Produktions-Proz.)</div></div>
-                                </div>
-                            </div>
-
-                            <div class="mod-cockpit-effect">
-                                <div class="mod-cockpit-thumb mod-thumb-gs"></div>
-                                <div>
-                                    <div class="mod-cockpit-main"><div class="mod-cockpit-change">-61 %</div>Grundstoffe <span>(GS)</span></div>
-                                    <div class="mod-cockpit-sub"><strong>-47 %</strong><div><span>&rarr;</span>Suffizienz (Kunststoff-Vol./Pers.)</div></div>
-                                    <div class="mod-cockpit-sub"><strong>-14 %</strong><div><span>&rarr;</span>Effizienz (Kunststoff-Recycling)</div></div>
-                                </div>
-                            </div>
-
-                            <div class="mod-cockpit-effect">
-                                <div class="mod-cockpit-thumb mod-thumb-klik"></div>
-                                <div>
-                                    <div class="mod-cockpit-main"><div class="mod-cockpit-change">-5 %</div>Strom-Anwend. <span>(KLIK*)</span></div>
-                                    <div class="mod-cockpit-sub"><strong>+-0 %</strong><div><span>&rarr;</span>Suffizienz (El. Geräte/Pers.)</div></div>
-                                    <div class="mod-cockpit-sub"><strong>-5 %</strong><div><span>&rarr;</span>Effizienz (Elektrische Geräte)</div></div>
-                                </div>
-                            </div>
-
-                            <div class="mod-cockpit-effect">
-                                <div class="mod-cockpit-thumb mod-thumb-pop"></div>
-                                <div>
-                                    <div class="mod-cockpit-main"><div class="mod-cockpit-change">0 %</div>Bevölkerungsentwicklung</div>
-                                </div>
-                            </div>
+                            {% endfor %}
                         </div>
 
                         <div class="mod-cockpit-center">
