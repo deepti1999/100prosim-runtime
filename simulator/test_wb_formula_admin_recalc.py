@@ -50,6 +50,25 @@ class FormulaAdminRecalcSignalTests(TestCase):
 
         schedule.assert_called_with("renewable", "TEST_FORMULA_ADMIN_RECALC")
 
+    def test_formula_recalc_is_queued_for_worker(self):
+        from simulator.models import BalanceJob
+        from simulator.signals import _queue_formula_dependent_recalc
+
+        with patch("simulator.signals._invalidate_formula_runtime_caches"):
+            _queue_formula_dependent_recalc("renewable", "TEST_QUEUED_FORMULA")
+
+        jobs = BalanceJob.objects.filter(
+            job_type=BalanceJob.TYPE_LANDUSE_RECALC,
+            payload__trigger="formula_admin",
+            payload__formula_key="TEST_QUEUED_FORMULA",
+        ).order_by("created_by_id")
+
+        self.assertEqual(jobs.count(), 2)
+        self.assertEqual(
+            {(job.created_by_id, job.payload["region_code"]) for job in jobs},
+            {(None, "DE"), (self.user.id, "DE")},
+        )
+
     def test_formula_variable_save_schedules_dependent_recalc(self):
         from simulator.models import Formula, FormulaVariable
 

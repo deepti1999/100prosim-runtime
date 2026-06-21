@@ -345,40 +345,61 @@ def _formula_recalc_scopes():
     return scopes
 
 
-def _recalculate_formula_dependents(category, trigger_key):
-    """Recalculate persisted UI values affected by a Formula admin change."""
-    from simulator.owner_scope import owner_scope
-    from simulator.region_scope import region_scope
+def _formula_recalc_job_type(category):
+    from simulator.models import BalanceJob
 
+    if category == "verbrauch":
+        return BalanceJob.TYPE_VERBRAUCH_RECALC
+    if category in ("renewable", "landuse", "ws"):
+        return BalanceJob.TYPE_LANDUSE_RECALC
+    return None
+
+
+def _queue_formula_dependent_recalc(category, trigger_key):
+    """Queue worker recalculation for persisted UI values after admin formula edits."""
+    from simulator.models import BalanceJob
+
+    job_type = _formula_recalc_job_type(category)
+    if not job_type:
+        return
+
+    _invalidate_formula_runtime_caches()
+
+    queued_count = 0
     for owner_id, region_code in _formula_recalc_scopes():
-        try:
-            _invalidate_formula_runtime_caches()
-            with region_scope(region_code), owner_scope(owner_id):
-                if category == "ws":
-                    from .ws_365_service import get_ws_365_data
+        payload = {
+            "region_code": region_code,
+            "trigger": "formula_admin",
+            "formula_key": trigger_key,
+            "formula_category": category,
+        }
+        existing = BalanceJob.objects.filter(
+            job_type=job_type,
+            created_by_id=owner_id,
+            payload__region_code=region_code,
+            status__in=[BalanceJob.STATUS_QUEUED, BalanceJob.STATUS_RUNNING],
+        ).first()
+        if existing:
+            continue
 
-                    get_ws_365_data(run_goal_seek=False)
-                elif category in ("renewable", "landuse"):
-                    from simulator.recalc_service import unified_recalc_all
+        BalanceJob.objects.create(
+            job_type=job_type,
+            status=BalanceJob.STATUS_QUEUED,
+            created_by_id=owner_id,
+            payload=payload,
+        )
+        queued_count += 1
 
-                    unified_recalc_all()
-                elif category == "verbrauch":
-                    from simulator.verbrauch_recalculator import recalc_all_verbrauch
-
-                    recalc_all_verbrauch(trigger_code=f"formula:{trigger_key}")
-                elif category in ("bilanz", "bilanz_constant", "ws_constant", "other"):
-                    # These categories may be read by formula evaluators but do not
-                    # have their own persisted parameter table to recalculate here.
-                    continue
-        except Exception as exc:
-            scope = f"owner={owner_id or 'global'}, region={region_code}"
-            print(f"Error in formula-triggered update for {trigger_key} ({scope}): {exc}")
+    print(
+        f"Queued {queued_count} formula-triggered recalc job(s) "
+        f"for {trigger_key} ({category})"
+    )
 
 
 def _schedule_formula_dependent_recalc(category, trigger_key):
     from django.db import transaction
 
-    transaction.on_commit(lambda: _recalculate_formula_dependents(category, trigger_key))
+    transaction.on_commit(lambda: _queue_formula_dependent_recalc(category, trigger_key))
 
 
 def _sync_admin_template_row_to_user_workspaces(instance, kwargs):
