@@ -273,6 +273,114 @@ post_save.connect(_invalidate_formula_lookup_caches, sender=Formula)
 post_save.connect(_invalidate_formula_lookup_caches, sender=FormulaVariable)
 
 
+def _invalidate_formula_runtime_caches():
+    """Clear process-local caches before an admin formula-driven recalculation.
+
+    Formula edits happen in the web process and the visible page values are
+    persisted rows. Clear all formula/recalc caches so each workspace is
+    recalculated against the just-saved Formula/FormulaVariable definitions.
+    """
+    try:
+        from simulator.recalc_cache import invalidate as invalidate_recalc_cache
+
+        invalidate_recalc_cache()
+    except Exception as exc:
+        print(f"Formula recalc cache clear warning: {exc}")
+
+    try:
+        from simulator.formula_service import (
+            FormulaService,
+            invalidate_auto_tokens_cache,
+            invalidate_lookups_cache,
+        )
+
+        FormulaService().clear_cache()
+        invalidate_auto_tokens_cache()
+        invalidate_lookups_cache()
+    except Exception as exc:
+        print(f"Formula service cache clear warning: {exc}")
+
+    try:
+        from simulator.ws365_orchestrator import invalidate_ws365_cache
+
+        invalidate_ws365_cache()
+    except Exception as exc:
+        print(f"WS365 cache clear warning: {exc}")
+
+
+def _formula_recalc_scopes():
+    """Return global + existing owner/region scopes that can show formula output."""
+    from simulator.models import LandUse, Region, RenewableData, VerbrauchData
+
+    global_region_ids = set()
+    owner_region_pairs = set()
+
+    for model in (LandUse, RenewableData, VerbrauchData):
+        global_region_ids.update(
+            model.all_objects.filter(owner__isnull=True)
+            .values_list("region_id", flat=True)
+            .distinct()
+        )
+        owner_region_pairs.update(
+            model.all_objects.filter(owner__isnull=False)
+            .values_list("owner_id", "region_id")
+            .distinct()
+        )
+
+    region_codes = dict(Region.objects.values_list("id", "code"))
+    scopes = []
+
+    for region_id in sorted(rid for rid in global_region_ids if rid):
+        region_code = region_codes.get(region_id)
+        if region_code:
+            scopes.append((None, region_code))
+
+    for owner_id, region_id in sorted(
+        (oid, rid) for oid, rid in owner_region_pairs if oid and rid
+    ):
+        region_code = region_codes.get(region_id)
+        if region_code:
+            scopes.append((owner_id, region_code))
+
+    return scopes
+
+
+def _recalculate_formula_dependents(category, trigger_key):
+    """Recalculate persisted UI values affected by a Formula admin change."""
+    from simulator.owner_scope import owner_scope
+    from simulator.region_scope import region_scope
+
+    for owner_id, region_code in _formula_recalc_scopes():
+        try:
+            _invalidate_formula_runtime_caches()
+            with region_scope(region_code), owner_scope(owner_id):
+                if category == "ws":
+                    from .ws_365_service import get_ws_365_data
+
+                    get_ws_365_data(run_goal_seek=False)
+                elif category in ("renewable", "landuse"):
+                    from simulator.recalc_service import unified_recalc_all
+
+                    unified_recalc_all()
+                elif category == "verbrauch":
+                    from simulator.verbrauch_recalculator import recalc_all_verbrauch
+
+                    recalc_all_verbrauch(trigger_code=f"formula:{trigger_key}")
+                elif category in ("bilanz", "bilanz_constant", "ws_constant", "other"):
+                    # These categories may be read by formula evaluators but do not
+                    # have their own persisted parameter table to recalculate here.
+                    continue
+        except Exception as exc:
+            scope = f"owner={owner_id or 'global'}, region={region_code}"
+            print(f"Error in formula-triggered update for {trigger_key} ({scope}): {exc}")
+
+
+def _schedule_formula_dependent_recalc(category, trigger_key):
+    from django.db import transaction
+
+    transaction.on_commit(lambda: _recalculate_formula_dependents(category, trigger_key))
+
+
 def _sync_admin_template_row_to_user_workspaces(instance, kwargs):
     if _skip_signal_processing(kwargs):
         return
@@ -416,7 +524,6 @@ def formula_changed(sender, instance, **kwargs):
         return
 
     from django.core.cache import cache
-    from django.db import transaction
     from simulator.formula_service import FormulaService
 
     cache.delete(f"formula_{instance.key}")
@@ -425,24 +532,7 @@ def formula_changed(sender, instance, **kwargs):
     except Exception as e:
         print(f"Formula cache clear warning: {e}")
 
-    def trigger_update():
-        try:
-            if instance.category == "ws":
-                from .ws_365_service import get_ws_365_data
-
-                get_ws_365_data(run_goal_seek=False)
-            elif instance.category == "renewable":
-                from simulator.recalc_service import unified_recalc_all
-
-                unified_recalc_all()
-            elif instance.category == "verbrauch":
-                from simulator.verbrauch_recalculator import recalc_all_verbrauch
-
-                recalc_all_verbrauch(trigger_code=f"formula:{instance.key}")
-        except Exception as e:
-            print(f"Error in formula-triggered update for {instance.key}: {e}")
-
-    transaction.on_commit(trigger_update)
+    _schedule_formula_dependent_recalc(instance.category, instance.key)
 
 @receiver(post_save, sender=FormulaVariable)
 @receiver(post_delete, sender=FormulaVariable)
@@ -457,11 +547,15 @@ def formula_variable_changed(sender, instance, **kwargs):
     from simulator.formula_service import FormulaService
 
     try:
-        formula_key = instance.formula.key
+        formula = instance.formula
+        formula_key = formula.key
         cache.delete(f"formula_{formula_key}")
         FormulaService().clear_cache(formula_key)
     except Exception as e:
         print(f"Formula variable cache clear warning: {e}")
+        return
+
+    _schedule_formula_dependent_recalc(formula.category, formula_key)
 
 @receiver(post_save, sender=WS365Formula)
 @receiver(post_delete, sender=WS365Formula)

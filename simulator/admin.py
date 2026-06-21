@@ -861,12 +861,20 @@ class FormulaAdmin(admin.ModelAdmin):
     
     # Admin actions
     def activate_formulas(self, request, queryset):
+        formulas = list(queryset.values_list("category", "key"))
         updated = queryset.update(is_active=True)
+        from simulator.signals import _schedule_formula_dependent_recalc
+        for category, key in formulas:
+            _schedule_formula_dependent_recalc(category, key)
         self.message_user(request, f'{updated} formula(s) activated.')
     activate_formulas.short_description = " Activate selected formulas"
     
     def deactivate_formulas(self, request, queryset):
+        formulas = list(queryset.values_list("category", "key"))
         updated = queryset.update(is_active=False)
+        from simulator.signals import _schedule_formula_dependent_recalc
+        for category, key in formulas:
+            _schedule_formula_dependent_recalc(category, key)
         self.message_user(request, f'{updated} formula(s) deactivated.')
     deactivate_formulas.short_description = " Deactivate selected formulas"
     
