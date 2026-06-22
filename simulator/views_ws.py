@@ -16,6 +16,7 @@ from .ws_queue_api import (
     ws_api_apply_full_balance,
     ws_api_apply_full_balance_wind,
     ws_api_balance_job_status,
+    ws_api_latest_balance_job,
 )
 
 __all__ = [
@@ -24,6 +25,7 @@ __all__ = [
     "ws_api_apply_full_balance",
     "ws_api_apply_full_balance_wind",
     "ws_api_balance_job_status",
+    "ws_api_latest_balance_job",
     "ws_api_data",
     "ws_api_goal_seek",
     "ws_api_summary",

@@ -72,6 +72,7 @@ from .views_ws import (
     ws_api_balance_job_status,
     ws_api_data,
     ws_api_goal_seek,
+    ws_api_latest_balance_job,
     ws_api_summary,
 )
 
@@ -137,6 +138,7 @@ urlpatterns = [
     path('api/ws/apply-full-balance/', ws_api_apply_full_balance, name='ws_api_apply_full_balance'),
     path('api/ws/apply-balance-wind/', ws_api_apply_balance_wind, name='ws_api_apply_balance_wind'),
     path('api/ws/apply-full-balance-wind/', ws_api_apply_full_balance_wind, name='ws_api_apply_full_balance_wind'),
+    path('api/ws/latest-balance-job/', ws_api_latest_balance_job, name='ws_api_latest_balance_job'),
     path('api/ws/balance-job/<uuid:job_id>/', ws_api_balance_job_status, name='ws_api_balance_job_status'),
     
     # API Endpoints

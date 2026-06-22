@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.db import models
 from django.http import JsonResponse
 from django.utils import timezone
 
@@ -156,6 +157,27 @@ def _queue_new_balance_job(user, job_type, payload):
         payload=payload or {},
     )
 
+
+def _balance_job_payload(job):
+    payload = {
+        'success': True,
+        'job_id': str(job.id),
+        'job_type': job.job_type,
+        'status': job.status,
+        'attempts': job.attempts,
+        'error': job.error or '',
+        'created_at': job.created_at.isoformat() if job.created_at else None,
+        'started_at': job.started_at.isoformat() if job.started_at else None,
+        'finished_at': job.finished_at.isoformat() if job.finished_at else None,
+    }
+
+    if job.status == BalanceJob.STATUS_SUCCEEDED:
+        payload['result'] = job.result or {}
+    elif job.status in [BalanceJob.STATUS_QUEUED, BalanceJob.STATUS_RUNNING]:
+        payload['message'] = 'Balance is still running. Please wait...'
+
+    return payload
+
 def _run_balance_job_inline_debug(request, job_type):
     """
     Localhost fallback: execute WS balance job inline when DEBUG is enabled.
@@ -293,23 +315,41 @@ def ws_api_balance_job_status(request, job_id):
 
     _expire_balance_job_if_stale(job)
 
-    payload = {
-        'success': True,
-        'job_id': str(job.id),
-        'status': job.status,
-        'attempts': job.attempts,
-        'error': job.error or '',
-        'created_at': job.created_at.isoformat() if job.created_at else None,
-        'started_at': job.started_at.isoformat() if job.started_at else None,
-        'finished_at': job.finished_at.isoformat() if job.finished_at else None,
-    }
+    return JsonResponse(_balance_job_payload(job))
 
-    if job.status == BalanceJob.STATUS_SUCCEEDED:
-        payload['result'] = job.result or {}
-    elif job.status in [BalanceJob.STATUS_QUEUED, BalanceJob.STATUS_RUNNING]:
-        payload['message'] = 'Balance is still running. Please wait...'
 
-    return JsonResponse(payload)
+@login_required
+def ws_api_latest_balance_job(request):
+    """Return the current user's latest recent WS balance job.
+
+    This lets the Szenario-Abgleich page recover after refresh/navigation while
+    a worker job is still running, and show the final failure/success instead of
+    leaving the UI looking stuck.
+    """
+    balance_types = [
+        BalanceJob.TYPE_SOLAR_WS_ONLY,
+        BalanceJob.TYPE_SOLAR_SECTOR_WS,
+        BalanceJob.TYPE_WIND_WS_ONLY,
+        BalanceJob.TYPE_WIND_SECTOR_WS,
+    ]
+    for job_type in balance_types:
+        _expire_stale_balance_jobs(user=request.user, job_type=job_type)
+
+    cutoff = timezone.now() - timedelta(minutes=30)
+    job = (
+        BalanceJob.objects
+        .filter(created_by=request.user, job_type__in=balance_types)
+        .filter(
+            models.Q(status__in=[BalanceJob.STATUS_QUEUED, BalanceJob.STATUS_RUNNING]) |
+            models.Q(created_at__gte=cutoff)
+        )
+        .order_by("-created_at")
+        .first()
+    )
+    if job is None:
+        return JsonResponse({'success': True, 'job': None})
+
+    return JsonResponse({'success': True, 'job': _balance_job_payload(job)})
 
 __all__ = [
     "_queue_new_balance_job",
@@ -319,4 +359,5 @@ __all__ = [
     "ws_api_apply_balance_wind",
     "ws_api_apply_full_balance_wind",
     "ws_api_balance_job_status",
+    "ws_api_latest_balance_job",
 ]
