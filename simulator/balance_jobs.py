@@ -33,6 +33,25 @@ def _json_safe(value: Any) -> Any:
     return value
 
 
+def format_balance_job_error(exc: Exception) -> str:
+    """Return a user-facing message for known balance failure modes."""
+    message = str(exc)
+    if "required landuse is negative" not in message:
+        return message
+
+    code = "Landnutzung"
+    if message.startswith("LU_2.1"):
+        code = "LU_2.1"
+    elif message.startswith("LU_6"):
+        code = "LU_6"
+
+    return (
+        f"Diese Balance ist mit den aktuellen Eingaben nicht möglich: "
+        f"Der benötigte Wert für {code} würde unter 0 ha fallen. "
+        "Bitte reduzieren Sie die Überversorgung oder verwenden Sie die andere Balance-Option."
+    )
+
+
 def _record_balance_calculation_run(job: BalanceJob, result: Dict[str, Any], duration_ms: int) -> Dict[str, Any]:
     """Create the cache-busting CalculationRun for balance jobs.
 

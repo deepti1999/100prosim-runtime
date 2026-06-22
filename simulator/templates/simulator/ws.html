@@ -323,6 +323,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function errorMessage(error) {
+        return error?.message || String(error || 'Unbekannter Fehler');
+    }
+
     function fmt0(value) {
         const num = Number(value || 0);
         return Math.round(num).toLocaleString('de-DE');
@@ -508,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
             }
         } catch (error) {
-            alert('Fehler beim Sector-Balance: ' + error);
+            alert('Fehler beim Sector-Balance: ' + errorMessage(error));
         } finally {
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-solar-panel me-1"></i>Balance Solar';
@@ -627,7 +631,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
             }
         } catch (error) {
-            alert('Fehler beim Wind Sector-Balance: ' + error);
+            alert('Fehler beim Wind Sector-Balance: ' + errorMessage(error));
         } finally {
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-wind me-1"></i>Balance Wind';

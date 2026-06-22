@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.utils import timezone
 
+from simulator.balance_jobs import format_balance_job_error
 from simulator.models import BalanceJob
 
 def _balance_job_timeout_seconds(setting_name, default_seconds):
@@ -196,7 +197,7 @@ def ws_api_apply_balance(request):
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        return JsonResponse({'success': False, 'error': format_balance_job_error(e)}, status=500)
 
 @login_required
 def ws_api_apply_full_balance(request):
@@ -223,7 +224,7 @@ def ws_api_apply_full_balance(request):
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        return JsonResponse({'success': False, 'error': format_balance_job_error(e)}, status=500)
 
 @login_required
 def ws_api_apply_balance_wind(request):
@@ -250,7 +251,7 @@ def ws_api_apply_balance_wind(request):
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        return JsonResponse({'success': False, 'error': format_balance_job_error(e)}, status=500)
 
 @login_required
 def ws_api_apply_full_balance_wind(request):
@@ -277,7 +278,7 @@ def ws_api_apply_full_balance_wind(request):
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        return JsonResponse({'success': False, 'error': format_balance_job_error(e)}, status=500)
 
 @login_required
 def ws_api_balance_job_status(request, job_id):

@@ -3,7 +3,12 @@ import time
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from simulator.balance_jobs import claim_next_job, recover_interrupted_jobs, run_balance_job
+from simulator.balance_jobs import (
+    claim_next_job,
+    format_balance_job_error,
+    recover_interrupted_jobs,
+    run_balance_job,
+)
 from simulator.models import BalanceJob
 
 class Command(BaseCommand):
@@ -54,10 +59,10 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f"Completed {job.id}"))
             except Exception as exc:
                 job.status = BalanceJob.STATUS_FAILED
-                job.error = str(exc)
+                job.error = format_balance_job_error(exc)
                 job.finished_at = timezone.now()
                 job.save(update_fields=["status", "error", "finished_at", "updated_at"])
-                self.stderr.write(self.style.ERROR(f"Failed {job.id}: {exc}"))
+                self.stderr.write(self.style.ERROR(f"Failed {job.id}: {job.error}"))
 
             if run_once:
                 return
