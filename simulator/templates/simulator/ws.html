@@ -489,10 +489,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Apply Balance Button
     document.getElementById('applyBalanceBtn').addEventListener('click', async function() {
         const btn = this;
-        if (!confirm('Möchten Sie den WS-Strom-/Drift-Ausgleich per Solar anwenden?\n\nDies passt LU_2.1 an, sodass Tag 365 = Tag 1 (Speicher balanciert).')) {
-            return;
-        }
-        
+
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Wird angewendet...';
         
@@ -531,9 +528,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Apply Sector Balance Button (sector-first, then WS/LU rebalance)
     document.getElementById('applyFullBalanceBtn').addEventListener('click', async function() {
         const btn = this;
-        if (!confirm('Möchten Sie die vollständige 2-Schritt-Balance ausführen?\n\nSchritt 1: Sektoren ausgleichen (Gebäudewärme, Prozesswärme, Mobile Anwendungen)\nSchritt 2: WS-Drift + Strom/LU_2.1 erneut balancieren')) {
-            return;
-        }
 
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Wird angewendet...';
@@ -596,9 +590,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Apply Wind WS-Only Balance Button
     document.getElementById('applyWindBalanceBtn').addEventListener('click', async function() {
         const btn = this;
-        if (!confirm('Möchten Sie den WS-Strom-/Drift-Ausgleich per Wind anwenden?\n\nDies passt LU_6 an, sodass Tag 365 = Tag 1 (Speicher balanciert).')) {
-            return;
-        }
 
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Wird angewendet...';
@@ -650,9 +641,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Apply Wind Sector+WS Balance Button
     document.getElementById('applyWindFullBalanceBtn').addEventListener('click', async function() {
         const btn = this;
-        if (!confirm('Möchten Sie die vollständige 2-Schritt-Balance mit Wind ausführen?\n\nSchritt 1: Sektoren ausgleichen (Gebäudewärme, Prozesswärme, Mobile Anwendungen)\nSchritt 2: WS-Drift + Strom/LU_6 erneut balancieren')) {
-            return;
-        }
 
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Wird angewendet...';
