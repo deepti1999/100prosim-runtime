@@ -465,6 +465,7 @@
                 note = '';
             }
 
+            updateScenarioInfo('Szenario wird gespeichert ...', false);
             fetch('/api/scenario/create/', {
                 method: 'POST',
                 headers: {
@@ -476,17 +477,30 @@
                     note: note
                 })
             })
-                .then(function (response) { return response.json(); })
+                .then(function (response) {
+                    return response.json().catch(function () {
+                        throw new Error('Server-Antwort konnte nicht gelesen werden.');
+                    }).then(function (data) {
+                        if (!response.ok && data.status !== 'ok') {
+                            throw new Error(data.error || ('HTTP ' + response.status));
+                        }
+                        return data;
+                    });
+                })
                 .then(function (data) {
                     if (data.status === 'ok') {
+                        updateScenarioInfo('Szenario gespeichert: ' + escapeHtml(data.name || name), false);
                         alert('Szenario gespeichert: ' + data.name + '\nAktualisiert: ' + data.created_at);
                         loadScenarioList();
                     } else {
+                        updateScenarioInfo('Szenario konnte nicht gespeichert werden', true);
                         alert('Fehler beim Speichern des Szenarios: ' + data.error);
                     }
                 })
                 .catch(function (error) {
-                    alert('Fehler beim Speichern des Szenarios: ' + error);
+                    var message = error && error.message ? error.message : String(error);
+                    updateScenarioInfo('Szenario konnte nicht gespeichert werden: ' + escapeHtml(message), true);
+                    alert('Fehler beim Speichern des Szenarios: ' + message);
                 });
         }
 

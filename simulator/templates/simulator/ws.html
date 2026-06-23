@@ -289,6 +289,30 @@ document.addEventListener('DOMContentLoaded', function() {
         if (balanceDetail) balanceDetail.textContent = '';
     }
 
+    function setBalanceButtonsEnabled(enabled) {
+        [
+            'applyBalanceBtn',
+            'applyFullBalanceBtn',
+            'applyWindBalanceBtn',
+            'applyWindFullBalanceBtn'
+        ].forEach(function(id) {
+            const btn = document.getElementById(id);
+            if (btn) btn.disabled = !enabled;
+        });
+    }
+
+    function showWsSummaryLoadError(error) {
+        const msg = errorMessage(error);
+        const solarBody = document.getElementById('solarGoalSeekBody');
+        const windBody = document.getElementById('windGoalSeekBody');
+        const html = '<p class="text-danger mb-2"><i class="fas fa-exclamation-triangle me-2"></i>Automatische Vorschau konnte nicht geladen werden.</p>'
+            + '<p class="text-muted small mb-0">Die Balance-Buttons bleiben verfügbar. Beim Start wird der Abgleich im Hintergrund berechnet.</p>';
+        if (solarBody) solarBody.innerHTML = html;
+        if (windBody) windBody.innerHTML = html;
+        showBalanceFailure('Vorschau konnte nicht geladen werden: ' + msg);
+        setBalanceButtonsEnabled(true);
+    }
+
     async function waitForBalanceJob(jobId) {
         const statusUrlTemplate = '{% url "simulator:ws_api_balance_job_status" job_id="00000000-0000-0000-0000-000000000000" %}';
         const statusUrl = statusUrlTemplate.replace('00000000-0000-0000-0000-000000000000', jobId);
@@ -391,9 +415,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderSolarSummary(goalSeek) {
         const body = document.getElementById('solarGoalSeekBody');
         if (!goalSeek || !Object.keys(goalSeek).length) {
-            body.innerHTML = '<p class="text-muted mb-0">Solar-Balance wird automatisch beim Laden der Seite berechnet.</p>';
+            body.innerHTML = '<p class="text-muted mb-0">Solar-Vorschau ist noch nicht verfügbar. Der vollständige Balance-Job kann trotzdem gestartet werden.</p>';
             document.getElementById('applyBalanceBtn').disabled = true;
-            document.getElementById('applyFullBalanceBtn').disabled = true;
+            document.getElementById('applyFullBalanceBtn').disabled = false;
             return;
         }
         body.innerHTML = `
@@ -414,9 +438,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderWindSummary(goalSeekWind) {
         const body = document.getElementById('windGoalSeekBody');
         if (!goalSeekWind || !Object.keys(goalSeekWind).length) {
-            body.innerHTML = '<p class="text-muted mb-0">Klicken Sie auf "Balance by Wind", um Wind zu berechnen.</p>';
+            body.innerHTML = '<p class="text-muted mb-0">Wind-Vorschau ist noch nicht verfügbar. Der vollständige Balance-Job kann trotzdem gestartet werden.</p>';
             document.getElementById('applyWindBalanceBtn').disabled = true;
-            document.getElementById('applyWindFullBalanceBtn').disabled = true;
+            document.getElementById('applyWindFullBalanceBtn').disabled = false;
             return;
         }
         body.innerHTML = `
@@ -456,8 +480,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // stakeholder PDF §2.4.3 (T19, T20). Goal-seek results populate
     // automatically via the initial refreshWsSummaryCards() call below
     // (the summary endpoint runs goal_seek=True internally).
-    refreshWsSummaryCards().catch(() => {});
-    recoverLatestBalanceJob().catch(() => {});
+    refreshWsSummaryCards().catch(showWsSummaryLoadError);
+    recoverLatestBalanceJob().catch(function(error) {
+        console.warn('latest balance recovery failed', error);
+    });
 
 
     // Apply Balance Button

@@ -157,7 +157,7 @@
                         </small>
                     </h6>
                     <div>
-                        <button class="btn btn-sm btn-outline-danger me-2" onclick="event.stopPropagation(); localStorage.clear(); location.reload();" title="Lokalen Speicher löschen">
+                        <button class="btn btn-sm btn-outline-danger me-2" onclick="event.stopPropagation(); clearChangesStorageAndReload();" title="Lokalen Speicher löschen">
                             <i class="fas fa-trash-alt"></i> Speicher löschen
                         </button>
                         <button class="btn btn-sm btn-outline-info me-2" onclick="event.stopPropagation(); testLocalStorage();" title="Lokalen Speicher testen">
@@ -2273,6 +2273,12 @@
     }
 
     // Clear changes history
+    function clearChangesStorageAndReload() {
+        localStorage.removeItem('landuse_changes_history');
+        sessionStorage.removeItem('landuse_changes_history_backup');
+        location.reload();
+    }
+
     function clearChangesHistory() {
         if (!confirm('Clear all changes history? This will remove the saved changes from storage.')) return;
         
