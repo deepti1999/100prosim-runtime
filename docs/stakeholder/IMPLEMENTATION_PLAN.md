@@ -31,7 +31,7 @@ Every item `X-N` follows this six-step ritual. Plan is **not** done until all si
 | **V3 — API smoke** | curl or pytest hitting HTTP endpoints | `scripts/smoke_<item>.sh` | Expected JSON / HTTP 200 / contract preserved |
 | **V4 — Playwright localhost** | Regression scenario at `http://localhost:8001` | `regression/scenarios/` + `simulator/test_e2e_ui_*.py` | Scenario A + any item-specific scenario passes; screenshot diff clean |
 | **V5 — Playwright Heroku** | Same scenario against live `prosim-100` | `bash scripts/heroku_up.sh` → run → `bash scripts/heroku_down.sh` | Scenario passes on live URL. Catches cross-process cache bugs that V2–V4 miss. |
-| **V6 — Docs** | Update `CLAUDE.md` / per-item doc / memory if needed | `CLAUDE.md`, `docs/`, memory files | Any new invariant, gotcha, or decision is written down. |
+| **V6 — Docs** | Update `project runtime notes` / per-item doc / memory if needed | `project runtime notes`, `docs/`, memory files | Any new invariant, gotcha, or decision is written down. |
 
 **Cadence for V5:** batch by phase, not per item. Spin Heroku up once per phase, run the full Playwright suite against it, tear down. Keeps Heroku cost to ~$0.10/phase.
 
@@ -196,7 +196,7 @@ Items are 30-minute fixes each. Removing unused buttons. No behaviour change.
 **V3:** POST to the old endpoint still works (idempotence).
 **V4:** Playwright `/landuse/` → verify button absent.
 **V5:** Same, live Heroku.
-**V6:** `CLAUDE.md` entry in Phase 1 change log.
+**V6:** `project runtime notes` entry in Phase 1 change log.
 
 ### 1-B. Remove "Goal Seek" + "Refresh (Aktualisieren)" buttons — `T19`, `T20`
 
@@ -210,7 +210,7 @@ Items are 30-minute fixes each. Removing unused buttons. No behaviour change.
 **V3:** Balance-all API still produces identical output pre/post removal.
 **V4:** Playwright — open Szenario-Abgleich modal, buttons not present, balance still completes.
 **V5:** Same, Heroku.
-**V6:** `CLAUDE.md` — note the Goal Seek / Refresh redundancy finding.
+**V6:** `project runtime notes` — note the Goal Seek / Refresh redundancy finding.
 
 ---
 
@@ -231,7 +231,7 @@ Translation work. Mechanical. Can run in parallel with Phase 3.
 **V3:** HTML bodies contain no untranslated English domain terms. Automated check: `grep -E "Renewable|Land Use|Save All|Target Value" docs/e2e_snapshots/` must be empty after run.
 **V4:** Playwright visits every page, captures text content, diff against expected German strings.
 **V5:** Same, Heroku.
-**V6:** `docs/stakeholder/TRANSLATION_GLOSSARY.md` committed. `CLAUDE.md` note about "translate UI, not codes".
+**V6:** `docs/stakeholder/TRANSLATION_GLOSSARY.md` committed. `project runtime notes` note about "translate UI, not codes".
 
 ### 2-B. Translate user manual to German — `T32`, `T33`
 
@@ -259,7 +259,7 @@ Translation work. Mechanical. Can run in parallel with Phase 3.
 **V3:** API round-trips a value posted as `1.234,5` and returns the same format on GET.
 **V4:** Playwright — visit every numeric page, screenshot, check for presence of comma-decimal and dot-thousands.
 **V5:** Same, Heroku.
-**V6:** `CLAUDE.md` note: German locale + `toLocaleString('de-DE')` are the contract.
+**V6:** `project runtime notes` note: German locale + `toLocaleString('de-DE')` are the contract.
 
 ---
 
@@ -279,7 +279,7 @@ Translation work. Mechanical. Can run in parallel with Phase 3.
 **V3:** n/a (pure template).
 **V4:** Playwright visits all pages, asserts side-menu DOM element is present + same CSS class set.
 **V5:** Same, Heroku.
-**V6:** `CLAUDE.md` — template partial pattern.
+**V6:** `project runtime notes` — template partial pattern.
 
 ### 3-B. Top-bar dedup — `T41`, `T42`
 
@@ -328,7 +328,7 @@ Biggest UX bundle. Each item has real backend touches.
 **V3:** API: POST `/api/baseline/restore/` resets all user data to admin baseline; verify two users see the same baseline.
 **V4:** Playwright — user A modifies, user B modifies, both `Reset to baseline`, both converge to same state.
 **V5:** Same, Heroku (two browser sessions).
-**V6:** `CLAUDE.md` — note shared baseline contract.
+**V6:** `project runtime notes` — note shared baseline contract.
 
 ### 4-C. Consolidate Balance buttons — `T21`, `T22`
 
@@ -344,7 +344,7 @@ Biggest UX bundle. Each item has real backend touches.
 **V3:** API contract stable for old endpoints; new unified endpoint produces same final state as old two-step.
 **V4:** Playwright — click "Balance Solar" → state matches old two-step result.
 **V5:** Same, Heroku (this is the class of bug we hit before — cross-process cache coherency).
-**V6:** `CLAUDE.md` — balance-button consolidation recorded.
+**V6:** `project runtime notes` — balance-button consolidation recorded.
 
 ### 4-D. Fix: buttons non-functional after scenario changes — `T23`
 
@@ -359,7 +359,7 @@ Biggest UX bundle. Each item has real backend touches.
 **V3:** `/api/ws/balance-job/<id>/` returns progress; status advances.
 **V4:** Playwright — edit Verbrauch, click Balance Solar, verify spinner appears + job completes.
 **V5:** Same, Heroku. **This is the primary acceptance gate** — the original report was on the deployed app.
-**V6:** `CLAUDE.md` if new invariant discovered.
+**V6:** `project runtime notes` if new invariant discovered.
 
 ### 4-E. Auto-cascade (Excel-style propagation) on every change — `T24`, `T25`, `T26`, `T27`
 
@@ -383,7 +383,7 @@ Biggest UX bundle. Each item has real backend touches.
 **V3:** API trace confirms one cascade call per user save; `BalanceJob` table is untouched.
 **V4:** Playwright — edit Verbrauch target, navigate to Erneuerbare, confirm the linked cells reflect the change with no intermediate button press.
 **V5:** Same, Heroku.
-**V6:** `CLAUDE.md` — document the cascade-vs-Balance distinction.
+**V6:** `project runtime notes` — document the cascade-vs-Balance distinction.
 
 ---
 
@@ -537,9 +537,9 @@ Commit convention: `<type>(stakeholder-<phase>-<item>): <summary>` — e.g. `fix
 
 ---
 
-## 16. What changes in our workflow (updates to CLAUDE.md)
+## 16. What changes in our workflow (updates to project runtime notes)
 
-After Pascal approves this plan, the following update lands in `CLAUDE.md`:
+After Pascal approves this plan, the following update lands in `project runtime notes`:
 
 - New section "Stakeholder implementation plan" pointing at this file as source of truth.
 - New rule: "Any commit that advances a target must reference `T*` in the subject line".

@@ -12,7 +12,7 @@ Mandatory per item (non-negotiable, see IMPLEMENTATION_PLAN.md §1):
 - V3 API smoke passes
 - V4 Playwright against localhost passes
 - V5 Playwright against live Heroku passes
-- V6 docs updated (CLAUDE.md / per-item / memory)
+- V6 docs updated (project runtime notes / per-item / memory)
 
 ---
 

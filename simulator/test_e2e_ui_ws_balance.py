@@ -156,7 +156,7 @@ class UIWSBalanceTests(StaticLiveServerTestCase):
     def test_ws_balance_api_endpoint_is_reachable_for_authenticated_user(self):
         """Smoke check: the /api/ws/apply-balance/ endpoint responds to POST for
         a logged-in user. Full UI invariant checking (drift=0 post-balance) lives
-        in the Claude-driven regression/ harness (scenario C-ws-balance) — that
+        in the legacy regression/ harness (scenario C-ws-balance) — that
         flow is timing-sensitive enough to be fragile inside a 10-second headless
         Playwright test, while the harness runs it deterministically against the
         live stack."""

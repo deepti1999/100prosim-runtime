@@ -2,7 +2,7 @@
 
 **Status:** **Phase A SHIPPED 2026-04-23 (T64) + Phase B SHIPPED 2026-04-23 (T65) + Phase C SHIPPED 2026-04-23 (T66)** — all V5-verified on Heroku. §2.3 operationally closed end-to-end (DE + non-DE region proven).
 **Date:** 2026-04-23 (revised; v1 from earlier same day preserved in git history at commit `f5c738b` and back).
-**Author:** Claude (Opus 4.7) under Pascal's direction.
+**Author:** project audit.
 **Scope:** Stakeholder PDF §2.3 "Datenmodell" (Schmidt-Kanefendt 2026-04-03).
 **Purpose:** Re-frame the §2.3 work after the v1 audit got the framing wrong (treated §2.3 as value import; it is a **provenance + region + admin-edit** ask). Decompose §2.3 into atomic stakeholder requirements aligned with the literal text, audit current architecture against each, plan implementation phases that are independently shippable, and end with the decision points that are actually blocking.
 
@@ -145,7 +145,7 @@ What §2.3 still needs (post-Phase-C):
 
 **Recommendation:** split §2.3 into a **2-phase incremental ship** (Phase A: provenance + tooltip + admin import for DE; Phase B: region first-class + Bundesländer-ready import). Each phase independently shippable, V2–V6 verifiable, and additive — does not touch the 51 shipped targets' numerical behaviour because Phase A is provenance-only and Phase B touches new (per-region) rows only.
 
-**Hard rule this audit enforces:** no cell / code / label rename (CLAUDE.md "Stakeholder requirements" #1). Every `LU_*`, `9.3.*`, Verbrauch code, sector name, WS365 field name, and `Formula.name` stays frozen. Import only adds provenance metadata + region tagging; it does not rename anything. (Maps to SR-007 below.)
+**Hard rule this audit enforces:** no cell / code / label rename (project runtime notes "Stakeholder requirements" #1). Every `LU_*`, `9.3.*`, Verbrauch code, sector name, WS365 field name, and `Formula.name` stays frozen. Import only adds provenance metadata + region tagging; it does not rename anything. (Maps to SR-007 below.)
 
 ---
 
@@ -184,7 +184,7 @@ Each SR maps to one or more of the 11 literal asks in `260403_Section_2.3_litera
 ### SR-005 — Per-user / per-scenario overrides are preserved (unchanged)
 > The existing per-user workspace override behaviour MUST NOT break. If a user changed `LU_2.1` in their workspace, their override still wins over the imported default; the import supplies the base, not the overlay.
 
-**Maps to:** constraint (no literal ask; CLAUDE.md invariant).
+**Maps to:** constraint (no literal ask; project runtime notes invariant).
 
 **Acceptance:** `workspace_service.ensure_user_workspace_data()` behaviour unchanged; regression scenarios A / C / D pass with `compare.py` exit 0.
 
@@ -198,14 +198,14 @@ Each SR maps to one or more of the 11 literal asks in `260403_Section_2.3_litera
 ### SR-007 — Import never renames any cell / code / label (unchanged — hard rule)
 > All codes (`LU_*`, `9.3.*`, sector names, WS365 field names, `Formula` rows) stay frozen. The import ADDS provenance / region metadata; it MUST NOT rename anything.
 
-**Maps to:** CLAUDE.md "Stakeholder requirements" #1; not a literal §2.3 ask but a hard project invariant.
+**Maps to:** project runtime notes "Stakeholder requirements" #1; not a literal §2.3 ask but a hard project invariant.
 
 **Acceptance:** `test_wb_code_freeze.py` (new) asserts no rename happens on import; the import command rejects any operation that would touch a `code` field.
 
 ### SR-008 — Import does not break the 51 shipped targets (unchanged — hard rule)
 > All 51 shipped + Heroku-verified targets stay green. Golden regression scenarios A / C / D pass. All `test_bb_*` / `test_wb_*` / `test_e2e_*` modules pass.
 
-**Maps to:** CLAUDE.md "Per-item verification" rule; not a literal §2.3 ask.
+**Maps to:** project runtime notes "Per-item verification" rule; not a literal §2.3 ask.
 
 **Acceptance:** full thesis test suite green pre-import and post-import on the same seed. A / C / D goldens unchanged unless intentionally re-captured with Pascal sign-off.
 
@@ -432,7 +432,7 @@ The 10 v1 risks are preserved; severities re-evaluated against the corrected (pr
 |---------|----------------------------------------------------------------------------------|------:|--------:|------------|
 | RISK-01 | An import operation drifts a scenario golden                                     |  H/H  |   **L/L**   | Phase A is provenance-only; Phase B touches new-region rows only. DE re-sync (B4 in decision doc) is opt-in admin operation gated on `--apply` + diff review. |
 | RISK-02 | Ambiguous one-to-many label mappings auto-picked wrong                           |  H/H  |   **M/M**   | Step C s_xlsx_map shows 78 % HIGH; only the 22 % MED-or-below need hand review (~30 min for Pascal); LOW classified as `origin='internal'` automatically. |
-| RISK-03 | A code / cell / label gets renamed during import (violates CLAUDE.md contract)   | C/L  |   **C/L**   | Linter test `test_wb_code_freeze`; import command rejects any operation that would touch a `code` field. SR-007 enforces. |
+| RISK-03 | A code / cell / label gets renamed during import (violates project runtime notes contract)   | C/L  |   **C/L**   | Linter test `test_wb_code_freeze`; import command rejects any operation that would touch a `code` field. SR-007 enforces. |
 | RISK-04 | Import collides with `ensure_user_workspace_data()` for a live user               |  M/M  |   **M/M**   | Maintenance-mode flag (`MAINTENANCE_MODE=1` env) blocks per-user workspace fires while the import runs; documented runbook for staging vs live. |
 | RISK-05 | Per-user overrides silently overwritten by base row re-import                    |  C/L  |   **C/L**   | SR-005: import touches only `owner=NULL` base rows; per-user workspace tables (`owner=<user>`) are read-only to the import. Test `test_bb_user_override_preserved`. |
 | RISK-06 | D.xlsx column layout changes between stakeholder revisions                       |  M/M  |   **M/M**   | Pinned manifest at `data/import/d_xlsx.manifest.json` records column layout fingerprint; import asserts header match; fails loud on drift. |
@@ -447,7 +447,7 @@ The 10 v1 risks are preserved; severities re-evaluated against the corrected (pr
 
 ## 8. Verification / validation plan (V2–V6 per phase, revised)
 
-CLAUDE.md V2–V6 ritual applied to each phase. The three-phase v1 plan
+project runtime notes V2–V6 ritual applied to each phase. The three-phase v1 plan
 (A schema-only, B value sync, C overrides, D UI provenance) collapses to
 **two phases** in the corrected framing; v1's Phase D (UI provenance) is
 folded into Phase A; v1's Phase B (value sync) is replaced by the import
@@ -497,7 +497,7 @@ These are the binding answers. Phase A implementation uses these without further
 |---|---|---|---|
 | **D1** | Provenance schema — extend existing `source` / `quelle` / `notes` OR add new columns? | **Add new** `source_url` + `notes_assumption` + `origin`. Existing `quelle` / `source` / `notes` retain their current semantics. | Existing columns have incompatible content (`LandUse.quelle="D.1.<n>"` is a paragraph code, not a URL). Mixing semantics on the same column would corrupt audit history. |
 | **D2** | Region model — first-class table OR settings constant? | **First-class table** `(code, display_name, active, datenmodell_excel_hash)`. Phase A still ships single-region (Germany implicit); the table lands in Phase B. | SR-004 + SR-012 require multi-region semantics; ~20-LOC migration cost; avoids rewrite when ErnES sends `BB.xlsx`. |
-| **D3** | Import command behaviour on missing / malformed Excel? | **Fail loud, no silent fallback.** Refuse to write if file missing, hash-mismatch, or sheet schema unrecognised. | RISK-06 mitigation + CLAUDE.md "investigate root causes, don't bypass safety checks". |
+| **D3** | Import command behaviour on missing / malformed Excel? | **Fail loud, no silent fallback.** Refuse to write if file missing, hash-mismatch, or sheet schema unrecognised. | RISK-06 mitigation + project runtime notes "investigate root causes, don't bypass safety checks". |
 | **D4** | Source-URL UI surface? | **Info-icon (`i`) per row, click → popover** showing `source_url` (link) + `notes_assumption` (text). | Pascal's choice. Click is keyboard- + screen-reader-friendly; reliably Playwright-testable; works on touch devices. |
 | **D5** | Commit a D.xlsx hash manifest? | **Yes** — `data/import/d_xlsx.manifest.json` with `{import_tool_version, import_date, files: [{path, file_hash, sheet_hashes, region_code, rows_*}]}`. The .xlsx itself stays gitignored. | Audit trail; idempotency baseline; "what changed since last import" answer without reaching for the file. |
 | **D6** | LOW-confidence DB rows (5 NONE + 25 LABEL_ONLY)? | **`origin='internal'`** with one-line per-row rationale comment in `data/import/orphan_classification.csv`. | Mostly category headers + deeper splits ours-only; pragmatic; promote later if stakeholder asks. |
@@ -552,7 +552,7 @@ The previous v1 produced a `data/mapping/d_xlsx_to_db.csv` placeholder. With Ste
 - The gap is **source URLs** (86 on D.xlsx), **assumption notes** (747 on D.xlsx), **first-class Region**, and **admin re-import without code change**.
 - 12 atomic stakeholder requirements (SR-001 … SR-012); 10 risks (one drops H/H to L/L); 8 actually-blocking decisions for Pascal; 3 open questions for Schmidt-Kanefendt.
 - Two-phase implementation: **Phase A** (provenance + tooltip + DE admin import, ~3 days, V2–V6) and **Phase B** (region first-class + Bundesländer-ready import + D4a/D4b unblocked, ~3 days, V2–V6).
-- Cell / code / label freeze (CLAUDE.md rule #1) preserved by design — additive columns only.
+- Cell / code / label freeze (project runtime notes rule #1) preserved by design — additive columns only.
 - 51 shipped targets stay green; T54 D4a/D4b unblocks as a positive side-effect of Phase B.
 
 **This audit makes no code changes and proposes none yet.** Next step is Pascal's decision on the 8 actually-blocking decisions in §9; coding starts in Phase A once those are resolved.

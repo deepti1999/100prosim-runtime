@@ -298,7 +298,7 @@ calculation — tracked here so they don't get lost.
   provenance popover ("Net zum Netz; H₂-Anteil unter 9.2.1.5.2 separat
   geführt.") so stakeholders reading §2.3.1's "Quellbezüge und
   Annahmen" don't hit the 20% gap cold.
-- **Estimated effort:** 15 min Claude — edit the popover template text
+- **Estimated effort:** 15 min — edit the popover template text
   + V4 localhost screenshot. No V5 Heroku needed (pure UI polish).
 
 ### Finding B — GebaeudewaermeData 2.0 / 2.3 / 2.6 / 2.10 display scale 1000× undersized
@@ -326,7 +326,7 @@ calculation — tracked here so they don't get lost.
   align with VerbrauchData scale. Percent rows (e.g. 2.1 = 71.6 %)
   and specific-quantity rows (e.g. 2.4.1 = 136.0 kWh/qm/a) already
   have correct scale — leave untouched.
-- **Estimated effort:** 30 min Claude + one Heroku cycle — edit 4
+- **Estimated effort:** 30 min + one Heroku cycle — edit 4
   rows × 2 fixtures (8 edits), re-seed, restart, V4 localhost screenshot,
   V5 Heroku screenshot + tear-down.
 

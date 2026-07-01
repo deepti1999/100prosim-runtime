@@ -116,6 +116,6 @@ If a caveat above escalates to blocking behaviour (e.g. two-user
 shared baseline actually breaks, live banner stops updating, a
 production security incident), upgrade it from "accepted" to
 "open" in `index.md`, open a task with T-ID, and follow the
-V2-V6 ritual per CLAUDE.md §"Per-item verification".
+V2-V6 ritual per project runtime notes §"Per-item verification".
 
 This document is an **acceptance ledger**, not a TODO list.

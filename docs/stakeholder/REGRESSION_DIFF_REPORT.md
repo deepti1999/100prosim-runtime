@@ -139,7 +139,7 @@ regression:
    lightweight HTTP+regex pattern as capture_A.py, adding POSTs
    to `/api/ws/apply-balance/` + polling `/api/ws/balance-job/<id>/`.
 2. Reset testsim workspace first so the balance is deterministic
-   (`heroku run` snippet in CLAUDE.md, same idea locally).
+   (`heroku run` snippet in project runtime notes, same idea locally).
 3. Run, capture fresh JSON, regenerate the golden with the same
    sign-off note pattern, commit.
 

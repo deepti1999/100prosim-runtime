@@ -1,6 +1,6 @@
 # Change History: Initial State → 57/63 Shipped
 
-**Author:** Claude (audit follow-up Task 4, 2026-04-24)
+**Author:** project audit
 **Method:** git archaeology + narrative, not a commit dump.
 **Scope:** every behaviour-changing commit on `main` between the PDF-delivery baseline and the current `02908ef` audit-cross-cutting commit. ErnES-gated work (T1-T5+T7) excluded — those depend on stakeholder action and have no code yet.
 
@@ -49,9 +49,9 @@ The 100prosim-Web port arrived in the runtime bundle with Deepti's master-thesis
 
 **What changed**
 - Plan + progress tracker docs (no T-IDs).
-- Regression harness scaffold: `regression/playbook.md`, `regression/scenarios/`, `regression/golden/`, `regression/compare.py` — Claude-driven golden-file UI + calculation regression. Scenarios A (baseline read-only, 162 fields) and C (WS balance with worker poll, 41 fields + speicherdrift invariant) committed at `55fe5b8`. Scenario D added later in `6470e00`.
+- Regression harness scaffold: `regression/playbook.md`, `regression/scenarios/`, `regression/golden/`, `regression/compare.py` — legacy golden-file UI + calculation regression. Scenarios A (baseline read-only, 162 fields) and C (WS balance with worker poll, 41 fields + speicherdrift invariant) committed at `55fe5b8`. Scenario D added later in `6470e00`.
 - T6 acid-test harness stub at `scripts/bench_acid_test.sh` — JSON output schema + log file format locked in; measurement body is a TODO that always emits `elapsed_seconds: null, status: "stub"` until Phase 7-B.
-- `.claude/hooks/` for syntax checks + session-start docker/git diagnostics.
+- `developer hooks/` for syntax checks + session-start docker/git diagnostics.
 
 **Verification:** scenarios produce JSON; `compare.py A` exits 0.
 
@@ -110,9 +110,9 @@ The 100prosim-Web port arrived in the runtime bundle with Deepti's master-thesis
 - `86e3ba2` **T24, T25, T26, T27** (4-E): auto-cascade on every save across LandUse + Verbrauch + Renewable. Removed `skip_cascade=True` from `save_renewable_user_input` (the Renewable surface was the only one with the flag — see "Risks" below). Removed manual "Recalculate Renewables" button (or gated admin-only). Toast feedback after each save.
 
 **Risks encountered + mitigations**
-- **Cross-process cache bug** (incident, fixed in `54d4567` then `a31fa64`): on Heroku, web and worker are SEPARATE processes. Django signals don't cross process boundaries. Without explicit cache invalidation at worker entry, the worker would compute against stale parameter state from before the user's save. Mitigation: invalidate ALL FOUR process-local caches (`recalc_cache._cache`, `_AUTO_TOKENS_CACHE`, `_LOOKUPS_CACHE`, `_WS365_COMPUTE_CACHE`) at `run_balance_job` entry. Documented in CLAUDE.md "Architectural rule".
+- **Cross-process cache bug** (incident, fixed in `54d4567` then `a31fa64`): on Heroku, web and worker are SEPARATE processes. Django signals don't cross process boundaries. Without explicit cache invalidation at worker entry, the worker would compute against stale parameter state from before the user's save. Mitigation: invalidate ALL FOUR process-local caches (`recalc_cache._cache`, `_AUTO_TOKENS_CACHE`, `_LOOKUPS_CACHE`, `_WS365_COMPUTE_CACHE`) at `run_balance_job` entry. Documented in project runtime notes "Architectural rule".
 - **Multi-pass DAG signature bug** (incident, fixed in `691b99f`): `recalc_cache` key signature excluded computed `ziel` values, so multi-pass DAG convergence stopped after 1 pass (pass 2 saw same signature, returned empty). Mitigation: extend signature to include all output values.
-- **Function-name shadowing** (incident, fixed in `9b0cf3d`): `views.py` had `update_user_percent` defined twice; Python silently keeps the last `def`, URL router routed to the wrong signature → 500 error. Mitigation: now grep `^def ` | sort | uniq -c when auditing modules; CLAUDE.md "companion rule".
+- **Function-name shadowing** (incident, fixed in `9b0cf3d`): `views.py` had `update_user_percent` defined twice; Python silently keeps the last `def`, URL router routed to the wrong signature → 500 error. Mitigation: now grep `^def ` | sort | uniq -c when auditing modules; project runtime notes "companion rule".
 - **`save() vs save(skip_cascade=True)` divergence**: Renewable's save handler used `skip_cascade=True` historically because cascade was assumed to be triggered separately. T25 broke that assumption by requiring cascade-on-save everywhere. The fix removed the flag — the test suite caught it via `test_bb_renewable_edit::test_renewable_save_triggers_cascade`.
 
 **Tests added:** `test_bb_admin_baseline` (5/5), `test_bb_e2e_auto_cascade`, `test_bb_renewable_edit` cascade extensions.
@@ -130,7 +130,7 @@ The 100prosim-Web port arrived in the runtime bundle with Deepti's master-thesis
 - `7c02458` **T54 D1/D2/D3/D4c**: backend wired the italic blue Tagesladungen under each source value + on each flow segment + percent shares + bottom-right Abgleichdifferenz=160. Formula: `value × (365 / final_stromnetz)`. Wind/Hydro use AE-adjusted numerator. Asymmetric numerators per Excel cells E14/E21/E27/E33.
 - `897e212` **T54 D4a/D4b** (Phase B closure): Pmax-Ely-ES `194 GW` and Pmax-RV `261 GW (elekt.)` red labels read from `Region.installed_pmax_*` instead of being hardcoded. Phase C TEST region cycle confirmed these read region-scoped (TEST showed 200/270 GW).
 
-**The 22-pass SVG iteration** for T54 is its own sub-saga. Commits `e55114e` … `f4d1a6a` (over ~3 days) reshaped the flow diagram pass-by-pass to match Excel page 10. Lessons codified in CLAUDE.md "Working with the Jahresstrom flow diagram (SVG iteration discipline)" — Excel WS.xlsm is parseable ground truth (via `scripts/gen_flow_svg.py`), box-on-arrow visually CUTS the arrow (move boxes off), cascade-shift everything when a circle moves, revert beats fix-forward for visual regressions. Pass-by-pass commits made every regression independently revertible. V5 Heroku verification batched at structural milestones (passes 6, 22) rather than every pass.
+**The 22-pass SVG iteration** for T54 is its own sub-saga. Commits `e55114e` … `f4d1a6a` (over ~3 days) reshaped the flow diagram pass-by-pass to match Excel page 10. Lessons codified in project runtime notes "Working with the Jahresstrom flow diagram (SVG iteration discipline)" — Excel WS.xlsm is parseable ground truth (via `scripts/gen_flow_svg.py`), box-on-arrow visually CUTS the arrow (move boxes off), cascade-shift everything when a circle moves, revert beats fix-forward for visual regressions. Pass-by-pass commits made every regression independently revertible. V5 Heroku verification batched at structural milestones (passes 6, 22) rather than every pass.
 
 **Risks encountered + mitigations**
 - **Pass-14 visual regression** (revert example): a layout change made things worse; restored via `git checkout <prev-pass-sha> -- annual_electricity.html`. Clean revert, no half-broken intermediate commit.
@@ -195,7 +195,7 @@ The 100prosim-Web port arrived in the runtime bundle with Deepti's master-thesis
 - `e23653b` GebaeudewaermeData unique = (region, code) (migration `0054`) — was unique on `code` alone, blocked second-region rows.
 - `ae2809f` scenarios carry `region_code` (snapshot/baseline payloads).
 - `cb746eb` BalanceJob `payload.region_code` + worker `region_scope` wrap (cross-process region coherency).
-- `fb5f2c8` WSData per-`(owner, region)` (migration `0055`) — decision rationale: rejected per-user-only (DE/BB share user's WSData breaks region switching), rejected per-region-only (user edits would mutate global state), chose per-(owner, region) for symmetry with parameter models + cross-process cache coherency per CLAUDE.md.
+- `fb5f2c8` WSData per-`(owner, region)` (migration `0055`) — decision rationale: rejected per-user-only (DE/BB share user's WSData breaks region switching), rejected per-region-only (user edits would mutate global state), chose per-(owner, region) for symmetry with parameter models + cross-process cache coherency per project runtime notes.
 - `e7b8c19` row-creating import mode for new regions (`_create_region_rows_from_de_template` helper).
 - `6dfc2ed` synthetic TEST region full-smoke test + GebaeudewaermeData manager swap (default Manager → OwnerScopedManager).
 - `bbff38c` + `373e94c` Heroku V5 helper script `scripts/heroku_seed_test_region.py` (clones DE × 1.05) + django.setup() ordering fix.
@@ -234,11 +234,11 @@ Rather than rewriting the calculation core in PyPSA (the PowerSystem Python libr
 
 ### 2. Single-dyno Heroku as performance target
 
-Production runs on Heroku Basic (1 web + 1 worker, no parallelism, Postgres-over-network). Optimisations are biased toward this profile — local multi-core Docker wins that don't transfer to single-dyno are deprioritised. Documented in CLAUDE.md "Two main stakeholder work streams §1".
+Production runs on Heroku Basic (1 web + 1 worker, no parallelism, Postgres-over-network). Optimisations are biased toward this profile — local multi-core Docker wins that don't transfer to single-dyno are deprioritised. Documented in project runtime notes "Two main stakeholder work streams §1".
 
 ### 3. Process-local caches + signal invalidation rule
 
-Four process-local in-memory caches (recalc_cache._cache, _AUTO_TOKENS_CACHE, _LOOKUPS_CACHE, _WS365_COMPUTE_CACHE) are wiped at every `run_balance_job` entry on the worker. Reason: Django signals don't cross process boundaries, so a save on the web dyno does NOT invalidate the worker's caches. Without this discipline, "silent no-op" bugs (worker pass 1 sees stale cache → returns empty → outer loop breaks early) appear in production but pass locally. Codified in CLAUDE.md "Architectural rule".
+Four process-local in-memory caches (recalc_cache._cache, _AUTO_TOKENS_CACHE, _LOOKUPS_CACHE, _WS365_COMPUTE_CACHE) are wiped at every `run_balance_job` entry on the worker. Reason: Django signals don't cross process boundaries, so a save on the web dyno does NOT invalidate the worker's caches. Without this discipline, "silent no-op" bugs (worker pass 1 sees stale cache → returns empty → outer loop breaks early) appear in production but pass locally. Codified in project runtime notes "Architectural rule".
 
 ### 4. Workspace-scoped data per user
 

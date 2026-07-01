@@ -12,7 +12,7 @@ breaking the §2.4.4 PDF auto-cascade contract for the Renewable surface.
 The fix removed the flag. Without a regression test, a future refactor
 could re-add the flag silently.
 
-Past incident motivation (CLAUDE.md "Past incidents" section):
+Past incident motivation (project runtime notes "Past incidents" section):
 - commit `54d4567` — caches not wiped at job entry caused 1.1.2 revert bug.
 - commit `691b99f` — signature excluded computed ziels, multi-pass DAG
   stopped after 1 pass.

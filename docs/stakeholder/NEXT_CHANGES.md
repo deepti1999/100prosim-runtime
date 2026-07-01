@@ -210,6 +210,6 @@ These are larger design/build items — each is a real feature, not a tweak. Sco
 
 ## Notes on what's NOT in this document
 
-- No mention of the existing cache-coherency or Heroku deployment quirks — those are our internal concerns, not stakeholder-facing. See `CLAUDE.md` for those.
+- No mention of the existing cache-coherency or Heroku deployment quirks — those are our internal concerns, not stakeholder-facing. See `project runtime notes` for those.
 - The stakeholder does **not** challenge the frozen cell names (LU_*, 9.3.1, sector names). Our existing "never rename cells" rule holds; the UI-label translations in P2-1 are on top of the cell codes, not replacements for them.
 - "A great achievement" framing — take at face value. The list is long because the ambition is to replace Excel entirely, not because what's there is bad.

@@ -182,7 +182,7 @@ These are already wired up via JS `setPercentText` calls. Good.
 | Legend example numbers | 399, 401 | `31.799`, `146` |
 | Footer | 410 | `100prosim Web · {{ diagram_generated_on }}` |
 
-These are German domain labels — frozen per CLAUDE.md stakeholder
+These are German domain labels — frozen per project runtime notes stakeholder
 contract. **They stay hardcoded.**
 
 ---

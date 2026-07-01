@@ -382,7 +382,7 @@ Based on direct inspection of the repo.
 - **Scenarios**: user-owned, named, comparable. Create / rename / delete / restore-baseline / save-snapshot semantics. No investment-optimization framing anywhere.
 - **Outputs**: balance sheet per sector (`Bilanz`), annual electricity Sankey-style SVG diagram (`Jahresstrom`), Cockpit KPIs, storage cycle plot.
 - **UI language**: German throughout. Non-negotiable if the thesis is German-examined.
-- **Test coverage**: backend thesis suites + Claude-driven regression harness + Playwright/Selenium UI tests. Well-covered current behaviour.
+- **Test coverage**: backend thesis suites + legacy regression harness + Playwright/Selenium UI tests. Well-covered current behaviour.
 - **Formula engine**: user-editable formulas stored as text (`Formula.formula_text`) evaluated at runtime via `formula_evaluator.py`. This gives 100ProSim a runtime-configurable calculation model that no optimization framework offers natively.
 
 **What 100ProSim does not do** (that PyPSA would add if migrated):
@@ -581,7 +581,7 @@ Rough estimate: a migration rewrite doubles the test line count for the first 6 
 | Rewrite thesis test suite | 2–3 | Per section 16 |
 | Rewrite UI components that depended on formula values | 1–2 | `Jahresstrom` Sankey probably needs Plotly redo |
 | Integration + debugging | 2–4 | Solver infeasibility debugging is an undocumented art |
-| Documentation rewrite | 1–2 | CLAUDE.md, thesis methodology chapter |
+| Documentation rewrite | 1–2 | project runtime notes, thesis methodology chapter |
 
 **Calendar time part-time**: 6–12 months.
 

@@ -4,7 +4,7 @@ annual-electricity endpoint on the current seed baseline.
 Mirrors regression/scenarios/D-full-flow-verbrauch-solar-wind.yml, but uses the
 API directly (Django test client) rather than Playwright, because the full UI
 replay depends on browser localStorage state that's brittle to simulate in
-headless tests. The Claude-driven regression harness (regression/compare.py)
+headless tests. The legacy regression harness (regression/compare.py)
 covers the UI path.
 
     python manage.py test simulator.test_e2e_ui_D_full_flow -v 1

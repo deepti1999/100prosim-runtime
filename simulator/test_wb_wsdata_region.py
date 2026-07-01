@@ -5,7 +5,7 @@ Phase B left WSData per-user-only. Phase C adds region scope so a user
 who switches from DE to BB sees BB's 365-day timeseries instead of
 their DE one.
 
-Decision rationale (per CLAUDE.md "Architectural rule"):
+Decision rationale (per project runtime notes "Architectural rule"):
 - WSData is *workspace state* (the 365-day simulation result), not
   just parameter substrate. It depends on parameters that are now
   region-scoped (Phase B), so WSData must be region-scoped too —

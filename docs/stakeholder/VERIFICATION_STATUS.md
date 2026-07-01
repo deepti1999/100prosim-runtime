@@ -103,7 +103,7 @@ Updated in this push:
 - `docs/stakeholder/PROGRESS.md` — full phase-by-phase burndown with commit SHAs.
 - `docs/stakeholder/FLOW_DIAGRAM_AUDIT.md` — Phase 5-C node mapping audit + T54 open action.
 - `docs/stakeholder/VERIFICATION_STATUS.md` — this file.
-- `CLAUDE.md` — V2–V6 codified as non-negotiable earlier (2026-04-21).
+- `project runtime notes` — V2–V6 codified as non-negotiable earlier (2026-04-21).
 
 ## Not fully verified — honest gaps
 
